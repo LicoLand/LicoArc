@@ -1,0 +1,22 @@
+[
+  {
+    "name": "plaintext-field-is-forbidden",
+    "value": {
+      "contractVersion": "fabrigent.relay.v2",
+      "envelopeId": "env_000000000002",
+      "mailboxId": "box_000000000002",
+      "ciphertext": "synthetic-ciphertext",
+      "expiresAt": "2030-01-01T00:00:00.000Z",
+      "plaintext": "forbidden"
+    }
+  },
+  {
+    "name": "ciphertext-is-required",
+    "value": {
+      "contractVersion": "fabrigent.relay.v2",
+      "envelopeId": "env_000000000003",
+      "mailboxId": "box_000000000003",
+      "expiresAt": "2030-01-01T00:00:00.000Z"
+    }
+  }
+]

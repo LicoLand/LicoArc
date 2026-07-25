@@ -2,19 +2,20 @@
 
 ## Versioning Model
 
-Fabrigent publishes versioned contract lines. Each line lives in its own
-directories (`contracts/v1/`, `policies/v1/`, `conformance/v1/`) and is
-bundled into an immutable, content-addressed artifact
-(`artifacts/fabrigent-v1.json`). The wire contract identifies itself with
-the `contractVersion` constant, currently `fabrigent.relay.v1`.
+Fabrigent publishes versioned contract lines. Each line lives in matching
+`contracts/`, `policies/`, and `conformance/` version directories and is
+bundled into an immutable, content-addressed artifact. The current wire
+contract identifies itself as `fabrigent.relay.v2`; the published
+`fabrigent.relay.v1` artifact remains available unchanged.
 
 ## Rules
 
 - A published version directory is immutable. Corrections and extensions
   ship as a new version.
-- Implementations pin an exact artifact and verify its `digest` (SHA-256
-  over the canonical serialization of the embedded sources) before relying
-  on its contents.
+- Implementations pin an exact artifact and verify its `digest` before
+  relying on its contents. In `v2`, SHA-256 binds the canonical
+  `artifactVersion`, `digestAlgorithm`, and embedded sources. The immutable
+  `v1` digest binds its embedded sources as originally published.
 - Consumers must treat `additionalProperties: false` as normative: an
   envelope with unknown fields is non-conformant.
 - The governance policy's required capabilities are the minimum a conformant
@@ -24,9 +25,8 @@ the `contractVersion` constant, currently `fabrigent.relay.v1`.
 
 - Within a version line, the schema, policy, and corpus never change; the
   artifact digest is the integrity proof.
-- Across versions, no wire-level compatibility is implied. A consumer that
-  supports `fabrigent.relay.v1` must not assume anything about a future
-  version until it is published.
+- Across versions, no wire-level compatibility is implied. Consumers migrate
+  explicitly and reject any contract version they did not pin.
 
 ## Toolchain
 

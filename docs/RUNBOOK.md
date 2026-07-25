@@ -10,7 +10,7 @@ or newer.
 npm run verify
 ```
 
-This runs `npm run artifacts:check`, which fails unless the tracked bundle
+This runs `npm run artifacts:check`, which fails unless every tracked bundle
 matches its canonical sources, and `npm test`, which runs the conformance
 and integrity tests.
 
@@ -22,14 +22,15 @@ Run after any change under `contracts/`, `policies/`, or `conformance/`:
 npm run artifacts:generate
 ```
 
-The generator (`tools/generate-artifact.mjs`) embeds the canonical sources
-into `artifacts/fabrigent-v1.json` and recomputes the SHA-256 digest over
-their canonical JSON serialization. Commit the regenerated artifact together
-with its source change. Never hand-edit the artifact.
+The generator (`tools/generate-artifact.mjs`) regenerates every configured
+bundle. The immutable v1 algorithm remains source-only; v2 binds artifact
+version, digest algorithm, and sources. Commit a newly generated artifact
+only with the new version sources that produced it. Never mutate or hand-edit
+a published artifact.
 
 ## Publish A New Contract Version
 
-1. Create a new version directory (for example `contracts/v2/`) instead of
+1. Create a new version directory (for example `contracts/v3/`) instead of
    mutating a published version.
 2. Add the policy and conformance corpus for the new version.
 3. Extend the generator's source list and artifact name for the new version,

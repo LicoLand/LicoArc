@@ -6,25 +6,23 @@ human-reviewed protocol sources into immutable, verifiable artifacts.
 ## Components
 
 ```text
-contracts/v1/   policies/v1/   conformance/v1/
+contracts/vN/   policies/vN/   conformance/vN/
        \            |            /
         tools/generate-artifact.mjs
                     |
-        artifacts/fabrigent-v1.json
+        artifacts/fabrigent-vN.json
                     |
         tests/conformance.test.mjs
 ```
 
 - **Canonical sources.** The envelope schema
-  (`contracts/v1/relay-envelope.schema.json`), the governance policy
-  (`policies/v1/relay-governance.json`), and the synthetic conformance
-  corpus (`conformance/v1/valid.json`, `conformance/v1/invalid.json`) are
-  the only inputs.
+  governance policy, and synthetic conformance corpus in matching version
+  directories are the only inputs for each bundle.
 - **Bundle artifact.** `tools/generate-artifact.mjs` parses the sources,
   embeds them under `sources`, and computes `digest` as SHA-256 over the
-  canonical JSON serialization plus a trailing newline. The artifact
-  identifies itself as `fabrigent.bundle.v1` with `digestAlgorithm`
-  `sha256`.
+  canonical JSON serialization. In `fabrigent.bundle.v2`, the digest binds
+  `artifactVersion`, `digestAlgorithm`, and `sources`; the published v1
+  digest and bytes retain their original source-only definition.
 - **Verification.** `npm run artifacts:check` regenerates the expected
   bundle and compares it byte-for-byte; `npm test` re-derives the digest
   and evaluates the corpus against the embedded schema and policy.
@@ -35,7 +33,7 @@ The policy declares `relay-is-untrusted`. The contract carries only opaque
 ciphertext and routing metadata; encryption, decryption, key custody,
 plaintext inspection, host permission authority, and client-runtime
 coordination are forbidden capabilities by policy. See
-[../protocols/relay-envelope-v1.md](../protocols/relay-envelope-v1.md).
+[../protocols/relay-envelope-v2.md](../protocols/relay-envelope-v2.md).
 
 ## Boundaries
 
