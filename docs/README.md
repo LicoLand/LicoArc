@@ -26,10 +26,12 @@ under `docs/plans/`, never in tracked documents.
 | Repository entity and configuration layout | [ENTITY-CONFIG-LAYOUT.md](ENTITY-CONFIG-LAYOUT.md) |
 | Architecture of the artifact pipeline | [architecture/overview.md](architecture/overview.md) |
 | Artifact and conformance verification | [functionality/artifact-and-conformance-verification.md](functionality/artifact-and-conformance-verification.md) |
+| Relay envelope contract v2 | [protocols/relay-envelope-v2.md](protocols/relay-envelope-v2.md) |
 | Relay envelope contract v1 | [protocols/relay-envelope-v1.md](protocols/relay-envelope-v1.md) |
 | Synthetic envelope examples | [examples/relay-envelope-examples.md](examples/relay-envelope-examples.md) |
 | Architecture decision records | [adrs/README.md](adrs/README.md) |
 | ADR 0001: immutable versioned artifacts | [adrs/0001-immutable-versioned-artifacts.md](adrs/0001-immutable-versioned-artifacts.md) |
+| ADR 0002: bind artifact interpretation metadata | [adrs/0002-bind-artifact-interpretation-metadata.md](adrs/0002-bind-artifact-interpretation-metadata.md) |
 
 ## Documentation Rules
 

@@ -11,12 +11,12 @@ source.
 Fabrigent owns:
 
 - Neutral federation addressing, session, and delivery contract definitions.
-- Opaque relay envelope wire contracts (`contracts/v1/`).
+- Opaque relay envelope wire contracts (`contracts/v1/`, `contracts/v2/`).
 - Relay governance policy, including required and forbidden capabilities and
-  envelope limits (`policies/v1/`).
+  envelope limits (`policies/v1/`, `policies/v2/`).
 - Compatibility rules and version policy
   ([docs/COMPATIBILITY.md](docs/COMPATIBILITY.md)).
-- Synthetic conformance corpora (`conformance/v1/`).
+- Synthetic conformance corpora (`conformance/v1/`, `conformance/v2/`).
 - Versioned bundle artifacts with content digests (`artifacts/`).
 
 ## Explicitly Out Of Scope
@@ -31,16 +31,18 @@ Fabrigent owns:
 
 ## Current Contract Line
 
-The `v1` line defines the opaque relay envelope `fabrigent.relay.v1` and the
-governance policy `fabrigent.relay-governance.v1` under a
-`relay-is-untrusted` trust model. The human-readable projection of the wire
-contract is [docs/protocols/relay-envelope-v1.md](docs/protocols/relay-envelope-v1.md).
+The current `v2` line defines the opaque relay envelope
+`fabrigent.relay.v2` and governance policy
+`fabrigent.relay-governance.v2` under a `relay-is-untrusted` trust model.
+The published `v1` line remains immutable. Human-readable projections are
+[v2](docs/protocols/relay-envelope-v2.md) and
+[v1](docs/protocols/relay-envelope-v1.md).
 
 ## Consumption Model
 
-1. Pin an exact artifact, for example `artifacts/fabrigent-v1.json`.
-2. Verify the artifact digest (`artifactVersion`, `digestAlgorithm`,
-   `digest`) against the canonical sources it embeds.
+1. Pin an exact artifact, for example `artifacts/fabrigent-v2.json`.
+2. Verify the artifact digest against `artifactVersion`, `digestAlgorithm`,
+   and the canonical sources it embeds.
 3. Treat the embedded contract, policy, and conformance corpus as the only
    authority for that version.
 

@@ -4,8 +4,9 @@ Fabrigent is LicoLand's neutral authority for versioned federation transport
 contracts and governance policy. Implementations consume immutable,
 content-addressed artifacts instead of importing this repository's source.
 
-The current `v1` contract defines opaque relay envelopes, mailbox leases,
-quotas, acknowledgements, and cleanup. It deliberately excludes client keys,
+The current `v2` contract defines opaque relay envelopes, bounded retention,
+mailbox and relay quotas, acknowledgements, and cleanup. The published `v1`
+line remains immutable for pinned consumers. Both deliberately exclude client keys,
 encryption, decryption, plaintext, local approval, host permissions, and
 client-runtime coordination. LicoUp owns its end-to-end encryption and key
 custody.
