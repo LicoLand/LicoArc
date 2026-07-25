@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/contracts/v2/relay-envelope.schema.json",
+  "title": "Fabrigent opaque relay envelope",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contractVersion",
+    "envelopeId",
+    "mailboxId",
+    "ciphertext",
+    "expiresAt"
+  ],
+  "properties": {
+    "contractVersion": { "const": "fabrigent.relay.v2" },
+    "envelopeId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_-]{16,128}$"
+    },
+    "mailboxId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_-]{16,128}$"
+    },
+    "ciphertext": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1048576
+    },
+    "expiresAt": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

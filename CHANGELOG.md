@@ -7,6 +7,14 @@ immutable; this file records repository-level change history.
 
 ## [Unreleased]
 
+### Security
+
+- Add the immutable v2 artifact line, binding interpretation metadata into
+  its content digest and requiring bounded envelope retention, relay mailbox
+  count, and relay-wide envelope count in its governance policy.
+- Validate every relay-envelope schema field in the conformance harness,
+  including opaque identifiers, ciphertext size, and RFC 3339 date-times.
+
 ### Added
 
 - Required public documentation set: product definition, contributing guide,
