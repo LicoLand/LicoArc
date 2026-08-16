@@ -4,7 +4,7 @@
   "title": "LicoArc foundation lifecycle registry",
   "type": "object",
   "additionalProperties": false,
-  "required": ["$schema", "$id", "registryVersion", "lifecycle", "scope", "unknownStatePolicy", "states", "transitions", "publishedBytes", "unknownTransitionPolicy", "mixedLifecyclePolicy", "downgradePolicy"],
+  "required": ["$schema", "$id", "registryVersion", "lifecycle", "scope", "unknownStatePolicy", "states", "transitions", "publishedBytes", "definitionStatusRegistry", "unknownTransitionPolicy", "mixedLifecyclePolicy", "downgradePolicy"],
   "properties": {
     "$schema": { "type": "string", "const": "https://json-schema.org/draft/2020-12/schema" },
     "$id": { "type": "string", "const": "https://licoarc.com/spec/v1/schemas/foundation-lifecycle.schema.json" },
@@ -14,15 +14,15 @@
     "unknownStatePolicy": { "type": "string", "const": "reject" },
     "states": {
       "type": "array",
-      "minItems": 4,
-      "maxItems": 4,
+      "minItems": 5,
+      "maxItems": 5,
       "uniqueItems": true,
       "items": {
         "type": "object",
         "additionalProperties": false,
         "required": ["id", "mutable", "published", "terminal"],
         "properties": {
-          "id": { "type": "string", "enum": ["Draft", "Candidate", "Published", "Retired"] },
+          "id": { "type": "string", "enum": ["Draft", "Candidate", "Published", "Deprecated", "Retired"] },
           "mutable": { "type": "boolean" },
           "published": { "type": "boolean" },
           "terminal": { "type": "boolean" }
@@ -31,21 +31,22 @@
     },
     "transitions": {
       "type": "array",
-      "minItems": 5,
-      "maxItems": 5,
+      "minItems": 6,
+      "maxItems": 6,
       "uniqueItems": true,
       "items": {
         "type": "object",
         "additionalProperties": false,
         "required": ["from", "to", "requires"],
         "properties": {
-          "from": { "type": "string", "enum": ["Draft", "Candidate", "Published", "Retired"] },
-          "to": { "type": "string", "enum": ["Draft", "Candidate", "Published", "Retired"] },
+          "from": { "type": "string", "enum": ["Draft", "Candidate", "Published", "Deprecated", "Retired"] },
+          "to": { "type": "string", "enum": ["Draft", "Candidate", "Published", "Deprecated", "Retired"] },
           "requires": { "type": "string", "maxLength": 128 }
         }
       }
     },
     "publishedBytes": { "type": "string", "const": "immutable-and-verifiable" },
+    "definitionStatusRegistry": { "type": "string", "const": "spec/protocol-lines.json" },
     "unknownTransitionPolicy": { "type": "string", "const": "reject" },
     "mixedLifecyclePolicy": { "type": "string", "const": "reject" },
     "downgradePolicy": { "type": "string", "const": "reject" }

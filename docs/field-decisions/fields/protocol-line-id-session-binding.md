@@ -1,7 +1,4 @@
-# Field Review: Protocol Line Identifier at Session Establishment
-
-This record preserves explanation and decision history. It is not a second
-specification; normative field semantics come only from the Field Registry.
+# Field Review: Protocol Line ID Session Binding
 
 ## Review state
 
@@ -9,68 +6,23 @@ specification; normative field semantics come only from the Field Registry.
 | --- | --- |
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-protocol-line-id-session-binding` |
-| Decision status | `DECIDED` |
-| Definition status | `PARTIAL` |
-| Existing authority | [Field Registry](../../../spec/FIELD-REGISTRY.md) |
-| Predecessor or successor | Succeeds `FLD-protocol-line-id`; no successor. |
-| Current conclusion | `protocolLineId` is mandatory in authenticated session establishment and inherited by established records rather than repeated in each record. |
+| Decision status | `RETIRED` |
+| Definition status | `NOT-SPECIFIED` |
+| Existing authority | [Canonical Field Registry](../../../spec/FIELD-REGISTRY.md) |
+| Predecessor or successor | Candidate placement replaced by open `FLD-protocol-support-statement-v1` and `FLD-handshake-transcript-v1`. |
+| Current conclusion | Exact line content identity must be authenticated, but the former mandatory handshake `DIGEST256` and inherited placement are withdrawn. |
 
-## Question
+## Preserved requirement
 
-Where must the exact Protocol Line be named without repeating an immutable
-32-octet value throughout an established session?
+Endpoints must agree on one immutable complete line before session state can
+advance. Ordinary records cannot carry an unauthenticated selector, and a
+content mismatch cannot fall back to a lower line.
 
-## Role in communication
+## Retirement rationale
 
-Each Endpoint states and authenticates the selected line during session
-establishment. Both peers lock that value with the complete transcript and use
-the retained session binding for every later record. A record that cannot
-resolve one exact binding fails closed.
-
-## Contribution to LicoArc's final vision
-
-Carries one complete immutable interoperability choice during authenticated session establishment, then lets established records inherit it without repeating 32 octets.
-
-## Field model and trade-offs
-
-The value remains mandatory `DIGEST256` in a handshake record. It is forbidden
-in established data and control records because the authenticated session
-already supplies the value. Reconnect without retained safe session continuity
-performs a new handshake instead of copying an untrusted per-record selector.
-
-## Necessity proof
-
-The handshake must select one exact line, but no interoperable action requires
-the same value after the session lock. Repetition creates wire cost and a
-second opportunity for mismatch without adding authority.
-
-## Visibility and trust
-
-The value is Endpoint-authenticated and never selected by a Station, Route,
-Provider, or application Payload. Session lookup cannot override transcript
-validation.
-
-## Alternatives
-
-- Repeat the identifier in every record: rejected as redundant and ambiguous.
-- Infer it from transport: rejected because a carrier is not Endpoint
-  protocol authority.
-- Bind it once in the handshake and inherit it: selected.
-
-## Comparative evidence, never authority
-
-External material below is bounded comparison or risk evidence only.
-
-External material is unnecessary because the LicoArc-owned session binding
-and overhead question is self-contained.
-
-## Decision history
-
-The original record admitted the identifier but left established-record
-presence inconsistent with its handshake role. LicoArc review on 2026-08-03
-selected one authenticated handshake occurrence and an inherited session
-binding, updated the Field Registry, and retired the broader predecessor.
+The old placement preceded the exact Hybrid AKE and transcript construction.
+No digest width, field, label, record, or inheritance rule remains active.
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. Only the scope recorded by this decision and its linked normative authorities is defined; any remaining normative ambiguity requires a successor decision before entering the protocol definition.
+The definition is `NOT-SPECIFIED`; this record is history only.

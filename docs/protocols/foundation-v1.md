@@ -105,13 +105,17 @@ bound by sending a self-reported length or budget.
 | `MAX_NESTING_DEPTH` | 16 | Recursive parser depth |
 | `MAX_INTEGER` | 9,007,199,254,740,991 | Safe integer ceiling |
 
-The lifecycle registry closes `Draft → Candidate → Published → Retired`, with
-an explicit Candidate regeneration transition. Published bytes are immutable
-and remain verifiable after retirement. Unknown states and transitions,
-mixed lifecycle composition, retired inputs, and downgrade-selected inputs
-fail closed. Foundation identifiers are source-contract or encoding-contract
-identifiers only; they are not capability, Provider, product, account, or
-runtime identifiers.
+The lifecycle registry closes `Draft → Candidate → Published →
+Deprecated → Retired`, with an explicit Candidate regeneration transition
+and direct withdrawal of an unpublished Candidate. Published bytes remain
+immutable through deprecation and retirement. Exact new-session and
+existing-session behavior comes only from the authenticated Protocol Line or
+Profile registry entry; an implementation, Station, Provider, or
+unauthenticated input cannot choose continuation, termination, migration, or
+fallback. Unknown states and transitions, mixed lifecycle composition,
+retired inputs, and downgrade-selected inputs fail closed. Foundation
+identifiers are source-contract or encoding-contract identifiers only; they
+are not capability, Provider, product, account, or runtime identifiers.
 
 ## Generation and content identity
 

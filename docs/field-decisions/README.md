@@ -191,6 +191,16 @@ No Group field proposal remains open in this workspace. A future semantic
 change requires a new Message Field Decision ID and a complete registry
 migration; it cannot reopen or reinterpret one of the seven closed records.
 
+Core v1 has six independent open field questions. They record required
+semantics only; none allocates a wire field, label, object, encoding, or
+fallback before its owning decision closes and the Canonical Field Registry is
+updated in the same change.
+
+| Open Core v1 record | Open Core v1 record | Open Core v1 record |
+| --- | --- | --- |
+| [protocol-support-statement-v1.md](fields/protocol-support-statement-v1.md) | [minimum-protocol-generation-v1.md](fields/minimum-protocol-generation-v1.md) | [prekey-bundle-v1.md](fields/prekey-bundle-v1.md) |
+| [handshake-transcript-v1.md](fields/handshake-transcript-v1.md) | [session-accept.md](fields/session-accept.md) | [ratchet-header.md](fields/ratchet-header.md) |
+
 ## Historical predecessor records
 
 - [padding-length.md](fields/padding-length.md) preserves the rejected common

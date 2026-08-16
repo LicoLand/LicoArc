@@ -1,111 +1,18 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://licoarc.com/spec/v1/protection/registry.json",
-  "registryVersion": "licoarc.pairwise-protection-registry.v1",
-  "protocolLineId": "e04b2e1098100e61ee1d79b04f2b3281aa7450aecc2189afa3ffebe2ec41d1ef",
-  "protocolLineName": "licoarc.v1",
-  "capabilityId": "licoarc.pairwise-protection.v1",
+  "registryVersion": "licoarc.pairwise-protection.v1",
   "lifecycle": "Candidate",
-  "normativeLanguage": "en",
-  "scope": "endpoint-authenticated-pairwise-protection",
-  "sourcePaths": {
-    "bounds": "spec/v1/protection/bounds.json",
-    "failure": "spec/v1/protection/failure.json",
-    "labels": "spec/v1/protection/labels.json",
-    "profiles": "spec/v1/protection/profiles.json",
-    "resourceContract": "spec/v1/protection/resource-contract.json",
-    "state": "spec/v1/protection/state.json",
-    "capabilitySchema": "spec/v1/protection/capability.schema.json",
-    "handshakeSchema": "spec/v1/protection/handshake.schema.json",
-    "recordSchema": "spec/v1/protection/record.schema.json",
-    "epochSchema": "spec/v1/protection/epoch.schema.json",
-    "profileSchema": "spec/v1/protection/profile.schema.json",
-    "runtime": "spec/v1/protection/runtime.cddl",
-    "sourceManifest": "spec/v1/protection/source-manifest.json",
-    "conformanceManifest": "conformance/v1/protection/manifest.json"
-  },
-  "representation": {
-    "governance": "restricted-jcs-json",
-    "runtime": "deterministic-cbor",
-    "mapKeyEncoding": "compact-unsigned-integer",
-    "lengthEncoding": "definite",
-    "rawBytes": "bstr",
-    "textOnRuntimeWire": "forbidden",
-    "tags": "forbidden",
-    "floats": "forbidden",
-    "indefiniteLengths": "forbidden",
-    "duplicateLabels": "reject-record",
-    "unknownLabels": "reject-record",
-    "trailingBytes": "reject-record",
-    "nonCanonicalEncodings": "reject-record"
-  },
-  "profiles": [
-    {
-      "profileId": "cbc5bc838141a34aa0dd1b300022de6212f47540f95f9d7958cb1f2dcf74e42e",
-      "profileName": "high-assurance",
-      "strengthRank": 2,
-      "lifecycle": "Candidate",
-      "mandatory": false,
-      "minimumSafe": false
-    },
-    {
-      "profileId": "d9e09414257925eed013b7add0672277fb9f91dd34c2c4e1ee985d0b5b17a7d6",
-      "profileName": "baseline",
-      "strengthRank": 1,
-      "lifecycle": "Candidate",
-      "mandatory": true,
-      "minimumSafe": true
-    }
-  ],
-  "negotiation": {
-    "declaration": "signed-bounded-expiring-capability",
-    "supportedProfiles": "complete-profile-identifiers-only",
-    "selection": "highest-strength-common-profile-meeting-both-minimums",
-    "tieBreak": "lower-profileId-byte-order",
-    "transcript": "both-declarations-selected-profile-roles-identities-purpose-and-line",
-    "stationAuthority": "none",
-    "providerAuthority": "none",
-    "componentMenu": "forbidden",
-    "silentFallback": "forbidden",
-    "unknownProfile": "reject",
-    "retiredProfile": "reject",
-    "noCommonProfile": "terminal-failure"
-  },
-  "sessionBinding": {
-    "authenticatedOnce": [
-      "protocolLineId",
-      "protectionProfileId",
-      "initiatorCapabilityDigest",
-      "responderCapabilityDigest",
-      "initiatorEndpointIdentityRef",
-      "responderEndpointIdentityRef",
-      "handshakePurpose",
-      "roles"
-    ],
-    "establishedRecordInheritance": "all-listed-values-derived-from-session",
-    "repeatedStableFields": "reject-record",
-    "mismatch": "terminal-session-context-mismatch"
-  },
-  "observerBoundary": {
-    "station": [
-      "opaque-protected-packet-length-and-transport-routing-only"
-    ],
-    "peerEndpoint": [
-      "authenticated-profile-and-inner-sender-metadata"
-    ],
-    "endpoint": [
-      "private-keys-entropy-protected-state-and-local-trust"
-    ],
-    "outerSenderIdentity": "never",
-    "trafficShaping": "no-discretionary-padding-delay-or-synthetic-traffic"
-  },
-  "outOfScope": [
-    "secret-custody",
-    "entropy-source-selection",
-    "provider-selection",
-    "endpoint-local-trust",
-    "independent-security-audit",
-    "transport-profile",
-    "publication"
-  ]
+  "definitionStatus": "PARTIAL",
+  "sessionEligible": false,
+  "activeProfiles": [],
+  "profileCatalog": "spec/protection-profiles.json",
+  "openAlgorithmDecisions": ["ALG-core-v1-hybrid-ake", "ALG-core-v1-double-ratchet"],
+  "openFieldDecisions": ["FLD-prekey-bundle-v1", "FLD-handshake-transcript-v1", "FLD-session-accept", "FLD-ratchet-header"],
+  "wireSchemas": [],
+  "runtimeGrammar": null,
+  "conformanceCorpus": null,
+  "unknownProfilePolicy": "terminal-reject",
+  "fallbackPolicy": "forbidden",
+  "stateAdvanceOnFailure": false
 }

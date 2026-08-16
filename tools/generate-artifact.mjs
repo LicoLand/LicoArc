@@ -1,543 +1,359 @@
 import { createHash } from "node:crypto";
-import {
-  lstat,
-  readFile,
-  readdir,
-  writeFile
-} from "node:fs/promises";
+import { lstat, readFile, readdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
+import {
+  assertClosedJsonSchema,
+  assertValidAgainstClosedSchema,
+  assertValidProtocolCatalogs,
+  assertValidProtocolLineManifest,
+  assertValidSecurityAccounting,
+  loadFoundationContext,
+  parseRestrictedJson
+} from "./protocol/index.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const sourceManifestPath = "spec/v1/manifest.json";
+const manifestPath = "spec/v1/manifest.json";
 const conformanceManifestPath = "conformance/v1/manifest.json";
 const artifactPath = "artifacts/v1/licoarc.bundle.json";
-const authorityRoots = ["spec/v1", "conformance/v1"];
-const expectedManifestVersion = "licoarc.protocol-line-manifest.v1";
-const expectedConformanceManifestVersion = "licoarc.conformance-manifest.v1";
-const expectedWireId = "licoarc.protocol-line.v1";
-const expectedLifecycle = "Candidate";
-const expectedArtifactVersion = "licoarc.bundle.v1";
-const digestPattern = /^[0-9a-f]{64}$/u;
-const capabilityIds = [
-  "licoarc.federation-governance.v1",
-  "licoarc.generic-messaging.v1",
-  "licoarc.group-collaboration.v1",
-  "licoarc.https-transport.v1",
-  "licoarc.identity.v1",
-  "licoarc.pairwise-protection.v1",
-  "licoarc.protocol-foundation.v1",
-  "licoarc.reliable-exchange.v1",
-  "licoarc.transferable-evidence.v1"
-];
+const catalogPaths = {
+  protocolLines: "spec/protocol-lines.json",
+  protectionProfiles: "spec/protection-profiles.json"
+};
+const catalogSchemaPaths = {
+  protocolLines: "spec/schemas/protocol-lines.schema.json",
+  protectionProfiles: "spec/schemas/protection-profiles.schema.json"
+};
+const securityPaths = {
+  claims: "spec/v1/security/claims.json",
+  adversaries: "spec/v1/security/adversary-model.json",
+  bindings: "spec/v1/security/formal-bindings.json",
+  registry: "spec/v1/security/registry.json"
+};
+const securitySchemaPaths = {
+  claims: "spec/schemas/security-claims.schema.json",
+  adversaries: "spec/schemas/security-adversary-model.schema.json",
+  bindings: "spec/schemas/security-formal-bindings.schema.json",
+  registry: "spec/schemas/security-registry.schema.json"
+};
 
-const arguments_ = process.argv.slice(2);
-if (arguments_.length > 1 ||
-    (arguments_.length === 1 && arguments_[0] !== "--check")) {
+const args = process.argv.slice(2);
+if (args.length > 1 || (args.length === 1 && args[0] !== "--check")) {
   throw new TypeError("expected no arguments or --check");
 }
-const checkOnly = arguments_[0] === "--check";
+const checkOnly = args[0] === "--check";
 
-const manifest = await readJson(sourceManifestPath);
-const conformanceManifest = await readJson(conformanceManifestPath);
-validateSourceManifest(manifest);
-validateConformanceManifest(conformanceManifest);
+const context = await loadFoundationContext(root);
+const limits = context.limits.governance;
+const manifest = await readJson(manifestPath);
+assertValidProtocolLineManifest(manifest, context);
 
-const actualAuthorityFiles = (await Promise.all(
-  authorityRoots.map((authorityRoot) => collectRegularFiles(authorityRoot))
-)).flat().sort();
-for (const sourcePath of actualAuthorityFiles) {
-  if (!/\.(?:json|cddl)$/u.test(sourcePath)) {
-    throw new TypeError("authority files must be JSON or CDDL");
-  }
+const conformanceSchema = await readJson("spec/schemas/conformance-manifest.schema.json");
+assertClosedJsonSchema(conformanceSchema);
+const conformance = await readJson(conformanceManifestPath);
+assertValidAgainstClosedSchema(conformance, conformanceSchema);
+
+const catalogs = await readObjectPaths(catalogPaths);
+const catalogSchemas = await readObjectPaths(catalogSchemaPaths);
+assertValidProtocolCatalogs(catalogs.protocolLines, catalogs.protectionProfiles, catalogSchemas);
+
+const security = await readObjectPaths(securityPaths);
+const securitySchemas = await readObjectPaths(securitySchemaPaths);
+assertValidSecurityAccounting({ ...security, schemas: securitySchemas });
+
+const protectionRegistry = await readJson("spec/v1/protection/registry.json");
+assertComposition(manifest, conformance, catalogs, protectionRegistry);
+
+const componentClosures = [];
+for (const capability of manifest.capabilities) {
+  componentClosures.push({ entry: capability, ...await resolveComponent(capability, capability.capabilityId) });
+}
+for (const definition of manifest.openDefinitions) {
+  componentClosures.push({ entry: definition, ...await resolveComponent(definition, definition.definitionId) });
 }
 
-const declaredSourceFiles = [
-  sourceManifestPath,
-  ...manifest.governanceSources,
-  ...manifest.runtimeSources
-].sort();
-assertEqualArrays(actualAuthorityFiles, declaredSourceFiles,
-  "Protocol Line source closure");
-
-const aggregateManifestFiles = new Set([
-  sourceManifestPath,
-  conformanceManifestPath
+const expected = new Set([
+  manifestPath,
+  conformanceManifestPath,
+  ...manifest.sourceClosure.additionalSources
 ]);
-const capabilitySourceFiles = actualAuthorityFiles.filter((sourcePath) =>
-  !aggregateManifestFiles.has(sourcePath));
-assertEqualArrays(
-  capabilitySourceFiles,
-  conformanceManifest.sourcePaths,
-  "conformance source closure"
-);
+for (const { paths } of componentClosures) for (const sourcePath of paths) expected.add(sourcePath);
+const expectedPaths = [...expected].sort();
+assertSortedUnique(expectedPaths, "aggregate source paths");
 
-const sourceBytes = new Map();
-const sourceValues = new Map();
-for (const sourcePath of actualAuthorityFiles) {
-  const bytes = await readFile(fromRelativePath(sourcePath));
-  sourceBytes.set(sourcePath, bytes);
-  if (sourcePath.endsWith(".json")) {
-    sourceValues.set(sourcePath, sortJsonValue(JSON.parse(bytes.toString("utf8"))));
-  } else {
-    sourceValues.set(sourcePath, decodeUtf8Cddl(bytes, sourcePath));
+const actualPaths = (await Promise.all(manifest.sourceClosure.roots.map(collectRegularFiles)))
+  .flat()
+  .concat(manifest.sourceClosure.additionalSources.filter((sourcePath) =>
+    !manifest.sourceClosure.roots.some((sourceRoot) => isWithin(sourcePath, sourceRoot))))
+  .sort();
+assertSortedUnique(actualPaths, "discovered aggregate source paths");
+assertEqualArrays(actualPaths, expectedPaths, "aggregate manifest does not close over its declared sources");
+
+const sources = {};
+for (const sourcePath of expectedPaths) sources[sourcePath] = await readNormativeSource(sourcePath);
+
+const digestMismatches = [];
+for (const { entry, label, paths } of componentClosures) {
+  const actualDigest = componentDigest(paths, sources);
+  if (entry.sourceDigest !== actualDigest) digestMismatches.push(`${label}=${actualDigest}`);
+}
+if (digestMismatches.length > 0) {
+  throw new Error(`component source digest mismatch: ${digestMismatches.join(", ")}`);
+}
+
+for (const corpus of conformance.capabilityCorpora) {
+  const closure = componentClosures.find(({ entry }) => entry.capabilityId === corpus.capabilityId);
+  if (!closure?.paths.includes(corpus.manifestPath)) {
+    throw new Error(`capability corpus is outside its source closure: ${corpus.capabilityId}`);
+  }
+}
+for (const corpus of conformance.definitionCorpora) {
+  const closure = componentClosures.find(({ entry }) => entry.definitionId === corpus.definitionId);
+  if (!closure?.paths.includes(corpus.manifestPath)) {
+    throw new Error(`definition corpus is outside its source closure: ${corpus.definitionId}`);
   }
 }
 
-const digestByPath = Object.fromEntries(
-  capabilitySourceFiles.map((sourcePath) => [
-    sourcePath,
-    sha256(sourceBytes.get(sourcePath))
-  ])
-);
-assertDigestMap(conformanceManifest.sourceDigests, digestByPath,
-  "conformance source digests");
-
-const capabilityById = new Map(
-  conformanceManifest.capabilities.map((capability) => [
-    capability.capabilityId,
-    capability
-  ])
-);
-const manifestCapabilityById = new Map(
-  manifest.capabilities.map((capability) => [
-    capability.capabilityId,
-    capability
-  ])
-);
-for (const capabilityId of capabilityIds) {
-  const capability = capabilityById.get(capabilityId);
-  const manifestCapability = manifestCapabilityById.get(capabilityId);
-  if (!capability || !manifestCapability) {
-    throw new Error("Protocol Line capability set is incomplete");
-  }
-  validateCapability(capability, manifestCapability, digestByPath, sourceValues);
-}
-if (capabilityById.size !== capabilityIds.length ||
-    manifestCapabilityById.size !== capabilityIds.length) {
-  throw new Error("Protocol Line capability set contains an undeclared entry");
-}
-
-const expectedMinimumSafe = capabilityIds.map((capabilityId) => ({
-  capabilityId,
-  minimumVersion: 1
-}));
-if (!deepEqual(manifest.minimumSafe.capabilityVersions, expectedMinimumSafe)) {
-  throw new Error("minimum-safe capability policy is not the closed Candidate set");
-}
-
-const sourcePaths = [sourceManifestPath, conformanceManifestPath,
-  ...capabilitySourceFiles].sort();
-const sources = Object.fromEntries(
-  sourcePaths.map((sourcePath) => [sourcePath, sourceValues.get(sourcePath) ??
-    sortJsonValue(JSON.parse((sourceBytes.get(sourcePath)).toString("utf8")))])
-);
 const body = {
-  artifactVersion: expectedArtifactVersion,
+  artifactVersion: "licoarc.bundle.v2",
   wireId: manifest.wireId,
+  generation: manifest.generation,
   lifecycle: manifest.lifecycle,
+  definitionStatus: manifest.definitionStatus,
+  sessionEligible: manifest.sessionEligible,
+  publicationEligible: manifest.publicationEligible,
   digestAlgorithm: "sha256",
   sources
 };
-const canonical = `${canonicalizeJson(body)}\n`;
+const canonical = `${canonicalJson(body)}\n`;
 const artifact = `${JSON.stringify({
   ...body,
   digest: sha256(Buffer.from(canonical, "utf8"))
 }, null, 2)}\n`;
-const output = fromRelativePath(artifactPath);
+const output = fromRelative(artifactPath);
 
 if (checkOnly) {
   const current = await readFile(output, "utf8").catch((error) => {
     if (error?.code === "ENOENT") return "";
     throw error;
   });
-  if (current !== artifact) {
-    throw new Error(`${expectedArtifactVersion} artifact is missing or stale`);
-  }
+  if (current !== artifact) throw new Error("licoarc.bundle.v2 artifact is missing or stale");
 } else {
   await writeFile(output, artifact);
 }
 
-function validateSourceManifest(value) {
-  assertClosedObject(value, [
-    "$schema",
-    "manifestVersion",
-    "wireId",
-    "lifecycle",
-    "minimumSafe",
-    "capabilities",
-    "governanceSources",
-    "runtimeSources",
-    "boundsRegistry",
-    "handshakeBinding",
-    "sessionLock",
-    "translationPolicy"
-  ], "source manifest");
-  assertEqual(value.manifestVersion, expectedManifestVersion, "manifest version");
-  assertEqual(value.wireId, expectedWireId, "Protocol Line identity");
-  assertEqual(value.lifecycle, expectedLifecycle, "Protocol Line lifecycle");
-  assertEqual(value.minimumSafe?.protocolLineVersion, 1,
-    "minimum-safe Protocol Line version");
-  if (value.$schema !== "https://json-schema.org/draft/2020-12/schema") {
-    throw new TypeError("source manifest schema marker is not canonical");
+function assertComposition(manifestValue, conformanceValue, catalogValues, protectionValue) {
+  const line = catalogValues.protocolLines.lines.find(({ wireId, generation }) =>
+    wireId === manifestValue.wireId && generation === manifestValue.generation);
+  if (!line || line.lifecycle !== manifestValue.lifecycle ||
+      line.definitionStatus !== manifestValue.definitionStatus ||
+      line.sessionEligible !== manifestValue.sessionEligible ||
+      line.publicationEligible !== manifestValue.publicationEligible) {
+    throw new Error("Protocol Line manifest status does not match its catalog record");
   }
-  if (value.boundsRegistry !== "spec/v1/foundation/bounds.json" ||
-      value.handshakeBinding !==
-        "manifest-capabilities-identities-and-declarations" ||
-      value.sessionLock !== true || value.translationPolicy !== "forbidden") {
-    throw new Error("Protocol Line foundation policy is not closed");
-  }
-  assertSortedUnique(value.governanceSources, "governance source paths");
-  assertSortedUnique(value.runtimeSources, "runtime source paths");
-  if (value.governanceSources.some((sourcePath) => !sourcePath.endsWith(".json"))) {
-    throw new TypeError("governance sources must be JSON");
-  }
-  if (value.runtimeSources.some((sourcePath) => !sourcePath.endsWith(".cddl"))) {
-    throw new TypeError("runtime sources must be CDDL");
-  }
-  assertSortedUnique(value.capabilities.map(({ capabilityId }) => capabilityId),
-    "manifest capability identities");
-  for (const capability of value.capabilities) {
-    assertClosedObject(capability, ["capabilityId", "version", "sourceDigest"],
-      "manifest capability");
-    if (capability.version !== 1 || !digestPattern.test(capability.sourceDigest)) {
-      throw new TypeError("manifest capability version or digest is invalid");
+
+  const capabilityIds = manifestValue.capabilities.map(({ capabilityId }) => capabilityId);
+  assertSortedUnique(capabilityIds, "manifest capability identities");
+  assertEqualArrays(capabilityIds, line.definedCapabilities,
+    "manifest capability membership does not match the Protocol Line catalog");
+  const missing = line.mandatoryCapabilities.filter((capabilityId) =>
+    !line.definedCapabilities.includes(capabilityId));
+  assertEqualArrays(manifestValue.missingMandatoryCapabilities, missing,
+    "missing mandatory capability set does not match the Protocol Line catalog");
+  assertEqualArrays(manifestValue.blockers, line.blockers,
+    "manifest blockers do not match the Protocol Line catalog");
+
+  for (const capability of manifestValue.capabilities) {
+    const expectedVersion = Number(capability.capabilityId.match(/\.v([1-9][0-9]*)$/u)?.[1]);
+    if (capability.version !== expectedVersion) throw new Error("capability version does not match its identifier");
+    const direct = capability.sourceManifestPath === null;
+    if (direct !== (capability.sourceRoots.length > 0 && capability.sourcePaths.length > 0) ||
+        (!direct && (capability.sourceRoots.length > 0 || capability.sourcePaths.length > 0))) {
+      throw new Error("capability source identity must use exactly one closure form");
     }
+  }
+
+  const definitionIds = manifestValue.openDefinitions.map(({ definitionId }) => definitionId);
+  assertSortedUnique(definitionIds, "open definition identities");
+  assertEqualArrays(definitionIds, ["pairwise-protection", "security-accounting"],
+    "open definition set is not closed");
+  assertSortedUnique(manifestValue.blockers, "manifest blockers");
+  assertSortedUnique(manifestValue.sourceClosure.additionalSources, "additional source paths");
+
+  const conformanceCapabilities = conformanceValue.capabilityCorpora.map(({ capabilityId }) => capabilityId);
+  assertSortedUnique(conformanceCapabilities, "conformance capability identities");
+  assertEqualArrays(conformanceCapabilities, capabilityIds,
+    "conformance capability membership does not match the Protocol Line manifest");
+  assertEqualArrays(conformanceValue.definitionCorpora.map(({ definitionId }) => definitionId),
+    ["security-accounting"], "definition corpus set is not closed");
+  if (conformanceValue.absentCorpora.length !== 1 ||
+      conformanceValue.absentCorpora[0].definitionId !== "pairwise-protection") {
+    throw new Error("open Pairwise Protection must have exactly one absence record");
+  }
+
+  if (protectionValue.definitionStatus !== "PARTIAL" ||
+      protectionValue.sessionEligible !== false ||
+      protectionValue.activeProfiles.length !== 0 ||
+      protectionValue.wireSchemas.length !== 0 ||
+      protectionValue.runtimeGrammar !== null ||
+      protectionValue.conformanceCorpus !== null ||
+      catalogValues.protectionProfiles.activeProfiles.length !== 0 ||
+      line.protectionProfileIds.length !== 0) {
+    throw new Error("open Pairwise Protection was incorrectly made active");
   }
 }
 
-function validateConformanceManifest(value) {
-  assertClosedObject(value, [
-    "$schema",
-    "manifestVersion",
-    "wireId",
-    "lifecycle",
-    "capabilities",
-    "sourcePaths",
-    "sourceDigests",
-    "positiveCorpusPaths",
-    "negativeCorpusPaths"
-  ], "conformance manifest");
-  if (value.$schema !== "https://json-schema.org/draft/2020-12/schema" ||
-      value.manifestVersion !== expectedConformanceManifestVersion ||
-      value.wireId !== expectedWireId || value.lifecycle !== expectedLifecycle) {
-    throw new TypeError("conformance manifest identity is not canonical");
+async function resolveComponent(entry, label) {
+  if (entry.sourceManifestPath === null) {
+    assertSortedUnique(entry.sourceRoots, `${label} source roots`);
+    assertSortedUnique(entry.sourcePaths, `${label} source paths`);
+    const actual = (await Promise.all(entry.sourceRoots.map(collectRegularFiles))).flat().sort();
+    assertSortedUnique(actual, `${label} discovered sources`);
+    assertEqualArrays(actual, entry.sourcePaths, `${label} direct source closure is stale`);
+    return { label, paths: [...entry.sourcePaths] };
   }
-  assertSortedUnique(value.sourcePaths, "conformance source paths");
-  assertSortedUnique(value.positiveCorpusPaths, "positive corpus paths");
-  assertSortedUnique(value.negativeCorpusPaths, "negative corpus paths");
-  assertSortedUnique(value.capabilities.map(({ capabilityId }) => capabilityId),
-    "conformance capability identities");
-  if (value.capabilities.length !== capabilityIds.length ||
-      !deepEqual(value.capabilities.map(({ capabilityId }) => capabilityId), capabilityIds)) {
-    throw new Error("conformance capability identities are not the closed set");
+
+  const sourceManifest = await readJson(entry.sourceManifestPath);
+  const sources = sourceManifest.sources;
+  if (!Array.isArray(sources) || sources.length === 0) {
+    throw new Error(`${label} source manifest has no declared sources`);
   }
-  if (!isPlainObject(value.sourceDigests)) {
-    throw new TypeError("conformance source digests must be an object");
+  assertSortedUnique(sources, `${label} source paths`);
+  const additionalSources = sourceManifest.additionalSources ?? [];
+  assertSortedUnique(additionalSources, `${label} additional source paths`);
+  if (sourceManifest.undeclaredFiles !== undefined && sourceManifest.undeclaredFiles !== "reject") {
+    throw new Error(`${label} source manifest must reject undeclared files`);
   }
-  for (const digest of Object.values(value.sourceDigests)) {
-    if (!digestPattern.test(digest)) throw new TypeError("invalid source digest");
+  if (sourceManifest.symlinks !== undefined && sourceManifest.symlinks !== "reject") {
+    throw new Error(`${label} source manifest must reject symbolic links`);
   }
+  if (entry.definitionStatus === "PARTIAL" && sourceManifest.definitionStatus !== "PARTIAL") {
+    throw new Error(`${label} source manifest does not preserve partial status`);
+  }
+
+  if (sourceManifest.sourceRoots !== undefined) {
+    assertSortedUnique(sourceManifest.sourceRoots, `${label} source roots`);
+    if (sources.some((sourcePath) =>
+      !sourceManifest.sourceRoots.some((sourceRoot) => isWithin(sourcePath, sourceRoot)))) {
+      throw new Error(`${label} source path is outside its declared roots`);
+    }
+    const actual = (await Promise.all(sourceManifest.sourceRoots.map(collectRegularFiles)))
+      .flat()
+      .filter((sourcePath) => sourcePath !== entry.sourceManifestPath)
+      .sort();
+    assertSortedUnique(actual, `${label} discovered sources`);
+    assertEqualArrays(actual, sources, `${label} source manifest does not close over its roots`);
+  }
+
+  const paths = [...new Set([entry.sourceManifestPath, ...sources, ...additionalSources])].sort();
+  assertSortedUnique(paths, `${label} component closure`);
+  return { label, paths };
 }
 
-function validateCapability(capability, manifestCapability, digestByPath, sourceValues) {
-  assertClosedObject(capability, [
-    "capabilityId",
-    "version",
-    "lifecycle",
-    "registryPath",
-    "sourceManifestPath",
-    "conformanceManifestPath",
-    "policyPaths",
-    "schemaPaths",
-    "requirementPaths",
-    "vectorPaths",
-    "positiveCorpusPath",
-    "negativeCorpusPath",
-    "sourcePaths",
-    "sourceDigests",
-    "sourceDigest"
-  ], "conformance capability");
-  if (capability.version !== 1 || capability.lifecycle !== expectedLifecycle ||
-      capability.conformanceManifestPath !==
-        `conformance/v1/${capabilityGroup(capability.capabilityId)}/manifest.json`) {
-    throw new Error("capability lifecycle or conformance binding is invalid");
-  }
-  assertSortedUnique(capability.sourcePaths, "capability source paths");
-  for (const sourcePath of capability.sourcePaths) {
-    if (!Object.hasOwn(digestByPath, sourcePath)) {
-      throw new Error("capability source is outside the closed source set");
-    }
-  }
-  assertDigestMap(capability.sourceDigests,
-    Object.fromEntries(capability.sourcePaths.map((sourcePath) => [
-      sourcePath,
-      digestByPath[sourcePath]
-    ])), "capability source digests");
-  const capabilityDigest = digestForSourceMap(capability.sourceDigests);
-  if (capability.sourceDigest !== capabilityDigest ||
-      manifestCapability.sourceDigest !== capabilityDigest) {
-    throw new Error("capability digest binding is stale");
-  }
-  if (capability.registryPath === null ||
-      !capability.sourcePaths.includes(capability.registryPath) ||
-      !capability.sourcePaths.includes(capability.positiveCorpusPath) ||
-      !capability.sourcePaths.includes(capability.negativeCorpusPath)) {
-    throw new Error("capability registry or corpus binding is incomplete");
-  }
-  for (const field of ["policyPaths", "schemaPaths", "requirementPaths", "vectorPaths"]) {
-    assertSortedUnique(capability[field], `${field} for ${capability.capabilityId}`);
-    for (const sourcePath of capability[field]) {
-      if (!capability.sourcePaths.includes(sourcePath)) {
-        throw new Error(`${field} contains an undeclared source`);
-      }
-    }
-  }
-  if (!capability.vectorPaths.includes(capability.positiveCorpusPath) ||
-      !capability.vectorPaths.includes(capability.negativeCorpusPath)) {
-    throw new Error("capability vectors do not cover both corpora");
-  }
-  const registry = sourceValues.get(capability.registryPath);
-  if (!isPlainObject(registry) || registry.lifecycle !== expectedLifecycle) {
-    throw new Error("capability registry lifecycle is not Candidate");
-  }
-  const registryIdentities = new Set([
-    capability.capabilityId,
-    ...(capability.capabilityId === "licoarc.transferable-evidence.v1"
-      ? ["licoarc.evidence.v1"] : []),
-    ...(capability.capabilityId === "licoarc.reliable-exchange.v1"
-      ? ["licoarc.reliable.v1"] : [])
-  ]);
-  if (capability.capabilityId !== "licoarc.protocol-foundation.v1" &&
-      !registryIdentities.has(registry.capabilityId) &&
-      !registryIdentities.has(registry.wireId)) {
-    throw new Error("registry identity does not match capability identity");
-  }
+async function readObjectPaths(paths) {
+  return Object.fromEntries(await Promise.all(Object.entries(paths).map(async ([name, sourcePath]) =>
+    [name, await readJson(sourcePath)])));
 }
 
-function capabilityGroup(capabilityId) {
-  const groups = {
-    "licoarc.federation-governance.v1": "governance",
-    "licoarc.generic-messaging.v1": "messaging",
-    "licoarc.group-collaboration.v1": "group",
-    "licoarc.https-transport.v1": "transport",
-    "licoarc.identity.v1": "identity",
-    "licoarc.pairwise-protection.v1": "protection",
-    "licoarc.protocol-foundation.v1": "foundation",
-    "licoarc.reliable-exchange.v1": "reliable",
-    "licoarc.transferable-evidence.v1": "evidence"
-  };
-  const group = groups[capabilityId];
-  if (!group) throw new Error("unknown capability identity");
-  return group;
+async function readJson(relativePath) {
+  assertSafeRelativePath(relativePath);
+  return parseRestrictedJson(await readFile(fromRelative(relativePath)), limits);
+}
+
+async function readNormativeSource(sourcePath) {
+  assertSafeRelativePath(sourcePath);
+  const bytes = await readFile(fromRelative(sourcePath));
+  if (sourcePath.endsWith(".json")) return sortJson(parseRestrictedJson(bytes, limits));
+  if (sourcePath.endsWith(".cddl")) return decodeCddl(bytes, sourcePath);
+  throw new TypeError(`unsupported normative source type: ${sourcePath}`);
 }
 
 async function collectRegularFiles(relativeDirectory) {
-  const absoluteDirectory = fromRelativePath(relativeDirectory);
-  const entries = await readdir(absoluteDirectory, { withFileTypes: true });
-  entries.sort((left, right) => left.name < right.name ? -1 : left.name > right.name ? 1 : 0);
+  assertSafeRelativePath(relativeDirectory);
+  const entries = await readdir(fromRelative(relativeDirectory), { withFileTypes: true });
+  entries.sort((left, right) => left.name.localeCompare(right.name, "en"));
   const files = [];
   for (const entry of entries) {
     const relativePath = path.posix.join(relativeDirectory, entry.name);
-    const absolutePath = fromRelativePath(relativePath);
-    const stat = await lstat(absolutePath);
-    if (stat.isSymbolicLink() || entry.isSymbolicLink()) {
-      throw new TypeError("authority files must not be symbolic links");
-    }
+    const stat = await lstat(fromRelative(relativePath));
+    if (stat.isSymbolicLink()) throw new TypeError("normative sources must not be symbolic links");
     if (entry.isDirectory()) files.push(...await collectRegularFiles(relativePath));
     else if (entry.isFile()) files.push(relativePath);
-    else throw new TypeError("authority files must be regular files");
+    else throw new TypeError("normative sources must be regular files");
   }
   return files;
 }
 
-async function readJson(relativePath) {
-  const bytes = await readFile(fromRelativePath(relativePath));
-  const source = bytes.toString("utf8");
-  assertNoDuplicateJsonObjectKeys(source);
-  return JSON.parse(source);
+function fromRelative(relativePath) {
+  assertSafeRelativePath(relativePath);
+  const resolved = path.resolve(root, relativePath);
+  if (!resolved.startsWith(`${root}${path.sep}`)) throw new Error("path escapes repository");
+  return resolved;
 }
 
-function fromRelativePath(relativePath) {
-  return path.join(root, ...relativePath.split("/"));
+function assertSafeRelativePath(relativePath) {
+  if (typeof relativePath !== "string" || relativePath.length === 0 ||
+      path.posix.isAbsolute(relativePath) || relativePath.includes("\\") ||
+      path.posix.normalize(relativePath) !== relativePath ||
+      relativePath.split("/").some((segment) => segment === "" || segment === "." || segment === "..")) {
+    throw new TypeError("normative source path must be a safe repository-relative path");
+  }
 }
 
-function decodeUtf8Cddl(bytes, sourcePath) {
-  const value = new TextDecoder("utf-8", { fatal: true }).decode(bytes);
-  if (!value.endsWith("\n") || value.includes("\r") || value.includes("\u0000")) {
-    throw new TypeError(`invalid CDDL source: ${sourcePath}`);
+function isWithin(sourcePath, sourceRoot) {
+  return sourcePath === sourceRoot || sourcePath.startsWith(`${sourceRoot}/`);
+}
+
+function decodeCddl(bytes, sourcePath) {
+  let text;
+  try {
+    text = new TextDecoder("utf-8", { fatal: true }).decode(bytes);
+  } catch {
+    throw new TypeError(`CDDL source is not valid UTF-8: ${sourcePath}`);
+  }
+  if (!text.endsWith("\n") || text.includes("\r") || text.includes("\u0000") ||
+      text.startsWith("\ufeff")) {
+    throw new TypeError(`CDDL source is not canonical UTF-8 text: ${sourcePath}`);
+  }
+  return text;
+}
+
+function componentDigest(paths, sources) {
+  const content = paths.map((sourcePath) => ({ path: sourcePath, source: sources[sourcePath] }));
+  return sha256(Buffer.from(canonicalJson(content), "utf8"));
+}
+
+function sortJson(value) {
+  if (Array.isArray(value)) return value.map(sortJson);
+  if (value && typeof value === "object") {
+    return Object.fromEntries(Object.keys(value).sort().map((key) => [key, sortJson(value[key])]));
   }
   return value;
 }
 
-function assertClosedObject(value, expectedKeys, name) {
-  if (!isPlainObject(value)) throw new TypeError(`${name} must be an object`);
-  const actual = Object.keys(value).sort();
-  const expected = [...expectedKeys].sort();
-  assertEqualArrays(actual, expected, `${name} fields`);
+function canonicalJson(value) {
+  if (value === null || typeof value === "boolean" || typeof value === "number") return JSON.stringify(value);
+  if (typeof value === "string") return JSON.stringify(value);
+  if (Array.isArray(value)) return `[${value.map(canonicalJson).join(",")}]`;
+  return `{${Object.keys(value).sort().map((key) =>
+    `${JSON.stringify(key)}:${canonicalJson(value[key])}`).join(",")}}`;
 }
 
-function assertEqual(actual, expected, name) {
-  if (actual !== expected) throw new TypeError(`${name} does not match the closed contract`);
+function sha256(bytes) {
+  return createHash("sha256").update(bytes).digest("hex");
 }
 
-function assertSortedUnique(values, name) {
+function assertSortedUnique(values, label) {
   if (!Array.isArray(values) || values.some((value) => typeof value !== "string")) {
-    throw new TypeError(`${name} must be an array of strings`);
+    throw new TypeError(`${label} must be strings`);
   }
   for (let index = 1; index < values.length; index += 1) {
-    if (values[index - 1] >= values[index]) {
-      throw new TypeError(`${name} must be sorted and unique`);
-    }
+    if (values[index - 1] >= values[index]) throw new Error(`${label} must be sorted and unique`);
   }
 }
 
-function assertEqualArrays(actual, expected, name) {
-  if (actual.length !== expected.length || actual.some((value, index) => value !== expected[index])) {
-    throw new Error(`${name} does not close over the declared files`);
-  }
-}
-
-function assertDigestMap(actual, expected, name) {
-  if (!isPlainObject(actual) || !deepEqual(Object.keys(actual).sort(), Object.keys(expected).sort())) {
-    throw new Error(`${name} keys are not closed`);
-  }
-  for (const [sourcePath, digest] of Object.entries(expected)) {
-    if (actual[sourcePath] !== digest) throw new Error(`${name} is stale`);
-  }
-}
-
-function digestForSourceMap(sourceDigests) {
-  return sha256(Buffer.from(`${canonicalizeJson(sourceDigests)}\n`, "utf8"));
-}
-
-function sha256(value) {
-  return createHash("sha256").update(value).digest("hex");
-}
-
-function isPlainObject(value) {
-  return value !== null && typeof value === "object" && !Array.isArray(value);
-}
-
-function deepEqual(left, right) {
-  return JSON.stringify(left) === JSON.stringify(right);
-}
-
-function sortJsonValue(value) {
-  if (Array.isArray(value)) return value.map(sortJsonValue);
-  if (isPlainObject(value)) {
-    return Object.fromEntries(Object.keys(value).sort().map((key) => [key, sortJsonValue(value[key])]));
-  }
-  return value;
-}
-
-function canonicalizeJson(value) {
-  if (value === null || typeof value === "boolean") return JSON.stringify(value);
-  if (typeof value === "number") {
-    if (!Number.isFinite(value)) throw new TypeError("canonical JSON disallows non-finite numbers");
-    return JSON.stringify(value);
-  }
-  if (typeof value === "string") {
-    assertUnicodeScalarString(value);
-    return JSON.stringify(value);
-  }
-  if (Array.isArray(value)) return `[${value.map(canonicalizeJson).join(",")}]`;
-  if (isPlainObject(value)) {
-    return `{${Object.keys(value).sort().map((key) => {
-      assertUnicodeScalarString(key);
-      return `${JSON.stringify(key)}:${canonicalizeJson(value[key])}`;
-    }).join(",")}}`;
-  }
-  throw new TypeError("canonical JSON supports only JSON values");
-}
-
-function assertUnicodeScalarString(value) {
-  for (let index = 0; index < value.length; index += 1) {
-    const codeUnit = value.charCodeAt(index);
-    if (codeUnit >= 0xd800 && codeUnit <= 0xdbff) {
-      const nextCodeUnit = value.charCodeAt(index + 1);
-      if (nextCodeUnit < 0xdc00 || nextCodeUnit > 0xdfff) {
-        throw new TypeError("canonical JSON strings must contain Unicode scalars");
-      }
-      index += 1;
-    } else if (codeUnit >= 0xdc00 && codeUnit <= 0xdfff) {
-      throw new TypeError("canonical JSON strings must contain Unicode scalars");
-    }
-  }
-}
-
-function assertNoDuplicateJsonObjectKeys(source) {
-  let cursor = 0;
-  parseValue();
-  skipWhitespace();
-  if (cursor !== source.length) throw new SyntaxError("JSON source contains trailing content");
-
-  function parseValue() {
-    skipWhitespace();
-    switch (source[cursor]) {
-      case "{": parseObject(); break;
-      case "[": parseArray(); break;
-      case '"': parseString(false); break;
-      case "t": cursor += 4; break;
-      case "f": cursor += 5; break;
-      case "n": cursor += 4; break;
-      default:
-        while (cursor < source.length && /[-+0-9.eE]/u.test(source[cursor])) cursor += 1;
-    }
-  }
-
-  function parseObject() {
-    cursor += 1;
-    skipWhitespace();
-    const keys = new Set();
-    if (source[cursor] === "}") { cursor += 1; return; }
-    while (cursor < source.length) {
-      const key = parseString(true);
-      if (keys.has(key)) throw new SyntaxError("JSON source contains duplicate object member");
-      keys.add(key);
-      skipWhitespace();
-      if (source[cursor] !== ":") throw new SyntaxError("JSON object member is missing a colon");
-      cursor += 1;
-      parseValue();
-      skipWhitespace();
-      if (source[cursor] === "}") { cursor += 1; return; }
-      if (source[cursor] !== ",") throw new SyntaxError("JSON object member is missing a comma");
-      cursor += 1;
-      skipWhitespace();
-    }
-    throw new SyntaxError("JSON object is unterminated");
-  }
-
-  function parseArray() {
-    cursor += 1;
-    skipWhitespace();
-    if (source[cursor] === "]") { cursor += 1; return; }
-    while (cursor < source.length) {
-      parseValue();
-      skipWhitespace();
-      if (source[cursor] === "]") { cursor += 1; return; }
-      if (source[cursor] !== ",") throw new SyntaxError("JSON array member is missing a comma");
-      cursor += 1;
-      skipWhitespace();
-    }
-    throw new SyntaxError("JSON array is unterminated");
-  }
-
-  function parseString(decode) {
-    const start = cursor;
-    cursor += 1;
-    while (cursor < source.length) {
-      if (source[cursor] === "\\") cursor += 2;
-      else if (source[cursor] === '"') {
-        cursor += 1;
-        return decode ? JSON.parse(source.slice(start, cursor)) : undefined;
-      } else cursor += 1;
-    }
-    throw new SyntaxError("JSON string is unterminated");
-  }
-
-  function skipWhitespace() {
-    while (cursor < source.length && /[ \n\r\t]/u.test(source[cursor])) cursor += 1;
-  }
+function assertEqualArrays(actual, expected, message) {
+  if (actual.length !== expected.length ||
+      actual.some((value, index) => value !== expected[index])) throw new Error(message);
 }

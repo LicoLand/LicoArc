@@ -170,7 +170,7 @@ service segment.
 | --- | --- | --- | --- | --- |
 | 1 | Transport Profile | Outer parser selection, bounded submission and retrieval, short-lived Delivery Handle routing, raw-body framing, and transport failure classification | Carrier metadata may be visible; carrier success is never endpoint evidence | Defined in the HTTPS Transport Profile sources |
 | 2 | Protected Packet Carrier | One bounded opaque octet sequence carried as the Transport Profile's raw binary body | Station sees packet bytes and length but receives no security authority | Defined by transport and protection framing |
-| 3 | Pairwise Protection Frame | Exact profile, one-time handshake/session bindings, compact established framing, authenticated context, ciphertext, freshness, replay, and resource rules | Authenticated context is endpoint-bound | Defined by the Protection Profile sources |
+| 3 | Pairwise Protection Frame | Future exact Profile, handshake/session bindings, established framing, authenticated context, confidentiality, freshness, replay, and resource rules | Authenticated context remains Endpoint-bound | Open/partial; zero active Profile or wire sources |
 | 4 | Reliable Exchange Record | Protected Intent, logical Message identity, bounded retry/deduplication, aggregate confirmation, compact recovery feedback, evidence-before-finality, and terminal failure | Hidden from the Station by endpoint protection | Defined by Reliable Exchange sources |
 | 5 | Evidence Checkpoint Record | Bounded canonical statement digests, portable Endpoint pair, signing Identity state, and independently verifiable signature set | Hidden from the Station in transit; transferable only when an Endpoint discloses it | Defined by Evidence Profile sources |
 | 6 | Group Collaboration Object | Protected Group Membership State, exact epoch context, bounded member Endpoints, roles, Group Message binding, and aggregate result semantics | Hidden from the Station by endpoint protection | Defined by Group Collaboration sources |
@@ -182,10 +182,11 @@ for active field names, types, presence, visibility, and dispositions. The
 layer table above summarizes that authority and cannot extend or reinterpret
 it.
 
-The current `licoarc.protocol-line.v1` Candidate is a closed source-bound
-Protocol Line. Its capability registries and corpora are bound by the sorted
-[`spec/v1/manifest.json`](spec/v1/manifest.json) and the generated artifact;
-the manifest cannot override the Canonical Field Registry.
+The current `licoarc.protocol-line.v1` source projection is
+`Candidate`/`PARTIAL`. It is deterministic and source-bound but is not an
+executable Protocol Line: mandatory Pairwise Protection remains open, so the
+catalog marks it session- and publication-ineligible. Its manifest cannot
+override the Canonical Field Registry or turn an open decision into wire.
 
 The defined carrier has no JSON Outer Envelope: the Transport Profile selects its outer
 parser, places a short-lived opaque Delivery Handle in transport routing, and
@@ -206,9 +207,9 @@ container and criticality rules; unknown critical semantics fail closed.
 Changing a field's security class requires a new Protocol Line rather than an
 in-place reinterpretation.
 
-The current Candidate closes this protection model through the Pairwise
-Protection registry, schemas, CDDL, bounds, and definition-level corpus. No
-field classification alone claims successful runtime cryptography.
+The current Candidate does not close Pairwise Protection. Its protection
+registry contains zero active Profiles and no wire schema, CDDL or corpus.
+Field classification alone cannot supply the missing construction or proof.
 
 This separation is informed by the protected/unprotected header and external
 associated-data discipline recorded in the
@@ -304,60 +305,35 @@ and decides which evidence is sufficient before allowing them.
 
 ### 3. Pairwise Protection
 
-Pairwise Protection is the endpoint security capability. Its two indivisible
-suite levels have independently decided
-implementation-neutral Prototypes in the [baseline](docs/algorithm-decisions/baseline-pairwise-protection-suite.md)
-and [high-assurance](docs/algorithm-decisions/high-assurance-pairwise-protection-suite.md)
-records and exact formal profile definitions.
+Pairwise Protection is the mandatory endpoint security capability, but its
+Core v1 construction is open. The former Candidate records claimed a complete
+ratchet without encoding a DH ratchet transition and defined a custom
+post-quantum recovery composition without an applicable proof. Both are
+withdrawn from active formal and machine meaning.
 
-- the mandatory baseline combines Signal/PQXDH-like asynchronous prekeys,
-  Double Ratchet, ML-KEM-768, one reviewed traditional signature together with
-  ML-DSA-65, and sealed-sender-style sender-metadata protection; and
-- the high-assurance suite combines the stronger asynchronous-prekey
-  parameter set, ML-KEM-1024, one reviewed traditional signature together
-  with ML-DSA-87, and continuous post-quantum recovery through ML-KEM Braid
-  integrated with a Triple Ratchet. It retains sealed-sender-style protection
-  while using the same performance-first metadata boundary. Neither suite adds
-  discretionary traffic-shaping bytes, artificial delay, or synthetic messages.
+The [Hybrid AKE](docs/algorithm-decisions/core-v1-hybrid-ake.md) and
+[Double Ratchet](docs/algorithm-decisions/core-v1-double-ratchet.md) successors
+are `OPEN`/`PARTIAL`. Their field reviews allocate no prekey bundle,
+transcript, SessionAccept, ratchet header or label. The exact AKE and proof
+must precede any mandatory classical/post-quantum one-time-prekey consumption
+rule.
 
-Each complete profile defines:
+The closed architecture rule is fail closed: no silent downgrade,
+component-wise negotiation, implementation fallback, translation or state
+advance after a failed assumption. A future reduced-security construction is
+a separately proved complete Profile with a new immutable identity.
 
-- exact profile and protocol identities;
-- endpoint-authenticated handshake roles and signed, bounded, expiring
-  declarations of complete supported profiles;
-- selection of the strongest mutually supported complete profile allowed by
-  both endpoints, with failure closed when no common baseline exists;
-- transcript binding of both declarations, selected profile, roles, endpoint
-  identities, handshake purpose, and Protocol Line, followed by an
-  immutable session lock and downgrade rejection;
-- one-time authenticated carriage of `protocolLineId`,
-  `protectionProfileId`, applicable `capabilityDigest` values, and
-  `endpointIdentityRef`, with established records inheriting rather than
-  repeating those stable values;
-- key schedule, ratchet, rekey, reset, and retirement transitions;
-- protected header, associated-data, freshness, replay, and bounded
-  out-of-order semantics;
-- an ordinary established-record path limited to bounded symmetric ratchet,
-  key-derivation, and authenticated-encryption work, with public-key work
-  confined to bounded establishment, rekey, ratchet transitions, and the
-  separately specified batch-amortized Evidence Checkpoint construction;
-- exact implementation-neutral CPU-work, memory, state, handshake,
-  established-record, Evidence Checkpoint, control-traffic, and
-  unauthenticated-input bounds; and
-- positive, boundary, negative, and adversarial conformance vectors.
+One complete Profile must eventually close its identifiers, AKE, transcript,
+hybrid authentication, key confirmation, ratchet, record protection,
+metadata budget, replay/rollback/restart/deletion transitions, resource bounds,
+failures, proof bindings and source-derived corpus together. Until then the
+Protocol Line is not executable.
 
-The decisions close the exact algorithm composition, source-derived vectors,
-and normative resource contracts. A complete combination enters the Candidate
-definition only together with its formal profile identifier, closed machine
-specification, definition-level corpus, and generated Candidate artifact.
-Downstream implementations own runtime measurements, provider choices, and
-delivery claims. None changes or gates the Candidate definition.
-
-LicoArc specifies protocol-visible key deletion points, anti-rollback
-transitions, and hard bounds on prekeys, skipped-message keys, replay state,
-transparency material, capability declarations, and caches. Endpoint products
-implement those obligations and own private keys, entropy, cryptographic
-providers, protected persistence, user history, backup, and local retention.
+The future complete Profile must specify protocol-visible key deletion,
+anti-rollback transitions and hard bounds on prekeys, skipped keys and replay
+state. Endpoint products will implement those obligations and continue to own
+private keys, entropy, cryptographic providers, protected persistence, user
+history, backup and local retention.
 A provider name, endpoint, certificate, plugin, or vendor is implementation
 plumbing and cannot enter protocol data, Endpoint identity, or a trust root.
 
@@ -583,10 +559,12 @@ The handle authorizes only a bounded routing attempt; Endpoint-protected
 handshake data validates identity and invitation purpose. The fixed storage
 window is profile semantics and requires no request field.
 
-The current Protocol Line Candidate defines Pairwise Protection, Generic
-Messaging, Reliable Exchange, delivery-handle semantics, identity, discovery,
-and the HTTPS Transport Profile through its closed manifests, registries,
-schemas, CDDL, bounds, and definition-level corpora.
+The current Protocol Line Candidate defines Generic Messaging, Reliable
+Exchange, delivery-handle semantics, identity, discovery, and the HTTPS
+Transport Profile through their closed manifests, registries, schemas, CDDL,
+bounds, and definition-level corpora. It requires Pairwise Protection for any
+future executable composition, but that mandatory capability remains
+`PARTIAL` with no active Profile, wire, or corpus.
 
 ### 8. Transport Profiles
 

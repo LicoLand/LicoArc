@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "manifestVersion": "licoarc.security-conformance.v1",
+  "lifecycle": "Candidate",
+  "definitionStatus": "PARTIAL",
+  "positiveCorpusPath": "conformance/v1/security/valid.json",
+  "negativeCorpusPath": "conformance/v1/security/invalid.json",
+  "sourcePaths": [
+    "spec/v1/security/adversary-model.json",
+    "spec/v1/security/claims.json",
+    "spec/v1/security/formal-bindings.json",
+    "spec/v1/security/registry.json",
+    "spec/v1/security/source-manifest.json"
+  ],
+  "schemaPaths": [
+    "spec/schemas/security-adversary-model.schema.json",
+    "spec/schemas/security-claims.schema.json",
+    "spec/schemas/security-corpus.schema.json",
+    "spec/schemas/security-formal-bindings.schema.json",
+    "spec/schemas/security-registry.schema.json"
+  ],
+  "caseIds": ["partial-line-has-unproved-claims", "explicit-nonclaim-never-implies-proof"],
+  "negativeCaseIds": ["proved-without-formal-binding", "unknown-adversary-reference", "unknown-security-member", "missing-record-confidentiality-claim", "downstream-result-advances-definition"]
+}

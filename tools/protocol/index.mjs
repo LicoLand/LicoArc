@@ -1,4 +1,10 @@
 export {
+  CatalogError,
+  assertValidProtocolCatalogs,
+  resolveExistingSessionPolicy,
+  selectProtocolLine
+} from "./catalogs.mjs";
+export {
   RestrictedJsonError,
   assertRestrictedJsonValue,
   canonicalizeRestrictedJson,
@@ -18,6 +24,10 @@ export {
   assertValidAgainstClosedSchema,
   validateClosedSchema
 } from "./schema.mjs";
+export {
+  SecurityAccountingError,
+  assertValidSecurityAccounting
+} from "./security.mjs";
 export {
   FOUNDATION_REGISTRY_PATHS,
   FOUNDATION_ROOTS,

@@ -28,15 +28,17 @@ evidence.
 
 ## Complete current inventory
 
-Four decisions define the baseline protection suite, high-assurance
-protection suite, transferable Evidence Checkpoint, and Group state evolution.
-The size-bucket proposal is rejected because the performance-first definition
-contains no traffic-shaping padding.
+The former baseline and custom high-assurance protection constructions are
+retired. Hybrid AKE and Double Ratchet successors remain open and partial;
+only the fail-closed Protocol Line selection constitution is newly specified.
 
 | Decision ID | Question | Decision status | Definition | Record |
 | --- | --- | --- | --- | --- |
-| `ALG-baseline-pairwise-protection-suite` | Which complete mandatory composition satisfies the normative resource contract? | `DECIDED` | `SPECIFIED` | [baseline-pairwise-protection-suite.md](baseline-pairwise-protection-suite.md) |
-| `ALG-high-assurance-pairwise-protection-suite` | Which complete high-assurance composition satisfies its normative resource contract? | `DECIDED` | `SPECIFIED` | [high-assurance-pairwise-protection-suite.md](high-assurance-pairwise-protection-suite.md) |
+| `ALG-baseline-pairwise-protection-suite` | Which complete mandatory composition satisfies the normative resource contract? | `RETIRED` | `NOT-SPECIFIED` | [baseline-pairwise-protection-suite.md](baseline-pairwise-protection-suite.md) |
+| `ALG-core-v1-double-ratchet` | Which exact Double Ratchet construction closes Core v1? | `OPEN` | `PARTIAL` | [core-v1-double-ratchet.md](core-v1-double-ratchet.md) |
+| `ALG-core-v1-hybrid-ake` | Which exact Hybrid AKE construction closes Core v1? | `OPEN` | `PARTIAL` | [core-v1-hybrid-ake.md](core-v1-hybrid-ake.md) |
+| `ALG-high-assurance-pairwise-protection-suite` | Which complete high-assurance composition satisfies its normative resource contract? | `RETIRED` | `NOT-SPECIFIED` | [high-assurance-pairwise-protection-suite.md](high-assurance-pairwise-protection-suite.md) |
+| `ALG-protocol-line-selection` | How is one immutable complete Protocol Line selected without downgrade? | `DECIDED` | `SPECIFIED` | [protocol-line-selection.md](protocol-line-selection.md) |
 | `ALG-protected-size-bucket-schedule` | Should a mandatory profile add a deterministic size-bucket schedule? | `REJECTED` | `NOT-SPECIFIED` | [protected-size-bucket-schedule.md](protected-size-bucket-schedule.md) |
 | `ALG-transferable-evidence-checkpoint` | Which canonical digest and signature construction provides bounded transferable Endpoint attribution? | `DECIDED` | `SPECIFIED` | [transferable-evidence-checkpoint.md](transferable-evidence-checkpoint.md) |
 | `ALG-group-state-evolution` | Which bounded deterministic procedure evolves protected Group membership state? | `DECIDED` | `SPECIFIED` | [group-state-evolution.md](group-state-evolution.md) |

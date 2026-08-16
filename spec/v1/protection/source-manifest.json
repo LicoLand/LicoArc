@@ -3,33 +3,10 @@
   "$id": "https://licoarc.com/spec/v1/protection/source-manifest.json",
   "manifestVersion": "licoarc.protection-source-manifest.v1",
   "contractVersion": "licoarc.pairwise-protection.v1",
-  "protocolLineId": "e04b2e1098100e61ee1d79b04f2b3281aa7450aecc2189afa3ffebe2ec41d1ef",
   "lifecycle": "Candidate",
-  "sourceRoots": [
-    "conformance/v1/protection",
-    "spec/v1/protection"
-  ],
-  "sources": [
-    "conformance/v1/protection/invalid.json",
-    "conformance/v1/protection/manifest.json",
-    "conformance/v1/protection/valid.json",
-    "spec/v1/protection/bounds.json",
-    "spec/v1/protection/capability.schema.json",
-    "spec/v1/protection/epoch.schema.json",
-    "spec/v1/protection/failure.json",
-    "spec/v1/protection/handshake.schema.json",
-    "spec/v1/protection/labels.json",
-    "spec/v1/protection/profile.schema.json",
-    "spec/v1/protection/profiles.json",
-    "spec/v1/protection/record.schema.json",
-    "spec/v1/protection/registry.json",
-    "spec/v1/protection/resource-contract.json",
-    "spec/v1/protection/runtime.cddl",
-    "spec/v1/protection/source-manifest.json",
-    "spec/v1/protection/state.json"
-  ],
-  "sorted": true,
+  "definitionStatus": "PARTIAL",
+  "sessionEligible": false,
+  "sources": ["spec/protection-profiles.json", "spec/v1/protection/registry.json", "spec/v1/protection/source-manifest.json"],
   "undeclaredFiles": "reject",
-  "symlinks": "reject",
-  "canonicalEncoding": "restricted-jcs-json-plus-deterministic-cbor-runtime"
+  "symlinks": "reject"
 }

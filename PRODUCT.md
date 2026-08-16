@@ -87,15 +87,14 @@ excluded or profile-owned dispositions. Field names below summarize that
 registry and cannot independently extend or reinterpret it.
 
 - The outer envelope contains no plaintext field.
-- A mandatory baseline Pairwise Protection suite fixes one complete
-  asynchronous-prekey, ratchet, hybrid-authentication, sender-metadata, size,
-  freshness, replay, and downgrade contract; a separately complete
-  high-assurance suite strengthens its post-quantum parameters and continuous
-  post-quantum recovery. Each suite defines exact implementation-neutral
-  resource and wire bounds.
-- Signed capability declarations select the strongest complete common
-  Protection Profile, bind that selection into the authenticated handshake
-  transcript, and lock it for the session. No common baseline fails closed.
+- Pairwise Protection will admit one complete mandatory Core v1 Profile only
+  after its Hybrid AKE, prekey, transcript, key-confirmation, Double Ratchet,
+  resource, failure and proof contracts are decided and specified together.
+  The current Candidate has no active Profile or protection wire.
+- Security downgrade is never silent. Unknown, incomplete, below-minimum,
+  ineligible or ambiguous Protocol Line/Profile input fails without fallback
+  or state advance. A future reduced-security construction is a separately
+  identified complete Profile, never a baseline fallback.
 - First contact establishes a protected but `unverified` peer channel.
   LicoArc carries protected Verification Records and evidence; each Endpoint
   derives and retains its own peer-verification state and decides which
@@ -253,13 +252,12 @@ This section records durable, approved definition intent. Definition maturity
 is reported in [`docs/STATUS.md`](docs/STATUS.md); downstream delivery facts
 are outside this repository.
 
-The four Algorithm Decisions are now independently `DECIDED`: [baseline
-Pairwise Protection](docs/algorithm-decisions/baseline-pairwise-protection-suite.md),
-[high-assurance Pairwise Protection](docs/algorithm-decisions/high-assurance-pairwise-protection-suite.md),
-[Group state evolution](docs/algorithm-decisions/group-state-evolution.md),
-and [Transferable Evidence Checkpoint](docs/algorithm-decisions/transferable-evidence-checkpoint.md).
-Their implementation-neutral Prototypes, source-derived vectors, and numeric
-resource contracts are closed durable intent.
+[Group state evolution](docs/algorithm-decisions/group-state-evolution.md) and
+[Transferable Evidence Checkpoint](docs/algorithm-decisions/transferable-evidence-checkpoint.md)
+remain independently `DECIDED`/`SPECIFIED`. The former baseline and
+high-assurance Pairwise Protection conclusions are `RETIRED`/`NOT-SPECIFIED`;
+their withdrawn Prototypes, vectors, resource contracts, and Profile
+identifiers are not current definition authority.
 
 ### Artifact, wire, and Protocol Line composition
 
@@ -284,59 +282,39 @@ session, translator, dual wire, or permanent bridge. Retirement removes the
 superseded mutable line, implementation path, corpus, and compatibility entry
 in one complete migration; already Published bytes remain immutable.
 
-### Complete protection suites
+### Pairwise Protection proof gate
 
-Pairwise Protection defines two complete, indivisible suite levels. A
-consumer selects one whole suite; it cannot negotiate an open Cartesian
-product of KEM, signature, ratchet, sender-metadata, framing, or transport
-components. The two algorithm decisions close the composition reflected in
-the formal profile and machine-readable sources.
+The former Candidate protection constructions are retired. They remain
+historical decision records only and contribute no Profile identifier, schema,
+runtime grammar, corpus or generated wire. The active successor questions are
+the [Hybrid AKE](docs/algorithm-decisions/core-v1-hybrid-ake.md) and
+[Double Ratchet](docs/algorithm-decisions/core-v1-double-ratchet.md) Algorithm
+Decisions plus their independent Message Field Decisions.
 
-| Requirement | Mandatory baseline suite | High-assurance suite |
-| --- | --- | --- |
-| Asynchronous establishment | Signal/PQXDH-like asynchronous prekeys | Signal/PQXDH-like asynchronous prekeys with the stronger complete post-quantum parameter set |
-| Session evolution | Double Ratchet | ML-KEM Braid integrated through a Triple Ratchet for continuous post-quantum key evolution |
-| Post-quantum KEM | ML-KEM-768 | ML-KEM-1024 |
-| Endpoint authentication | one reviewed traditional signature together with ML-DSA-65 | one reviewed traditional signature together with ML-DSA-87 |
-| Sender metadata | sealed-sender-style protection is mandatory | sealed-sender-style protection is mandatory |
-| Ordinary record work | bounded symmetric ratchet, key derivation, and authenticated encryption; no per-record signature or full asynchronous KEM | bounded symmetric ratchet, key derivation, and authenticated encryption; continuous post-quantum transitions occur only at profile-bounded epochs |
-| Resource contract | exact CPU-work, memory, state, wire, and unauthenticated-work bounds | independent exact bounds; high assurance cannot borrow the baseline envelope |
-| Traffic metadata | no discretionary traffic-shaping bytes, artificial delay, or synthetic messages; outer length and timing remain residual metadata | the same performance-first rule; stronger cryptography does not create an anonymity or traffic-analysis-resistance claim |
+Core v1 freezes the fail-closed constitution but does not pre-decide that
+pairing consumes both classical and post-quantum one-time prekeys. Fixed secret
+shapes, the hybrid combiner, authentication, transcript, prekey roles and
+consumption, responder key confirmation, ratchet state, bounds and claims must
+be selected by one exact construction and its proof. Until then every related
+security target is `unproved`, Pairwise Protection is `PARTIAL`, and Protocol
+Line v1 is session- and publication-ineligible.
 
-The selected exact construction is recorded in the [baseline Algorithm
-Decision](docs/algorithm-decisions/baseline-pairwise-protection-suite.md):
-X25519 plus ML-KEM-768, Ed25519 plus ML-DSA-65, HKDF-SHA-256,
-ChaCha20-Poly1305, asynchronous prekeys, transcript-locked Double Ratchet,
-sealed sender metadata, and bounded fail-closed replay and deletion rules.
-The [high-assurance Algorithm Decision](docs/algorithm-decisions/high-assurance-pairwise-protection-suite.md)
-selects X25519 plus ML-KEM-1024, Ed25519 plus ML-DSA-87, and a continuous
-ML-KEM Braid/Triple-Ratchet state with its own bounds. Local lineage research
-is untracked and cannot replace LicoArc authority.
+Formal schema/corpus consistency is source-integrity evidence only.
+Implementations, interoperability, audits, packaging and publication cannot
+fill a missing proof binding or change definition status.
 
-The decisions freeze the Prototype, vector origin, and numeric resource
-contract. One exact combination enters a Candidate definition only when its
-formal profile identifier, closed machine specification, definition-level
-conformance corpus, and generated Candidate artifact are created together.
-Implementation, runtime validation, review, packaging, and publication are
-downstream concerns and do not change that definition state.
+### Protocol Line selection and future session lock
 
-### Capability selection and session lock
+An Endpoint may support multiple Published generations, while each session is
+locked to one exact complete Protocol Line. Selection retains only complete,
+new-session-eligible common entries meeting both authenticated minimum
+generations and chooses the unique highest generation. Zero or ambiguous
+results fail without fallback or state advance. Component negotiation,
+translation, Station selection and identifier reuse are forbidden.
 
-Endpoints publish signed, bounded, expiring capability declarations containing
-only complete supported Protection Profiles and their lifecycle constraints.
-Selection chooses the strongest mutually supported complete profile allowed by
-both endpoints' minimum-safe policy. The two declarations, chosen profile,
-roles, endpoint identities, handshake purpose, and Protocol Line enter
-the authenticated handshake transcript. The result is locked for the session:
-no mid-session component substitution, silent fallback, or downgrade is
-permitted. If the endpoints have no common mandatory baseline profile,
-establishment fails closed.
-
-The handshake carries and authenticates `protocolLineId`,
-`protectionProfileId`, each applicable `capabilityDigest`, and
-`endpointIdentityRef` once. Established records inherit those immutable
-bindings and reject their repetition. Removing four stable 32-octet values
-from the ordinary record path does not weaken their authority or continuity.
+The future Protocol Support Statement, transcript and SessionAccept fields are
+open. Their eventual wire must authenticate both support inputs and the exact
+selection result; this lifecycle procedure does not allocate or infer them.
 
 ### Identity transparency and first contact
 

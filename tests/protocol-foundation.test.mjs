@@ -90,23 +90,15 @@ test("deterministic CBOR rejects malformed, non-canonical, unknown, and over-bou
   assert.throws(() => encodeFoundationRuntimeRecord({ 0: 1, 1: "text" }, context), /raw bytes/);
 });
 
-test("Protocol Line manifest is the only composition boundary", () => {
-  const manifest = {
-    manifestVersion: "licoarc.protocol-line-manifest.v1",
-    wireId: "licoarc.foundation.v1",
-    lifecycle: "Candidate",
-    minimumSafe: { protocolLineVersion: 1, capabilityVersions: [] },
-    capabilities: [],
-    governanceSources: ["spec/v1/foundation/bounds.json"],
-    runtimeSources: ["spec/v1/foundation/runtime.cddl"],
-    boundsRegistry: "spec/v1/foundation/bounds.json",
-    handshakeBinding: "manifest-capabilities-identities-and-declarations",
-    sessionLock: true,
-    translationPolicy: "forbidden"
-  };
+test("Protocol Line manifest is the only composition boundary", async () => {
+  const manifest = JSON.parse(await readFile(path.join(repositoryRoot,
+    "spec/v1/manifest.json"), "utf8"));
   assert.deepEqual(validateProtocolLineManifest(manifest, context), []);
   assert.doesNotThrow(() => assertValidProtocolLineManifest(manifest, context));
-  assert.deepEqual(validateProtocolLineManifest({ ...manifest, runtimeSources: [...manifest.governanceSources] }, context), ["governance and runtime source families must be disjoint"]);
+  assert.notDeepEqual(validateProtocolLineManifest({
+    ...manifest,
+    capabilities: [...manifest.capabilities].reverse()
+  }, context), []);
   assert.notDeepEqual(validateProtocolLineManifest({ ...manifest, unknown: true }, context), []);
 });
 

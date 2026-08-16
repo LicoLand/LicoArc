@@ -8,7 +8,7 @@
   "properties": {
     "artifactType": { "type": "string", "enum": ["manifest", "registry", "policy", "release-input"] },
     "artifactVersion": { "type": "string", "pattern": "^licoarc\\.[a-z][a-z0-9-]*(?:\\.[a-z][a-z0-9-]*)?\\.v[1-9][0-9]*$", "maxLength": 128 },
-    "lifecycle": { "type": "string", "enum": ["Candidate", "Published", "Retired"] },
+    "lifecycle": { "type": "string", "enum": ["Candidate", "Published", "Deprecated", "Retired"] },
     "payload": { "type": "object", "additionalProperties": false }
   }
 }

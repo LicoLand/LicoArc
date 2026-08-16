@@ -1,0 +1,13 @@
+{
+  "$schema": "https://licoarc.com/spec/schemas/security-registry.schema.json",
+  "$id": "https://licoarc.com/spec/v1/security/registry.json",
+  "registryVersion": "licoarc.security-accounting.v1",
+  "lifecycle": "Candidate",
+  "definitionStatus": "PARTIAL",
+  "claimsPath": "spec/v1/security/claims.json",
+  "adversaryModelPath": "spec/v1/security/adversary-model.json",
+  "formalBindingsPath": "spec/v1/security/formal-bindings.json",
+  "proofDoesNotDefineProtocol": true,
+  "downstreamEvidenceDoesNotAdvanceDefinition": true,
+  "missingMandatoryBindingPolicy": "line-ineligible"
+}

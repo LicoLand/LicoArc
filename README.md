@@ -57,22 +57,24 @@ protocol-owned command catalog.
 
 ## Current Repository Status
 
-The current repository line is the **Candidate** `licoarc.protocol-line.v1`.
-Its manifest and generated bundle declare that exact wire ID and lifecycle.
+The current repository source projection is the **Candidate**
+`licoarc.protocol-line.v1` with definition status `PARTIAL`. Its manifest and
+generated bundle declare that exact identity and its ineligible status.
 Current definition facts are maintained in [`docs/STATUS.md`](docs/STATUS.md).
 
 The [Canonical Field Registry](spec/FIELD-REGISTRY.md) is the sole authority
-for the active field inventory. The nine capability source manifests, schemas,
-registries, bounds, vectors, corpora, and generated bundle form a specified and
-closed mutable Candidate; implementations consume it but cannot override it.
+for active fields. Pairwise Protection currently has zero active Profiles or
+wire schemas: Hybrid AKE, prekey consumption, transcript, key confirmation and
+Double Ratchet remain open pending an exact construction and proof.
 
 Candidate governance and release artifacts use restricted JCS-canonical JSON
 with JSON Schema and content-addressed OCI, DSSE, and TUF controls. Candidate
 Endpoint wire data uses deterministic CBOR described by closed CDDL, compact
 integer labels, and raw `protectedPacket` bodies. The representation split,
-Group collaboration, Pairwise Protection, Reliable Exchange, HTTPS Transport
-Profile, identity continuity, and multi-root threshold governance are all
-specified in the mutable Candidate source closure.
+Bounded Group collaboration, Reliable Exchange, HTTPS Transport Profile,
+identity continuity and multi-root threshold governance remain specified.
+The partial Candidate is not session-eligible, publication-eligible or
+Published.
 
 LicoArc checks the tracked definition with its own schemas, field and
 requirement registries, policies, corpora, artifact generation, and digest

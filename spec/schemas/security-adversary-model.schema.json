@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/schemas/security-adversary-model.schema.json",
+  "title": "LicoArc security adversary model registry",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "$id", "registryVersion", "lifecycle", "models"],
+  "properties": {
+    "$schema": {"const": "https://licoarc.com/spec/schemas/security-adversary-model.schema.json"},
+    "$id": {"const": "https://licoarc.com/spec/v1/security/adversary-model.json"},
+    "registryVersion": {"const": "licoarc.adversary-model.v1"},
+    "lifecycle": {"const": "Candidate"},
+    "models": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "name"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^A[0-9]+$", "maxLength": 8},
+          "name": {"type": "string", "pattern": "^[a-z][a-z0-9-]+$", "maxLength": 128},
+          "powers": {"type": "array", "maxItems": 64, "uniqueItems": true, "items": {"type": "string", "pattern": "^[a-z][a-z0-9-]+$", "maxLength": 128}},
+          "limits": {"type": "array", "maxItems": 64, "uniqueItems": true, "items": {"type": "string", "pattern": "^[a-z][a-z0-9-]+$", "maxLength": 128}},
+          "variants": {"type": "array", "maxItems": 64, "uniqueItems": true, "items": {"type": "string", "pattern": "^[a-z][a-z0-9-]+$", "maxLength": 128}}
+        }
+      }
+    }
+  }
+}

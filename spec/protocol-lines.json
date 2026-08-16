@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/protocol-lines.json",
+  "registryVersion": "licoarc.protocol-lines.v1",
+  "definitionStates": ["DRAFT", "PARTIAL", "COMPLETE"],
+  "lifecycleStates": ["Candidate", "Published", "Deprecated", "Retired"],
+  "lines": [
+    {
+      "wireId": "licoarc.protocol-line.v1",
+      "generation": 1,
+      "minimumGeneration": 1,
+      "contentDigest": null,
+      "lifecycle": "Candidate",
+      "definitionStatus": "PARTIAL",
+      "sessionEligible": false,
+      "publicationEligible": false,
+      "newSessionPolicy": "forbid-incomplete",
+      "existingSessionPolicy": "terminate-on-authenticated-adoption",
+      "authenticatedEffectiveGeneration": null,
+      "mandatoryCapabilities": [
+        "licoarc.generic-messaging.v1",
+        "licoarc.https-transport.v1",
+        "licoarc.identity.v1",
+        "licoarc.pairwise-protection.v1",
+        "licoarc.protocol-foundation.v1",
+        "licoarc.reliable-exchange.v1",
+        "licoarc.transferable-evidence.v1"
+      ],
+      "definedCapabilities": [
+        "licoarc.federation-governance.v1",
+        "licoarc.generic-messaging.v1",
+        "licoarc.group-collaboration.v1",
+        "licoarc.https-transport.v1",
+        "licoarc.identity.v1",
+        "licoarc.protocol-foundation.v1",
+        "licoarc.reliable-exchange.v1",
+        "licoarc.transferable-evidence.v1"
+      ],
+      "protectionProfileIds": [],
+      "blockers": [
+        "ALG-core-v1-double-ratchet",
+        "ALG-core-v1-hybrid-ake",
+        "FLD-handshake-transcript-v1",
+        "FLD-minimum-protocol-generation-v1",
+        "FLD-prekey-bundle-v1",
+        "FLD-protocol-support-statement-v1",
+        "FLD-ratchet-header",
+        "FLD-session-accept",
+        "SEC-formal-security-bindings"
+      ]
+    }
+  ],
+  "selection": {
+    "supportStatementAuthority": "endpoint-authenticated",
+    "supportEntry": "wire-id-generation-and-content-digest",
+    "minimumGeneration": "endpoint-authenticated-monotonic-floor",
+    "filterOrder": [
+      "known-exact-content-identity",
+      "complete-definition",
+      "new-session-policy-allows",
+      "session-eligible",
+      "meets-both-minimum-generations",
+      "all-mandatory-capabilities-defined",
+      "all-protection-profiles-complete-and-eligible"
+    ],
+    "choice": "unique-highest-common-generation",
+    "success": "selected-pending-future-transcript-authentication",
+    "zeroResult": "terminal-no-common-line",
+    "ambiguousHighest": "terminal-ambiguous-generation",
+    "unknown": "terminal-unknown-line",
+    "contentIdentityMismatch": "terminal-content-identity-mismatch",
+    "unauthenticatedSupport": "terminal-unauthenticated-support",
+    "fallback": "forbidden",
+    "componentNegotiation": "forbidden",
+    "translation": "forbidden",
+    "stateAdvanceOnFailure": false
+  },
+  "immutability": {
+    "publishedBytes": "content-digest-bound-and-immutable",
+    "lifecycleRecord": "may-change-without-changing-content-digest",
+    "semanticChange": "new-complete-line-and-generation",
+    "identifierReuse": "forbidden"
+  },
+  "retirement": {
+    "retiredNewSessions": "forbid-retired",
+    "existingSessionPolicyOwner": "authenticated-protocol-line-registry",
+    "effectiveBoundOwner": "authenticated-protocol-line-registry",
+    "implementationChoice": "forbidden",
+    "silentMigration": "forbidden",
+    "successorRebinding": "fresh-complete-authenticated-handshake-only"
+  }
+}

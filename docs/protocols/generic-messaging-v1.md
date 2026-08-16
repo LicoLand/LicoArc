@@ -77,7 +77,10 @@ accepts the record.
 Reserved `contentType` values occupy `4294901760..4294967295`. The only v1
 value is `4294901761` (`attachmentReceiveState`). Every other value in that
 range is an `unknown-reserved-meaning` terminal failure. Ordinary values are
-`0..2147483647` and never acquire Lico Arc semantics.
+`0..2147483647` and never acquire Lico Arc semantics. Every allocated numeric
+value is permanent: it is never reused or semantically reassigned. A new
+meaning receives a new value, and neither application capability support nor
+Protocol Line/Profile selection is encoded through `contentType`.
 
 ## Attachment declaration and fixed geometry
 

@@ -165,13 +165,18 @@ export function validateProtocolLineManifest(value, context) {
   if (!schema) throw new FoundationError("protocol-line manifest schema is required");
   const errors = validateClosedSchema(value, schema);
   if (errors.length > 0) return errors;
-  if (!Array.isArray(value.governanceSources) || !Array.isArray(value.runtimeSources)) return ["manifest source lists are required"];
-  const governance = new Set(value.governanceSources);
-  const runtime = new Set(value.runtimeSources);
-  if ([...governance].some((sourcePath) => runtime.has(sourcePath))) return ["governance and runtime source families must be disjoint"];
-  if (value.governanceSources.some((sourcePath) => !sourcePath.endsWith(".json"))) return ["governance sources must be JSON"];
-  if (value.runtimeSources.some((sourcePath) => !sourcePath.endsWith(".cddl"))) return ["runtime sources must be CDDL"];
-  if (!isSortedUnique(value.governanceSources) || !isSortedUnique(value.runtimeSources)) return ["manifest source lists must be sorted and unique"];
+  if (!Array.isArray(value.capabilities) ||
+      !Array.isArray(value.sourceClosure?.roots) ||
+      !Array.isArray(value.sourceClosure?.additionalSources)) {
+    return ["manifest source closure is required"];
+  }
+  if (!isSortedUnique(value.capabilities.map(({ capabilityId }) => capabilityId))) {
+    return ["manifest capabilities must be sorted and unique"];
+  }
+  if (new Set(value.sourceClosure.additionalSources).size !==
+      value.sourceClosure.additionalSources.length) {
+    return ["additional source paths must be unique"];
+  }
   return [];
 }
 
@@ -313,8 +318,8 @@ function assertFoundationRegistries(documents, limits) {
     if (identifier.wire !== false) throw new FoundationError("foundation identifiers cannot become runtime wire values");
   }
   const states = new Set(lifecycle.states.map(({ id }) => id));
-  if (!states.has("Candidate") || !states.has("Published") || !states.has("Retired")) throw new FoundationError("foundation lifecycle is incomplete");
-  const expectedTransitions = new Set(["Draft->Candidate", "Candidate->Candidate", "Candidate->Published", "Candidate->Retired", "Published->Retired"]);
+  if (!states.has("Candidate") || !states.has("Published") || !states.has("Deprecated") || !states.has("Retired")) throw new FoundationError("foundation lifecycle is incomplete");
+  const expectedTransitions = new Set(["Draft->Candidate", "Candidate->Candidate", "Candidate->Published", "Candidate->Retired", "Published->Deprecated", "Deprecated->Retired"]);
   const actualTransitions = new Set();
   for (const transition of lifecycle.transitions) {
     if (!states.has(transition.from) || !states.has(transition.to)) throw new FoundationError("foundation lifecycle transition references an unknown state");
@@ -324,7 +329,7 @@ function assertFoundationRegistries(documents, limits) {
   }
   if (actualTransitions.size !== expectedTransitions.size) throw new FoundationError("foundation lifecycle transition set is incomplete");
   const stateById = new Map(lifecycle.states.map((state) => [state.id, state]));
-  if (stateById.get("Published")?.mutable !== false || stateById.get("Retired")?.mutable !== false || stateById.get("Retired")?.terminal !== true) {
+  if (stateById.get("Published")?.mutable !== false || stateById.get("Deprecated")?.mutable !== false || stateById.get("Retired")?.mutable !== false || stateById.get("Retired")?.terminal !== true || lifecycle.definitionStatusRegistry !== "spec/protocol-lines.json") {
     throw new FoundationError("published and retired lifecycle states must be immutable, with Retired terminal");
   }
   const labelsByValue = new Set();
