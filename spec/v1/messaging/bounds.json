@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/v1/messaging/bounds.json",
+  "registryVersion": "licoarc.messaging-bounds.v1",
+  "lifecycle": "Candidate",
+  "scope": "generic-messaging-and-attachments-v1",
+  "units": {
+    "ATTACHMENT_RECOVERY_WINDOW": "seconds"
+  },
+  "bounds": {
+    "MAX_PAYLOAD_BYTES": 262144,
+    "MAX_ATTACHMENT_BYTES": 8388608,
+    "ATTACHMENT_CHUNK_BYTES": 65536,
+    "MAX_ATTACHMENT_CHUNKS": 128,
+    "MAX_ATTACHMENTS": 8,
+    "MAX_REQUEST_RANGES": 32,
+    "MAX_REQUESTED_CHUNKS": 128,
+    "MAX_ATTACHMENT_STATE_UPDATES": 64,
+    "MAX_ATTACHMENT_RECOVERY_ROUNDS": 32,
+    "MAX_ATTACHMENT_RETRANSMITTED_CHUNKS": 256,
+    "MAX_ATTACHMENT_CONTROL_BYTES": 65536,
+    "MAX_EXTENSIONS": 16,
+    "MAX_EXTENSION_BYTES": 4096,
+    "MAX_CRITICAL_EXTENSIONS": 16,
+    "MAX_MEDIA_TYPE": 4294967295,
+    "MAX_CONTENT_TYPE": 4294967295,
+    "MAX_CONTROL_RECORD_BYTES": 65536,
+    "MAX_RECOVERY_STATE_BYTES": 4096,
+    "MAX_STATE_UPDATE": 64,
+    "MAX_RECOVERY_ROUND": 32,
+    "ATTACHMENT_RECOVERY_WINDOW": 86400
+  },
+  "relationships": [
+    "ATTACHMENT_CHUNK_BYTES > 0",
+    "ATTACHMENT_CHUNK_BYTES <= MAX_PAYLOAD_BYTES",
+    "MAX_ATTACHMENT_BYTES <= MAX_ATTACHMENT_CHUNKS * ATTACHMENT_CHUNK_BYTES",
+    "MAX_REQUESTED_CHUNKS >= MAX_REQUEST_RANGES",
+    "MAX_RECOVERY_STATE_BYTES <= MAX_CONTROL_RECORD_BYTES",
+    "MAX_STATE_UPDATE = MAX_ATTACHMENT_STATE_UPDATES",
+    "MAX_RECOVERY_ROUND = MAX_ATTACHMENT_RECOVERY_ROUNDS"
+  ],
+  "resetPolicy": "none-of-retry-reconnect-session-renewal-route-change-station-migration-resets-or-extends-a-bound",
+  "recoveryWindowStart": "declaring-message-endpoint-acceptance"
+}

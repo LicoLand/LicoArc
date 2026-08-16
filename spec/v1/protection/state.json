@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/v1/protection/state.json",
+  "registryVersion": "licoarc.protection-state-machine.v1",
+  "lifecycle": "Candidate",
+  "scope": "endpoint-pairwise-session-state",
+  "states": [
+    { "id": "new", "terminal": false, "acceptsRecords": false },
+    { "id": "capability-validated", "terminal": false, "acceptsRecords": false },
+    { "id": "handshake-authenticated", "terminal": false, "acceptsRecords": false },
+    { "id": "established", "terminal": false, "acceptsRecords": true },
+    { "id": "retiring", "terminal": false, "acceptsRecords": false },
+    { "id": "terminal", "terminal": true, "acceptsRecords": false }
+  ],
+  "transitions": [
+    { "from": "new", "to": "capability-validated", "event": "valid-capabilities", "requires": "both-signed-declarations-and-bounded-digest-match" },
+    { "from": "capability-validated", "to": "handshake-authenticated", "event": "valid-handshake", "requires": "exact-profile-and-transcript-signature-set" },
+    { "from": "handshake-authenticated", "to": "established", "event": "session-confirmed", "requires": "both-endpoints-commit-session-lock" },
+    { "from": "established", "to": "established", "event": "valid-established-record", "requires": "authenticated-counter-within-profile-window" },
+    { "from": "established", "to": "established", "event": "valid-pq-epoch", "requires": "high-assurance-only-all-or-nothing-expected-epoch" },
+    { "from": "established", "to": "retiring", "event": "profile-retired-or-reset-requested", "requires": "new-authenticated-handshake-before-next-session" },
+    { "from": "retiring", "to": "terminal", "event": "retirement-observed", "requires": "no-silent-rebind" },
+    { "from": "new", "to": "terminal", "event": "fatal-establishment-failure", "requires": "closed-failure-class" },
+    { "from": "capability-validated", "to": "terminal", "event": "fatal-establishment-failure", "requires": "closed-failure-class" },
+    { "from": "handshake-authenticated", "to": "terminal", "event": "fatal-establishment-failure", "requires": "closed-failure-class" },
+    { "from": "established", "to": "terminal", "event": "terminal-record-failure", "requires": "closed-failure-class" }
+  ],
+  "sessionLock": {
+    "immutable": [
+      "protocolLineId",
+      "protectionProfileId",
+      "initiatorCapabilityDigest",
+      "responderCapabilityDigest",
+      "initiatorEndpointIdentityRef",
+      "responderEndpointIdentityRef",
+      "handshakePurpose",
+      "initiatorRole",
+      "responderRole",
+      "transcriptDigest"
+    ],
+    "recordInheritance": "derive-from-session-not-wire-repeat",
+    "mismatch": "stable-field-repetition-or-context-mismatch"
+  },
+  "persistentState": {
+    "required": [
+      "sessionLock",
+      "rootSecret-or-profile-equivalent",
+      "directionChains",
+      "nextSendCounter",
+      "highestReceivedCounter",
+      "skippedMessageKeys",
+      "replayWindow",
+      "consumedOneTimePrekeyTombstones",
+      "terminalStatus"
+    ],
+    "restart": "restore-before-input-validation",
+    "rollback": "reject-without-reset",
+    "limits": "profile-resource-contract"
+  },
+  "ratchetAtomicity": {
+    "deriveSkipped": "bounded-and-commit-after-authentication",
+    "receive": "verify-before-chain-advance",
+    "send": "derive-and-delete-before-counter-commit",
+    "epoch": "validate-all-material-before-three-chain-replacement",
+    "deletion": "old-secrets-erased-before-visible-transition"
+  }
+}

@@ -1,0 +1,92 @@
+; Lico Arc Reliable Exchange v1 endpoint-protected runtime grammar.
+; Every map uses compact unsigned integer labels, deterministic CBOR, shortest
+; definite lengths, raw byte strings, no tags/floats/indefinite lengths, and
+; rejects unknown labels and trailing bytes before state transition.
+
+reliable-record = reliable-intent / reliable-event / confirmation / state-snapshot
+
+reliable-intent = {
+  0 => id128,                         ; stable logical Message identity
+  1 => digest256,                     ; Protected Intent digest
+  2 => bytes .size (1..256),          ; application idempotency input
+  3 => bytes .size (0..262144),       ; exact User Payload bytes
+  4 => uint .le 4294967295,           ; opaque application content type
+  5 => digest256,                     ; peer-visible meaning digest
+  ? 6 => digest256,                   ; complete attachment declaration root
+  ? 7 => id128                        ; stable Group projection identity
+}
+
+reliable-event = {
+  0 => uint .le 11,                   ; closed event kind
+  1 => id128,
+  2 => digest256,
+  ? 3 => uint,                        ; route epoch; never a message identity
+  ? 4 => bytes .size (1..524288),     ; exact protected packet when carried
+  ? 5 => digest256,
+  ? 6 => digest256,                   ; application result digest
+  ? 7 => uint .le 12,                 ; closed failure code
+  ? 8 => uint .le 3,                  ; Station hint only
+  ? 9 => id128,
+  ? 10 => digest256,
+  ? 11 => id128,
+  ? 12 => uint .le 32,
+  ? 13 => [* chunk-range],
+  ? 14 => [* projection-result]
+}
+
+confirmation = {
+  0 => id128,                         ; confirmation identity
+  1 => uint .le 3,                   ; received/accepted/completed/terminal
+  2 => uint .le 4,                   ; pending/success/cancelled/failed/ambiguous
+  3 => [+ id128],                     ; sorted unique bounded IDs
+  ? 4 => uint .le 12,
+  ? 5 => digest256
+}
+
+chunk-range = {
+  0 => uint,
+  1 => uint
+}
+
+projection-result = {
+  0 => id128,
+  1 => digest256,
+  2 => uint .le 3,                    ; pending/delivered/rejected/failed
+  ? 3 => uint .le 12,
+  4 => uint .le 1                      ; endpoint-evidence or none
+}
+
+state-snapshot = {
+  0 => uint .le 3,                    ; outbox/inbox/attachment/aggregate
+  1 => uint .le 11,                   ; tagged state from the selected family
+  2 => id128,
+  3 => digest256,
+  ? 4 => bytes .size (1..256),
+  ? 5 => uint,
+  ? 6 => digest256,
+  ? 7 => uint .le 32,
+  ? 8 => uint .le 16,
+  9 => uint .le 256,                  ; immutable lifetime transition count
+  ? 10 => uint .le 12,
+  ? 11 => digest256,
+  ? 12 => digest256,
+  ? 13 => id128,
+  ? 14 => uint .le 32,
+  ? 15 => uint .le 64,
+  ? 16 => [* chunk-range],
+  ? 17 => [* projection-result],
+  ? 18 => digest256
+}
+
+id128 = bytes .size 16
+digest256 = bytes .size 32
+bytes = bstr
+
+; Event validation is atomic: intent identity, digest, route epoch, exact
+; packet identity, evidence digest, and all caller-provided bounds are checked
+; together.  Same logical identity plus different meaning is terminal
+; conflict. Retry, restart, session renewal, Route change, Station migration,
+; and replay do not reset transition, retry, confirmation, or recovery bounds.
+; A Station outcome is never enough to cross Endpoint Accepted or Effect
+; Completed. A terminal state accepts only an identical replay/ack and rejects
+; all reopen attempts.

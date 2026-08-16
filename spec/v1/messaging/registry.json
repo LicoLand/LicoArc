@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/v1/messaging/registry.json",
+  "registryVersion": "licoarc.generic-messaging.v1",
+  "protocolLineId": "licoarc.v1",
+  "capabilityId": "licoarc.generic-messaging.v1",
+  "lifecycle": "Candidate",
+  "normativeLanguage": "en",
+  "scope": "endpoint-protected-generic-message-and-resumable-attachment",
+  "sourcePaths": {
+    "bounds": "spec/v1/messaging/bounds.json",
+    "labels": "spec/v1/messaging/labels.json",
+    "runtime": "spec/v1/messaging/runtime.cddl",
+    "messageSchema": "spec/v1/messaging/message.schema.json",
+    "controlSchema": "spec/v1/messaging/control.schema.json",
+    "sourceManifest": "spec/v1/messaging/source-manifest.json",
+    "conformanceManifest": "conformance/v1/messaging/manifest.json"
+  },
+  "representation": {
+    "source": "restricted-jcs-json",
+    "runtime": "deterministic-cbor",
+    "mapKeyEncoding": "compact-unsigned-integer",
+    "lengthEncoding": "definite",
+    "rawBytes": "bstr",
+    "tags": "forbidden",
+    "floats": "forbidden",
+    "indefiniteLengths": "forbidden",
+    "duplicateLabels": "reject",
+    "unknownCoreLabels": "reject",
+    "trailingBytes": "reject"
+  },
+  "protectedPlacement": {
+    "visibility": "peer-endpoints-only",
+    "stationVisibility": "none-after-protection",
+    "stationAuthority": "none",
+    "payloadInterpretation": "endpoint-or-reserved-control-only"
+  },
+  "classes": [
+    "event",
+    "request",
+    "response",
+    "error",
+    "cancel",
+    "streamChunk"
+  ],
+  "payloadPolicy": {
+    "ordinary": "exact-byte-round-trip",
+    "compression": "forbidden",
+    "normalization": "forbidden",
+    "parsing": "forbidden",
+    "rewrite": "forbidden",
+    "reservedContentTypes": "closed-control-grammar"
+  },
+  "attachmentPolicy": {
+    "descriptorImmutable": true,
+    "chunkKind": "streamChunk",
+    "chunkIdentity": "declaring-message-id-attachment-id-chunk-index",
+    "chunkSize": "fixed-by-bounds",
+    "countOffsetFinalLength": "derived-from-byteLength",
+    "wholeContentIntegrity": "contentDigest-only",
+    "chunkDigest": "forbidden",
+    "transferId": "forbidden",
+    "resumeToken": "forbidden",
+    "normalFeedback": "attachmentReceiveState",
+    "routineChunkConfirmation": "forbidden"
+  },
+  "receiveStatePolicy": {
+    "contentType": 4294901761,
+    "outerKind": "event",
+    "relatesTo": "declaring-message-id",
+    "ranges": "canonical-half-open-sorted-disjoint-non-adjacent",
+    "emptyRanges": "verified-completion-only",
+    "terminality": "complete-cancelled-failed-absorbing",
+    "lifetimeBounds": [
+      "MAX_ATTACHMENT_STATE_UPDATES",
+      "MAX_ATTACHMENT_RECOVERY_ROUNDS",
+      "MAX_ATTACHMENT_RETRANSMITTED_CHUNKS",
+      "MAX_ATTACHMENT_CONTROL_BYTES",
+      "ATTACHMENT_RECOVERY_WINDOW"
+    ],
+    "resetEvents": ["retry", "reconnect", "session-renewal", "route-change", "station-migration"]
+  },
+  "failurePolicy": {
+    "unknownCritical": "terminal-unknown-critical-extension",
+    "unknownReserved": "terminal-unknown-reserved-meaning",
+    "duplicate": "idempotent-only-when-identity-and-bytes-match",
+    "conflict": "terminal-conflicting-chunk",
+    "geometry": "terminal-invalid-geometry",
+    "digest": "terminal-digest-mismatch",
+    "stale": "terminal-stale-state",
+    "reset": "terminal-reset-attempt",
+    "bounds": "terminal-bound-exceeded"
+  },
+  "outOfScope": [
+    "product-command-catalogues",
+    "ordinary-payload-interpretation",
+    "storage-engines",
+    "retry-scheduling",
+    "station-to-station-protocol",
+    "station-receipts-as-endpoint-evidence"
+  ]
+}

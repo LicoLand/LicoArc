@@ -1,9 +1,0 @@
-[
-  {
-    "contractVersion": "fabrigent.relay.v1",
-    "envelopeId": "env_000000000001",
-    "mailboxId": "box_000000000001",
-    "ciphertext": "synthetic-ciphertext",
-    "expiresAt": "2030-01-01T00:00:00.000Z"
-  }
-]

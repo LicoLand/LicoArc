@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/v1/reliable/state.schema.json",
+  "title": "Lico Arc Reliable Exchange serializable tagged state",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["stateType", "stateTag", "logicalMessageId", "intentDigest", "transitionCount"],
+  "properties": {
+    "stateType": { "type": "string", "enum": ["outbox", "inbox", "attachment", "aggregate"] },
+    "stateTag": {
+      "type": "string",
+      "enum": [
+        "created", "in-flight", "ambiguous", "accepted", "effect-pending",
+        "completed", "cancelled", "failed", "new", "pending-evidence",
+        "pending", "partial"
+      ]
+    },
+    "logicalMessageId": { "type": "string", "pattern": "^[0-9a-f]{32}$" },
+    "intentDigest": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "applicationIdempotencyKey": { "type": "string", "pattern": "^[0-9a-f]{2,512}$" },
+    "routeEpoch": { "type": "integer", "minimum": 0, "maximum": 9007199254740991 },
+    "protectedPacketDigest": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "retryTransmissions": { "type": "integer", "minimum": 0, "maximum": 32 },
+    "routeMigrations": { "type": "integer", "minimum": 0, "maximum": 16 },
+    "transitionCount": { "type": "integer", "minimum": 0, "maximum": 256 },
+    "terminalFailureCode": { "type": "integer", "minimum": 0, "maximum": 12 },
+    "applicationResultDigest": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "evidenceDigest": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "attachmentId": { "type": "string", "pattern": "^[0-9a-f]{32}$" },
+    "recoveryRound": { "type": "integer", "minimum": 0, "maximum": 32 },
+    "stateUpdate": { "type": "integer", "minimum": 0, "maximum": 64 },
+    "requestedChunkRanges": { "type": "array", "maxItems": 32 },
+    "projectionResults": { "type": "array", "maxItems": 64 },
+    "memberResultsDigest": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/v1/transport/conformance-manifest.json",
+  "manifestVersion": "licoarc.https-transport-conformance-manifest.v1",
+  "contractVersion": "licoarc.https-transport.v1",
+  "lifecycle": "Candidate",
+  "validCasesPath": "conformance/v1/transport/valid.json",
+  "invalidCasesPath": "conformance/v1/transport/invalid.json",
+  "caseIds": [
+    "affiliate-control",
+    "reserve-control",
+    "submit-raw-packet",
+    "retrieve-control",
+    "claim-control",
+    "settle-control",
+    "transient-outcome",
+    "ambiguous-outcome"
+  ],
+  "negativeCaseIds": [
+    "tls-version",
+    "http-version",
+    "early-data",
+    "name-validation",
+    "wrong-method",
+    "unknown-path",
+    "query-present",
+    "invalid-handle",
+    "missing-operation-id",
+    "content-length-mismatch",
+    "transfer-encoding",
+    "wrong-media-type",
+    "empty-packet",
+    "packet-over-bound",
+    "noncanonical-control",
+    "duplicate-control-label",
+    "unknown-control-label",
+    "idempotency-conflict",
+    "storage-window-unavailable",
+    "station-evidence-claim"
+  ],
+  "assertions": [
+    "http2-over-tls13-only",
+    "rfc6125-san-name-validation",
+    "one-handle-in-fixed-request-target",
+    "one-raw-protected-packet-body",
+    "deterministic-cbor-control",
+    "fixed-storage-claim-and-idempotency-windows",
+    "typed-non-authoritative-outcomes",
+    "bounded-retry-with-identical-operation",
+    "declared-residual-metadata",
+    "zero-network-or-credential-effects"
+  ]
+}

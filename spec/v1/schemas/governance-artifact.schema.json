@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/v1/schemas/governance-artifact.schema.json",
+  "title": "LicoArc restricted governance artifact envelope",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["artifactType", "artifactVersion", "lifecycle", "payload"],
+  "properties": {
+    "artifactType": { "type": "string", "enum": ["manifest", "registry", "policy", "release-input"] },
+    "artifactVersion": { "type": "string", "pattern": "^licoarc\\.[a-z][a-z0-9-]*(?:\\.[a-z][a-z0-9-]*)?\\.v[1-9][0-9]*$", "maxLength": 128 },
+    "lifecycle": { "type": "string", "enum": ["Candidate", "Published", "Retired"] },
+    "payload": { "type": "object", "additionalProperties": false }
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/v1/evidence/bounds.json",
+  "registryVersion": "licoarc.transferable-evidence-bounds.v1",
+  "lifecycle": "Candidate",
+  "scope": "transferable-evidence-checkpoint-v1",
+  "units": {
+    "EVIDENCE_PENDING_WINDOW": "bounded-local-expiry-event",
+    "MAX_EVIDENCE_CHECKPOINT_BYTES": "bytes",
+    "MAX_PENDING_EVIDENCE_BYTES": "bytes"
+  },
+  "bounds": {
+    "MAX_EVIDENCE_STATEMENTS": 32,
+    "MAX_EVIDENCE_SIGNATURES": 4,
+    "MAX_EVIDENCE_SIGNATURE_BYTES": 4096,
+    "MAX_EVIDENCE_CHECKPOINT_BYTES": 8192,
+    "MAX_EVIDENCE_STATEMENT_BYTES": 262144,
+    "MAX_PENDING_EVIDENCE_STATEMENTS": 128,
+    "MAX_PENDING_EVIDENCE_BYTES": 262144,
+    "MAX_EVIDENCE_JOIN_TRANSITIONS": 256,
+    "MAX_IDENTITY_HISTORY_STATES": 64,
+    "MAX_KEYS_PER_IDENTITY_STATE": 4,
+    "MAX_EVIDENCE_BUNDLE_BYTES": 1048576,
+    "EVIDENCE_PENDING_WINDOW": 60,
+    "MAX_CHECKPOINT_RETRANSMISSIONS": 32
+  },
+  "relationships": [
+    "MAX_EVIDENCE_STATEMENTS > 0",
+    "MAX_EVIDENCE_SIGNATURES >= 2",
+    "MAX_EVIDENCE_SIGNATURE_BYTES * MAX_EVIDENCE_SIGNATURES < MAX_EVIDENCE_CHECKPOINT_BYTES",
+    "MAX_PENDING_EVIDENCE_STATEMENTS >= MAX_EVIDENCE_STATEMENTS",
+    "MAX_PENDING_EVIDENCE_BYTES >= MAX_EVIDENCE_CHECKPOINT_BYTES",
+    "MAX_IDENTITY_HISTORY_STATES > 0",
+    "MAX_KEYS_PER_IDENTITY_STATE > 0",
+    "MAX_CHECKPOINT_RETRANSMISSIONS > 0"
+  ],
+  "resetPolicy": "retry-restart-session-renewal-route-change-station-migration-replay-never-reset-or-extend-a-bound",
+  "pendingWindowStart": "first-receipt-of-unmatched-statement-or-checkpoint",
+  "pendingExpiryAuthority": "endpoint-local-expiry-event-only",
+  "trustedTime": "not-provided"
+}

@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/v1/schemas/foundation-bounds.schema.json",
+  "registryVersion": "licoarc.foundation-bounds.v1",
+  "lifecycle": "Candidate",
+  "scope": "foundation-source-and-runtime-parser",
+  "bounds": {
+    "MAX_SOURCE_FILES": 256,
+    "MAX_SOURCE_BYTES": 1048576,
+    "MAX_MANIFEST_BYTES": 65536,
+    "MAX_GOVERNANCE_BYTES": 1048576,
+    "MAX_RUNTIME_RECORD_BYTES": 1048576,
+    "MAX_RAW_BYTES": 262144,
+    "MAX_TEXT_BYTES": 4096,
+    "MAX_IDENTIFIER_BYTES": 128,
+    "MAX_ARRAY_ITEMS": 64,
+    "MAX_MAP_ENTRIES": 64,
+    "MAX_OBJECT_MEMBERS": 64,
+    "MAX_NESTING_DEPTH": 16,
+    "MAX_INTEGER": 9007199254740991
+  }
+}

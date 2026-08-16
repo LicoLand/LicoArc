@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/v1/protection/profile.schema.json",
+  "title": "Lico Arc complete Protection Profile descriptor",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profileId",
+    "profileName",
+    "strengthRank",
+    "lifecycle",
+    "algorithmDecisionId",
+    "retired",
+    "providerBoundary",
+    "establishment",
+    "authentication",
+    "transcript",
+    "keySchedule",
+    "ratchet",
+    "record",
+    "boundsRef",
+    "failurePolicyRef"
+  ],
+  "properties": {
+    "profileId": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "profileName": { "enum": ["baseline", "high-assurance"] },
+    "strengthRank": { "type": "integer", "minimum": 1, "maximum": 2 },
+    "lifecycle": { "enum": ["Candidate", "Published", "Retired"] },
+    "algorithmDecisionId": { "type": "string", "pattern": "^ALG-[a-z0-9-]+$" },
+    "retired": { "type": "boolean" },
+    "providerBoundary": { "type": "string", "minLength": 1, "maxLength": 256 },
+    "establishment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["construction", "classicalKeyAgreement", "postQuantumKeyEncapsulation", "sharedSecretOrder", "signedPrekeyAlgorithm", "oneTimePrekeyAlgorithm", "maxOneTimePrekeys", "oneTimePrekeyConsumption", "allZeroSharedSecret", "kemFailure"],
+      "properties": {
+        "construction": { "const": "asynchronous-prekey-hybrid" },
+        "classicalKeyAgreement": { "const": "X25519" },
+        "postQuantumKeyEncapsulation": { "enum": ["ML-KEM-768", "ML-KEM-1024"] },
+        "sharedSecretOrder": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "enum": ["X25519", "ML-KEM-768", "ML-KEM-1024"] } },
+        "signedPrekeyAlgorithm": { "const": "Ed25519" },
+        "oneTimePrekeyAlgorithm": { "const": "X25519" },
+        "maxOneTimePrekeys": { "type": "integer", "minimum": 1, "maximum": 64 },
+        "oneTimePrekeyConsumption": { "const": "at-most-one-per-authenticated-handshake" },
+        "allZeroSharedSecret": { "const": "reject" },
+        "kemFailure": { "const": "reject-without-state-advance" }
+      }
+    },
+    "authentication": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["identityKeyAlgorithms", "signatureCount", "signatures", "exactSet", "missingOrDuplicate"],
+      "properties": {
+        "identityKeyAlgorithms": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "enum": ["Ed25519", "ML-DSA-65", "ML-DSA-87"] } },
+        "signatureCount": { "const": 2 },
+        "signatures": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["algorithm", "purpose", "context"],
+            "properties": {
+              "algorithm": { "enum": ["Ed25519", "ML-DSA-65", "ML-DSA-87"] },
+              "purpose": { "enum": ["identity", "transcript"] },
+              "context": { "enum": ["LicoArc-Base-Identity", "LicoArc-High-Identity", "LicoArc-High-Transcript"] }
+            }
+          }
+        },
+        "exactSet": { "const": true },
+        "missingOrDuplicate": { "const": "reject" }
+      }
+    },
+    "transcript": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["domain", "digest", "encoding", "orderedFields", "authenticatedOnce", "establishedRepetition"],
+      "properties": {
+        "domain": { "enum": ["LP-BASE-TRANSCRIPT\u0000", "LP-HIGH-TRANSCRIPT\u0000"] },
+        "digest": { "const": "SHA-256" },
+        "encoding": { "const": "deterministic-cbor" },
+        "orderedFields": { "type": "array", "minItems": 17, "maxItems": 17, "uniqueItems": true, "items": { "type": "string" } },
+        "authenticatedOnce": { "const": true },
+        "establishedRepetition": { "const": "reject" }
+      }
+    },
+    "keySchedule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["extract", "rootEvolution", "expandLabels", "recordKey", "recordNonce", "aead", "nonceReuse"],
+      "properties": {
+        "extract": { "type": "string", "minLength": 1, "maxLength": 512 },
+        "rootEvolution": { "type": "string", "minLength": 1, "maxLength": 512 },
+        "expandLabels": { "type": "array", "minItems": 2, "maxItems": 3, "uniqueItems": true, "items": { "type": "string" } },
+        "recordKey": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "recordNonce": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "aead": { "const": "ChaCha20-Poly1305" },
+        "nonceReuse": { "const": "reject-and-terminal" }
+      }
+    },
+    "ratchet": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "chains", "recordAdvance", "pqEpochAdvance", "maxPendingEpochs", "epochTransition", "reset", "deletion"],
+      "properties": {
+        "kind": { "enum": ["DoubleRatchet", "TripleRatchet"] },
+        "chains": { "type": "array", "minItems": 2, "maxItems": 3, "uniqueItems": true, "items": { "type": "string" } },
+        "recordAdvance": { "const": "one-direction-chain-step-per-valid-record" },
+        "pqEpochAdvance": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "maxPendingEpochs": { "type": "integer", "minimum": 0, "maximum": 1 },
+        "epochTransition": { "enum": ["all-or-nothing", "not-applicable"] },
+        "reset": { "const": "new-authenticated-handshake-required" },
+        "deletion": { "type": "string", "minLength": 1, "maxLength": 256 }
+      }
+    },
+    "record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["outerFields", "innerProjection", "senderIdentityOuterVisibility", "associatedData", "nonceField", "profileField", "capabilityField", "endpointIdentityField"],
+      "properties": {
+        "outerFields": { "type": "array", "minItems": 6, "maxItems": 6, "uniqueItems": true, "items": { "type": "string" } },
+        "innerProjection": { "type": "array", "minItems": 3, "maxItems": 3, "uniqueItems": true, "items": { "type": "string" } },
+        "senderIdentityOuterVisibility": { "const": "never" },
+        "associatedData": { "type": "array", "minItems": 7, "maxItems": 7, "uniqueItems": true, "items": { "type": "string" } },
+        "nonceField": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "profileField": { "const": "forbidden-after-establishment" },
+        "capabilityField": { "const": "forbidden-after-establishment" },
+        "endpointIdentityField": { "const": "forbidden-after-establishment" }
+      }
+    },
+    "boundsRef": { "enum": ["baseline", "high"] },
+    "failurePolicyRef": { "const": "spec/v1/protection/failure.json" }
+  }
+}

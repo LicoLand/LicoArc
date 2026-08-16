@@ -1,0 +1,798 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/v1/identity/identity.schema.json",
+  "title": "Lico Arc Protocol v1 identity, discovery, affiliation, route, and transparency records",
+  "type": "object",
+  "oneOf": [
+    { "$ref": "#/$defs/identityUpdate" },
+    { "$ref": "#/$defs/affiliationUpdate" },
+    { "$ref": "#/$defs/routeUpdate" },
+    { "$ref": "#/$defs/firstContact" },
+    { "$ref": "#/$defs/discoveryInput" },
+    { "$ref": "#/$defs/transparencyBundle" },
+    { "$ref": "#/$defs/associationClaim" }
+  ],
+  "$defs": {
+    "digest256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "token256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "id128": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{32}$"
+    },
+    "epoch": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991
+    },
+    "unixSeconds": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "protocolLineId": {
+      "$ref": "#/$defs/digest256"
+    },
+    "endpointIdentityRef": {
+      "$ref": "#/$defs/digest256"
+    },
+    "signature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "keyId",
+        "signaturePurpose",
+        "signatureValue"
+      ],
+      "properties": {
+        "keyId": { "$ref": "#/$defs/id128" },
+        "signaturePurpose": {
+          "type": "string",
+          "enum": [
+            "endpoint-continuity",
+            "endpoint-evidence",
+            "station-affiliation",
+            "station-route-service",
+            "witness",
+            "gossip",
+            "discovery",
+            "verification"
+          ]
+        },
+        "signatureValue": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64,256}$"
+        }
+      }
+    },
+    "endpointContinuitySignature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "keyId",
+        "signaturePurpose",
+        "signatureValue"
+      ],
+      "properties": {
+        "keyId": { "$ref": "#/$defs/id128" },
+        "signaturePurpose": {
+          "type": "string",
+          "const": "endpoint-continuity"
+        },
+        "signatureValue": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64,256}$"
+        }
+      }
+    },
+    "stationAffiliationSignature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "keyId",
+        "signaturePurpose",
+        "signatureValue"
+      ],
+      "properties": {
+        "keyId": { "$ref": "#/$defs/id128" },
+        "signaturePurpose": {
+          "type": "string",
+          "const": "station-affiliation"
+        },
+        "signatureValue": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64,256}$"
+        }
+      }
+    },
+    "stationServiceSignature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "keyId",
+        "signaturePurpose",
+        "signatureValue"
+      ],
+      "properties": {
+        "keyId": { "$ref": "#/$defs/id128" },
+        "signaturePurpose": {
+          "type": "string",
+          "const": "station-route-service"
+        },
+        "signatureValue": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64,256}$"
+        }
+      }
+    },
+    "continuityProof": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "proofKind",
+        "predecessorStateDigest",
+        "signature"
+      ],
+      "properties": {
+        "proofKind": {
+          "type": "string",
+          "enum": [
+            "genesis",
+            "rotation",
+            "revocation",
+            "recovery",
+            "migration"
+          ]
+        },
+        "predecessorStateDigest": {
+          "anyOf": [
+            { "$ref": "#/$defs/digest256" },
+            { "type": "null" }
+          ]
+        },
+        "signature": { "$ref": "#/$defs/endpointContinuitySignature" }
+      }
+    },
+    "keyAuthorization": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "keyId",
+        "keyPurpose",
+        "keyDigest",
+        "keyState",
+        "validFromEpoch"
+      ],
+      "properties": {
+        "keyId": { "$ref": "#/$defs/id128" },
+        "keyPurpose": {
+          "type": "string",
+          "enum": [
+            "identity",
+            "evidence",
+            "handshake"
+          ]
+        },
+        "keyDigest": { "$ref": "#/$defs/digest256" },
+        "keyState": {
+          "type": "string",
+          "enum": [
+            "active",
+            "revoked",
+            "recovery"
+          ]
+        },
+        "validFromEpoch": { "$ref": "#/$defs/epoch" },
+        "revokedAtEpoch": { "$ref": "#/$defs/epoch" }
+      }
+    },
+    "stationAffiliation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "stationDescriptorDigest",
+        "affiliationCommitment",
+        "affiliationNonce",
+        "affiliationNotAfter",
+        "stationAffiliationSignature"
+      ],
+      "properties": {
+        "stationDescriptorDigest": { "$ref": "#/$defs/digest256" },
+        "affiliationCommitment": { "$ref": "#/$defs/digest256" },
+        "affiliationNonce": { "$ref": "#/$defs/token256" },
+        "affiliationNotAfter": { "$ref": "#/$defs/unixSeconds" },
+        "stationAffiliationSignature": {
+          "$ref": "#/$defs/stationAffiliationSignature"
+        }
+      }
+    },
+    "route": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "stationDescriptorDigest",
+        "affiliationCommitment",
+        "transportProfileId",
+        "handleClass",
+        "deliveryHandle",
+        "serviceUntil",
+        "stationServiceSignature"
+      ],
+      "properties": {
+        "stationDescriptorDigest": { "$ref": "#/$defs/digest256" },
+        "affiliationCommitment": { "$ref": "#/$defs/digest256" },
+        "transportProfileId": { "$ref": "#/$defs/digest256" },
+        "handleClass": {
+          "type": "string",
+          "const": "async"
+        },
+        "deliveryHandle": { "$ref": "#/$defs/token256" },
+        "serviceUntil": { "$ref": "#/$defs/unixSeconds" },
+        "stationServiceSignature": {
+          "$ref": "#/$defs/stationServiceSignature"
+        }
+      }
+    },
+    "identityUpdate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "recordType",
+        "protocolLineId",
+        "endpointIdentityRef",
+        "identityEpoch",
+        "transition",
+        "stateDigest",
+        "keyAuthorizations",
+        "continuityProof",
+        "endpointSignature"
+      ],
+      "properties": {
+        "recordType": {
+          "type": "string",
+          "const": "identityUpdate"
+        },
+        "protocolLineId": { "$ref": "#/$defs/protocolLineId" },
+        "endpointIdentityRef": { "$ref": "#/$defs/endpointIdentityRef" },
+        "identityEpoch": { "$ref": "#/$defs/epoch" },
+        "previousIdentityStateDigest": {
+          "$ref": "#/$defs/digest256"
+        },
+        "transition": {
+          "type": "string",
+          "enum": [
+            "genesis",
+            "rotation",
+            "revocation",
+            "recovery"
+          ]
+        },
+        "stateDigest": { "$ref": "#/$defs/digest256" },
+        "keyAuthorizations": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 4,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/keyAuthorization" }
+        },
+        "revokedKeyDigests": {
+          "type": "array",
+          "maxItems": 4,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/digest256" }
+        },
+        "recoveryProof": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "recoveryDigest",
+            "witnesses"
+          ],
+          "properties": {
+            "recoveryDigest": { "$ref": "#/$defs/digest256" },
+            "witnesses": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 4,
+              "uniqueItems": true,
+              "items": { "$ref": "#/$defs/signature" }
+            }
+          }
+        },
+        "continuityProof": { "$ref": "#/$defs/continuityProof" },
+        "endpointSignature": { "$ref": "#/$defs/endpointContinuitySignature" }
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "identityEpoch": { "const": 1 },
+            "transition": { "const": "genesis" },
+            "continuityProof": {
+              "properties": {
+                "proofKind": { "const": "genesis" },
+                "predecessorStateDigest": { "type": "null" }
+              }
+            }
+          },
+          "not": {
+            "anyOf": [
+              { "required": ["previousIdentityStateDigest"] },
+              { "required": ["recoveryProof"] },
+              { "required": ["revokedKeyDigests"] }
+            ]
+          }
+        },
+        {
+          "properties": {
+            "identityEpoch": { "minimum": 2 },
+            "transition": { "const": "rotation" }
+          },
+          "required": ["previousIdentityStateDigest"]
+        },
+        {
+          "properties": {
+            "identityEpoch": { "minimum": 2 },
+            "transition": { "const": "revocation" },
+            "revokedKeyDigests": { "minItems": 1 }
+          },
+          "required": [
+            "previousIdentityStateDigest",
+            "revokedKeyDigests"
+          ]
+        },
+        {
+          "properties": {
+            "identityEpoch": { "minimum": 2 },
+            "transition": { "const": "recovery" }
+          },
+          "required": [
+            "previousIdentityStateDigest",
+            "recoveryProof"
+          ]
+        }
+      ]
+    },
+    "affiliationUpdate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "recordType",
+        "protocolLineId",
+        "endpointIdentityRef",
+        "affiliationEpoch",
+        "transition",
+        "stationAffiliations",
+        "stateDigest",
+        "endpointSignature"
+      ],
+      "properties": {
+        "recordType": {
+          "type": "string",
+          "const": "affiliationUpdate"
+        },
+        "protocolLineId": { "$ref": "#/$defs/protocolLineId" },
+        "endpointIdentityRef": { "$ref": "#/$defs/endpointIdentityRef" },
+        "affiliationEpoch": { "$ref": "#/$defs/epoch" },
+        "previousAffiliationUpdateDigest": {
+          "$ref": "#/$defs/digest256"
+        },
+        "transition": {
+          "type": "string",
+          "enum": [
+            "genesis",
+            "migration",
+            "rotation",
+            "revocation",
+            "recovery"
+          ]
+        },
+        "stationAffiliations": {
+          "type": "array",
+          "maxItems": 4,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/stationAffiliation" }
+        },
+        "stateDigest": { "$ref": "#/$defs/digest256" },
+        "endpointSignature": { "$ref": "#/$defs/endpointContinuitySignature" }
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "affiliationEpoch": { "const": 1 },
+            "transition": { "const": "genesis" }
+          },
+          "not": {
+            "required": ["previousAffiliationUpdateDigest"]
+          }
+        },
+        {
+          "properties": {
+            "affiliationEpoch": { "minimum": 2 },
+            "transition": {
+              "enum": [
+                "migration",
+                "rotation",
+                "revocation",
+                "recovery"
+              ]
+            }
+          },
+          "required": ["previousAffiliationUpdateDigest"]
+        }
+      ]
+    },
+    "routeUpdate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "recordType",
+        "protocolLineId",
+        "endpointIdentityRef",
+        "peerEndpointIdentityRef",
+        "routeEpoch",
+        "transition",
+        "affiliationStateDigest",
+        "routeNotAfter",
+        "routes",
+        "endpointSignature"
+      ],
+      "properties": {
+        "recordType": {
+          "type": "string",
+          "const": "routeUpdate"
+        },
+        "protocolLineId": { "$ref": "#/$defs/protocolLineId" },
+        "endpointIdentityRef": { "$ref": "#/$defs/endpointIdentityRef" },
+        "peerEndpointIdentityRef": {
+          "$ref": "#/$defs/endpointIdentityRef"
+        },
+        "routeEpoch": { "$ref": "#/$defs/epoch" },
+        "previousRouteUpdateDigest": { "$ref": "#/$defs/digest256" },
+        "transition": {
+          "type": "string",
+          "enum": [
+            "genesis",
+            "migration",
+            "rotation",
+            "revocation",
+            "recovery"
+          ]
+        },
+        "affiliationStateDigest": { "$ref": "#/$defs/digest256" },
+        "routeNotAfter": { "$ref": "#/$defs/unixSeconds" },
+        "routes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 4,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/route" }
+        },
+        "endpointSignature": { "$ref": "#/$defs/endpointContinuitySignature" }
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "routeEpoch": { "const": 1 },
+            "transition": { "const": "genesis" }
+          },
+          "not": {
+            "required": ["previousRouteUpdateDigest"]
+          }
+        },
+        {
+          "properties": {
+            "routeEpoch": { "minimum": 2 },
+            "transition": {
+              "enum": [
+                "migration",
+                "rotation",
+                "revocation",
+                "recovery"
+              ]
+            }
+          },
+          "required": ["previousRouteUpdateDigest"]
+        }
+      ]
+    },
+    "protectedInvitation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "inviterEndpointIdentityRef",
+        "invitationBinding",
+        "purpose",
+        "audienceDigest"
+      ],
+      "properties": {
+        "inviterEndpointIdentityRef": {
+          "$ref": "#/$defs/endpointIdentityRef"
+        },
+        "inviteeEndpointIdentityRef": {
+          "$ref": "#/$defs/endpointIdentityRef"
+        },
+        "invitationBinding": { "$ref": "#/$defs/digest256" },
+        "purpose": {
+          "type": "string",
+          "const": "firstContact"
+        },
+        "audienceDigest": { "$ref": "#/$defs/digest256" },
+        "handshakeNonce": { "$ref": "#/$defs/token256" }
+      }
+    },
+    "firstContact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "recordType",
+        "handleClass",
+        "deliveryHandle",
+        "audienceDigest",
+        "invitationBinding",
+        "purpose",
+        "singleUse",
+        "expiresAt",
+        "protectedInvitation",
+        "peerVerificationState"
+      ],
+      "properties": {
+        "recordType": {
+          "type": "string",
+          "const": "firstContact"
+        },
+        "handleClass": {
+          "type": "string",
+          "const": "firstContact"
+        },
+        "deliveryHandle": { "$ref": "#/$defs/token256" },
+        "audienceDigest": { "$ref": "#/$defs/digest256" },
+        "invitationBinding": { "$ref": "#/$defs/digest256" },
+        "purpose": {
+          "type": "string",
+          "const": "firstContact"
+        },
+        "singleUse": {
+          "type": "boolean",
+          "const": true
+        },
+        "expiresAt": { "$ref": "#/$defs/unixSeconds" },
+        "protectedInvitation": {
+          "$ref": "#/$defs/protectedInvitation"
+        },
+        "peerVerificationState": {
+          "type": "string",
+          "const": "unverified"
+        }
+      }
+    },
+    "discoveryInput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "recordType",
+        "inputId",
+        "sourceKind",
+        "sourceRef",
+        "subjectEndpointIdentityRef",
+        "chainKind",
+        "stateEpoch",
+        "stateDigest",
+        "statementDigest",
+        "observedAt",
+        "expiresAt",
+        "sourceSignature",
+        "authenticatedInputOnly"
+      ],
+      "properties": {
+        "recordType": {
+          "type": "string",
+          "const": "discoveryInput"
+        },
+        "inputId": { "$ref": "#/$defs/id128" },
+        "sourceKind": {
+          "type": "string",
+          "enum": [
+            "directory",
+            "witness",
+            "gossip",
+            "station"
+          ]
+        },
+        "sourceRef": { "$ref": "#/$defs/digest256" },
+        "subjectEndpointIdentityRef": {
+          "$ref": "#/$defs/endpointIdentityRef"
+        },
+        "chainKind": {
+          "type": "string",
+          "enum": [
+            "identity",
+            "affiliation",
+            "route"
+          ]
+        },
+        "stateEpoch": { "$ref": "#/$defs/epoch" },
+        "stateDigest": { "$ref": "#/$defs/digest256" },
+        "statementDigest": { "$ref": "#/$defs/digest256" },
+        "observedAt": { "$ref": "#/$defs/unixSeconds" },
+        "expiresAt": { "$ref": "#/$defs/unixSeconds" },
+        "sourceSignature": { "$ref": "#/$defs/signature" },
+        "authenticatedInputOnly": {
+          "type": "boolean",
+          "const": true
+        }
+      }
+    },
+    "authenticatedInput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "inputId",
+        "inputKind",
+        "sourceRef",
+        "stateEpoch",
+        "stateDigest",
+        "statementDigest",
+        "expiresAt",
+        "signature",
+        "authenticatedInputOnly"
+      ],
+      "properties": {
+        "inputId": { "$ref": "#/$defs/id128" },
+        "inputKind": {
+          "type": "string",
+          "enum": [
+            "witness",
+            "gossip",
+            "discovery",
+            "stationSignature",
+            "verificationRecord"
+          ]
+        },
+        "sourceRef": { "$ref": "#/$defs/digest256" },
+        "stateEpoch": { "$ref": "#/$defs/epoch" },
+        "stateDigest": { "$ref": "#/$defs/digest256" },
+        "statementDigest": { "$ref": "#/$defs/digest256" },
+        "expiresAt": { "$ref": "#/$defs/unixSeconds" },
+        "signature": { "$ref": "#/$defs/signature" },
+        "authenticatedInputOnly": {
+          "type": "boolean",
+          "const": true
+        }
+      }
+    },
+    "transparencyBundle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "recordType",
+        "subjectEndpointIdentityRef",
+        "chainKind",
+        "stateEpoch",
+        "stateDigest",
+        "witnessInputs",
+        "gossipInputs",
+        "discoveryInputs",
+        "stationSignatureInputs",
+        "verificationInputs",
+        "authority",
+        "endpointRetainsContinuity"
+      ],
+      "properties": {
+        "recordType": {
+          "type": "string",
+          "const": "transparencyBundle"
+        },
+        "subjectEndpointIdentityRef": {
+          "$ref": "#/$defs/endpointIdentityRef"
+        },
+        "chainKind": {
+          "type": "string",
+          "enum": [
+            "identity",
+            "affiliation",
+            "route"
+          ]
+        },
+        "stateEpoch": { "$ref": "#/$defs/epoch" },
+        "stateDigest": { "$ref": "#/$defs/digest256" },
+        "witnessInputs": {
+          "type": "array",
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/authenticatedInput" }
+        },
+        "gossipInputs": {
+          "type": "array",
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/authenticatedInput" }
+        },
+        "discoveryInputs": {
+          "type": "array",
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/authenticatedInput" }
+        },
+        "stationSignatureInputs": {
+          "type": "array",
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/authenticatedInput" }
+        },
+        "verificationInputs": {
+          "type": "array",
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/authenticatedInput" }
+        },
+        "authority": {
+          "type": "string",
+          "const": "bounded-authenticated-input-only"
+        },
+        "endpointRetainsContinuity": {
+          "type": "boolean",
+          "const": true
+        },
+        "splitView": {
+          "type": "boolean"
+        }
+      }
+    },
+    "associationClaim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "recordType",
+        "claimId",
+        "issuerEndpointIdentityRef",
+        "subjectEndpointIdentityRefs",
+        "claimEpoch",
+        "claimDigest",
+        "expiresAt",
+        "authority",
+        "issuerSignature"
+      ],
+      "properties": {
+        "recordType": {
+          "type": "string",
+          "const": "associationClaim"
+        },
+        "claimId": { "$ref": "#/$defs/id128" },
+        "issuerEndpointIdentityRef": {
+          "$ref": "#/$defs/endpointIdentityRef"
+        },
+        "subjectEndpointIdentityRefs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/endpointIdentityRef" }
+        },
+        "claimEpoch": { "$ref": "#/$defs/epoch" },
+        "previousClaimDigest": { "$ref": "#/$defs/digest256" },
+        "claimDigest": { "$ref": "#/$defs/digest256" },
+        "expiresAt": { "$ref": "#/$defs/unixSeconds" },
+        "authority": {
+          "type": "string",
+          "const": "non-authoritative-protected-input"
+        },
+        "issuerSignature": { "$ref": "#/$defs/signature" }
+      },
+      "not": {
+        "required": [
+          "humanIdentity",
+          "accountId",
+          "deviceId",
+          "ownership",
+          "consent",
+          "peerTrust"
+        ]
+      }
+    }
+  }
+}

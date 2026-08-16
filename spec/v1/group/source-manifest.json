@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/v1/group/source-manifest.json",
+  "manifestVersion": "licoarc.group-collaboration-source-manifest.v1",
+  "contractVersion": "licoarc.group-collaboration.v1",
+  "lifecycle": "Candidate",
+  "representation": "restricted-jcs-json-plus-deterministic-cbor-runtime",
+  "digestAlgorithm": "sha256",
+  "sourceRoots": ["conformance/v1/group", "spec/v1/group"],
+  "sources": [
+    "conformance/v1/group/invalid.json",
+    "conformance/v1/group/manifest.json",
+    "conformance/v1/group/valid.json",
+    "spec/v1/group/bounds.json",
+    "spec/v1/group/field-registry.json",
+    "spec/v1/group/group.schema.json",
+    "spec/v1/group/labels.json",
+    "spec/v1/group/message.schema.json",
+    "spec/v1/group/registry.json",
+    "spec/v1/group/result.schema.json",
+    "spec/v1/group/runtime.cddl",
+    "spec/v1/group/state.schema.json",
+    "spec/v1/group/transition.schema.json"
+  ]
+}
