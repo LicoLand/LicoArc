@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/v1/reliable/source-manifest.json",
+  "manifestVersion": "licoarc.reliable-source-manifest.v1",
+  "contractVersion": "licoarc.reliable-exchange.v1",
+  "lifecycle": "Candidate",
+  "sourceRoots": [
+    "conformance/v1/reliable",
+    "spec/v1/reliable"
+  ],
+  "sources": [
+    "conformance/v1/reliable/invalid.json",
+    "conformance/v1/reliable/manifest.json",
+    "conformance/v1/reliable/valid.json",
+    "spec/v1/reliable/bounds.json",
+    "spec/v1/reliable/event.schema.json",
+    "spec/v1/reliable/intent.schema.json",
+    "spec/v1/reliable/labels.json",
+    "spec/v1/reliable/registry.json",
+    "spec/v1/reliable/runtime.cddl",
+    "spec/v1/reliable/state.schema.json"
+  ],
+  "sorted": true,
+  "undeclaredFiles": "reject",
+  "symlinks": "reject"
+}

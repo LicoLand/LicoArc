@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/v1/messaging/source-manifest.json",
+  "manifestVersion": "licoarc.messaging-source-manifest.v1",
+  "contractVersion": "licoarc.generic-messaging.v1",
+  "lifecycle": "Candidate",
+  "sourceRoots": [
+    "conformance/v1/messaging",
+    "spec/v1/messaging"
+  ],
+  "sources": [
+    "conformance/v1/messaging/invalid.json",
+    "conformance/v1/messaging/manifest.json",
+    "conformance/v1/messaging/valid.json",
+    "spec/v1/messaging/bounds.json",
+    "spec/v1/messaging/control.schema.json",
+    "spec/v1/messaging/labels.json",
+    "spec/v1/messaging/message.schema.json",
+    "spec/v1/messaging/registry.json",
+    "spec/v1/messaging/runtime.cddl"
+  ],
+  "sorted": true,
+  "undeclaredFiles": "reject",
+  "symlinks": "reject"
+}

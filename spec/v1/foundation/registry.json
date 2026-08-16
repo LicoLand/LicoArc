@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/v1/schemas/foundation-registry.schema.json",
+  "registryVersion": "licoarc.foundation-registry.v1",
+  "lifecycle": "Candidate",
+  "scope": "representation-lifecycle-identifier-bound-foundation",
+  "boundsPath": "spec/v1/foundation/bounds.json",
+  "identifiersPath": "spec/v1/foundation/identifiers.json",
+  "lifecyclePath": "spec/v1/foundation/lifecycle.json",
+  "labelsPath": "spec/v1/foundation/labels.json",
+  "representationPath": "spec/v1/foundation/representation.json",
+  "governanceSchemaPath": "spec/v1/schemas/protocol-line-manifest.schema.json",
+  "runtimeCddlPath": "spec/v1/foundation/runtime.cddl",
+  "parserPolicy": {
+    "governance": "restricted-jcs-and-closed-json-schema",
+    "runtime": "deterministic-cbor-and-closed-cddl",
+    "failClosed": true
+  },
+  "sourceClosure": {
+    "manifestPath": "spec/v1/foundation/source-manifest.json",
+    "roots": [
+      "spec/v1/foundation",
+      "spec/v1/schemas",
+      "conformance/v1/foundation"
+    ],
+    "undeclaredFiles": "reject",
+    "symlinks": "reject",
+    "sortedPaths": "required"
+  }
+}

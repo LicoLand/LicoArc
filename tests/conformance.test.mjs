@@ -1,124 +1,195 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import test from "node:test";
 
-const legacyArtifact = JSON.parse(
-  await readFile(new URL("../artifacts/fabrigent-v1.json", import.meta.url), "utf8")
-);
-const artifact = JSON.parse(
-  await readFile(new URL("../artifacts/fabrigent-v2.json", import.meta.url), "utf8")
-);
-const schema = artifact.sources["contracts/v2/relay-envelope.schema.json"];
-const policy = artifact.sources["policies/v2/relay-governance.json"];
-const valid = artifact.sources["conformance/v2/valid.json"];
-const invalid = artifact.sources["conformance/v2/invalid.json"];
+const repositoryRoot = fileURLToPath(new URL("../", import.meta.url));
+const sourceManifestPath = "spec/v1/manifest.json";
+const conformanceManifestPath = "conformance/v1/manifest.json";
+const artifactPath = "artifacts/v1/licoarc.bundle.json";
 
-function conforms(value) {
-  if (!value || typeof value !== "object" || Array.isArray(value)) {
-    return false;
-  }
-  const required = schema.required.every((key) => Object.hasOwn(value, key));
-  const onlyKnown = Object.keys(value).every((key) => Object.hasOwn(schema.properties, key));
-  return required &&
-    onlyKnown &&
-    value.contractVersion === "fabrigent.relay.v2" &&
-    typeof value.envelopeId === "string" &&
-    new RegExp(schema.properties.envelopeId.pattern, "u").test(value.envelopeId) &&
-    typeof value.mailboxId === "string" &&
-    new RegExp(schema.properties.mailboxId.pattern, "u").test(value.mailboxId) &&
-    typeof value.ciphertext === "string" &&
-    [...value.ciphertext].length >= schema.properties.ciphertext.minLength &&
-    [...value.ciphertext].length <= schema.properties.ciphertext.maxLength &&
-    isRfc3339DateTime(value.expiresAt);
-}
+const sourceManifest = await readJson(sourceManifestPath);
+const conformanceManifest = await readJson(conformanceManifestPath);
+const artifact = await readJson(artifactPath);
+const capabilityIds = conformanceManifest.capabilities.map(({ capabilityId }) =>
+  capabilityId
+);
 
-function isRfc3339DateTime(value) {
-  if (typeof value !== "string") return false;
-  const match = /^(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{2})[Tt](?<hour>\d{2}):(?<minute>\d{2}):(?<second>\d{2})(?:\.\d+)?(?<zone>[Zz]|[+-]\d{2}:\d{2})$/.exec(value);
-  if (!match) return false;
-  const fields = Object.fromEntries(
-    ["year", "month", "day", "hour", "minute", "second"]
-      .map((name) => [name, Number(match.groups[name])])
+test("Candidate artifact closes the manifest, conformance, and source registries", async () => {
+  assert.deepEqual(Object.keys(artifact).sort(), [
+    "artifactVersion",
+    "digest",
+    "digestAlgorithm",
+    "lifecycle",
+    "sources",
+    "wireId"
+  ]);
+  assert.equal(artifact.artifactVersion, "licoarc.bundle.v1");
+  assert.equal(artifact.wireId, "licoarc.protocol-line.v1");
+  assert.equal(artifact.lifecycle, "Candidate");
+  assert.equal(artifact.digestAlgorithm, "sha256");
+  assert.equal(sourceManifest.wireId, artifact.wireId);
+  assert.equal(sourceManifest.lifecycle, artifact.lifecycle);
+  assert.equal(conformanceManifest.wireId, artifact.wireId);
+  assert.equal(conformanceManifest.lifecycle, artifact.lifecycle);
+  assert.deepEqual(capabilityIds, [...capabilityIds].sort());
+  assert.equal(new Set(capabilityIds).size, capabilityIds.length);
+  assert.equal(capabilityIds.length, 9);
+  assert.ok(capabilityIds.every((capabilityId) =>
+    /^licoarc\.[a-z0-9-]+\.v1$/u.test(capabilityId)
+  ));
+
+  const expectedSources = [
+    sourceManifestPath,
+    ...sourceManifest.governanceSources,
+    ...sourceManifest.runtimeSources
+  ].sort();
+  assert.deepEqual(Object.keys(artifact.sources), expectedSources);
+  assert.deepEqual(
+    expectedSources,
+    [conformanceManifestPath, sourceManifestPath,
+      ...conformanceManifest.sourcePaths].sort()
   );
-  const leapYear = fields.year % 4 === 0 &&
-    (fields.year % 100 !== 0 || fields.year % 400 === 0);
-  const daysInMonth = [
-    31, leapYear ? 29 : 28, 31, 30, 31, 30,
-    31, 31, 30, 31, 30, 31
-  ][fields.month - 1];
-  if (fields.month < 1 || fields.month > 12 ||
-      fields.day < 1 || fields.day > daysInMonth ||
-      fields.hour > 23 || fields.minute > 59 || fields.second > 59) {
-    return false;
-  }
-  if (match.groups.zone !== "Z" && match.groups.zone !== "z") {
-    const [offsetHour, offsetMinute] = match.groups.zone.slice(1).split(":").map(Number);
-    if (offsetHour > 23 || offsetMinute > 59) return false;
-  }
-  return Number.isFinite(Date.parse(value));
-}
+  assert.ok(expectedSources.every((sourcePath) =>
+    !sourcePath.includes("/relay/")
+  ));
+  assert.deepEqual(
+    conformanceManifest.positiveCorpusPaths,
+    conformanceManifest.capabilities.map(({ positiveCorpusPath }) =>
+      positiveCorpusPath
+    ).sort()
+  );
+  assert.deepEqual(
+    conformanceManifest.negativeCorpusPaths,
+    conformanceManifest.capabilities.map(({ negativeCorpusPath }) =>
+      negativeCorpusPath
+    ).sort()
+  );
 
-test("artifact digest binds metadata and every canonical source", () => {
-  const canonical = `${JSON.stringify({
+  const artifactBody = {
     artifactVersion: artifact.artifactVersion,
+    wireId: artifact.wireId,
+    lifecycle: artifact.lifecycle,
     digestAlgorithm: artifact.digestAlgorithm,
     sources: artifact.sources
-  })}\n`;
-  const digest = createHash("sha256").update(canonical).digest("hex");
-  assert.equal(artifact.artifactVersion, "fabrigent.bundle.v2");
-  assert.equal(artifact.digestAlgorithm, "sha256");
-  assert.equal(artifact.digest, digest);
-});
+  };
+  assert.equal(artifact.digest, sha256(`${canonicalizeJson(artifactBody)}\n`));
 
-test("published v1 artifact remains immutable", () => {
-  const canonical = `${JSON.stringify(legacyArtifact.sources)}\n`;
-  assert.equal(legacyArtifact.artifactVersion, "fabrigent.bundle.v1");
-  assert.equal(legacyArtifact.digestAlgorithm, "sha256");
-  assert.equal(
-    createHash("sha256").update(canonical).digest("hex"),
-    "bf63cd32b9e24ac1c079ffd5b853e797cdd505c05e0defd4149a9207e2da4697"
-  );
-  assert.equal(
-    legacyArtifact.digest,
-    "bf63cd32b9e24ac1c079ffd5b853e797cdd505c05e0defd4149a9207e2da4697"
-  );
-});
+  const manifestCapabilityById = new Map(sourceManifest.capabilities.map(
+    (capability) => [capability.capabilityId, capability]
+  ));
+  const rawDigestByPath = Object.fromEntries(await Promise.all(
+    conformanceManifest.sourcePaths.map(async (sourcePath) => [
+      sourcePath,
+      sha256(await readFile(path.join(repositoryRoot, sourcePath)))
+    ])
+  ));
+  assert.deepEqual(conformanceManifest.sourceDigests, rawDigestByPath);
 
-test("conformance corpus accepts valid and rejects invalid examples", () => {
-  assert.ok(valid.every(conforms));
-  assert.ok(invalid.every(({ value }) => !conforms(value)));
-});
+  for (const capability of conformanceManifest.capabilities) {
+    const manifestCapability = manifestCapabilityById.get(capability.capabilityId);
+    assert.ok(manifestCapability);
+    assert.equal(capability.version, 1);
+    assert.equal(capability.lifecycle, "Candidate");
+    assertSortedUnique(capability.sourcePaths);
+    assert.deepEqual(Object.keys(capability.sourceDigests).sort(),
+      capability.sourcePaths);
+    for (const sourcePath of capability.sourcePaths) {
+      assert.equal(capability.sourceDigests[sourcePath], rawDigestByPath[sourcePath]);
+    }
+    const capabilityDigest = sha256(
+      `${canonicalizeJson(capability.sourceDigests)}\n`
+    );
+    assert.equal(capability.sourceDigest, capabilityDigest);
+    assert.equal(manifestCapability.sourceDigest, capabilityDigest);
+    assert.ok(capability.sourcePaths.includes(capability.registryPath));
+    assert.ok(capability.sourcePaths.includes(capability.positiveCorpusPath));
+    assert.ok(capability.sourcePaths.includes(capability.negativeCorpusPath));
+    for (const field of [
+      "policyPaths",
+      "schemaPaths",
+      "requirementPaths",
+      "vectorPaths"
+    ]) {
+      assertSortedUnique(capability[field]);
+      assert.ok(capability[field].every((sourcePath) =>
+        capability.sourcePaths.includes(sourcePath)
+      ));
+    }
+    assert.deepEqual(capability.vectorPaths, [
+      capability.positiveCorpusPath,
+      capability.negativeCorpusPath
+    ].sort());
 
-test("governance keeps relays outside encryption and host authority", () => {
-  assert.equal(policy.trustModel, "relay-is-untrusted");
-  assert.ok(policy.forbiddenCapabilities.includes("encryption"));
-  assert.ok(policy.forbiddenCapabilities.includes("client-key-custody"));
-  assert.ok(policy.forbiddenCapabilities.includes("host-permission-authority"));
-  for (const limit of [
-    "maxCiphertextBytes",
-    "maxEnvelopeRetentionSeconds",
-    "maxLeaseSeconds",
-    "maxMailboxEnvelopes",
-    "maxMailboxes",
-    "maxRelayEnvelopes"
-  ]) {
-    assert.ok(Number.isSafeInteger(policy.limits[limit]));
-    assert.ok(policy.limits[limit] > 0);
+    const registry = artifact.sources[capability.registryPath];
+    assert.equal(registry.lifecycle, "Candidate");
+    const positive = artifact.sources[capability.positiveCorpusPath];
+    const negative = artifact.sources[capability.negativeCorpusPath];
+    assert.ok(Array.isArray(positive));
+    assert.ok(Array.isArray(negative));
+    assertUniqueCaseIds(positive);
+    assertUniqueCaseIds(negative);
+    const positiveIds = positive.map(({ id }) => id);
+    const negativeIds = negative.map(({ id }) => id);
+    assert.equal(
+      new Set([...positiveIds, ...negativeIds]).size,
+      positiveIds.length + negativeIds.length
+    );
+    const corpusManifest = artifact.sources[capability.conformanceManifestPath];
+    assert.equal(corpusManifest.lifecycle, "Candidate");
+    const declaredNegativeIds = Array.isArray(corpusManifest.negativeCaseIds)
+      ? corpusManifest.negativeCaseIds
+      : corpusManifest.caseIds.filter((id) => id.includes(".reject."));
+    const declaredPositiveIds = Array.isArray(corpusManifest.negativeCaseIds)
+      ? corpusManifest.caseIds
+      : corpusManifest.caseIds.filter((id) => !id.includes(".reject."));
+    assert.deepEqual([...declaredPositiveIds].sort(), [...positiveIds].sort());
+    assert.deepEqual([...declaredNegativeIds].sort(), [...negativeIds].sort());
   }
 });
 
-test("schema validation enforces every relay-envelope field boundary", () => {
-  const base = valid[0];
-  assert.equal(conforms(null), false);
-  assert.equal(conforms([]), false);
-  assert.equal(conforms({ ...base, envelopeId: "short" }), false);
-  assert.equal(conforms({ ...base, mailboxId: "contains.invalid.characters" }), false);
-  assert.equal(conforms({ ...base, ciphertext: "" }), false);
-  assert.equal(conforms({
-    ...base,
-    ciphertext: "x".repeat(schema.properties.ciphertext.maxLength + 1)
-  }), false);
-  assert.equal(conforms({ ...base, expiresAt: "2030-02-30T00:00:00Z" }), false);
-  assert.equal(conforms({ ...base, expiresAt: "not-a-date" }), false);
+test("source values preserve deterministic CDDL and JSON representation", () => {
+  for (const [sourcePath, source] of Object.entries(artifact.sources)) {
+    if (sourcePath.endsWith(".cddl")) {
+      assert.equal(typeof source, "string");
+      assert.match(source, /\n$/u);
+      assert.doesNotMatch(source, /\r|\u0000/u);
+    } else {
+      assert.notEqual(source, undefined);
+    }
+  }
 });
+
+async function readJson(relativePath) {
+  return JSON.parse(await readFile(path.join(repositoryRoot, relativePath), "utf8"));
+}
+
+function assertSortedUnique(values) {
+  assert.ok(Array.isArray(values));
+  assert.deepEqual(values, [...values].sort());
+  assert.equal(new Set(values).size, values.length);
+}
+
+function assertUniqueCaseIds(cases) {
+  assert.ok(cases.every((case_) => typeof case_.id === "string"));
+  assert.equal(new Set(cases.map(({ id }) => id)).size, cases.length);
+}
+
+function sha256(value) {
+  return createHash("sha256").update(value).digest("hex");
+}
+
+function canonicalizeJson(value) {
+  if (value === null || typeof value === "boolean") return JSON.stringify(value);
+  if (typeof value === "number" || typeof value === "string") {
+    return JSON.stringify(value);
+  }
+  if (Array.isArray(value)) {
+    return `[${value.map(canonicalizeJson).join(",")}]`;
+  }
+  return `{${Object.keys(value).sort().map((key) =>
+    `${JSON.stringify(key)}:${canonicalizeJson(value[key])}`
+  ).join(",")}}`;
+}

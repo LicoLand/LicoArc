@@ -1,46 +1,48 @@
-# Fabrigent Documentation
+# Lico Arc Protocol Documentation
 
-This directory is the canonical index of Fabrigent's formal documentation.
-It records implemented and verified facts about the federation contract, the
-governance policy, the artifact pipeline, and repository operation.
-Proposals, plans, and unverified conclusions stay in ignored local material
-under `docs/plans/`, never in tracked documents.
+This directory indexes LicoArc's formal protocol-definition documents.
+The [README Core Domain Model](../README.md#core-domain-model) owns the exact
+three-entity model; `PRODUCT.md` owns durable intent; `ARCHITECTURE.md` owns
+implementation-neutral boundaries; and `STATUS.md` reports definition
+maturity only.
 
-## Project Documents
+The [Canonical Field Registry](../spec/FIELD-REGISTRY.md) is the sole
+normative field inventory. The [Decision Lifecycle](DECISION-LIFECYCLE.md)
+governs the independent [Algorithm Decision](algorithm-decisions/README.md)
+and [Message Field Decision](field-decisions/README.md) workspaces. Decision
+records explain history but never replace formal or machine-readable
+authorities.
 
-| Topic | Document |
-| --- | --- |
-| Product definition | [../PRODUCT.md](../PRODUCT.md) |
-| Contribution process | [../CONTRIBUTING.md](../CONTRIBUTING.md) |
-| Code of conduct | [../CODE_OF_CONDUCT.md](../CODE_OF_CONDUCT.md) |
-| Security policy | [../SECURITY.md](../SECURITY.md) |
-| Changelog | [../CHANGELOG.md](../CHANGELOG.md) |
-| Governed release status | [releases/README.md](releases/README.md) |
-| License | [../LICENSE](../LICENSE) |
-
-## Formal Documents
+## Project documents
 
 | Topic | Document |
 | --- | --- |
-| Repository and release operations | [RUNBOOK.md](RUNBOOK.md) |
-| Version and compatibility policy | [COMPATIBILITY.md](COMPATIBILITY.md) |
-| Repository entity and configuration layout | [ENTITY-CONFIG-LAYOUT.md](ENTITY-CONFIG-LAYOUT.md) |
-| Architecture of the artifact pipeline | [architecture/overview.md](architecture/overview.md) |
-| Artifact and conformance verification | [functionality/artifact-and-conformance-verification.md](functionality/artifact-and-conformance-verification.md) |
-| Relay envelope contract v2 | [protocols/relay-envelope-v2.md](protocols/relay-envelope-v2.md) |
-| Relay envelope contract v1 | [protocols/relay-envelope-v1.md](protocols/relay-envelope-v1.md) |
-| Synthetic envelope examples | [examples/relay-envelope-examples.md](examples/relay-envelope-examples.md) |
-| Architecture decision records | [adrs/README.md](adrs/README.md) |
-| ADR 0001: immutable versioned artifacts | [adrs/0001-immutable-versioned-artifacts.md](adrs/0001-immutable-versioned-artifacts.md) |
-| ADR 0002: bind artifact interpretation metadata | [adrs/0002-bind-artifact-interpretation-metadata.md](adrs/0002-bind-artifact-interpretation-metadata.md) |
+| Core domain model | [README](../README.md#core-domain-model) |
+| Product goal and boundary | [PRODUCT.md](../PRODUCT.md) |
+| Domain language | [CONTEXT.md](../CONTEXT.md) |
+| Definition status | [STATUS.md](STATUS.md) |
+| Architecture | [ARCHITECTURE.md](../ARCHITECTURE.md) |
+| Decision lifecycle | [DECISION-LIFECYCLE.md](DECISION-LIFECYCLE.md) |
+| Algorithm decisions | [algorithm-decisions/README.md](algorithm-decisions/README.md) |
+| Field decisions | [field-decisions/README.md](field-decisions/README.md) |
+| Canonical field registry | [spec/FIELD-REGISTRY.md](../spec/FIELD-REGISTRY.md) |
+| Specification index | [spec/README.md](../spec/README.md) |
+| Compatibility | [COMPATIBILITY.md](COMPATIBILITY.md) |
+| Source-integrity checks | [conformance/verification.md](conformance/verification.md) |
+| Repository operations | [RUNBOOK.md](RUNBOOK.md) |
 
-## Documentation Rules
+## Definition boundary
 
-- Document only implemented, verified facts. Every technical fact has one
-  canonical authority in `contracts/`, `policies/`, `conformance/`,
-  `artifacts/`, or a formal document; other documents reference it.
-- Update formal documentation in the same change that alters the capability
-  or boundary it describes.
-- Examples must be synthetic and privacy-safe.
-- Local plans (`docs/plans/`), reports (`docs/reports/`), caches (`cache/`),
-  and build outputs (`build/`) are ignored and must never be tracked.
+- LicoArc tracks normative prose, schemas, CDDL, registries, policies, bounds,
+  manifests, definition-level corpora, decisions, and deterministic artifacts.
+- `docs/references/` is ignored local research. No tracked source links to,
+  reads, embeds, or requires it.
+- Plans, reports, caches, build output, and raw evidence remain ignored.
+- Language implementations, providers, executable interoperability, device
+  validation, audits, packaging, publication channels, deployment, support,
+  operation, and product integration close only downstream.
+- Repository checks prove tracked definition-source consistency only.
+
+Formal documents change with their owning definition. Examples remain
+synthetic and privacy-safe. English formal documentation is normative; a
+Chinese localization is maintained only where explicitly provided.

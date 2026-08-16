@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/v1/schemas/foundation-labels.schema.json",
+  "registryVersion": "licoarc.foundation-labels.v1",
+  "lifecycle": "Candidate",
+  "scope": "foundation-runtime-record-only",
+  "keyEncoding": "compact-unsigned-integer",
+  "unknownLabelPolicy": "reject",
+  "duplicateLabelPolicy": "reject",
+  "labels": [
+    {
+      "name": "recordType",
+      "label": 0,
+      "required": true
+    },
+    {
+      "name": "protectedPacket",
+      "label": 1,
+      "required": false
+    },
+    {
+      "name": "sequence",
+      "label": 2,
+      "required": false
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/v1/schemas/foundation-representation.schema.json",
+  "title": "LicoArc source representation boundary",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "$id", "registryVersion", "lifecycle", "scope", "governance", "runtime", "composition"],
+  "properties": {
+    "$schema": { "type": "string", "const": "https://json-schema.org/draft/2020-12/schema" },
+    "$id": { "type": "string", "const": "https://licoarc.com/spec/v1/schemas/foundation-representation.schema.json" },
+    "registryVersion": { "type": "string", "const": "licoarc.foundation-representation.v1" },
+    "lifecycle": { "type": "string", "enum": ["Candidate", "Published", "Retired"] },
+    "scope": { "type": "string", "const": "source-representation-boundary" },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["encoding", "schemaDialect", "documentEncoding", "duplicateMemberPolicy", "unknownClosedMemberPolicy", "nonFiniteNumberPolicy"],
+      "properties": {
+        "encoding": { "type": "string", "const": "restricted-jcs" },
+        "schemaDialect": { "type": "string", "const": "https://json-schema.org/draft/2020-12/schema" },
+        "documentEncoding": { "type": "string", "const": "utf-8" },
+        "duplicateMemberPolicy": { "type": "string", "const": "reject" },
+        "unknownClosedMemberPolicy": { "type": "string", "const": "reject" },
+        "nonFiniteNumberPolicy": { "type": "string", "const": "reject" }
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["encoding", "schemaLanguage", "mapKeyEncoding", "lengthEncoding", "rawBytes", "duplicateLabelPolicy", "unknownLabelPolicy", "trailingBytePolicy", "indefiniteLengthPolicy"],
+      "properties": {
+        "encoding": { "type": "string", "const": "deterministic-cbor" },
+        "schemaLanguage": { "type": "string", "const": "closed-cddl" },
+        "mapKeyEncoding": { "type": "string", "const": "compact-unsigned-integer" },
+        "lengthEncoding": { "type": "string", "const": "definite" },
+        "rawBytes": { "type": "string", "const": "bounded-bstr" },
+        "duplicateLabelPolicy": { "type": "string", "const": "reject" },
+        "unknownLabelPolicy": { "type": "string", "const": "reject" },
+        "trailingBytePolicy": { "type": "string", "const": "reject" },
+        "indefiniteLengthPolicy": { "type": "string", "const": "reject" }
+      }
+    },
+    "composition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["onlyBoundary", "translation", "substitution", "governanceAsRuntimeWire", "runtimeAsGovernanceInput"],
+      "properties": {
+        "onlyBoundary": { "type": "string", "const": "protocol-line-manifest" },
+        "translation": { "type": "string", "const": "forbidden" },
+        "substitution": { "type": "string", "const": "forbidden" },
+        "governanceAsRuntimeWire": { "type": "string", "const": "forbidden" },
+        "runtimeAsGovernanceInput": { "type": "string", "const": "forbidden" }
+      }
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/v1/schemas/source-manifest.schema.json",
+  "manifestVersion": "licoarc.foundation-source-manifest.v1",
+  "artifactVersion": "licoarc.foundation-bundle.v1",
+  "lifecycle": "Candidate",
+  "representation": "jcs-governance-plus-deterministic-cbor-runtime",
+  "digestAlgorithm": "sha256",
+  "sourceRoots": [
+    "conformance/v1/foundation",
+    "spec/v1/foundation",
+    "spec/v1/schemas"
+  ],
+  "sources": [
+    "conformance/v1/foundation/invalid.json",
+    "conformance/v1/foundation/manifest.json",
+    "conformance/v1/foundation/valid.json",
+    "spec/v1/foundation/bounds.json",
+    "spec/v1/foundation/identifiers.json",
+    "spec/v1/foundation/labels.json",
+    "spec/v1/foundation/lifecycle.json",
+    "spec/v1/foundation/registry.json",
+    "spec/v1/foundation/representation.json",
+    "spec/v1/foundation/runtime.cddl",
+    "spec/v1/schemas/foundation-bounds.schema.json",
+    "spec/v1/schemas/foundation-identifiers.schema.json",
+    "spec/v1/schemas/foundation-labels.schema.json",
+    "spec/v1/schemas/foundation-lifecycle.schema.json",
+    "spec/v1/schemas/foundation-registry.schema.json",
+    "spec/v1/schemas/foundation-representation.schema.json",
+    "spec/v1/schemas/governance-artifact.schema.json",
+    "spec/v1/schemas/protocol-line-manifest.schema.json",
+    "spec/v1/schemas/runtime-record.schema.json",
+    "spec/v1/schemas/source-manifest.schema.json"
+  ]
+}

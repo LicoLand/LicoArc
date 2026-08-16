@@ -2,7 +2,7 @@
 
 ## Our Commitment
 
-The Fabrigent project is committed to a harassment-free, professional
+The Lico Arc Protocol project is committed to a harassment-free, professional
 environment for everyone, regardless of background or identity.
 
 ## Expected Behavior
@@ -22,7 +22,7 @@ environment for everyone, regardless of background or identity.
 Maintainers may remove, edit, or reject contributions that violate this code
 and may suspend repeat offenders from project spaces. Report unacceptable
 behavior through the repository host's private reporting channels at
-<https://github.com/LicoLand/Fabrigent>.
+<https://github.com/LicoLand/LicoArc>.
 
 ## Scope
 

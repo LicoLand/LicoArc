@@ -1,5 +1,5 @@
 {
-  "name": "@licoland/fabrigent",
+  "name": "@licoland/licoarc",
   "version": "0.1.0",
   "private": false,
   "type": "module",
@@ -7,7 +7,7 @@
   "description": "Neutral, versioned federation communication contracts and governance policy.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/LicoLand/Fabrigent.git"
+    "url": "https://github.com/LicoLand/LicoArc.git"
   },
   "scripts": {
     "artifacts:generate": "node tools/generate-artifact.mjs",

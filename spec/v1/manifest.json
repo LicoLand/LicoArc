@@ -1,0 +1,212 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "manifestVersion": "licoarc.protocol-line-manifest.v1",
+  "wireId": "licoarc.protocol-line.v1",
+  "lifecycle": "Candidate",
+  "minimumSafe": {
+    "protocolLineVersion": 1,
+    "capabilityVersions": [
+      {
+        "capabilityId": "licoarc.federation-governance.v1",
+        "minimumVersion": 1
+      },
+      {
+        "capabilityId": "licoarc.generic-messaging.v1",
+        "minimumVersion": 1
+      },
+      {
+        "capabilityId": "licoarc.group-collaboration.v1",
+        "minimumVersion": 1
+      },
+      {
+        "capabilityId": "licoarc.https-transport.v1",
+        "minimumVersion": 1
+      },
+      {
+        "capabilityId": "licoarc.identity.v1",
+        "minimumVersion": 1
+      },
+      {
+        "capabilityId": "licoarc.pairwise-protection.v1",
+        "minimumVersion": 1
+      },
+      {
+        "capabilityId": "licoarc.protocol-foundation.v1",
+        "minimumVersion": 1
+      },
+      {
+        "capabilityId": "licoarc.reliable-exchange.v1",
+        "minimumVersion": 1
+      },
+      {
+        "capabilityId": "licoarc.transferable-evidence.v1",
+        "minimumVersion": 1
+      }
+    ]
+  },
+  "capabilities": [
+    {
+      "capabilityId": "licoarc.federation-governance.v1",
+      "version": 1,
+      "sourceDigest": "4c326f98c85c5b5a02ed8fa15e32d9e3bcf8c253da9e3b9a0d700c1b2672b86a"
+    },
+    {
+      "capabilityId": "licoarc.generic-messaging.v1",
+      "version": 1,
+      "sourceDigest": "fcaac9de57ba9ceacd1f82116e0930b1eacb205c76e299ce5b9206492953ef63"
+    },
+    {
+      "capabilityId": "licoarc.group-collaboration.v1",
+      "version": 1,
+      "sourceDigest": "9bf85a1ea957303d5f0b3e5e453663689ead9fac59d62f95d56d123eab829d61"
+    },
+    {
+      "capabilityId": "licoarc.https-transport.v1",
+      "version": 1,
+      "sourceDigest": "6d4636c983606fb266443a3ce05171a8af7ab5284e0ce301be7024ce16592cb5"
+    },
+    {
+      "capabilityId": "licoarc.identity.v1",
+      "version": 1,
+      "sourceDigest": "7739ae54e2344d4518d8bb62c5691a54223e92470b31eda38528daf834c4064c"
+    },
+    {
+      "capabilityId": "licoarc.pairwise-protection.v1",
+      "version": 1,
+      "sourceDigest": "d9f0726380060ac35dc892fd70b9ac5881752372bc2785ad0d942ac4fbb1d090"
+    },
+    {
+      "capabilityId": "licoarc.protocol-foundation.v1",
+      "version": 1,
+      "sourceDigest": "40dd6e14fcd17bf2ef8f7afa323987241c1f7953ec863289d12481e83b6b8494"
+    },
+    {
+      "capabilityId": "licoarc.reliable-exchange.v1",
+      "version": 1,
+      "sourceDigest": "fc71600281f967b5daf95bfdbf54e8ad469145297bd556587c5755f89c91d7f2"
+    },
+    {
+      "capabilityId": "licoarc.transferable-evidence.v1",
+      "version": 1,
+      "sourceDigest": "e9e1d46247f063dbb45bd30fa8862b007de74c9e3344ca0d5dce5ac3886bb56e"
+    }
+  ],
+  "governanceSources": [
+    "conformance/v1/evidence/invalid.json",
+    "conformance/v1/evidence/manifest.json",
+    "conformance/v1/evidence/valid.json",
+    "conformance/v1/foundation/invalid.json",
+    "conformance/v1/foundation/manifest.json",
+    "conformance/v1/foundation/valid.json",
+    "conformance/v1/governance/invalid.json",
+    "conformance/v1/governance/manifest.json",
+    "conformance/v1/governance/valid.json",
+    "conformance/v1/group/invalid.json",
+    "conformance/v1/group/manifest.json",
+    "conformance/v1/group/valid.json",
+    "conformance/v1/identity/invalid.json",
+    "conformance/v1/identity/manifest.json",
+    "conformance/v1/identity/valid.json",
+    "conformance/v1/manifest.json",
+    "conformance/v1/messaging/invalid.json",
+    "conformance/v1/messaging/manifest.json",
+    "conformance/v1/messaging/valid.json",
+    "conformance/v1/protection/invalid.json",
+    "conformance/v1/protection/manifest.json",
+    "conformance/v1/protection/valid.json",
+    "conformance/v1/reliable/invalid.json",
+    "conformance/v1/reliable/manifest.json",
+    "conformance/v1/reliable/valid.json",
+    "conformance/v1/transport/invalid.json",
+    "conformance/v1/transport/manifest.json",
+    "conformance/v1/transport/valid.json",
+    "spec/v1/evidence/bounds.json",
+    "spec/v1/evidence/checkpoint.schema.json",
+    "spec/v1/evidence/identity-bundle.schema.json",
+    "spec/v1/evidence/labels.json",
+    "spec/v1/evidence/registry.json",
+    "spec/v1/evidence/source-manifest.json",
+    "spec/v1/evidence/statement.schema.json",
+    "spec/v1/foundation/bounds.json",
+    "spec/v1/foundation/identifiers.json",
+    "spec/v1/foundation/labels.json",
+    "spec/v1/foundation/lifecycle.json",
+    "spec/v1/foundation/registry.json",
+    "spec/v1/foundation/representation.json",
+    "spec/v1/foundation/source-manifest.json",
+    "spec/v1/governance/governance.policy.json",
+    "spec/v1/governance/governance.schema.json",
+    "spec/v1/governance/registry.json",
+    "spec/v1/governance/source-manifest.json",
+    "spec/v1/group/bounds.json",
+    "spec/v1/group/field-registry.json",
+    "spec/v1/group/group.schema.json",
+    "spec/v1/group/labels.json",
+    "spec/v1/group/message.schema.json",
+    "spec/v1/group/registry.json",
+    "spec/v1/group/result.schema.json",
+    "spec/v1/group/source-manifest.json",
+    "spec/v1/group/state.schema.json",
+    "spec/v1/group/transition.schema.json",
+    "spec/v1/identity/identity.policy.json",
+    "spec/v1/identity/identity.schema.json",
+    "spec/v1/identity/registry.json",
+    "spec/v1/messaging/bounds.json",
+    "spec/v1/messaging/control.schema.json",
+    "spec/v1/messaging/labels.json",
+    "spec/v1/messaging/message.schema.json",
+    "spec/v1/messaging/registry.json",
+    "spec/v1/messaging/source-manifest.json",
+    "spec/v1/protection/bounds.json",
+    "spec/v1/protection/capability.schema.json",
+    "spec/v1/protection/epoch.schema.json",
+    "spec/v1/protection/failure.json",
+    "spec/v1/protection/handshake.schema.json",
+    "spec/v1/protection/labels.json",
+    "spec/v1/protection/profile.schema.json",
+    "spec/v1/protection/profiles.json",
+    "spec/v1/protection/record.schema.json",
+    "spec/v1/protection/registry.json",
+    "spec/v1/protection/resource-contract.json",
+    "spec/v1/protection/source-manifest.json",
+    "spec/v1/protection/state.json",
+    "spec/v1/reliable/bounds.json",
+    "spec/v1/reliable/event.schema.json",
+    "spec/v1/reliable/intent.schema.json",
+    "spec/v1/reliable/labels.json",
+    "spec/v1/reliable/registry.json",
+    "spec/v1/reliable/source-manifest.json",
+    "spec/v1/reliable/state.schema.json",
+    "spec/v1/requirement-registry.schema.json",
+    "spec/v1/schemas/foundation-bounds.schema.json",
+    "spec/v1/schemas/foundation-identifiers.schema.json",
+    "spec/v1/schemas/foundation-labels.schema.json",
+    "spec/v1/schemas/foundation-lifecycle.schema.json",
+    "spec/v1/schemas/foundation-registry.schema.json",
+    "spec/v1/schemas/foundation-representation.schema.json",
+    "spec/v1/schemas/governance-artifact.schema.json",
+    "spec/v1/schemas/protocol-line-manifest.schema.json",
+    "spec/v1/schemas/runtime-record.schema.json",
+    "spec/v1/schemas/source-manifest.schema.json",
+    "spec/v1/transport/bounds.json",
+    "spec/v1/transport/labels.json",
+    "spec/v1/transport/registry.json",
+    "spec/v1/transport/request.schema.json",
+    "spec/v1/transport/response.schema.json",
+    "spec/v1/transport/source-manifest.json"
+  ],
+  "runtimeSources": [
+    "spec/v1/evidence/runtime.cddl",
+    "spec/v1/foundation/runtime.cddl",
+    "spec/v1/group/runtime.cddl",
+    "spec/v1/identity/runtime.cddl",
+    "spec/v1/messaging/runtime.cddl",
+    "spec/v1/protection/runtime.cddl",
+    "spec/v1/reliable/runtime.cddl",
+    "spec/v1/transport/runtime.cddl"
+  ],
+  "boundsRegistry": "spec/v1/foundation/bounds.json",
+  "handshakeBinding": "manifest-capabilities-identities-and-declarations",
+  "sessionLock": true,
+  "translationPolicy": "forbidden"
+}

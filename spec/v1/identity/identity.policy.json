@@ -1,0 +1,189 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/v1/identity/identity.policy.json",
+  "title": "Lico Arc Protocol identity and transparency policy",
+  "registryVersion": "licoarc.identity-policy.v1",
+  "wireId": "licoarc.identity.v1",
+  "lifecycle": "Candidate",
+  "scope": "endpoint-identity-discovery-affiliation-route-transparency",
+  "unknownPolicy": "reject",
+  "retiredPolicy": "reject",
+  "downgradePolicy": "reject",
+  "bounds": {
+    "MAX_RECORD_BYTES": 65536,
+    "MAX_STATE_BYTES": 262144,
+    "MAX_DIGEST_BYTES": 32,
+    "MAX_NONCE_BYTES": 32,
+    "MAX_DELIVERY_HANDLE_BYTES": 32,
+    "MAX_TEXT_BYTES": 128,
+    "MAX_IDENTITY_CHAIN_RECORDS": 64,
+    "MAX_AFFILIATION_CHAIN_RECORDS": 64,
+    "MAX_ROUTE_CHAIN_RECORDS": 64,
+    "MAX_AFFILIATIONS": 4,
+    "MAX_ROUTES": 4,
+    "MAX_DISCOVERY_INPUTS": 8,
+    "MAX_WITNESS_INPUTS": 8,
+    "MAX_GOSSIP_INPUTS": 8,
+    "MAX_STATION_INPUTS": 8,
+    "MAX_VERIFICATION_INPUTS": 8,
+    "MAX_ASSOCIATED_ENDPOINTS": 8,
+    "MAX_SIGNATURES": 4,
+    "MAX_PATH_DIGESTS": 64,
+    "MAX_VERIFICATION_EVIDENCE_BYTES": 1024,
+    "MAX_EPOCH": 9007199254740991
+  },
+  "chains": {
+    "identity": {
+      "scope": "one-stable-endpoint-identity",
+      "genesisEpoch": 1,
+      "successorStep": 1,
+      "predecessor": "absent-at-genesis-required-after-genesis",
+      "highWater": "endpoint-retained",
+      "transitionKinds": [
+        "genesis",
+        "rotation",
+        "revocation",
+        "recovery"
+      ]
+    },
+    "affiliation": {
+      "scope": "one-stable-endpoint-identity-global-across-peers",
+      "genesisEpoch": 1,
+      "successorStep": 1,
+      "predecessor": "absent-at-genesis-required-after-genesis",
+      "highWater": "endpoint-retained-and-peer-reconciled",
+      "transitionKinds": [
+        "genesis",
+        "migration",
+        "rotation",
+        "revocation",
+        "recovery"
+      ]
+    },
+    "route": {
+      "scope": "stable-endpoint-and-one-peer-relationship",
+      "genesisEpoch": 1,
+      "successorStep": 1,
+      "predecessor": "absent-at-genesis-required-after-genesis",
+      "highWater": "endpoint-and-peer-retained",
+      "transitionKinds": [
+        "genesis",
+        "migration",
+        "rotation",
+        "revocation",
+        "recovery"
+      ]
+    }
+  },
+  "successorValidation": {
+    "order": [
+      "closed-schema",
+      "scope-and-identity",
+      "epoch-and-predecessor",
+      "canonical-logical-digest",
+      "continuity-proof",
+      "transition-specific-rules",
+      "cross-chain-references",
+      "bounds-and-observer-rules"
+    ],
+    "replacement": "atomic-after-complete-validation",
+    "arrivalOrder": "never-selects",
+    "stationTime": "never-selects",
+    "directoryOrder": "never-selects",
+    "expiry": "never-selects-and-never-resets-high-water",
+    "gap": "reject-and-no-mutation",
+    "fork": "reject-equal-epoch-different-digest-and-no-mutation",
+    "replay": "reject-duplicate-or-idempotently-observe-without-mutation",
+    "rollback": "reject-lower-epoch-and-no-mutation",
+    "continuityFailure": "new-endpoint-requires-repairing-not-migration",
+    "overflow": "reject-without-wrap"
+  },
+  "stationBoundary": {
+    "identityVisibility": "never",
+    "affiliationOperationInput": [
+      "stationDescriptorDigest",
+      "affiliationCommitment",
+      "operationId"
+    ],
+    "affiliationStatementScope": [
+      "stationDescriptorDigest",
+      "affiliationCommitment",
+      "affiliationNotAfter",
+      "stationAffiliationSignature"
+    ],
+    "routeStatementScope": [
+      "stationDescriptorDigest",
+      "affiliationCommitment",
+      "transportProfileId",
+      "deliveryHandle",
+      "serviceUntil",
+      "stationServiceSignature"
+    ],
+    "stationAuthority": "finite-service-statement-only",
+    "forbiddenClaims": [
+      "endpoint-identity",
+      "peer-trust",
+      "availability",
+      "retention",
+      "delivery",
+      "acceptance",
+      "application-effect",
+      "chain-order",
+      "fork-selection",
+      "key-custody"
+    ]
+  },
+  "firstContact": {
+    "handleClass": "firstContact",
+    "purpose": "first-contact-routing-only",
+    "singleUse": true,
+    "audienceBound": true,
+    "scopeBound": true,
+    "shortLived": true,
+    "protectedInvitationBinding": true,
+    "independentTokenField": false,
+    "stableEndpointIdentifier": false,
+    "initialPeerVerificationState": "unverified",
+    "stationSuccessMeaning": "routing-hint-only",
+    "redemption": "one-accepted-attempt; replay-rejects-without-trust-change"
+  },
+  "transparency": {
+    "inputKinds": [
+      "witness",
+      "gossip",
+      "discovery",
+      "stationSignature",
+      "verificationRecord"
+    ],
+    "authority": "bounded-authenticated-input-only",
+    "endpointRetainsContinuity": true,
+    "inputSelectsIdentity": false,
+    "inputSelectsTrust": false,
+    "splitView": "surface-conflict-to-endpoint;-never-pick-arrival-or-source",
+    "nonEnumeration": true
+  },
+  "associationClaims": {
+    "authority": "non-authoritative-protected-input",
+    "mergesIdentities": false,
+    "provesHuman": false,
+    "provesAccount": false,
+    "provesDevice": false,
+    "provesOwnership": false,
+    "provesConsent": false,
+    "setsPeerTrust": false
+  },
+  "endpointIdentityExclusions": [
+    "stationId",
+    "stationDescriptorDigest",
+    "domain",
+    "providerId",
+    "accountId",
+    "deviceId",
+    "listener",
+    "listenerLocation",
+    "deliveryHandle",
+    "mailboxId",
+    "networkId",
+    "directoryId"
+  ]
+}

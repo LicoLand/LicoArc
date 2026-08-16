@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/v1/group/registry.json",
+  "registryVersion": "licoarc.group-collaboration.v1",
+  "protocolLineId": "licoarc.v1",
+  "capabilityId": "licoarc.group-collaboration.v1",
+  "lifecycle": "Candidate",
+  "normativeLanguage": "en",
+  "scope": "protected-bounded-group-state-message-and-per-member-projection",
+  "sourcePaths": {
+    "bounds": "spec/v1/group/bounds.json",
+    "labels": "spec/v1/group/labels.json",
+    "runtime": "spec/v1/group/runtime.cddl",
+    "schema": "spec/v1/group/group.schema.json",
+    "stateSchema": "spec/v1/group/state.schema.json",
+    "messageSchema": "spec/v1/group/message.schema.json",
+    "transitionSchema": "spec/v1/group/transition.schema.json",
+    "resultSchema": "spec/v1/group/result.schema.json",
+    "fieldRegistry": "spec/v1/group/field-registry.json",
+    "sourceManifest": "spec/v1/group/source-manifest.json",
+    "conformanceManifest": "conformance/v1/group/manifest.json"
+  },
+  "representation": {
+    "governance": "restricted-jcs-json",
+    "runtime": "deterministic-cbor",
+    "mapKeyEncoding": "compact-unsigned-integer",
+    "lengthEncoding": "definite",
+    "rawBytes": "bstr",
+    "tags": "forbidden",
+    "floats": "forbidden",
+    "indefiniteLengths": "forbidden",
+    "duplicateLabels": "reject",
+    "unknownLabels": "reject",
+    "trailingBytes": "reject"
+  },
+  "stateIdentity": {
+    "digest": "SHA-256(domain=LICOARC-GROUP-STATE\\0, canonical-state)",
+    "tuple": ["groupId", "groupEpoch", "previousGroupStateDigest", "members", "transitionDigest"],
+    "genesisEpoch": 0,
+    "successorRule": "exactly-predecessor-epoch-plus-one",
+    "predecessorRule": "exact-complete-canonical-immediate-predecessor"
+  },
+  "transitionAuthorization": {
+    "genesis": "author-is-a-state-authority-member-in-the-genesis-snapshot",
+    "successor": "author-is-a-state-authority-in-the-exact-predecessor-snapshot",
+    "operations": ["add", "remove", "role"],
+    "stationOrder": "never-authority",
+    "productPermissions": "never-authority",
+    "arrivalOrder": "never-authority",
+    "evidence": "the-Endpoint-protection-and-Endpoint-evidence-context-authenticate-the-transition"
+  },
+  "forkPolicy": {
+    "samePredecessorAndEpochSameDigest": "idempotent-duplicate",
+    "samePredecessorAndEpochDifferentDigest": "reject-fork",
+    "missingPredecessor": "reject-gap",
+    "staleEpoch": "reject-stale",
+    "crossGroup": "reject-cross-group",
+    "terminalRemovalReplay": "reject-removed-member"
+  },
+  "projectionPolicy": {
+    "recipients": "canonical-sorted-members-excluding-sender",
+    "maxRecipients": "MAX_GROUP_PROJECTIONS",
+    "projectionId": "first-16-bytes-SHA-256(domain=LICOARC-GROUP-PROJECTION\\0, stateDigest, messageId, recipient)",
+    "retry": "per-member-at-least-once-with-stable-projection-id",
+    "stationReceipt": "never-endpoint-evidence"
+  },
+  "aggregationPolicy": {
+    "resultOrder": "recipient-endpoint-reference-byte-order",
+    "missingResult": "pending",
+    "allDelivered": "complete",
+    "noDeliveredAndAllTerminalFailure": "failed",
+    "otherwise": "partial",
+    "authority": "endpoint-evidence-or-none-only"
+  },
+  "persistencePolicy": {
+    "restart": "restore-high-water-predecessor-evidence-current-members-tombstones-and-per-member-projections-before-accepting-input",
+    "bounded": true,
+    "persistedStationState": false,
+    "persistedProductPermission": false,
+    "retiredStateReset": "no-legacy-group-root-or-namespace-is-read"
+  },
+  "outOfScope": [
+    "Station-membership-or-ordering-authority",
+    "Network-or-account-membership",
+    "human-or-device-identity",
+    "product-permission-or-command-catalogue",
+    "group-key-management",
+    "application-payload-interpretation",
+    "unbounded-broadcast",
+    "compatibility-translator-or-alternate-wire"
+  ]
+}

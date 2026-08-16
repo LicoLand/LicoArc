@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/v1/schemas/protocol-line-manifest.schema.json",
+  "title": "LicoArc closed Protocol Line manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["manifestVersion", "wireId", "lifecycle", "minimumSafe", "capabilities", "governanceSources", "runtimeSources", "boundsRegistry", "handshakeBinding", "sessionLock", "translationPolicy"],
+  "properties": {
+    "manifestVersion": { "type": "string", "const": "licoarc.protocol-line-manifest.v1" },
+    "wireId": { "type": "string", "pattern": "^licoarc\\.[a-z][a-z0-9-]*(?:\\.[a-z][a-z0-9-]*)?\\.v[1-9][0-9]*$", "maxLength": 128 },
+    "lifecycle": { "type": "string", "enum": ["Candidate", "Published", "Retired"] },
+    "minimumSafe": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["protocolLineVersion", "capabilityVersions"],
+      "properties": {
+        "protocolLineVersion": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 },
+        "capabilityVersions": {
+          "type": "array",
+          "minItems": 0,
+          "maxItems": 64,
+          "uniqueItems": true,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["capabilityId", "minimumVersion"],
+            "properties": {
+              "capabilityId": { "type": "string", "pattern": "^licoarc\\.[a-z][a-z0-9-]*(?:\\.[a-z][a-z0-9-]*)?\\.v[1-9][0-9]*$", "maxLength": 128 },
+              "minimumVersion": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 }
+            }
+          }
+        }
+      }
+    },
+    "capabilities": {
+      "type": "array",
+      "minItems": 0,
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["capabilityId", "version", "sourceDigest"],
+        "properties": {
+          "capabilityId": { "type": "string", "pattern": "^licoarc\\.[a-z][a-z0-9-]*(?:\\.[a-z][a-z0-9-]*)?\\.v[1-9][0-9]*$", "maxLength": 128 },
+          "version": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 },
+          "sourceDigest": { "type": "string", "pattern": "^[0-9a-f]{64}$", "maxLength": 64 }
+        }
+      }
+    },
+    "governanceSources": {
+      "type": "array",
+      "minItems": 0,
+      "maxItems": 256,
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^(?:spec/v1/foundation|spec/v1/schemas|conformance/v1/foundation)/[A-Za-z0-9._/-]+$", "maxLength": 256 }
+    },
+    "runtimeSources": {
+      "type": "array",
+      "minItems": 0,
+      "maxItems": 256,
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^(?:spec/v1/foundation|spec/v1/schemas|conformance/v1/foundation)/[A-Za-z0-9._/-]+$", "maxLength": 256 }
+    },
+    "boundsRegistry": { "type": "string", "const": "spec/v1/foundation/bounds.json" },
+    "handshakeBinding": { "type": "string", "const": "manifest-capabilities-identities-and-declarations" },
+    "sessionLock": { "type": "boolean", "const": true },
+    "translationPolicy": { "type": "string", "const": "forbidden" }
+  }
+}

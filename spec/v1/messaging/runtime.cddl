@@ -1,0 +1,73 @@
+; Lico Arc Protocol v1 Generic Messaging and resumable attachments.
+; All maps use unsigned integer labels and deterministic definite-length CBOR.
+; The comments are normative where CDDL cannot express cross-field arithmetic.
+
+generic-message = {
+  0 => bstr,                         ; messageId, exactly 16 octets
+  1 => uint,                         ; kind, 0..5
+  ? 2 => bstr,                       ; relatesTo, exactly 16 octets when present
+  3 => uint,                         ; contentType, uint32
+  4 => bstr,                         ; payload, 0..MAX_PAYLOAD_BYTES octets
+  ? 5 => { * uint => bstr },         ; extensions, bounded application namespace
+  ? 6 => [* uint],                   ; critical, bounded and closed in v1
+  ? 7 => uint,                       ; chunkIndex, streamChunk only
+  ? 8 => bool,                       ; chunkFinal, non-attachment stream only
+  ? 9 => bstr,                       ; attachmentId, attachment streamChunk only
+  ? 10 => [* attachment-descriptor]
+}
+
+attachment-descriptor = {
+  0 => bstr,                         ; attachmentId, exactly 16 octets
+  1 => uint,                         ; mediaType, uint32
+  2 => uint,                         ; byteLength, 0..MAX_ATTACHMENT_BYTES
+  3 => bstr                          ; contentDigest, exactly 32 octets
+}
+
+chunk-range = {
+  0 => uint,                         ; inclusive startChunkIndex
+  1 => uint                          ; exclusive endChunkIndexExclusive
+}
+
+attachment-receive-state = {
+  0 => bstr,                         ; attachmentId, exactly 16 octets
+  1 => [* chunk-range],              ; 0..MAX_REQUEST_RANGES, bounded coverage
+  2 => uint,                         ; stateUpdate, starts at zero
+  3 => uint,                         ; outcome, 0 pending, 1 complete, 2 cancelled, 3 failed
+  ? 4 => uint,                       ; failureCode, required for cancelled/failed
+  5 => uint                          ; recoveryRound, starts at zero
+}
+
+; Generic Message class values:
+;   0 event, 1 request, 2 response, 3 error, 4 cancel, 5 streamChunk.
+; Reserved contentType 4294901761 is attachmentReceiveState. It is valid only
+; on an event whose payload is exactly attachment-receive-state. All other
+; values in 4294901760..4294967295 are unknown reserved meanings and fail.
+;
+; Per-kind rules:
+;   response, error, cancel, streamChunk require relatesTo;
+;   streamChunk requires chunkIndex and either attachmentId or chunkFinal;
+;   attachment chunks forbid chunkFinal and carry one descriptor-derived slice;
+;   non-attachment stream chunks require chunkFinal and forbid attachmentId;
+;   receive-state event requires relatesTo and has no attachments field.
+;
+; Attachment geometry is fixed by the enclosing Protocol Line:
+;   count = byteLength == 0 ? 0 : ceil(byteLength / ATTACHMENT_CHUNK_BYTES)
+;   offset(i) = i * ATTACHMENT_CHUNK_BYTES
+;   length(i) = min(ATTACHMENT_CHUNK_BYTES, byteLength - offset(i)).
+; Checked arithmetic and MAX_ATTACHMENT_CHUNKS are applied before allocation.
+; The protected tuple (relatesTo, attachmentId, chunkIndex) binds one stable
+; messageId and one immutable raw payload slice. A changed identity or bytes is
+; terminal. contentDigest covers all slices in ascending index order.
+;
+; Extension labels must be in 65536..2147483647. Labels in either reserved
+; range are rejected. A critical label must occur in extensions and be known by
+; this line; v1 recognizes no critical extension, so a non-empty critical array
+; is terminal unknown-critical. Unknown non-critical values remain opaque.
+;
+; Receive-state ranges are half-open, non-empty, strictly ordered, disjoint,
+; and non-adjacent. Their count and covered index sum are bounded. Empty ranges
+; are legal only after all derived chunks and exact length are accepted and the
+; complete contentDigest verifies. Completion, cancellation, and failure are
+; absorbing. stateUpdate and recoveryRound cannot decrease or reset; retries,
+; reconnects, session renewal, Route changes, and Station migration do not
+; refresh any lifetime bound or ATTACHMENT_RECOVERY_WINDOW.

@@ -1,0 +1,193 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/v1/protection/handshake.schema.json",
+  "title": "Lico Arc Pairwise Protection authenticated establishment",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "recordType",
+    "handshakeId",
+    "protocolLineId",
+    "protectionProfileId",
+    "handshakePurpose",
+    "initiatorRole",
+    "responderRole",
+    "initiatorEndpointIdentityRef",
+    "responderEndpointIdentityRef",
+    "initiatorCapabilityDigest",
+    "responderCapabilityDigest",
+    "responderSignedPrekeyId",
+    "initiatorEphemeralX25519PublicKey",
+    "responderMlKemPublicKey",
+    "initiatorMlKemCiphertext",
+    "transcriptDigest",
+    "signatures",
+    "initiatorCapabilityDeclaration",
+    "responderCapabilityDeclaration",
+    "responderPrekeyBundle"
+  ],
+  "properties": {
+    "recordType": { "const": "handshake" },
+    "handshakeId": { "type": "string", "pattern": "^[0-9a-f]{32}$" },
+    "protocolLineId": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "protectionProfileId": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "handshakePurpose": { "enum": ["pairing", "reconnect", "rekey"] },
+    "initiatorRole": { "const": "initiator" },
+    "responderRole": { "const": "responder" },
+    "initiatorEndpointIdentityRef": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "responderEndpointIdentityRef": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "initiatorCapabilityDigest": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "responderCapabilityDigest": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "responderSignedPrekeyId": { "type": "string", "pattern": "^[0-9a-f]{32}$" },
+    "responderOneTimePrekeyId": { "type": "string", "pattern": "^[0-9a-f]{32}$" },
+    "initiatorEphemeralX25519PublicKey": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "responderMlKemPublicKey": { "type": "string", "pattern": "^(?:[0-9a-f]{2}){32,8192}$" },
+    "initiatorMlKemCiphertext": { "type": "string", "pattern": "^(?:[0-9a-f]{2}){32,8192}$" },
+    "transcriptDigest": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "signatures": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["algorithm", "purpose", "context", "keyId", "value"],
+        "properties": {
+          "algorithm": { "enum": ["Ed25519", "ML-DSA-65", "ML-DSA-87"] },
+          "purpose": { "enum": ["identity", "transcript"] },
+          "context": {
+            "enum": [
+              "LicoArc-Base-Identity",
+              "LicoArc-High-Identity",
+              "LicoArc-High-Transcript"
+            ]
+          },
+          "keyId": { "type": "string", "pattern": "^[0-9a-f]{32}$" },
+          "value": { "type": "string", "pattern": "^(?:[0-9a-f]{2}){64,8192}$" }
+        }
+      }
+    },
+    "initiatorCapabilityDeclaration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "recordType",
+        "protocolLineId",
+        "endpointIdentityRef",
+        "supportedProtectionProfiles",
+        "minimumProtectionProfile",
+        "capabilityEpoch",
+        "validFrom",
+        "validUntil",
+        "declarationNonce",
+        "signature"
+      ],
+      "properties": {
+        "recordType": { "const": "capabilityDeclaration" },
+        "protocolLineId": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "endpointIdentityRef": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "supportedProtectionProfiles": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 2,
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+        },
+        "minimumProtectionProfile": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "capabilityEpoch": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 },
+        "validFrom": { "type": "integer", "minimum": 0, "maximum": 9007199254740991 },
+        "validUntil": { "type": "integer", "minimum": 0, "maximum": 9007199254740991 },
+        "declarationNonce": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "signature": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["algorithm", "purpose", "keyId", "value"],
+          "properties": {
+            "algorithm": { "const": "Ed25519" },
+            "purpose": { "const": "capability-declaration" },
+            "keyId": { "type": "string", "pattern": "^[0-9a-f]{32}$" },
+            "value": { "type": "string", "pattern": "^[0-9a-f]{128}$" }
+          }
+        }
+      }
+    },
+    "responderCapabilityDeclaration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "recordType",
+        "protocolLineId",
+        "endpointIdentityRef",
+        "supportedProtectionProfiles",
+        "minimumProtectionProfile",
+        "capabilityEpoch",
+        "validFrom",
+        "validUntil",
+        "declarationNonce",
+        "signature"
+      ],
+      "properties": {
+        "recordType": { "const": "capabilityDeclaration" },
+        "protocolLineId": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "endpointIdentityRef": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "supportedProtectionProfiles": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 2,
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+        },
+        "minimumProtectionProfile": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "capabilityEpoch": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 },
+        "validFrom": { "type": "integer", "minimum": 0, "maximum": 9007199254740991 },
+        "validUntil": { "type": "integer", "minimum": 0, "maximum": 9007199254740991 },
+        "declarationNonce": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "signature": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["algorithm", "purpose", "keyId", "value"],
+          "properties": {
+            "algorithm": { "const": "Ed25519" },
+            "purpose": { "const": "capability-declaration" },
+            "keyId": { "type": "string", "pattern": "^[0-9a-f]{32}$" },
+            "value": { "type": "string", "pattern": "^[0-9a-f]{128}$" }
+          }
+        }
+      }
+    },
+    "responderPrekeyBundle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["recordType", "identityEd25519PublicKey", "identityMlDsaPublicKey", "signedPrekey", "oneTimePrekeys", "mlKemPublicKey"],
+      "properties": {
+        "recordType": { "const": "prekeyBundle" },
+        "identityEd25519PublicKey": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "identityMlDsaPublicKey": { "type": "string", "pattern": "^(?:[0-9a-f]{2}){32,4096}$" },
+        "signedPrekey": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "publicKey", "signature"],
+          "properties": {
+            "id": { "type": "string", "pattern": "^[0-9a-f]{32}$" },
+            "publicKey": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+            "signature": { "type": "string", "pattern": "^[0-9a-f]{128}$" }
+          }
+        },
+        "oneTimePrekeys": {
+          "type": "array",
+          "maxItems": 64,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "publicKey"],
+            "properties": {
+              "id": { "type": "string", "pattern": "^[0-9a-f]{32}$" },
+              "publicKey": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+            }
+          }
+        },
+        "mlKemPublicKey": { "type": "string", "pattern": "^(?:[0-9a-f]{2}){32,4096}$" }
+      }
+    }
+  }
+}

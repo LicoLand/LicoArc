@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/v1/group/labels.json",
+  "registryVersion": "licoarc.group-collaboration-labels.v1",
+  "lifecycle": "Candidate",
+  "scope": "protected-group-state-message-transition-and-results",
+  "wireEncoding": "deterministic-cbor-unsigned-integer-labels",
+  "unknownLabelPolicy": "reject-record",
+  "duplicateLabelPolicy": "reject-record",
+  "trailingBytePolicy": "reject-record",
+  "state": [
+    { "name": "groupId", "label": 0, "presence": "mandatory", "type": "DIGEST256" },
+    { "name": "groupEpoch", "label": 1, "presence": "mandatory", "type": "uint64" },
+    { "name": "previousGroupStateDigest", "label": 2, "presence": "conditional", "type": "DIGEST256" },
+    { "name": "members", "label": 3, "presence": "mandatory", "type": "GroupMember[1..MAX_GROUP_MEMBERS]" },
+    { "name": "transitionDigest", "label": 4, "presence": "mandatory", "type": "DIGEST256" }
+  ],
+  "member": [
+    { "name": "endpointIdentityRef", "label": 0, "presence": "mandatory", "type": "DIGEST256" },
+    { "name": "role", "label": 1, "presence": "mandatory", "type": "Role" }
+  ],
+  "transition": [
+    { "name": "groupId", "label": 0, "presence": "mandatory", "type": "DIGEST256" },
+    { "name": "previousGroupStateDigest", "label": 1, "presence": "conditional", "type": "DIGEST256" },
+    { "name": "nextGroupEpoch", "label": 2, "presence": "mandatory", "type": "uint64" },
+    { "name": "authorEndpointRef", "label": 3, "presence": "mandatory", "type": "DIGEST256" },
+    { "name": "operation", "label": 4, "presence": "mandatory", "type": "GroupOperation" }
+  ],
+  "operation": [
+    { "name": "kind", "label": 0, "presence": "mandatory", "type": "OperationKind" },
+    { "name": "targetEndpointRef", "label": 1, "presence": "conditional", "type": "DIGEST256" },
+    { "name": "targetRole", "label": 2, "presence": "conditional", "type": "Role" },
+    { "name": "initialMembers", "label": 3, "presence": "conditional", "type": "GroupMember[1..MAX_GROUP_MEMBERS]" }
+  ],
+  "message": [
+    { "name": "messageId", "label": 0, "presence": "mandatory", "type": "ID128" },
+    { "name": "groupStateDigest", "label": 1, "presence": "mandatory", "type": "DIGEST256" },
+    { "name": "payload", "label": 2, "presence": "mandatory", "type": "bstr[0..MAX_GROUP_PAYLOAD_BYTES]" }
+  ],
+  "projection": [
+    { "name": "projectionId", "label": 0, "presence": "mandatory", "type": "ID128" },
+    { "name": "messageId", "label": 1, "presence": "mandatory", "type": "ID128" },
+    { "name": "groupStateDigest", "label": 2, "presence": "mandatory", "type": "DIGEST256" },
+    { "name": "recipientEndpointRef", "label": 3, "presence": "mandatory", "type": "DIGEST256" }
+  ],
+  "result": [
+    { "name": "projectionId", "label": 0, "presence": "mandatory", "type": "ID128" },
+    { "name": "recipientEndpointRef", "label": 1, "presence": "mandatory", "type": "DIGEST256" },
+    { "name": "outcome", "label": 2, "presence": "mandatory", "type": "ResultOutcome" },
+    { "name": "failureCode", "label": 3, "presence": "conditional", "type": "FailureCode" },
+    { "name": "authority", "label": 4, "presence": "mandatory", "type": "endpoint-evidence|none" }
+  ],
+  "aggregate": [
+    { "name": "messageId", "label": 0, "presence": "mandatory", "type": "ID128" },
+    { "name": "groupStateDigest", "label": 1, "presence": "mandatory", "type": "DIGEST256" },
+    { "name": "results", "label": 2, "presence": "mandatory", "type": "GroupResult[1..MAX_GROUP_RESULTS]" },
+    { "name": "outcome", "label": 3, "presence": "mandatory", "type": "AggregateOutcome" },
+    { "name": "counts", "label": 4, "presence": "mandatory", "type": "AggregateCounts" }
+  ],
+  "roles": [
+    { "name": "member", "value": 0 },
+    { "name": "state-authority", "value": 1 }
+  ],
+  "operationKinds": [
+    { "name": "genesis", "value": 0 },
+    { "name": "add", "value": 1 },
+    { "name": "remove", "value": 2 },
+    { "name": "role", "value": 3 }
+  ],
+  "resultOutcomes": [
+    { "name": "pending", "value": 0, "terminal": false },
+    { "name": "delivered", "value": 1, "terminal": true },
+    { "name": "rejected", "value": 2, "terminal": true },
+    { "name": "failed", "value": 3, "terminal": true }
+  ],
+  "aggregateOutcomes": [
+    { "name": "complete", "value": 0 },
+    { "name": "partial", "value": 1 },
+    { "name": "failed", "value": 2 }
+  ],
+  "failureCodes": [
+    { "name": "malformed", "value": 0 },
+    { "name": "unauthorized", "value": 1 },
+    { "name": "duplicate", "value": 2 },
+    { "name": "fork", "value": 3 },
+    { "name": "gap", "value": 4 },
+    { "name": "stale", "value": 5 },
+    { "name": "removed-member", "value": 6 },
+    { "name": "over-bound", "value": 7 },
+    { "name": "unknown-state", "value": 8 },
+    { "name": "station-authority", "value": 9 },
+    { "name": "conflict", "value": 10 },
+    { "name": "tombstone-overflow", "value": 11 },
+    { "name": "timeout", "value": 12 }
+  ]
+}

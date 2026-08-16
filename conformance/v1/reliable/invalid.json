@@ -1,0 +1,84 @@
+[
+  {
+    "id": "confirmation-unsorted",
+    "kind": "confirmation",
+    "value": {
+      "0": "base64:AQIDBAUGBwgJCgsMDQ4PEA==",
+      "1": 1,
+      "2": 1,
+      "3": [
+        "base64:EhMUFQYHCAkKCwwNDg8QEQ==",
+        "base64:AQIDBAUGBwgJCgsMDQ4PEA=="
+      ]
+    },
+    "outcome": "non-canonical-confirmed-message-ids"
+  },
+  {
+    "id": "confirmation-duplicate-id",
+    "kind": "confirmation",
+    "value": {
+      "0": "base64:AQIDBAUGBwgJCgsMDQ4PEA==",
+      "1": 1,
+      "2": 1,
+      "3": [
+        "base64:AQIDBAUGBwgJCgsMDQ4PEA==",
+        "base64:AQIDBAUGBwgJCgsMDQ4PEA=="
+      ]
+    },
+    "outcome": "duplicate-confirmed-message-id"
+  },
+  {
+    "id": "same-id-different-intent",
+    "kind": "transition",
+    "value": { "logicalMessageId": "0102030405060708090a0b0c0d0e0f10", "intentDigest": "2222222222222222222222222222222222222222222222222222222222222222" },
+    "outcome": "intent-conflict"
+  },
+  {
+    "id": "station-receipt-authority",
+    "kind": "transition",
+    "value": { "eventKind": "stationHint", "stageAdvance": "accepted" },
+    "outcome": "station-authority"
+  },
+  {
+    "id": "retry-over-bound",
+    "kind": "transition",
+    "value": { "retryTransmissions": 33 },
+    "outcome": "retry-bound-exceeded"
+  },
+  {
+    "id": "route-reset",
+    "kind": "transition",
+    "value": { "routeEpoch": 0, "previousRouteEpoch": 2, "event": "route-change" },
+    "outcome": "route-reset"
+  },
+  {
+    "id": "terminal-reopen",
+    "kind": "transition",
+    "value": { "stateTag": "failed", "eventKind": "endpointAccepted" },
+    "outcome": "terminal-reopen"
+  },
+  {
+    "id": "group-projection-conflict",
+    "kind": "transition",
+    "value": { "projectionId": "0102030405060708090a0b0c0d0e0f10", "first": "delivered", "second": "failed" },
+    "outcome": "group-projection-conflict"
+  },
+  {
+    "id": "snapshot-over-bound",
+    "kind": "transition",
+    "value": { "transitionCount": 257 },
+    "outcome": "state-bound-exceeded"
+  },
+  {
+    "id": "wire-trailing-byte",
+    "kind": "wire",
+    "hex": "a400500102030405060708090a0b0c0d0e0f1001000300044000",
+    "outcome": "trailing-bytes"
+  },
+  {
+    "id": "wire-noncanonical-integer",
+    "kind": "wire",
+    "hex": "a400500102030405060708090a0b0c0d0e0f1001180203416964656d",
+    "outcome": "non-canonical-wire"
+  }
+]
