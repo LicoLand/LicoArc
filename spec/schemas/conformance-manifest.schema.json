@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/schemas/conformance-manifest.schema.json",
+  "title": "LicoArc aggregate conformance manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "manifestVersion", "wireId", "lifecycle", "definitionStatus", "capabilityCorpora", "definitionCorpora", "absentCorpora", "sourceClosure"],
+  "properties": {
+    "$schema": {"const": "https://licoarc.com/spec/schemas/conformance-manifest.schema.json"},
+    "manifestVersion": {"const": "licoarc.conformance-manifest.v2"},
+    "wireId": {"const": "licoarc.protocol-line.v1"},
+    "lifecycle": {"const": "Candidate"},
+    "definitionStatus": {"const": "PARTIAL"},
+    "capabilityCorpora": {
+      "type": "array", "minItems": 8, "maxItems": 8, "uniqueItems": true,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["capabilityId", "manifestPath"],
+        "properties": {
+          "capabilityId": {"type": "string", "pattern": "^licoarc\\.[a-z][a-z0-9-]*(?:\\.[a-z][a-z0-9-]*)?\\.v[1-9][0-9]*$", "maxLength": 128},
+          "manifestPath": {"type": "string", "pattern": "^conformance/v1/[a-z0-9-]+/manifest\\.json$", "maxLength": 256}
+        }
+      }
+    },
+    "definitionCorpora": {
+      "type": "array", "minItems": 1, "maxItems": 16, "uniqueItems": true,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["definitionId", "manifestPath"],
+        "properties": {
+          "definitionId": {"type": "string", "pattern": "^[a-z][a-z0-9-]+$", "maxLength": 128},
+          "manifestPath": {"type": "string", "pattern": "^conformance/v1/[a-z0-9-]+/manifest\\.json$", "maxLength": 256}
+        }
+      }
+    },
+    "absentCorpora": {
+      "type": "array", "minItems": 1, "maxItems": 16, "uniqueItems": true,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["definitionId", "reason"],
+        "properties": {
+          "definitionId": {"type": "string", "pattern": "^[a-z][a-z0-9-]+$", "maxLength": 128},
+          "reason": {"type": "string", "pattern": "^[a-z][a-z0-9-]+$", "maxLength": 128}
+        }
+      }
+    },
+    "sourceClosure": {"const": "declared-component-source-closures"}
+  }
+}

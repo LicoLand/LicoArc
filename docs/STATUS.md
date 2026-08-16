@@ -1,64 +1,50 @@
-# Lico Arc Protocol Definition Status
-
-This document is the authority for current LicoArc definition status. English
-is normative. Product intent is defined in `PRODUCT.md`, vocabulary and
-invariants in `CONTEXT.md`, and exact machine-readable meaning in `spec/` and
-`conformance/`.
-
-LicoArc is a protocol-definition repository. It does not track or gate on any
-language implementation, provider selection, executable interoperability,
-runtime or device result, audit, package, publication channel, deployment,
-support, operation, or product integration. Those facts close only in their
-own repositories or delivery channels and cannot advance or block a LicoArc
-definition.
+# LicoArc Status
 
 ## Definition authority
 
-| Scope | Status |
+This protocol-definition repository owns implementation-neutral protocol
+meaning only. The current
+`licoarc.protocol-line.v1` source projection is `Candidate` with definition
+status `PARTIAL`; it is not executable, session-eligible, publication-eligible
+or Published.
+
+| Definition area | Current state |
 | --- | --- |
-| Domain model and repository boundary | defined |
-| Decision lifecycle | defined |
-| Canonical field inventory | defined |
-| Protocol Line composition and lifecycle | Candidate definition complete |
-| Pairwise Protection profiles | Candidate definition complete |
-| Endpoint identity, discovery, transparency, affiliation, and migration | Candidate definition complete |
+| Protocol Line lifecycle and fail-closed selection | Specified |
+| Pairwise Protection | Open/partial; zero active Profiles or wire schemas |
+| Security claims, adversaries and proof bindings | Registered; mandatory Pairwise claims unproved |
+| Endpoint identity and continuity | Candidate definition complete |
 | Generic Messaging and attachments | Candidate definition complete |
-| Group Collaboration | Candidate definition complete |
+| Bounded Group Collaboration Profile v1 | Candidate definition complete |
 | Reliable Exchange and Evidence Checkpoints | Candidate definition complete |
 | HTTPS Transport Profile | Candidate definition complete |
-| Federation governance and certification semantics | Candidate definition complete |
+| Federation governance semantics | Candidate definition complete |
 
-The current line remains a mutable `Candidate`. “Complete” above means the
-declared implementation-neutral definition is closed across its formal text,
-schemas, registries, policies, bounds, source manifests, definition-level
-positive and negative corpus, and generated artifact. It makes no downstream
-delivery claim.
+The Pairwise Protection blockers are the open Hybrid AKE and Double Ratchet
+Algorithm Decisions, their independent Message Field Decisions and the absent
+formal bindings. No earlier Candidate construction remains an active authority.
 
 ## Tracked source closure
 
-The tracked definition graph consists of:
+`spec/protocol-lines.json` separates lifecycle from definition status and owns
+generation, minimum-safe selection, eligibility, immutability and retirement
+policy. `spec/protection-profiles.json` owns active Profile admission and
+withdrawn identifier tombstones. `spec/v1/` and `conformance/v1/` contain the
+current versioned source closure; `artifacts/v1/licoarc.bundle.json` is its
+deterministic partial-Candidate projection.
 
-- durable intent and protocol documents;
-- Algorithm and Message Field decision records;
-- versioned schemas, CDDL, registries, policies, bounds, and manifests;
-- positive and negative definition-level conformance corpora; and
-- the deterministic generated Protocol Line bundle.
+Source-integrity verification proves only that this tracked definition graph and the
+generated artifact agree. It does not prove a cryptographic claim or complete
+an open protocol definition.
 
-Repository checks prove only internal consistency of that graph: declared
-inputs, schema/registry alignment, decision inventory closure, corpus binding,
-manifest digests, and deterministic artifact generation.
-
-`docs/references/` is ignored local research material. It is not a normative
-input, tracked document, link target, fixture, artifact source, or completion
-condition.
+`docs/references/` remains ignored local research and is not part of the
+tracked definition graph.
 
 ## Ownership boundary
 
-Downstream implementations consume one exact pinned Protocol Line without
-minting identifiers or redefining semantics. Each implementation repository
-owns its own dependencies, providers, executable tests, runtime validation,
-interoperability claims, device evidence, audit response, packaging, release,
-deployment, operation, support, and integration.
-
-Downstream findings may motivate a new LicoArc decision when protocol meaning
-must change. They never become evidence that closes this repository.
+Language implementations, Providers, Endpoint or Station runtime behavior,
+interoperability execution, device measurements, fuzzing results, audits,
+packages, publication channels, deployment, support and operation close in
+their owners. They cannot advance or block a LicoArc definition, change
+protocol bytes, fill a missing formal binding, or make this Candidate
+Published.

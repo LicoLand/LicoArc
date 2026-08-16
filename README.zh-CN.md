@@ -49,19 +49,20 @@ Endpoint；只有接收 Endpoint 可以验证并接受对端、受保护内容�
 
 ## 当前仓库状态
 
-当前仓库线路是生命周期明确为 `Candidate` 的 `licoarc.protocol-line.v1`；
-清单与生成 bundle 都以机器可读字段声明这一精确 wire ID 和生命周期。当前
+当前仓库源投影是 `Candidate`、定义状态为 `PARTIAL` 的
+`licoarc.protocol-line.v1`；清单与生成 bundle 都以机器可读字段声明这一精确
+身份及其不可执行状态。当前
 定义事实以英文规范文档 [`docs/STATUS.md`](docs/STATUS.md) 为准。
 
-[规范字段注册表](spec/FIELD-REGISTRY.md) 是当前字段清单的唯一权威。九个能力
-的源清单、schema、注册表、边界、向量、语料和生成 bundle 共同形成已规定且闭合
-的可变 Candidate；实现只能消费它，不能覆盖它。
+[规范字段注册表](spec/FIELD-REGISTRY.md) 是当前字段清单的唯一权威。Pairwise
+Protection 当前没有活动 Profile 或 wire schema；Hybrid AKE、prekey consumption、
+transcript、key confirmation 与 Double Ratchet 均需等待精确定义和证明。
 
 Candidate 治理与发布工件采用受限 JSON，并通过 JCS 规范化，配合 JSON Schema
 以及内容寻址的 OCI、DSSE 和 TUF 控制；Candidate Endpoint 运行时线数据则采用
 由封闭 CDDL 描述的确定性 CBOR、紧凑整数标签和原始 `protectedPacket` body。
-该分层、群组协作、Pairwise Protection、Reliable Exchange、HTTPS Transport
-Profile、身份连续性与多根阈值治理都已在可变 Candidate 源闭包中规定。
+有界 Group 协作、Reliable Exchange、HTTPS Transport Profile、身份连续性与多根
+阈值治理仍已规定；该部分 Candidate 不可建立 session、不可发布，也不是 Published。
 
 LicoArc 使用自有 schema、字段及规范要求注册表、策略、定义级语料、产物生成
 与摘要一致性检查协议定义。`docs/references/` 是被忽略的本地研究材料，不是

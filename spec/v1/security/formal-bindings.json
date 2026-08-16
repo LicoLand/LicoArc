@@ -1,0 +1,12 @@
+{
+  "$schema": "https://licoarc.com/spec/schemas/security-formal-bindings.schema.json",
+  "$id": "https://licoarc.com/spec/v1/security/formal-bindings.json",
+  "registryVersion": "licoarc.formal-bindings.v1",
+  "lifecycle": "Candidate",
+  "status": "incomplete",
+  "requiredKinds": ["protocol-line-id", "profile-id", "algorithm-id", "domain-separator", "field-label", "bound", "failure-enum"],
+  "bindings": [],
+  "authority": "generated-only-from-decided-specified-normative-sources",
+  "missingBindingPolicy": "claim-remains-unproved-and-line-ineligible",
+  "modelAuthority": "never-a-second-protocol"
+}

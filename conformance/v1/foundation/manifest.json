@@ -29,5 +29,19 @@
     "foundation-runtime-cbor-unknown-label",
     "foundation-runtime-cbor-negative-label",
     "foundation-runtime-cbor-overflow"
+  ],
+  "selectionCaseIds": [
+    "selection-unique-highest",
+    "selection-below-both-minimums",
+    "selection-partial-line",
+    "selection-deprecated-new-session-forbidden",
+    "selection-retired",
+    "selection-unknown",
+    "selection-ambiguous-highest",
+    "selection-content-identity-mismatch",
+    "selection-no-lower-fallback-after-mismatch",
+    "selection-unauthenticated-peer",
+    "existing-deprecated-policy",
+    "existing-retired-policy"
   ]
 }

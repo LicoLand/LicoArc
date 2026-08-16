@@ -25,6 +25,12 @@
       "terminal": false
     },
     {
+      "id": "Deprecated",
+      "mutable": false,
+      "published": true,
+      "terminal": false
+    },
+    {
       "id": "Retired",
       "mutable": false,
       "published": false,
@@ -45,7 +51,7 @@
     {
       "from": "Candidate",
       "to": "Published",
-      "requires": "explicit-publication-authorization"
+      "requires": "decided-specified-complete-source-and-proof-bindings-plus-publication-authorization"
     },
     {
       "from": "Candidate",
@@ -54,11 +60,17 @@
     },
     {
       "from": "Published",
+      "to": "Deprecated",
+      "requires": "authenticated-lifecycle-policy"
+    },
+    {
+      "from": "Deprecated",
       "to": "Retired",
-      "requires": "explicit-retirement-and-replacement"
+      "requires": "authenticated-retirement-policy"
     }
   ],
   "publishedBytes": "immutable-and-verifiable",
+  "definitionStatusRegistry": "spec/protocol-lines.json",
   "unknownTransitionPolicy": "reject",
   "mixedLifecyclePolicy": "reject",
   "downgradePolicy": "reject"

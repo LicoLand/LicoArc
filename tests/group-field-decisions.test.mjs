@@ -193,7 +193,10 @@ test("Group field inventory is closed and the Candidate Group schema is admitted
   assert.match(index, /No Group field proposal remains open/);
   assert.doesNotMatch(index, /\| Decision status \| `OPEN` \|/);
 
-  assert.match(status, /Group Collaboration \| Candidate definition complete/i);
+  assert.match(
+    status,
+    /Bounded Group Collaboration Profile v1 \| Candidate definition complete/i
+  );
   assert.equal(groupRegistry.lifecycle, "Candidate");
   assert.equal(groupRegistry.capabilityId, "licoarc.group-collaboration.v1");
 

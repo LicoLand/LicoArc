@@ -51,6 +51,16 @@
     "rewrite": "forbidden",
     "reservedContentTypes": "closed-control-grammar"
   },
+  "contentTypeRegistry": {
+    "representation": "uint32",
+    "allocationReuse": "forbidden",
+    "semanticMutation": "forbidden",
+    "newSemantics": "new-permanent-value",
+    "ordinaryAuthority": "application-dispatch-only",
+    "reservedAuthority": "licoarc-control-grammar-only",
+    "cryptographicNegotiation": "forbidden",
+    "applicationCapabilityPlacement": "protected-application-payload"
+  },
   "attachmentPolicy": {
     "descriptorImmutable": true,
     "chunkKind": "streamChunk",

@@ -1,6 +1,8 @@
-# Lico Arc Protocol v1 — Group Collaboration
+# Lico Arc Protocol v1 — Bounded Group Collaboration Profile
 
-This document projects the machine-readable Group Collaboration Profile. The
+This document projects the machine-readable Bounded Group Collaboration
+Profile v1. It is one max-64 per-member projection construction, not the
+permanent or exclusive architecture for future large groups. The
 normative source closure is [`spec/v1/group/`](../../spec/v1/group/) and its
 positive and negative corpus is [`conformance/v1/group/`](../../conformance/v1/group/).
 The profile is a Candidate definition closed by the tracked normative sources
