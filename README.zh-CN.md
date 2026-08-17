@@ -1,5 +1,7 @@
 # Lico Arc Protocol
 
+[English](README.md)
+
 Lico Arc Protocol 是 LicoLand 的**协议层（Protocol Layer）**：它是协议
 语义、面向通讯站的 wire 契约与生命周期、封闭 schema、字段及规范要求注册表与策略、
 定义级语料、内容寻址协议产物、兼容性及联邦治理语义的实现中立权威。本仓库
@@ -11,11 +13,6 @@ Lico Arc Protocol 是 LicoLand 的**协议层（Protocol Layer）**：它是协�
 决策与定义闭环。
 
 ## 核心领域模型
-
-本节同步投影
-[英文 README 的核心领域模型](README.md#core-domain-model)；该英文段落是
-唯一权威定义。其他文档可以简要介绍并链接到那里，但不得自行增加、删除或
-重新定义实体及其信任边界。
 
 LicoArc 只承认三种领域实体：
 
@@ -51,8 +48,7 @@ Endpoint；只有接收 Endpoint 可以验证并接受对端、受保护内容�
 
 当前仓库源投影是 `Candidate`、定义状态为 `PARTIAL` 的
 `licoarc.protocol-line.v1`；清单与生成 bundle 都以机器可读字段声明这一精确
-身份及其不可执行状态。当前
-定义事实以英文规范文档 [`docs/STATUS.md`](docs/STATUS.md) 为准。
+身份及其不可执行状态。当前定义事实见 [`docs/STATUS.md`](docs/STATUS.md)。
 
 [规范字段注册表](spec/FIELD-REGISTRY.md) 是当前字段清单的唯一权威。Pairwise
 Protection 当前没有活动 Profile 或 wire schema；Hybrid AKE、prekey consumption、
@@ -69,20 +65,17 @@ LicoArc 使用自有 schema、字段及规范要求注册表、策略、定义�
 已追踪输入或闭环条件。所有实现与真实交付事实均由下游所有者自行闭环，不能
 推进或阻塞本仓库。
 
-本文档是 [README.md](README.md) 的简体中文本地化版本；英文 README 为规范
-语言版本，两者如有出入以英文版为准。
-
 ## 文档
 
-- [核心领域模型（英文权威）](README.md#core-domain-model)
+- [核心领域模型](README.md#core-domain-model)
 - [产品目标与边界](PRODUCT.md)
 - [领域语言](CONTEXT.md)
-- [当前状态（英文规范）](docs/STATUS.md)
+- [当前状态](docs/STATUS.md)
 - [架构设计](ARCHITECTURE.md)
-- [决策全生命周期（英文权威）](docs/DECISION-LIFECYCLE.md)
-- [算法决策讨论区（英文）](docs/algorithm-decisions/README.md)
-- [规范字段注册表（英文唯一权威）](spec/FIELD-REGISTRY.md)
-- [字段取舍讨论区（英文）](docs/field-decisions/README.md)
+- [决策全生命周期](docs/DECISION-LIFECYCLE.md)
+- [算法决策讨论区](docs/algorithm-decisions/README.md)
+- [规范字段注册表](spec/FIELD-REGISTRY.md)
+- [字段取舍讨论区](docs/field-decisions/README.md)
 - [协议规范索引](spec/README.md)
 - [正式文档索引](docs/README.md)
 - [贡献指南](CONTRIBUTING.md)
