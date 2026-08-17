@@ -1,5 +1,7 @@
 # Lico Arc Protocol
 
+[简体中文](README.zh-CN.md)
+
 Lico Arc Protocol is LicoLand's **Protocol Layer**: the
 implementation-neutral authority for protocol semantics, station-facing wire
 contracts and lifecycle, closed schemas, field and requirement registries, and policies,
@@ -81,9 +83,6 @@ requirement registries, policies, corpora, artifact generation, and digest
 consistency. `docs/references/` is ignored local research and is not a tracked
 input or closure condition. Every implementation and real-world delivery fact
 belongs to its downstream owner and cannot advance or block this repository.
-
-English is the normative language of this README; the
-[Simplified Chinese localization](README.zh-CN.md) is provided for reference.
 
 ## Documentation
 

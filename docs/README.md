@@ -44,5 +44,4 @@ authorities.
 - Repository checks prove tracked definition-source consistency only.
 
 Formal documents change with their owning definition. Examples remain
-synthetic and privacy-safe. English formal documentation is normative; a
-Chinese localization is maintained only where explicitly provided.
+synthetic and privacy-safe.
