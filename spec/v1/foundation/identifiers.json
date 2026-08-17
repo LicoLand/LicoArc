@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/v1/schemas/foundation-identifiers.schema.json",
+  "registryVersion": "licoarc.foundation-identifiers.v1",
+  "lifecycle": "Candidate",
+  "scope": "foundation-contract-identifiers-only",
+  "unknownPolicy": "reject",
+  "retiredPolicy": "reject",
+  "identifierSyntax": "licoarc.<scope>.<name>.v<positive-integer>",
+  "identifiers": [
+    {
+      "name": "foundationRegistry",
+      "value": "licoarc.foundation-registry.v1",
+      "kind": "source-contract",
+      "wire": false,
+      "status": "Candidate"
+    },
+    {
+      "name": "foundationBoundsRegistry",
+      "value": "licoarc.foundation-bounds.v1",
+      "kind": "source-contract",
+      "wire": false,
+      "status": "Candidate"
+    },
+    {
+      "name": "foundationIdentifierRegistry",
+      "value": "licoarc.foundation-identifiers.v1",
+      "kind": "source-contract",
+      "wire": false,
+      "status": "Candidate"
+    },
+    {
+      "name": "foundationLifecycleRegistry",
+      "value": "licoarc.foundation-lifecycle.v1",
+      "kind": "source-contract",
+      "wire": false,
+      "status": "Candidate"
+    },
+    {
+      "name": "foundationSourceManifest",
+      "value": "licoarc.foundation-source-manifest.v1",
+      "kind": "source-contract",
+      "wire": false,
+      "status": "Candidate"
+    },
+    {
+      "name": "protocolLineManifest",
+      "value": "licoarc.protocol-line-manifest.v1",
+      "kind": "composition-contract",
+      "wire": false,
+      "status": "Candidate"
+    },
+    {
+      "name": "foundationRuntimeRecord",
+      "value": "licoarc.foundation-runtime-record.v1",
+      "kind": "encoding-contract",
+      "wire": false,
+      "status": "Candidate"
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/v1/group/bounds.json",
+  "registryVersion": "licoarc.group-collaboration-bounds.v1",
+  "lifecycle": "Candidate",
+  "scope": "protected-group-state-message-and-projection-v1",
+  "units": {
+    "MAX_GROUP_STATE_BYTES": "bytes",
+    "MAX_GROUP_OPERATION_BYTES": "bytes",
+    "MAX_GROUP_MESSAGE_CONTROL_BYTES": "bytes",
+    "MAX_GROUP_PERSISTED_BYTES": "bytes"
+  },
+  "bounds": {
+    "MAX_GROUP_MEMBERS": 64,
+    "MAX_GROUP_EPOCH": 9007199254740991,
+    "MAX_GROUP_OPERATION_BYTES": 4096,
+    "MAX_GROUP_STATE_BYTES": 16384,
+    "MAX_GROUP_MESSAGE_CONTROL_BYTES": 8192,
+    "MAX_GROUP_PAYLOAD_BYTES": 262144,
+    "MAX_GROUP_PROJECTIONS": 64,
+    "MAX_GROUP_RESULTS": 64,
+    "MAX_GROUP_AGGREGATE_BYTES": 16384,
+    "MAX_PENDING_GROUP_TRANSITIONS": 128,
+    "MAX_PENDING_GROUP_RESULTS": 256,
+    "MAX_GROUP_EPOCH_TOMBSTONES": 1024,
+    "MAX_GROUP_PERSISTED_BYTES": 4194304,
+    "MAX_GROUP_UNAUTHENTICATED_BYTES": 16384
+  },
+  "relationships": [
+    "MAX_GROUP_MEMBERS >= 1",
+    "MAX_GROUP_PROJECTIONS <= MAX_GROUP_MEMBERS",
+    "MAX_GROUP_RESULTS = MAX_GROUP_PROJECTIONS",
+    "MAX_GROUP_STATE_BYTES <= MAX_GROUP_PERSISTED_BYTES",
+    "MAX_GROUP_OPERATION_BYTES < MAX_GROUP_STATE_BYTES",
+    "MAX_GROUP_UNAUTHENTICATED_BYTES >= MAX_GROUP_OPERATION_BYTES"
+  ],
+  "resetPolicy": "retry-reconnect-route-change-station-change-and-restart-never-reset-or-extend-a-group-bound",
+  "allocationPolicy": "validate-counts-and-canonical-predecessor-before-copying-member-or-result-collections"
+}

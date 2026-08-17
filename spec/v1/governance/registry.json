@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/v1/governance/registry.json",
+  "registryVersion": "licoarc.federation-governance.v1",
+  "wireId": "licoarc.federation-governance.v1",
+  "lifecycle": "Candidate",
+  "scope": "protocol-governance-input-only",
+  "schemaPath": "spec/v1/governance/governance.schema.json",
+  "policyPath": "spec/v1/governance/governance.policy.json",
+  "sourceManifestPath": "spec/v1/governance/source-manifest.json",
+  "conformanceManifestPath": "conformance/v1/governance/manifest.json",
+  "representation": "restricted-jcs",
+  "unknownFieldPolicy": "reject-record",
+  "unknownRolePolicy": "reject-record",
+  "retiredRootPolicy": "reject-signature",
+  "compromisedRootPolicy": "reject-signature-unless-recovery",
+  "signatureScope": "licoarc.federation-governance.v1|role|bundleDigest",
+  "closedRecordTypes": ["governanceBundle"],
+  "roles": ["membership", "compatibility", "revocation", "distribution", "consistency", "recovery", "abuse"],
+  "requiredAuthorizationRoles": ["membership", "compatibility", "revocation", "distribution", "consistency", "recovery", "abuse"],
+  "separateEndpointAdmission": true,
+  "distributionFamilies": ["oci-descriptor", "dsse-envelope", "tuf-root", "tuf-targets", "tuf-snapshot", "tuf-timestamp"],
+  "sourceClosure": {
+    "roots": ["conformance/v1/governance", "spec/v1/governance"],
+    "undeclaredFiles": "reject",
+    "symlinks": "reject",
+    "sortedPaths": "required"
+  },
+  "forbiddenAuthority": [
+    "one-signer-authorizes",
+    "one-root-authorizes",
+    "operator-authorizes",
+    "station-authorizes",
+    "network-host-authorizes",
+    "artifact-service-authorizes",
+    "membership-implies-endpoint-admission",
+    "compatibility-implies-endpoint-admission",
+    "abuse-implies-revocation",
+    "committee-service-is-final-trust"
+  ]
+}

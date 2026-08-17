@@ -1,0 +1,115 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/v1/identity/registry.json",
+  "registryVersion": "licoarc.identity-registry.v1",
+  "wireId": "licoarc.identity.v1",
+  "lifecycle": "Candidate",
+  "schemaPath": "spec/v1/identity/identity.schema.json",
+  "policyPath": "spec/v1/identity/identity.policy.json",
+  "runtimePath": "spec/v1/identity/runtime.cddl",
+  "unknownFieldPolicy": "reject-record",
+  "closedRecordTypes": [
+    "identityUpdate",
+    "affiliationUpdate",
+    "routeUpdate",
+    "firstContact",
+    "discoveryInput",
+    "transparencyBundle",
+    "associationClaim"
+  ],
+  "chainKinds": [
+    {
+      "kind": "identity",
+      "recordType": "identityUpdate",
+      "epochField": "identityEpoch",
+      "predecessorField": "previousIdentityStateDigest",
+      "digestField": "stateDigest",
+      "scope": "endpointIdentityRef"
+    },
+    {
+      "kind": "affiliation",
+      "recordType": "affiliationUpdate",
+      "epochField": "affiliationEpoch",
+      "predecessorField": "previousAffiliationUpdateDigest",
+      "digestField": "stateDigest",
+      "scope": "endpointIdentityRef-global"
+    },
+    {
+      "kind": "route",
+      "recordType": "routeUpdate",
+      "epochField": "routeEpoch",
+      "predecessorField": "previousRouteUpdateDigest",
+      "digestField": "logicalCanonicalRouteDigest",
+      "logicalDigestExcludes": ["endpointSignature"],
+      "scope": "endpointIdentityRef-peerEndpointIdentityRef"
+    }
+  ],
+  "fieldGroups": {
+    "endpointIdentity": [
+      "endpointIdentityRef",
+      "identityEpoch",
+      "previousIdentityStateDigest",
+      "stateDigest",
+      "keyAuthorizations",
+      "continuityProof",
+      "endpointSignature"
+    ],
+    "affiliation": [
+      "affiliationEpoch",
+      "previousAffiliationUpdateDigest",
+      "stationAffiliations",
+      "affiliationNonce",
+      "affiliationCommitment",
+      "affiliationNotAfter",
+      "stationAffiliationSignature"
+    ],
+    "route": [
+      "peerEndpointIdentityRef",
+      "routeEpoch",
+      "previousRouteUpdateDigest",
+      "affiliationStateDigest",
+      "routes",
+      "routeNotAfter",
+      "deliveryHandle",
+      "serviceUntil",
+      "stationServiceSignature"
+    ],
+    "firstContact": [
+      "handleClass",
+      "deliveryHandle",
+      "audienceDigest",
+      "invitationBinding",
+      "singleUse",
+      "expiresAt",
+      "protectedInvitation",
+      "peerVerificationState"
+    ],
+    "transparency": [
+      "witnessInputs",
+      "gossipInputs",
+      "discoveryInputs",
+      "stationSignatureInputs",
+      "verificationInputs"
+    ]
+  },
+  "observerContracts": {
+    "endpoint": "retains-identity-trust-and-all-three-chain-high-water-marks",
+    "peerEndpoint": "receives-protected-records-and-may-verify-continuity",
+    "station": "sees-only-operation-scope-opaque-commitment-handle-and-finite-service-statement",
+    "directory": "supplies-discovery-input-only",
+    "witness": "supplies-transparency-input-only",
+    "gossip": "supplies-transparency-input-only"
+  },
+  "forbiddenAuthority": [
+    "station-selects-chain-tip",
+    "directory-selects-chain-tip",
+    "witness-selects-chain-tip",
+    "gossip-selects-chain-tip",
+    "arrival-order-selects-chain-tip",
+    "station-time-selects-chain-tip",
+    "expiry-resets-chain",
+    "route-order-selects-global-primary",
+    "station-success-sets-peer-trust",
+    "association-claim-merges-identity"
+  ]
+}

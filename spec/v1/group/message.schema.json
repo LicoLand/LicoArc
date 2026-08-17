@@ -1,0 +1,5 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/v1/group/message.schema.json",
+  "$ref": "group.schema.json#/$defs/groupMessage"
+}

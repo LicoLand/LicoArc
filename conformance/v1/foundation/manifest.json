@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/v1/schemas/foundation-conformance-manifest.schema.json",
+  "manifestVersion": "licoarc.foundation-conformance-manifest.v1",
+  "contractVersion": "licoarc.foundation-source-manifest.v1",
+  "lifecycle": "Candidate",
+  "validCasesPath": "conformance/v1/foundation/valid.json",
+  "invalidCasesPath": "conformance/v1/foundation/invalid.json",
+  "caseIds": [
+    "foundation-governance-jcs-order",
+    "foundation-governance-unicode",
+    "foundation-runtime-cbor-record",
+    "foundation-runtime-cbor-empty-packet"
+  ],
+  "formatAssertions": [
+    "restricted-jcs",
+    "closed-json-schema",
+    "deterministic-cbor",
+    "closed-cddl"
+  ],
+  "negativeCaseIds": [
+    "foundation-governance-duplicate-key",
+    "foundation-governance-trailing-bytes",
+    "foundation-governance-unknown-member",
+    "foundation-runtime-cbor-duplicate-label",
+    "foundation-runtime-cbor-noncanonical-integer",
+    "foundation-runtime-cbor-indefinite-map",
+    "foundation-runtime-cbor-trailing-byte",
+    "foundation-runtime-cbor-unknown-label",
+    "foundation-runtime-cbor-negative-label",
+    "foundation-runtime-cbor-overflow"
+  ],
+  "selectionCaseIds": [
+    "selection-unique-highest",
+    "selection-below-both-minimums",
+    "selection-partial-line",
+    "selection-deprecated-new-session-forbidden",
+    "selection-retired",
+    "selection-unknown",
+    "selection-ambiguous-highest",
+    "selection-content-identity-mismatch",
+    "selection-no-lower-fallback-after-mismatch",
+    "selection-unauthenticated-peer",
+    "existing-deprecated-policy",
+    "existing-retired-policy"
+  ]
+}

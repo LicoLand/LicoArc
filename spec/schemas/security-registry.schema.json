@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/schemas/security-registry.schema.json",
+  "title": "LicoArc security accounting registry",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "$id", "registryVersion", "lifecycle", "definitionStatus", "claimsPath", "adversaryModelPath", "formalBindingsPath", "proofDoesNotDefineProtocol", "downstreamEvidenceDoesNotAdvanceDefinition", "missingMandatoryBindingPolicy"],
+  "properties": {
+    "$schema": {"const": "https://licoarc.com/spec/schemas/security-registry.schema.json"},
+    "$id": {"const": "https://licoarc.com/spec/v1/security/registry.json"},
+    "registryVersion": {"const": "licoarc.security-accounting.v1"},
+    "lifecycle": {"const": "Candidate"},
+    "definitionStatus": {"const": "PARTIAL"},
+    "claimsPath": {"const": "spec/v1/security/claims.json"},
+    "adversaryModelPath": {"const": "spec/v1/security/adversary-model.json"},
+    "formalBindingsPath": {"const": "spec/v1/security/formal-bindings.json"},
+    "proofDoesNotDefineProtocol": {"const": true},
+    "downstreamEvidenceDoesNotAdvanceDefinition": {"const": true},
+    "missingMandatoryBindingPolicy": {"const": "line-ineligible"}
+  }
+}

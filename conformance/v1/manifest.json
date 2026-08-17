@@ -1,0 +1,24 @@
+{
+  "$schema": "https://licoarc.com/spec/schemas/conformance-manifest.schema.json",
+  "manifestVersion": "licoarc.conformance-manifest.v2",
+  "wireId": "licoarc.protocol-line.v1",
+  "lifecycle": "Candidate",
+  "definitionStatus": "PARTIAL",
+  "capabilityCorpora": [
+    {"capabilityId": "licoarc.federation-governance.v1", "manifestPath": "conformance/v1/governance/manifest.json"},
+    {"capabilityId": "licoarc.generic-messaging.v1", "manifestPath": "conformance/v1/messaging/manifest.json"},
+    {"capabilityId": "licoarc.group-collaboration.v1", "manifestPath": "conformance/v1/group/manifest.json"},
+    {"capabilityId": "licoarc.https-transport.v1", "manifestPath": "conformance/v1/transport/manifest.json"},
+    {"capabilityId": "licoarc.identity.v1", "manifestPath": "conformance/v1/identity/manifest.json"},
+    {"capabilityId": "licoarc.protocol-foundation.v1", "manifestPath": "conformance/v1/foundation/manifest.json"},
+    {"capabilityId": "licoarc.reliable-exchange.v1", "manifestPath": "conformance/v1/reliable/manifest.json"},
+    {"capabilityId": "licoarc.transferable-evidence.v1", "manifestPath": "conformance/v1/evidence/manifest.json"}
+  ],
+  "definitionCorpora": [
+    {"definitionId": "security-accounting", "manifestPath": "conformance/v1/security/manifest.json"}
+  ],
+  "absentCorpora": [
+    {"definitionId": "pairwise-protection", "reason": "open-definition-has-no-active-wire"}
+  ],
+  "sourceClosure": "declared-component-source-closures"
+}

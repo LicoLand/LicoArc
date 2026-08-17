@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/v1/protection/registry.json",
+  "registryVersion": "licoarc.pairwise-protection.v1",
+  "lifecycle": "Candidate",
+  "definitionStatus": "PARTIAL",
+  "sessionEligible": false,
+  "activeProfiles": [],
+  "profileCatalog": "spec/protection-profiles.json",
+  "openAlgorithmDecisions": ["ALG-core-v1-hybrid-ake", "ALG-core-v1-double-ratchet"],
+  "openFieldDecisions": ["FLD-prekey-bundle-v1", "FLD-handshake-transcript-v1", "FLD-session-accept", "FLD-ratchet-header"],
+  "wireSchemas": [],
+  "runtimeGrammar": null,
+  "conformanceCorpus": null,
+  "unknownProfilePolicy": "terminal-reject",
+  "fallbackPolicy": "forbidden",
+  "stateAdvanceOnFailure": false
+}

@@ -1,0 +1,13 @@
+; Lico Arc Protocol v1 foundation runtime subset.
+; This is an encoding contract only. Capability-specific semantics allocate
+; their own fields after their independent lifecycle decisions.
+
+foundation-runtime-record = {
+  0 => uint,
+  ? 1 => bstr,
+  ? 2 => uint
+}
+
+; 0 is a closed record-kind label.  1 is bounded raw protected-packet bytes.
+; 2 is a bounded unsigned sequence coordinate.  Text map labels, tags,
+; floating-point values, duplicate labels, and indefinite lengths are invalid.

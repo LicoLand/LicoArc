@@ -7,4 +7,6 @@ coverage/
 # Local-only working material (must never be tracked)
 docs/plans/
 docs/reports/
+docs/references/
+docs/field-decisions/industry-facts.md
 cache/

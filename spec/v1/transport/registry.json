@@ -1,0 +1,269 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/v1/transport/registry.json",
+  "registryVersion": "licoarc.https-transport.v1",
+  "wireId": "licoarc.https-transport.v1",
+  "profileId": "licoarc.https-transport.v1",
+  "protocolLineId": "licoarc.v1",
+  "lifecycle": "Candidate",
+  "scope": "https-tls13-raw-protected-packet-store-and-forward-v1",
+  "sourcePaths": {
+    "bounds": "spec/v1/transport/bounds.json",
+    "labels": "spec/v1/transport/labels.json",
+    "requestSchema": "spec/v1/transport/request.schema.json",
+    "responseSchema": "spec/v1/transport/response.schema.json",
+    "runtime": "spec/v1/transport/runtime.cddl",
+    "sourceManifest": "spec/v1/transport/source-manifest.json",
+    "conformanceManifest": "conformance/v1/transport/manifest.json"
+  },
+  "representation": {
+    "governance": "restricted-jcs-json",
+    "control": "deterministic-cbor",
+    "controlMapKeys": "compact-unsigned-integer",
+    "controlLengths": "definite-shortest",
+    "rawPacket": "raw-octets",
+    "tags": "forbidden",
+    "floats": "forbidden",
+    "indefiniteLengths": "forbidden",
+    "duplicateLabels": "reject-record",
+    "unknownLabels": "reject-record",
+    "trailingBytes": "reject-record"
+  },
+  "carrier": {
+    "scheme": "https",
+    "httpVersion": "HTTP/2-only",
+    "tlsVersion": "TLS-1.3-only",
+    "tlsCipherSuites": [
+      "TLS_AES_128_GCM_SHA256",
+      "TLS_AES_256_GCM_SHA384",
+      "TLS_CHACHA20_POLY1305_SHA256"
+    ],
+    "earlyData": "forbidden",
+    "renegotiation": "forbidden",
+    "h2c": "forbidden",
+    "http1": "forbidden",
+    "http3": "forbidden",
+    "certificateValidation": {
+      "chain": "required",
+      "name": "RFC-6125-DNS-ID-SAN",
+      "commonNameFallback": "forbidden",
+      "wildcard": "forbidden",
+      "ipAddressSan": "allowed-only-when-route-uses-an-ip-literal",
+      "hostnameSource": "authenticated-Station-descriptor-listener",
+      "pinning": "no-application-specific-certificate-pin",
+      "clientCertificate": "not-required-by-this-profile"
+    },
+    "requestHeaders": {
+      "required": [
+        ":method",
+        ":scheme",
+        ":authority",
+        ":path",
+        "content-type",
+        "content-length",
+        "licoarc-operation-id"
+      ],
+      "lowercase": "required-by-http2",
+      "unknownExtensionHeaders": "ignored-only-when-not-profile-semantic"
+    },
+    "responseHeaders": {
+      "outcome": "licoarc-outcome",
+      "failureClass": "licoarc-failure-class",
+      "retryAfterMs": "licoarc-retry-after-ms",
+      "claimId": "licoarc-claim-id",
+      "claimEpoch": "licoarc-claim-epoch"
+    },
+    "framing": {
+      "contentLength": "required-and-equals-body-octets",
+      "contentLengthSyntax": "canonical-decimal-no-leading-zero",
+      "transferEncoding": "forbidden",
+      "contentEncoding": "identity-only",
+      "trailers": "forbidden",
+      "streaming": "forbidden",
+      "query": "forbidden",
+      "fragment": "forbidden",
+      "bodyBoundary": "carrier-content-length-only",
+      "explicitPacketLengthField": "forbidden"
+    },
+    "mediaTypes": {
+      "control": "application/licoarc-transport+cbor",
+      "protectedPacket": "application/licoarc-protected-packet"
+    },
+    "mediaTypeParameters": "forbidden"
+  },
+  "headers": {
+    "operationId": "LicoArc-Operation-Id",
+    "outcome": "LicoArc-Outcome",
+    "failureClass": "LicoArc-Failure-Class",
+    "retryAfterMs": "LicoArc-Retry-After-Ms",
+    "claimId": "LicoArc-Claim-Id",
+    "claimEpoch": "LicoArc-Claim-Epoch"
+  },
+  "operations": {
+    "AFFILIATE": {
+      "method": "POST",
+      "path": "/v1/affiliate",
+      "requestMediaType": "application/licoarc-transport+cbor",
+      "responseMediaType": "application/licoarc-transport+cbor",
+      "requestBody": "affiliate-request",
+      "responseBody": "affiliate-response",
+      "acceptedStatus": 201,
+      "target": "no-delivery-handle",
+      "idempotency": "required-operation-id-fixed-window"
+    },
+    "RESERVE": {
+      "method": "POST",
+      "path": "/v1/reserve",
+      "requestMediaType": "application/licoarc-transport+cbor",
+      "responseMediaType": "application/licoarc-transport+cbor",
+      "requestBody": "reserve-request",
+      "responseBody": "reserve-response",
+      "acceptedStatus": 201,
+      "target": "no-delivery-handle",
+      "idempotency": "required-operation-id-fixed-window"
+    },
+    "SUBMIT": {
+      "method": "POST",
+      "path": "/v1/handles/{deliveryHandle}/submit",
+      "requestMediaType": "application/licoarc-protected-packet",
+      "responseMediaType": "application/licoarc-transport+cbor",
+      "requestBody": "one-raw-protected-packet",
+      "responseBody": "submit-response",
+      "acceptedStatus": 202,
+      "target": "one-delivery-handle",
+      "idempotency": "required-operation-id-fixed-window"
+    },
+    "RETRIEVE": {
+      "method": "POST",
+      "path": "/v1/handles/{deliveryHandle}/retrieve",
+      "requestMediaType": "application/licoarc-transport+cbor",
+      "responseMediaType": "application/licoarc-protected-packet",
+      "requestBody": "retrieve-request",
+      "responseBody": "one-raw-protected-packet-on-accepted",
+      "acceptedStatus": 200,
+      "target": "one-delivery-handle",
+      "idempotency": "required-operation-id-fixed-window"
+    },
+    "CLAIM": {
+      "method": "POST",
+      "path": "/v1/handles/{deliveryHandle}/claim",
+      "requestMediaType": "application/licoarc-transport+cbor",
+      "responseMediaType": "application/licoarc-transport+cbor",
+      "requestBody": "claim-request",
+      "responseBody": "claim-response-with-bounded-packets",
+      "acceptedStatus": 200,
+      "target": "one-delivery-handle",
+      "idempotency": "required-operation-id-fixed-window"
+    },
+    "SETTLE": {
+      "method": "POST",
+      "path": "/v1/handles/{deliveryHandle}/settle",
+      "requestMediaType": "application/licoarc-transport+cbor",
+      "responseMediaType": "application/licoarc-transport+cbor",
+      "requestBody": "settle-request",
+      "responseBody": "settle-response",
+      "acceptedStatus": 200,
+      "target": "one-delivery-handle",
+      "idempotency": "required-operation-id-fixed-window"
+    }
+  },
+  "bodyRules": {
+    "control": "one-deterministic-cbor-closed-map",
+    "submit": "exactly-one-raw-protected-packet",
+    "retrieveAccepted": "one-raw-protected-packet-response",
+    "claimPackets": "each-claimed-item-has-one-bounded-protected-packet",
+    "json": "forbidden",
+    "outerEnvelope": "forbidden",
+    "senderEnvelopeId": "forbidden",
+    "explicitPacketLength": "forbidden",
+    "expiry": "forbidden",
+    "retentionClass": "forbidden",
+    "receiptToken": "forbidden",
+    "pollingResource": "forbidden"
+  },
+  "outcomes": {
+    "values": ["accepted", "rejected", "transient", "ambiguous"],
+    "statusMap": {
+      "accepted": {
+        "affiliate": 201,
+        "reserve": 201,
+        "submit": 202,
+        "retrieve": 200,
+        "claim": 200,
+        "settle": 200
+      },
+      "rejected": [400, 404, 406, 409, 413],
+      "transient": [429, 500, 503],
+      "ambiguous": [504]
+    },
+    "failureClasses": [
+      "invalidRequest",
+      "unsupportedProfile",
+      "targetUnavailable",
+      "packetTooLarge",
+      "capacityUnavailable",
+      "rateLimited",
+      "conflict",
+      "internalUnavailable"
+    ],
+    "stationAuthority": "transport-hint-only",
+    "endpointEvidence": "never-created-by-station-outcome",
+    "acceptedStoragePrecondition": "station-must-be-able-to-honor-fixed-window-before-accepting-submit"
+  },
+  "retry": {
+    "accepted": "same-operation-id-and-identical-canonical-request-replays-identical-result",
+    "rejected": "do-not-retry-unless-request-is-corrected-or-new-operation-id-is-used",
+    "transient": "same-operation-id-and-identical-canonical-request-may-retry-without-new-authorization",
+    "ambiguous": "same-operation-id-and-identical-canonical-request-only;-result-may-have-committed",
+    "conflict": "same-operation-id-with-different-canonical-request-fails-closed",
+    "submitBytes": "retry-must-use-identical-protected-packet-octets",
+    "windowReset": "retry-reconnect-route-change-and-station-migration-never-reset-or-extend"
+  },
+  "stateLifecycle": {
+    "affiliate": "accepted-affiliation-is-finite-and-station-scoped",
+    "reserve": "returns-one-short-lived-opaque-handle-and-finite-service-window",
+    "asyncHandle": "multiple-submissions-allowed-within-storage-window",
+    "firstContactHandle": "one-accepted-submission-then-consumed",
+    "submit": "accepted-packet-is-stored-with-one-fixed-storage-window",
+    "claim": "returns-bounded-items-and-one-live-claim-epoch",
+    "retrieve": "returns-only-an-opaque-protected-packet-for-a-live-claim-item",
+    "settle": "complete-removes-or-release-returns-each-item-atomically",
+    "stationSignals": "never-advance-endpoint-accepted-or-effect-completed"
+  },
+  "metadataBudget": {
+    "visible": [
+      "deliveryHandle-in-request-target-for-handle-bound-operations",
+      "actual-framed-body-length",
+      "method-and-fixed-path",
+      "HTTP-version-and-TLS-certificate-name",
+      "operationId-within-fixed-idempotency-scope",
+      "mediaType-and-status",
+      "typed-Station-outcome",
+      "bounded-retry-hint-when-transient",
+      "timing-frequency-route-and-connection-activity"
+    ],
+    "correlation": "handle-equality-operation-equality-packet-equality-length-timing-frequency-route-and-certificate-correlation-remain-possible",
+    "retention": "Station-retains-only-within-fixed-storage-idempotency-and-claim-windows; Endpoint-retains-local-policy",
+    "confidentiality": "no-plaintext-or-application-meaning-is-carried-outside-protected-packet",
+    "anonymity": "not-claimed",
+    "unlinkability": "not-claimed",
+    "trafficAnalysisResistance": "not-claimed",
+    "trafficShaping": "no-padding-no-artificial-delay-no-synthetic-messages-no-presence-or-mandatory-keepalive"
+  },
+  "outOfScope": [
+    "endpoint-identity",
+    "peer-authentication",
+    "endpoint-acceptance",
+    "effect-completion",
+    "endpoint-evidence",
+    "anonymity",
+    "unlinkability",
+    "traffic-analysis-resistance",
+    "http-server-or-client-implementation",
+    "credentials-and-certificates",
+    "station-storage-engine",
+    "station-quotas",
+    "retry-scheduling",
+    "deployment-and-operation"
+  ]
+}

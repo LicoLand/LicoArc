@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/v1/reliable/intent.schema.json",
+  "title": "Lico Arc Reliable Exchange Protected Intent semantic projection",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "recordType",
+    "protocolLineId",
+    "logicalMessageId",
+    "protectedIntentDigest",
+    "applicationIdempotencyKey",
+    "userPayload",
+    "contentType",
+    "meaningDigest"
+  ],
+  "properties": {
+    "recordType": { "type": "string", "const": "protectedIntent" },
+    "protocolLineId": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "logicalMessageId": { "type": "string", "pattern": "^[0-9a-f]{32}$" },
+    "protectedIntentDigest": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "applicationIdempotencyKey": { "type": "string", "pattern": "^[0-9a-f]{2,512}$" },
+    "userPayload": { "type": "string", "pattern": "^[0-9a-f]{0,524288}$" },
+    "contentType": { "type": "integer", "minimum": 0, "maximum": 4294967295 },
+    "meaningDigest": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "attachmentRootDigest": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "groupProjectionId": { "type": "string", "pattern": "^[0-9a-f]{32}$" }
+  }
+}

@@ -1,0 +1,146 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "manifestVersion": "licoarc.protocol-line-manifest.v2",
+  "wireId": "licoarc.protocol-line.v1",
+  "generation": 1,
+  "lifecycle": "Candidate",
+  "definitionStatus": "PARTIAL",
+  "sessionEligible": false,
+  "publicationEligible": false,
+  "protocolLineCatalog": "spec/protocol-lines.json",
+  "protectionProfileCatalog": "spec/protection-profiles.json",
+  "capabilities": [
+    {
+      "capabilityId": "licoarc.federation-governance.v1",
+      "version": 1,
+      "definitionStatus": "COMPLETE",
+      "sourceManifestPath": "spec/v1/governance/source-manifest.json",
+      "sourceRoots": [],
+      "sourcePaths": [],
+      "sourceDigest": "1b16c5508e00d48f226653ca0837d2d3b332626b03306ce90bab9e16a549c396"
+    },
+    {
+      "capabilityId": "licoarc.generic-messaging.v1",
+      "version": 1,
+      "definitionStatus": "COMPLETE",
+      "sourceManifestPath": "spec/v1/messaging/source-manifest.json",
+      "sourceRoots": [],
+      "sourcePaths": [],
+      "sourceDigest": "eb1c15f47a84b5fd000a6be7cbd5273e1081577143d7e0846c1adb0e256b7b4d"
+    },
+    {
+      "capabilityId": "licoarc.group-collaboration.v1",
+      "version": 1,
+      "definitionStatus": "COMPLETE",
+      "sourceManifestPath": "spec/v1/group/source-manifest.json",
+      "sourceRoots": [],
+      "sourcePaths": [],
+      "sourceDigest": "6a69bd1c8c90fd8275304cf8f0a014cb1fa665aeb46e066a593ef19849cd98fe"
+    },
+    {
+      "capabilityId": "licoarc.https-transport.v1",
+      "version": 1,
+      "definitionStatus": "COMPLETE",
+      "sourceManifestPath": "spec/v1/transport/source-manifest.json",
+      "sourceRoots": [],
+      "sourcePaths": [],
+      "sourceDigest": "803bad3c71795068502600e3169e1b83686f67af9fa440a203bfdfb1ccea447c"
+    },
+    {
+      "capabilityId": "licoarc.identity.v1",
+      "version": 1,
+      "definitionStatus": "COMPLETE",
+      "sourceManifestPath": null,
+      "sourceRoots": [
+        "conformance/v1/identity",
+        "spec/v1/identity"
+      ],
+      "sourcePaths": [
+        "conformance/v1/identity/invalid.json",
+        "conformance/v1/identity/manifest.json",
+        "conformance/v1/identity/valid.json",
+        "spec/v1/identity/identity.policy.json",
+        "spec/v1/identity/identity.schema.json",
+        "spec/v1/identity/registry.json",
+        "spec/v1/identity/runtime.cddl"
+      ],
+      "sourceDigest": "f761d649f8e14cd190b82a139371a8118724a22123bcc3d83682b60dc7e282b2"
+    },
+    {
+      "capabilityId": "licoarc.protocol-foundation.v1",
+      "version": 1,
+      "definitionStatus": "COMPLETE",
+      "sourceManifestPath": "spec/v1/foundation/source-manifest.json",
+      "sourceRoots": [],
+      "sourcePaths": [],
+      "sourceDigest": "976fbac8ab121b244d3d56083a23cee33dac89e8cd9e4ff314f193bb509c5f0f"
+    },
+    {
+      "capabilityId": "licoarc.reliable-exchange.v1",
+      "version": 1,
+      "definitionStatus": "COMPLETE",
+      "sourceManifestPath": "spec/v1/reliable/source-manifest.json",
+      "sourceRoots": [],
+      "sourcePaths": [],
+      "sourceDigest": "4dbc0b187a0ab2d6b8b933f48ee2036464f6700eb5b4ca31050bb617687dceaa"
+    },
+    {
+      "capabilityId": "licoarc.transferable-evidence.v1",
+      "version": 1,
+      "definitionStatus": "COMPLETE",
+      "sourceManifestPath": "spec/v1/evidence/source-manifest.json",
+      "sourceRoots": [],
+      "sourcePaths": [],
+      "sourceDigest": "393e1ee33591576a31ae5bcb868b859ca5c9b8d43caa67bb891203edd91b8fbf"
+    }
+  ],
+  "missingMandatoryCapabilities": [
+    "licoarc.pairwise-protection.v1"
+  ],
+  "openDefinitions": [
+    {
+      "definitionId": "pairwise-protection",
+      "definitionStatus": "PARTIAL",
+      "sourceManifestPath": "spec/v1/protection/source-manifest.json",
+      "sourceDigest": "5487852a64be744fba8ff4c79bbf5e0063b33affe15dfa933dc10dbac75e53dc"
+    },
+    {
+      "definitionId": "security-accounting",
+      "definitionStatus": "PARTIAL",
+      "sourceManifestPath": "spec/v1/security/source-manifest.json",
+      "sourceDigest": "89fef1f43ce715deb877815107054f7454db66a116232a6e1a25c640da95f200"
+    }
+  ],
+  "blockers": [
+    "ALG-core-v1-double-ratchet",
+    "ALG-core-v1-hybrid-ake",
+    "FLD-handshake-transcript-v1",
+    "FLD-minimum-protocol-generation-v1",
+    "FLD-prekey-bundle-v1",
+    "FLD-protocol-support-statement-v1",
+    "FLD-ratchet-header",
+    "FLD-session-accept",
+    "SEC-formal-security-bindings"
+  ],
+  "sourceClosure": {
+    "roots": [
+      "conformance/v1",
+      "spec/schemas",
+      "spec/v1"
+    ],
+    "additionalSources": [
+      "spec/protection-profiles.json",
+      "spec/protocol-lines.json",
+      "spec/schemas/conformance-manifest.schema.json",
+      "spec/schemas/protection-profiles.schema.json",
+      "spec/schemas/protocol-lines.schema.json",
+      "spec/v1/requirement-registry.schema.json"
+    ],
+    "undeclaredFiles": "reject",
+    "symlinks": "reject",
+    "encoding": "restricted-jcs-json-plus-canonical-utf8-cddl"
+  },
+  "handshakeBinding": "unavailable-until-open-decisions-close",
+  "sessionLock": false,
+  "translationPolicy": "forbidden"
+}

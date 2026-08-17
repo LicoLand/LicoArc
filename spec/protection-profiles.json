@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/protection-profiles.json",
+  "registryVersion": "licoarc.protection-profiles.v1",
+  "lifecycleStates": ["Candidate", "Published", "Deprecated", "Retired"],
+  "activeProfiles": [],
+  "reservedIdentifiers": [
+    {
+      "id": "cbc5bc838141a34aa0dd1b300022de6212f47540f95f9d7958cb1f2dcf74e42e",
+      "generation": 1,
+      "lifecycle": "Retired",
+      "status": "withdrawn-candidate",
+      "newSessionPolicy": "forbid-retired",
+      "existingSessionPolicy": "terminate-on-authenticated-adoption",
+      "authenticatedEffectiveGeneration": null,
+      "reusable": false
+    },
+    {
+      "id": "d9e09414257925eed013b7add0672277fb9f91dd34c2c4e1ee985d0b5b17a7d6",
+      "generation": 1,
+      "lifecycle": "Retired",
+      "status": "withdrawn-candidate",
+      "newSessionPolicy": "forbid-retired",
+      "existingSessionPolicy": "terminate-on-authenticated-adoption",
+      "authenticatedEffectiveGeneration": null,
+      "reusable": false
+    }
+  ],
+  "admission": {
+    "requires": "decided-specified-complete-profile-with-proof-bound-claims",
+    "contentIdentity": "required-before-active-admission",
+    "reducedSecurityFallback": "forbidden",
+    "componentNegotiation": "forbidden",
+    "unknownProfile": "terminal-unknown-profile",
+    "retiredProfile": "terminal-retired-profile",
+    "identifierReuse": "forbidden",
+    "stateAdvanceOnFailure": false
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/v1/evidence/registry.json",
+  "registryVersion": "licoarc.transferable-evidence.v1",
+  "wireId": "licoarc.evidence.v1",
+  "protocolLineId": "licoarc.v1",
+  "lifecycle": "Candidate",
+  "scope": "transferable-evidence-checkpoint-v1",
+  "sourcePaths": {
+    "bounds": "spec/v1/evidence/bounds.json",
+    "labels": "spec/v1/evidence/labels.json",
+    "statementSchema": "spec/v1/evidence/statement.schema.json",
+    "checkpointSchema": "spec/v1/evidence/checkpoint.schema.json",
+    "identityBundleSchema": "spec/v1/evidence/identity-bundle.schema.json",
+    "runtime": "spec/v1/evidence/runtime.cddl",
+    "sourceManifest": "spec/v1/evidence/source-manifest.json",
+    "conformanceManifest": "conformance/v1/evidence/manifest.json"
+  },
+  "representation": {
+    "governance": "restricted-jcs-json",
+    "runtime": "deterministic-cbor",
+    "mapKeyEncoding": "compact-unsigned-integer",
+    "lengthEncoding": "definite",
+    "rawBytes": "bstr",
+    "tags": "forbidden",
+    "floats": "forbidden",
+    "indefiniteLengths": "forbidden",
+    "duplicateLabels": "reject",
+    "unknownCoreLabels": "reject",
+    "trailingBytes": "reject"
+  },
+  "algorithm": {
+    "statementDomain": "LP-EVIDENCE-STATEMENT\\u0000",
+    "checkpointDomain": "LP-EVIDENCE-CHECKPOINT\\u0000",
+    "digest": "SHA-256",
+    "canonicalProjection": "deterministic-cbor",
+    "baselineSignatureSet": ["Ed25519", "ML-DSA-65"],
+    "signaturePurpose": "endpoint-evidence"
+  },
+  "attribution": {
+    "proves": "exact-statement-by-authorized-endpoint-key-state",
+    "requires": ["statement", "checkpoint", "identity-continuity-bundle"],
+    "excludes": [
+      "human-intent",
+      "statement-truth",
+      "trusted-time",
+      "legal-responsibility",
+      "uncompromised-key-custody",
+      "counterparty-cooperation",
+      "station-honesty",
+      "guaranteed-delivery"
+    ]
+  },
+  "join": {
+    "ordering": "statement-or-checkpoint-either-first",
+    "finality": "both-valid-statement-and-checkpoint-before-delivery-or-peer-state-advance",
+    "pending": "bounded-count-bytes-window",
+    "orphan": "retained-pending-only",
+    "loss": "retransmit-identical-signed-checkpoint",
+    "unsignedFallback": "forbidden",
+    "recursiveSelfReference": "forbidden",
+    "atomicity": "validate-all-then-commit-one-snapshot"
+  },
+  "observerPolicy": {
+    "station": "no-plaintext-statement-or-checkpoint-meaning-after-protection",
+    "independentVerifier": "sees-disclosed-package-only",
+    "endpoint": "owns-identity-key-custody-and-final-disclosure"
+  },
+  "outOfScope": [
+    "human-or-legal-nonrepudiation",
+    "trusted-wall-clock",
+    "key-custody-guarantee",
+    "application-truth",
+    "station-generated-evidence",
+    "unsigned-tail-fallback",
+    "per-chunk-signatures",
+    "recursive-checkpoints"
+  ]
+}

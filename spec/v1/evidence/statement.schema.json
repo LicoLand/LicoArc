@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/v1/evidence/statement.schema.json",
+  "title": "Lico Arc Transferable Statement semantic projection",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "recordType",
+    "statementKind",
+    "protocolLineId",
+    "authorEndpointRef",
+    "counterpartyEndpointRef",
+    "identityStateDigest",
+    "logicalMessageId",
+    "semanticBody",
+    "userPayload"
+  ],
+  "properties": {
+    "recordType": { "type": "string", "const": "transferableStatement" },
+    "statementKind": {
+      "type": "string",
+      "enum": [
+        "userIntent",
+        "endpointAccepted",
+        "effectCompleted",
+        "attachmentDeclared",
+        "attachmentVerified",
+        "groupMemberResult",
+        "confirmation"
+      ]
+    },
+    "protocolLineId": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "authorEndpointRef": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "counterpartyEndpointRef": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "identityStateDigest": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "logicalMessageId": { "type": "string", "pattern": "^[0-9a-f]{32}$" },
+    "semanticBody": { "type": "string", "pattern": "^[0-9a-f]{2,524288}$" },
+    "userPayload": { "type": "string", "pattern": "^[0-9a-f]{0,524288}$" },
+    "predecessorDigest": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "attachmentId": { "type": "string", "pattern": "^[0-9a-f]{32}$" },
+    "contentDigest": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+  }
+}

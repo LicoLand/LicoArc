@@ -1,0 +1,68 @@
+; Lico Arc Protocol v1 Group Collaboration runtime profile.
+; Labels are compact unsigned integers and all maps/arrays are definite.
+; Endpoint protection supplies confidentiality and authentication; this
+; profile never delegates state authority to a Station or product permission.
+
+digest256 = bstr .size 32
+id128 = bstr .size 16
+role = 0 / 1                         ; member / state-authority
+operation-kind = 0 / 1 / 2 / 3       ; genesis / add / remove / role
+result-outcome = 0 / 1 / 2 / 3        ; pending / delivered / rejected / failed
+aggregate-outcome = 0 / 1 / 2         ; complete / partial / failed
+
+group-member = {
+  0: digest256,                       ; endpointIdentityRef
+  1: role
+}
+
+group-state = {
+  0: digest256,                       ; groupId
+  1: uint,                            ; groupEpoch, <= MAX_GROUP_EPOCH
+  ? 2: digest256,                     ; previousGroupStateDigest
+  3: [1*64 group-member],             ; members, byte-sorted and unique
+  4: digest256                        ; transitionDigest
+}
+
+group-operation = {
+  0: operation-kind,
+  ? 1: digest256,                     ; targetEndpointRef
+  ? 2: role,                           ; targetRole
+  ? 3: [1*64 group-member]             ; genesis initialMembers
+}
+
+group-transition = {
+  0: digest256,                       ; groupId
+  ? 1: digest256,                     ; previousGroupStateDigest
+  2: uint,                            ; nextGroupEpoch
+  3: digest256,                       ; authorEndpointRef
+  4: group-operation
+}
+
+group-message = {
+  0: id128,
+  1: digest256,                       ; groupStateDigest
+  2: bstr .size 0..262144             ; opaque protected payload
+}
+
+group-projection = {
+  0: id128,
+  1: id128,
+  2: digest256,
+  3: digest256
+}
+
+group-result = {
+  0: id128,
+  1: digest256,
+  2: result-outcome,
+  ? 3: uint,                          ; closed failure code
+  4: 0 / 1                            ; endpoint-evidence / none
+}
+
+group-aggregate = {
+  0: id128,
+  1: digest256,
+  2: [1*64 group-result],
+  3: aggregate-outcome,
+  4: { 0: uint, 1: uint, 2: uint, 3: uint }
+}

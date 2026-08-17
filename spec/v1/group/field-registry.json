@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/v1/group/field-registry.json",
+  "registryVersion": "licoarc.group-field-registry.v1",
+  "lifecycle": "Candidate",
+  "activeFields": [
+    { "id": "group-state.group-id", "field": "groupId", "placement": "Group Membership State", "type": "DIGEST256", "presence": "M", "decision": "FLD-group-id" },
+    { "id": "group-state.epoch", "field": "groupEpoch", "placement": "Group Membership State", "type": "uint64", "presence": "M", "decision": "FLD-group-epoch" },
+    { "id": "group-state.previous-digest", "field": "previousGroupStateDigest", "placement": "Successor Group Membership State", "type": "DIGEST256", "presence": "C", "decision": "FLD-previous-group-state-digest" },
+    { "id": "group-state.members", "field": "members", "placement": "Group Membership State", "type": "GroupMember[1..MAX_GROUP_MEMBERS]", "presence": "M", "decision": "FLD-group-members" },
+    { "id": "group-member.role", "field": "role", "placement": "GroupMember", "type": "member | state-authority", "presence": "M", "decision": "FLD-group-member-role" },
+    { "id": "group-message.state-digest", "field": "groupStateDigest", "placement": "Group Message", "type": "DIGEST256", "presence": "M", "decision": "FLD-group-message-context" }
+  ],
+  "algorithmOwnedInputs": [
+    { "name": "authorEndpointRef", "placement": "protected transition input", "authority": "predecessor-state role only" },
+    { "name": "operation", "placement": "protected transition input", "authority": "closed add/remove/role procedure only" },
+    { "name": "transitionDigest", "placement": "derived Group Membership State identity component", "authority": "SHA-256 over canonical transition input" }
+  ],
+  "rejectedFields": [
+    { "id": "endpoint-association-claim", "field": "associationClaim", "replacement": "ordinary namespaced opaque message.payload", "decision": "FLD-endpoint-association-claim" },
+    { "id": "station-order", "field": "stationOrder", "replacement": "none", "decision": "not-a-protocol-field" },
+    { "id": "product-permission", "field": "productPermission", "replacement": "none", "decision": "not-a-protocol-field" }
+  ]
+}

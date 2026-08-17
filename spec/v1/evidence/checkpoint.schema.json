@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/v1/evidence/checkpoint.schema.json",
+  "title": "Lico Arc Evidence Checkpoint semantic projection",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "recordType",
+    "protocolLineId",
+    "signerEndpointRef",
+    "counterpartyEndpointRef",
+    "identityStateDigest",
+    "statementDigests",
+    "signatures"
+  ],
+  "properties": {
+    "recordType": { "type": "string", "const": "evidenceCheckpoint" },
+    "protocolLineId": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "signerEndpointRef": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "counterpartyEndpointRef": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "identityStateDigest": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "statementDigests": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+    },
+    "signatures": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 4,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["algorithm", "keyId", "purpose", "value"],
+        "properties": {
+          "algorithm": { "type": "string", "enum": ["Ed25519", "ML-DSA-65"] },
+          "keyId": { "type": "string", "pattern": "^[0-9a-f]{32}$" },
+          "purpose": { "type": "string", "const": "endpoint-evidence" },
+          "value": { "type": "string", "pattern": "^[0-9a-f]{2,8192}$" }
+        }
+      }
+    }
+  }
+}

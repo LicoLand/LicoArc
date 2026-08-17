@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/v1/schemas/foundation-representation.schema.json",
+  "registryVersion": "licoarc.foundation-representation.v1",
+  "lifecycle": "Candidate",
+  "scope": "source-representation-boundary",
+  "governance": {
+    "encoding": "restricted-jcs",
+    "schemaDialect": "https://json-schema.org/draft/2020-12/schema",
+    "documentEncoding": "utf-8",
+    "duplicateMemberPolicy": "reject",
+    "unknownClosedMemberPolicy": "reject",
+    "nonFiniteNumberPolicy": "reject"
+  },
+  "runtime": {
+    "encoding": "deterministic-cbor",
+    "schemaLanguage": "closed-cddl",
+    "mapKeyEncoding": "compact-unsigned-integer",
+    "lengthEncoding": "definite",
+    "rawBytes": "bounded-bstr",
+    "duplicateLabelPolicy": "reject",
+    "unknownLabelPolicy": "reject",
+    "trailingBytePolicy": "reject",
+    "indefiniteLengthPolicy": "reject"
+  },
+  "composition": {
+    "onlyBoundary": "protocol-line-manifest",
+    "translation": "forbidden",
+    "substitution": "forbidden",
+    "governanceAsRuntimeWire": "forbidden",
+    "runtimeAsGovernanceInput": "forbidden"
+  }
+}

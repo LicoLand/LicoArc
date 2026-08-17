@@ -1,0 +1,8 @@
+{
+  "$schema": "https://licoarc.com/spec/schemas/security-corpus.schema.json",
+  "corpusVersion": "licoarc.security-valid.v1",
+  "cases": [
+    {"id": "partial-line-has-unproved-claims", "expected": "accept-source-status"},
+    {"id": "explicit-nonclaim-never-implies-proof", "expected": "accept-source-status"}
+  ]
+}
