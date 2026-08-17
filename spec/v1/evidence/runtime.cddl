@@ -1,0 +1,68 @@
+; Lico Arc Transferable Evidence Checkpoint v1 runtime grammar.
+; Statements and checkpoints are Endpoint-protected in transit. A disclosed
+; package is independently verifiable only after deterministic decoding,
+; canonical digesting, exact signature-purpose checks, and continuity checks.
+
+evidence-record = transferable-statement / evidence-checkpoint
+
+transferable-statement = {
+  0 => uint .le 6,                    ; closed statement kind
+  1 => digest256,                     ; Protocol Line
+  2 => digest256,                     ; author Endpoint reference
+  3 => digest256,                     ; counterparty Endpoint reference
+  4 => digest256,                     ; exact signer identity state
+  5 => id128,                          ; stable logical Message
+  6 => bytes .size (1..262144),       ; peer-visible semantic meaning
+  7 => bytes .size (0..262144),       ; exact User Payload bytes
+  ? 8 => digest256,                   ; predecessor semantic digest
+  ? 9 => id128,                       ; attachment identity
+  ? 10 => digest256                    ; complete content digest
+}
+
+evidence-checkpoint = {
+  0 => digest256,
+  1 => digest256,
+  2 => digest256,
+  3 => digest256,
+  4 => [+ digest256],                 ; 1..32 sorted unique digests
+  5 => [2 signature, * signature]     ; baseline exactly two, max four line-wide
+}
+
+signature = {
+  0 => uint .le 1,                    ; Ed25519 or ML-DSA-65
+  1 => id128,
+  2 => 0,                             ; endpoint-evidence purpose only
+  3 => bytes .size (2..8192)
+}
+
+identity-continuity-bundle = {
+  0 => digest256,                      ; Endpoint identity reference
+  1 => [+ identity-state]               ; at most 64 under Protocol Line bounds
+}
+
+identity-state = {
+  0 => digest256,
+  1 => uint,
+  2 => digest256 / null,
+  3 => [1..4 * identity-key]
+}
+
+identity-key = {
+  0 => id128,
+  1 => 0,                              ; endpoint-evidence purpose
+  2 => uint .le 2,                     ; active/revoked/recovery
+  3 => digest256
+}
+
+id128 = bytes .size 16
+digest256 = bytes .size 32
+bytes = bstr
+
+; Statement projection excludes session IDs, protection frames, ciphertext,
+; retry attempts, Route, Station carriage, timing, and storage handles. The
+; statement digest is SHA-256("LP-EVIDENCE-STATEMENT" || NUL separator || canonical CBOR
+; projection). Checkpoint signing input is deterministic CBOR prefixed by
+; "LP-EVIDENCE-CHECKPOINT" || NUL separator and excludes the signatures member itself.
+; The complete statement and checkpoint pair is joined before application
+; delivery or peer-visible state advance. Orphans stay bounded pending and
+; expire only on an endpoint-local expiry event; time is not authenticated.

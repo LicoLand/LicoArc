@@ -1,0 +1,62 @@
+[
+  {
+    "id": "foundation-governance-duplicate-key",
+    "kind": "governance-json",
+    "input": "{\"a\":1,\"a\":2}",
+    "error": "duplicate-member"
+  },
+  {
+    "id": "foundation-governance-trailing-bytes",
+    "kind": "governance-json",
+    "input": "{\"a\":1} false",
+    "error": "trailing-bytes"
+  },
+  {
+    "id": "foundation-governance-unknown-member",
+    "kind": "schema",
+    "value": { "manifestVersion": "licoarc.foundation-source-manifest.v1", "unknown": true },
+    "error": "unknown-closed-member"
+  },
+  {
+    "id": "foundation-runtime-cbor-duplicate-label",
+    "kind": "runtime-cbor",
+    "hex": "a200010002",
+    "error": "duplicate-label"
+  },
+  {
+    "id": "foundation-runtime-cbor-noncanonical-integer",
+    "kind": "runtime-cbor",
+    "hex": "a1001801",
+    "error": "noncanonical-integer"
+  },
+  {
+    "id": "foundation-runtime-cbor-indefinite-map",
+    "kind": "runtime-cbor",
+    "hex": "bf0001ff",
+    "error": "indefinite-length"
+  },
+  {
+    "id": "foundation-runtime-cbor-trailing-byte",
+    "kind": "runtime-cbor",
+    "hex": "a1000100",
+    "error": "trailing-bytes"
+  },
+  {
+    "id": "foundation-runtime-cbor-unknown-label",
+    "kind": "runtime-cbor",
+    "hex": "a200010302",
+    "error": "unknown-label"
+  },
+  {
+    "id": "foundation-runtime-cbor-negative-label",
+    "kind": "runtime-cbor",
+    "hex": "a12001",
+    "error": "negative-label"
+  },
+  {
+    "id": "foundation-runtime-cbor-overflow",
+    "kind": "runtime-cbor",
+    "hex": "a1001b0020000000000000",
+    "error": "integer-overflow"
+  }
+]

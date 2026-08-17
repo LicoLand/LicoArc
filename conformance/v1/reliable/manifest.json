@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/v1/reliable/conformance-manifest.json",
+  "manifestVersion": "licoarc.reliable-conformance-manifest.v1",
+  "contractVersion": "licoarc.reliable-exchange.v1",
+  "lifecycle": "Candidate",
+  "validCasesPath": "conformance/v1/reliable/valid.json",
+  "invalidCasesPath": "conformance/v1/reliable/invalid.json",
+  "caseIds": [
+    "intent-create",
+    "same-route-retry",
+    "route-change-reprotect",
+    "sorted-confirmation",
+    "attachment-recovery-request",
+    "group-partial-results",
+    "restart-snapshot"
+  ],
+  "negativeCaseIds": [
+    "confirmation-unsorted",
+    "confirmation-duplicate-id",
+    "same-id-different-intent",
+    "station-receipt-authority",
+    "retry-over-bound",
+    "route-reset",
+    "terminal-reopen",
+    "group-projection-conflict",
+    "snapshot-over-bound",
+    "wire-trailing-byte",
+    "wire-noncanonical-integer"
+  ],
+  "assertions": [
+    "stable-protected-intent-and-logical-message-identity",
+    "same-route-exact-envelope-retry",
+    "route-change-reprotection-without-reauthorization",
+    "application-idempotency-conflict",
+    "sorted-bounded-confirmation-groups",
+    "per-member-group-partial-failure",
+    "serializable-restart-snapshot",
+    "absorbing-terminal-failure",
+    "station-signals-are-non-authoritative",
+    "no-exactly-once-or-guaranteed-station-delivery-claim"
+  ]
+}

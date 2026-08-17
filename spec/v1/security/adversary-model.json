@@ -1,0 +1,15 @@
+{
+  "$schema": "https://licoarc.com/spec/schemas/security-adversary-model.schema.json",
+  "$id": "https://licoarc.com/spec/v1/security/adversary-model.json",
+  "registryVersion": "licoarc.adversary-model.v1",
+  "lifecycle": "Candidate",
+  "models": [
+    {"id": "A0", "name": "network-and-station", "powers": ["read-carrier-metadata", "drop", "delay", "duplicate", "reorder", "inject", "replay", "partition", "censor", "lie-about-station-state"]},
+    {"id": "A1", "name": "classical-active", "powers": ["control-network"], "limits": ["cannot-break-admitted-primitives"]},
+    {"id": "A2", "name": "future-quantum", "powers": ["break-x25519", "break-ed25519"], "limits": ["cannot-break-ml-kem", "cannot-break-ml-dsa"]},
+    {"id": "A3", "name": "temporary-endpoint-compromise", "powers": ["expose-current-session-state-at-one-event"]},
+    {"id": "A4", "name": "identity-key-compromise", "variants": ["classical-only", "post-quantum-only", "both"]},
+    {"id": "A5", "name": "prekey-compromise", "variants": ["classical-signed", "classical-one-time", "post-quantum-signed", "post-quantum-one-time"]},
+    {"id": "A6", "name": "malicious-peer-endpoint", "powers": ["send-any-protocol-input", "withhold-state", "equivocate"]}
+  ]
+}

@@ -1,0 +1,192 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/v1/governance/governance.policy.json",
+  "policyVersion": "licoarc.federation-governance-policy.v1",
+  "lifecycle": "Candidate",
+  "scope": "offline-multi-root-federation-membership-certification-revocation-distribution-recovery",
+  "representation": {
+    "encoding": "restricted-jcs",
+    "schemaDialect": "https://json-schema.org/draft/2020-12/schema",
+    "digestAlgorithm": "sha256",
+    "signatureInput": "canonical-bundle-without-bundleDigest-and-authorizations",
+    "utf8": "required",
+    "duplicateMemberPolicy": "reject",
+    "unknownMemberPolicy": "reject",
+    "nonFiniteNumberPolicy": "reject"
+  },
+  "rootPolicy": {
+    "independentByRole": true,
+    "rootIdRepresentation": "digest128",
+    "keyIdRepresentation": "digest128",
+    "minimumKeyThreshold": 2,
+    "activeState": "active",
+    "nonSigningStates": ["retired", "compromised"],
+    "rotation": {
+      "requiresRecoveryAuthorization": true,
+      "predecessorRootDigestRequired": true,
+      "oldRootMayAuthorizeReplacement": false,
+      "activationRequiresNextBundle": true
+    }
+  },
+  "thresholds": [
+    {
+      "role": "membership",
+      "minimumIndependentRoots": 2,
+      "minimumDistinctSigners": 4,
+      "minimumKeysPerRoot": 2,
+      "authorizes": "membershipStatements"
+    },
+    {
+      "role": "compatibility",
+      "minimumIndependentRoots": 2,
+      "minimumDistinctSigners": 4,
+      "minimumKeysPerRoot": 2,
+      "authorizes": "compatibilityCertifications"
+    },
+    {
+      "role": "revocation",
+      "minimumIndependentRoots": 2,
+      "minimumDistinctSigners": 4,
+      "minimumKeysPerRoot": 2,
+      "authorizes": "revocations"
+    },
+    {
+      "role": "distribution",
+      "minimumIndependentRoots": 2,
+      "minimumDistinctSigners": 4,
+      "minimumKeysPerRoot": 2,
+      "authorizes": "distribution"
+    },
+    {
+      "role": "consistency",
+      "minimumIndependentRoots": 2,
+      "minimumDistinctSigners": 4,
+      "minimumKeysPerRoot": 2,
+      "authorizes": "consistency"
+    },
+    {
+      "role": "recovery",
+      "minimumIndependentRoots": 2,
+      "minimumDistinctSigners": 4,
+      "minimumKeysPerRoot": 2,
+      "authorizes": "recovery"
+    },
+    {
+      "role": "abuse",
+      "minimumIndependentRoots": 2,
+      "minimumDistinctSigners": 4,
+      "minimumKeysPerRoot": 2,
+      "authorizes": "abusePolicy"
+    }
+  ],
+  "roleSeparation": [
+    "membership-does-not-certify-compatibility",
+    "compatibility-does-not-admit-endpoints",
+    "revocation-does-not-rewrite-membership-history",
+    "distribution-does-not-create-membership",
+    "consistency-does-not-select-trust",
+    "recovery-does-not-restore-compromised-keys",
+    "abuse-does-not-revoke-or-admit",
+    "endpoint-admission-is-not-a-governance-role"
+  ],
+  "distributionPolicy": {
+    "model": "tuf-style-root-targets-snapshot-timestamp",
+    "rootVersionMonotonic": true,
+    "targetsVersionMonotonic": true,
+    "snapshotVersionMonotonic": true,
+    "timestampVersionMonotonic": true,
+    "timestampBindsSnapshot": true,
+    "snapshotBindsTargets": true,
+    "targetsBindOciDescriptor": true,
+    "targetsBindDsseEnvelope": true,
+    "consistentSnapshotRequired": true,
+    "expiryUsesExplicitOfflineNow": true,
+    "publication": "out-of-scope"
+  },
+  "statePolicy": {
+    "evaluationOrder": [
+      "closed-schema",
+      "canonical-digest",
+      "network-and-epoch",
+      "root-state-and-rotation",
+      "distribution-binding",
+      "snapshot-consistency",
+      "freshness-and-rollback",
+      "role-thresholds",
+      "signature-scope",
+      "replay-and-atomic-commit"
+    ],
+    "unknownRole": "reject-without-mutation",
+    "insufficientThreshold": "reject-without-mutation",
+    "staleBundle": "reject-without-mutation",
+    "replay": "idempotent-observation-without-mutation",
+    "inconsistentSnapshot": "reject-without-mutation",
+    "splitView": "reject-without-mutation",
+    "equivocation": "surface-digest-only-and-reject",
+    "rollback": "reject-without-mutation",
+    "expiry": "reject-without-mutation",
+    "compromisedRoot": "reject-unless-recovery-authorized",
+    "partialCommittee": "reject-without-mutation",
+    "commit": "atomic-after-complete-validation"
+  },
+  "endpointAdmission": {
+    "authority": "endpoint-local",
+    "automatic": false,
+    "governanceInputs": ["membershipStatements", "compatibilityCertifications", "revocations"],
+    "abuseInput": "advisory-only",
+    "stationAuthority": "none",
+    "networkHostAuthority": "none",
+    "artifactServiceAuthority": "none"
+  },
+  "abusePolicy": {
+    "authority": "local-operator-policy",
+    "scope": "bounded-expiring-advisory",
+    "protectedEvidence": "never-included",
+    "membershipEffect": "none",
+    "compatibilityEffect": "none",
+    "endpointAdmissionEffect": "local-only"
+  },
+  "privacy": {
+    "identityForm": "opaque-digest-reference",
+    "consistencyEvidence": "observer-digest-version-and-statement-digest-only",
+    "recoveryEvidence": "root-and-evidence-digests-only",
+    "plaintextMembershipEvidence": "forbidden",
+    "credentialMaterial": "forbidden",
+    "runtimeData": "forbidden"
+  },
+  "failureClasses": [
+    "instance-type",
+    "required-field",
+    "unknown-field",
+    "unknown-role",
+    "canonical-digest-mismatch",
+    "signature-scope-mismatch",
+    "insufficient-threshold",
+    "duplicate-signer",
+    "stale-bundle",
+    "replay",
+    "inconsistent-snapshot",
+    "split-view",
+    "equivocation",
+    "rollback",
+    "expired",
+    "compromised-root",
+    "invalid-rotation",
+    "invalid-recovery",
+    "partial-committee",
+    "authority-boundary"
+  ],
+  "outOfScope": [
+    "committee-operation",
+    "credentials",
+    "private-keys",
+    "signing-services",
+    "accounts",
+    "network-access",
+    "publication",
+    "deployment",
+    "hosted-operation",
+    "endpoint-final-trust",
+    "endpoint-admission-decision"
+  ]
+}

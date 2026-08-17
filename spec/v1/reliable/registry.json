@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/v1/reliable/registry.json",
+  "registryVersion": "licoarc.reliable-exchange.v1",
+  "wireId": "licoarc.reliable.v1",
+  "protocolLineId": "licoarc.v1",
+  "lifecycle": "Candidate",
+  "scope": "endpoint-protected-at-least-once-exchange-v1",
+  "sourcePaths": {
+    "bounds": "spec/v1/reliable/bounds.json",
+    "labels": "spec/v1/reliable/labels.json",
+    "intentSchema": "spec/v1/reliable/intent.schema.json",
+    "eventSchema": "spec/v1/reliable/event.schema.json",
+    "stateSchema": "spec/v1/reliable/state.schema.json",
+    "runtime": "spec/v1/reliable/runtime.cddl",
+    "sourceManifest": "spec/v1/reliable/source-manifest.json",
+    "conformanceManifest": "conformance/v1/reliable/manifest.json"
+  },
+  "representation": {
+    "governance": "restricted-jcs-json",
+    "runtime": "deterministic-cbor",
+    "mapKeyEncoding": "compact-unsigned-integer",
+    "lengthEncoding": "definite",
+    "rawBytes": "bstr",
+    "tags": "forbidden",
+    "floats": "forbidden",
+    "indefiniteLengths": "forbidden",
+    "duplicateLabels": "reject",
+    "unknownCoreLabels": "reject",
+    "trailingBytes": "reject"
+  },
+  "stateAuthority": {
+    "endpoint": "logical-intent-deduplication-evidence-and-effect-state",
+    "station": "opaque-carriage-and-untrusted-operation-hints-only",
+    "application": "effect-and-idempotency-result-only",
+    "scheduler": "caller-owned",
+    "storage": "caller-owned"
+  },
+  "delivery": {
+    "semantics": "at-least-once-when-a-conforming-path-is-available",
+    "sameRouteRetry": "same-protected-intent-and-exact-protected-bytes",
+    "routeChange": "may-reprotect-same-intent-without-reauthorizing-effect",
+    "restart": "restore-serializable-snapshot-before-processing-input",
+    "stationReceipt": "non-authoritative-hint",
+    "exactlyOnceEffects": "forbidden-claim",
+    "guaranteedStationDelivery": "forbidden-claim"
+  },
+  "closedStateTags": {
+    "outbox": ["created", "in-flight", "ambiguous", "accepted", "completed", "cancelled", "failed"],
+    "inbox": ["new", "pending-evidence", "accepted", "effect-pending", "completed", "cancelled", "failed"],
+    "attachment": ["pending", "complete", "cancelled", "failed"],
+    "aggregate": ["pending", "partial", "complete", "failed"]
+  },
+  "atomicity": "validate-complete-event-then-commit-one-new-immutable-snapshot",
+  "confirmation": {
+    "identity": "one-confirmation-id-per-result",
+    "grouping": "sorted-unique-message-ids-with-one-stage-outcome-and-failure",
+    "conflict": "same-confirmation-id-with-different-canonical-result-is-terminal",
+    "stationResults": "never-advance-endpoint-stage"
+  },
+  "attachment": {
+    "normalFeedback": "bounded-attachment-receive-state",
+    "routineChunkConfirmation": "forbidden",
+    "finality": "empty-verified-receive-state-requires-endpoint-evidence-checkpoint",
+    "windowReset": "forbidden-on-retry-restart-session-renewal-route-change-station-migration-replay"
+  },
+  "group": {
+    "projectionIdentity": "stable-per-member-logical-message-projection",
+    "partialFailure": "per-member-terminal-or-pending-results",
+    "aggregate": "deterministic-recipient-order-and-absorbing-member-results"
+  },
+  "failurePolicy": {
+    "invalid": "reject-without-state-advance",
+    "ambiguous": "retain-intent-and-retry-without-new-authorization",
+    "terminal": "absorbing-until-tombstone-retention-ends",
+    "bounds": "typed-terminal-failure"
+  },
+  "outOfScope": [
+    "exactly-once-local-effects",
+    "retry-scheduling",
+    "database-or-storage-engine",
+    "trusted-time-source",
+    "legal-nonrepudiation",
+    "guaranteed-station-delivery",
+    "station-to-station-protocol",
+    "plaintext-or-application-command-interpretation"
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/v1/schemas/foundation-lifecycle.schema.json",
+  "registryVersion": "licoarc.foundation-lifecycle.v1",
+  "lifecycle": "Candidate",
+  "scope": "protocol-line-and-source-lifecycle",
+  "unknownStatePolicy": "reject",
+  "states": [
+    {
+      "id": "Draft",
+      "mutable": true,
+      "published": false,
+      "terminal": false
+    },
+    {
+      "id": "Candidate",
+      "mutable": true,
+      "published": false,
+      "terminal": false
+    },
+    {
+      "id": "Published",
+      "mutable": false,
+      "published": true,
+      "terminal": false
+    },
+    {
+      "id": "Deprecated",
+      "mutable": false,
+      "published": true,
+      "terminal": false
+    },
+    {
+      "id": "Retired",
+      "mutable": false,
+      "published": false,
+      "terminal": true
+    }
+  ],
+  "transitions": [
+    {
+      "from": "Draft",
+      "to": "Candidate",
+      "requires": "complete-source-closure-and-review"
+    },
+    {
+      "from": "Candidate",
+      "to": "Candidate",
+      "requires": "same-line-regeneration-and-verification"
+    },
+    {
+      "from": "Candidate",
+      "to": "Published",
+      "requires": "decided-specified-complete-source-and-proof-bindings-plus-publication-authorization"
+    },
+    {
+      "from": "Candidate",
+      "to": "Retired",
+      "requires": "explicit-retirement-and-replacement"
+    },
+    {
+      "from": "Published",
+      "to": "Deprecated",
+      "requires": "authenticated-lifecycle-policy"
+    },
+    {
+      "from": "Deprecated",
+      "to": "Retired",
+      "requires": "authenticated-retirement-policy"
+    }
+  ],
+  "publishedBytes": "immutable-and-verifiable",
+  "definitionStatusRegistry": "spec/protocol-lines.json",
+  "unknownTransitionPolicy": "reject",
+  "mixedLifecyclePolicy": "reject",
+  "downgradePolicy": "reject"
+}

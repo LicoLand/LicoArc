@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/v1/schemas/protocol-line-manifest.schema.json",
+  "title": "LicoArc Protocol Line composition manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema", "manifestVersion", "wireId", "generation", "lifecycle",
+    "definitionStatus", "sessionEligible", "publicationEligible",
+    "protocolLineCatalog", "protectionProfileCatalog", "capabilities",
+    "missingMandatoryCapabilities", "openDefinitions", "blockers",
+    "sourceClosure", "handshakeBinding", "sessionLock", "translationPolicy"
+  ],
+  "properties": {
+    "$schema": {"const": "https://json-schema.org/draft/2020-12/schema"},
+    "manifestVersion": {"const": "licoarc.protocol-line-manifest.v2"},
+    "wireId": {"const": "licoarc.protocol-line.v1"},
+    "generation": {"const": 1},
+    "lifecycle": {"const": "Candidate"},
+    "definitionStatus": {"const": "PARTIAL"},
+    "sessionEligible": {"const": false},
+    "publicationEligible": {"const": false},
+    "protocolLineCatalog": {"const": "spec/protocol-lines.json"},
+    "protectionProfileCatalog": {"const": "spec/protection-profiles.json"},
+    "capabilities": {
+      "type": "array", "minItems": 8, "maxItems": 8, "uniqueItems": true,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["capabilityId", "version", "definitionStatus", "sourceManifestPath", "sourceRoots", "sourcePaths", "sourceDigest"],
+        "properties": {
+          "capabilityId": {"type": "string", "pattern": "^licoarc\\.[a-z][a-z0-9-]*(?:\\.[a-z][a-z0-9-]*)?\\.v[1-9][0-9]*$", "maxLength": 128},
+          "version": {"type": "integer", "minimum": 1, "maximum": 9007199254740991},
+          "definitionStatus": {"const": "COMPLETE"},
+          "sourceManifestPath": {"type": ["string", "null"], "pattern": "^spec/[A-Za-z0-9._/-]+\\.json$", "maxLength": 256},
+          "sourceRoots": {"type": "array", "maxItems": 8, "uniqueItems": true, "items": {"type": "string", "pattern": "^(?:spec|conformance)/[A-Za-z0-9._/-]+$", "maxLength": 256}},
+          "sourcePaths": {"type": "array", "maxItems": 256, "uniqueItems": true, "items": {"type": "string", "pattern": "^(?:spec|conformance)/[A-Za-z0-9._/-]+\\.(?:json|cddl)$", "maxLength": 256}},
+          "sourceDigest": {"type": "string", "pattern": "^[0-9a-f]{64}$", "maxLength": 64}
+        }
+      }
+    },
+    "missingMandatoryCapabilities": {"const": ["licoarc.pairwise-protection.v1"]},
+    "openDefinitions": {
+      "type": "array", "minItems": 2, "maxItems": 2, "uniqueItems": true,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["definitionId", "definitionStatus", "sourceManifestPath", "sourceDigest"],
+        "properties": {
+          "definitionId": {"type": "string", "enum": ["pairwise-protection", "security-accounting"]},
+          "definitionStatus": {"const": "PARTIAL"},
+          "sourceManifestPath": {"type": "string", "pattern": "^spec/v1/[A-Za-z0-9._/-]+/source-manifest\\.json$", "maxLength": 256},
+          "sourceDigest": {"type": "string", "pattern": "^[0-9a-f]{64}$", "maxLength": 64}
+        }
+      }
+    },
+    "blockers": {"type": "array", "minItems": 1, "maxItems": 64, "uniqueItems": true, "items": {"type": "string", "pattern": "^(?:ALG|FLD|SEC)-[a-z0-9-]+$", "maxLength": 128}},
+    "sourceClosure": {
+      "type": "object", "additionalProperties": false,
+      "required": ["roots", "additionalSources", "undeclaredFiles", "symlinks", "encoding"],
+      "properties": {
+        "roots": {"const": ["conformance/v1", "spec/schemas", "spec/v1"]},
+        "additionalSources": {"type": "array", "minItems": 1, "maxItems": 64, "uniqueItems": true, "items": {"type": "string", "pattern": "^spec/[A-Za-z0-9._/-]+\\.json$", "maxLength": 256}},
+        "undeclaredFiles": {"const": "reject"},
+        "symlinks": {"const": "reject"},
+        "encoding": {"const": "restricted-jcs-json-plus-canonical-utf8-cddl"}
+      }
+    },
+    "handshakeBinding": {"const": "unavailable-until-open-decisions-close"},
+    "sessionLock": {"const": false},
+    "translationPolicy": {"const": "forbidden"}
+  }
+}

@@ -1,0 +1,113 @@
+; Lico Arc HTTPS Transport v1 runtime grammar.
+; The carrier is HTTP/2 over TLS 1.3 only. Control bodies are one
+; deterministic CBOR map with compact unsigned labels. SUBMIT carries exactly
+; one raw protected packet body. An accepted RETRIEVE response carries exactly
+; one raw protected packet body. No JSON envelope, tags, floats, indefinite
+; lengths, duplicate labels, unknown labels, or trailing bytes exist.
+;
+; LicoArc-Operation-Id is a required lowercase 16-byte ID128 encoded as 32
+; hexadecimal characters in a header. It is not a CBOR label. The request
+; target uses one unpadded base64url TOKEN256 only for handle-bound operations.
+
+control-request = affiliate-request / reserve-request / retrieve-request /
+                  claim-request / settle-request
+
+affiliate-request = {
+  0 => digest256,                         ; Station descriptor digest
+  1 => digest256                          ; opaque affiliation commitment
+}
+
+reserve-request = {
+  0 => digest256,                         ; Station descriptor digest
+  1 => digest256,                         ; opaque affiliation commitment
+  2 => digest256,                         ; exact Transport Profile digest
+  3 => uint .le 1                         ; async=0, firstContact=1
+}
+
+retrieve-request = {
+  0 => token256,                          ; live claim id
+  1 => uint,                              ; live claim epoch
+  2 => token256                           ; Station-local item id
+}
+
+claim-request = {
+  0 => uint .between 1 64                 ; requested item bound
+}
+
+settle-request = {
+  0 => token256,                          ; live claim id
+  1 => uint,                              ; live claim epoch
+  2 => [+ settlement]                     ; complete bounded set
+}
+
+settlement = {
+  0 => token256,                          ; Station-local item id
+  1 => uint .le 1                         ; complete=0, release=1
+}
+
+control-response = affiliate-response / reserve-response / submit-response /
+                   claim-response / settle-response
+
+affiliate-response = {
+  0 => uint .le 3,                        ; accepted/rejected/transient/ambiguous
+  ? 1 => uint,                            ; affiliationNotAfter
+  ? 2 => signature,                       ; Station service statement only
+  ? 3 => uint .le 7,                      ; failure class
+  ? 4 => uint .le 60000                   ; retryAfterMs
+}
+
+reserve-response = {
+  0 => uint .le 3,
+  ? 1 => token256,                        ; one opaque Delivery Handle
+  ? 2 => uint .le 1,                      ; async/firstContact
+  ? 3 => uint,                            ; finite serviceUntil
+  ? 4 => signature,                        ; async Route capability only
+  ? 5 => uint .le 7,
+  ? 6 => uint .le 60000
+}
+
+submit-response = {
+  0 => uint .le 3,
+  ? 1 => uint .le 7,
+  ? 2 => uint .le 60000
+}
+
+claim-response = {
+  0 => uint .le 3,
+  ? 1 => token256,                         ; claim id when items are returned
+  ? 2 => uint,                              ; claim epoch when items are returned
+  ? 3 => [+ claimed-item],                  ; bounded packet batch
+  ? 4 => uint .le 7,
+  ? 5 => uint .le 60000
+}
+
+claimed-item = {
+  0 => token256,
+  1 => bytes .size (1..524288)
+}
+
+settle-response = {
+  0 => uint .le 3,
+  ? 1 => [+ settlement-result],
+  ? 2 => uint .le 7,
+  ? 3 => uint .le 60000
+}
+
+settlement-result = {
+  0 => token256,
+  1 => uint .le 3                       ; completed/released/stale/attemptLimit
+}
+
+digest256 = bytes .size 32
+token256 = bytes .size 32
+signature = bytes .size 64
+bytes = bstr
+
+; A malformed carrier fails before any operation state changes: wrong TLS or
+; HTTP version, invalid name, wrong method/path/media type, query/fragment,
+; missing or mismatched Content-Length, transfer encoding, trailers,
+; content-encoding, empty/oversized packet, non-canonical CBOR, duplicate or
+; unknown label, omitted required label, invalid token/enum, duplicate item,
+; or settlement outside the fixed claim is rejected. A Station cannot create
+; Endpoint acceptance, effect completion, freshness, replay, trust, or proof
+; of deletion by returning any outcome, signature, timestamp, or queue signal.

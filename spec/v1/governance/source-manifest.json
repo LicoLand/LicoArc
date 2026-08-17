@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/v1/governance/source-manifest.json",
+  "manifestVersion": "licoarc.federation-governance-source-manifest.v1",
+  "contractVersion": "licoarc.federation-governance.v1",
+  "lifecycle": "Candidate",
+  "representation": "restricted-jcs",
+  "sourceRoots": [
+    "conformance/v1/governance",
+    "spec/v1/governance"
+  ],
+  "sources": [
+    "conformance/v1/governance/invalid.json",
+    "conformance/v1/governance/manifest.json",
+    "conformance/v1/governance/valid.json",
+    "spec/v1/governance/governance.policy.json",
+    "spec/v1/governance/governance.schema.json",
+    "spec/v1/governance/registry.json"
+  ],
+  "sorted": true,
+  "undeclaredFiles": "reject",
+  "symlinks": "reject"
+}

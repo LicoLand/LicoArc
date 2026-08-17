@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/v1/requirement-registry.schema.json",
+  "title": "Lico Arc Protocol requirement registry",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "registryVersion",
+    "protocolLineId",
+    "capabilityId",
+    "lifecycle",
+    "registrySchemaPath",
+    "normativeLanguage",
+    "requirements"
+  ],
+  "properties": {
+    "registryVersion": {
+      "const": "licoarc.requirement-registry.v1"
+    },
+    "protocolLineId": {
+      "type": "string",
+      "pattern": "^licoarc\\.[a-z0-9-]+\\.v[1-9][0-9]*$"
+    },
+    "capabilityId": {
+      "type": "string",
+      "pattern": "^licoarc\\.[a-z0-9-]+\\.v[1-9][0-9]*$"
+    },
+    "lifecycle": {
+      "enum": [
+        "Candidate",
+        "Published",
+        "Retired"
+      ]
+    },
+    "registrySchemaPath": {
+      "const": "spec/v1/requirement-registry.schema.json"
+    },
+    "normativeLanguage": {
+      "const": "en"
+    },
+    "requirements": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "subject",
+          "requirementLevel",
+          "condition",
+          "behavior",
+          "violationEffect",
+          "sourceBindings"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^LAP-[A-Z0-9]+-[0-9]{3}$"
+          },
+          "subject": {
+            "enum": [
+              "Endpoint",
+              "Station",
+              "Endpoint and Station"
+            ]
+          },
+          "requirementLevel": {
+            "enum": [
+              "MUST",
+              "MUST NOT"
+            ]
+          },
+          "condition": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "behavior": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1000
+          },
+          "violationEffect": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "sourceBindings": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "path",
+                "pointer"
+              ],
+              "properties": {
+                "path": {
+                  "type": "string",
+                  "pattern": "^spec/v1/[a-z0-9./-]+\\.json$"
+                },
+                "pointer": {
+                  "type": "string",
+                  "pattern": "^#(?:/.*)?$"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

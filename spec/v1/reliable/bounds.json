@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/v1/reliable/bounds.json",
+  "registryVersion": "licoarc.reliable-exchange-bounds.v1",
+  "lifecycle": "Candidate",
+  "scope": "reliable-exchange-v1",
+  "units": {
+    "RELIABLE_STATE_WINDOW": "bounded-transition-count",
+    "CONFIRMATION_WINDOW": "bounded-transition-count"
+  },
+  "bounds": {
+    "MAX_PROTECTED_INTENT_BYTES": 262144,
+    "MAX_APPLICATION_IDEMPOTENCY_BYTES": 256,
+    "MAX_RELIABLE_EVENT_BYTES": 65536,
+    "MAX_RELIABLE_SNAPSHOT_BYTES": 1048576,
+    "MAX_RETRY_TRANSMISSIONS": 32,
+    "MAX_ROUTE_MIGRATIONS": 16,
+    "MAX_STATE_TRANSITIONS": 256,
+    "MAX_PENDING_MESSAGES": 128,
+    "MAX_TERMINAL_TOMBSTONES": 256,
+    "MAX_CONFIRMATION_IDS": 32,
+    "MAX_CONFIRMATION_RECORDS": 64,
+    "MAX_CONFIRMATION_BYTES": 16384,
+    "MAX_GROUP_PROJECTIONS": 64,
+    "MAX_GROUP_RESULT_BYTES": 16384,
+    "MAX_ATTACHMENT_RECOVERY_ROUNDS": 32,
+    "MAX_ATTACHMENT_RETRANSMITTED_CHUNKS": 256,
+    "MAX_ATTACHMENT_STATE_UPDATES": 64,
+    "MAX_ATTACHMENT_CONTROL_BYTES": 65536,
+    "MAX_PENDING_EVIDENCE_STATEMENTS": 128,
+    "MAX_PENDING_EVIDENCE_BYTES": 262144,
+    "RELIABLE_STATE_WINDOW": 256,
+    "CONFIRMATION_WINDOW": 64
+  },
+  "relationships": [
+    "MAX_RETRY_TRANSMISSIONS > 0",
+    "MAX_ROUTE_MIGRATIONS < MAX_STATE_TRANSITIONS",
+    "MAX_CONFIRMATION_IDS <= MAX_GROUP_PROJECTIONS",
+    "MAX_CONFIRMATION_RECORDS <= MAX_STATE_TRANSITIONS",
+    "MAX_GROUP_RESULT_BYTES <= MAX_RELIABLE_EVENT_BYTES",
+    "MAX_PENDING_MESSAGES <= MAX_TERMINAL_TOMBSTONES",
+    "RELIABLE_STATE_WINDOW = MAX_STATE_TRANSITIONS",
+    "CONFIRMATION_WINDOW = MAX_CONFIRMATION_RECORDS"
+  ],
+  "resetPolicy": "retry-reconnect-session-renewal-route-change-station-migration-replay-never-reset-or-extend-a-bound",
+  "lifetimeStart": "logical-message-intent-creation",
+  "exactlyOnceEffects": "not-provided"
+}

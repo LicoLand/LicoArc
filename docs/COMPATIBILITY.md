@@ -1,35 +1,51 @@
-# Fabrigent Compatibility Policy
+# Compatibility and Protocol Line Lifecycle
 
-## Versioning Model
+LicoArc compatibility is agreement on one exact immutable complete Protocol
+Line, not agreement on a product version, transport, implementation or loose
+algorithm set. The current v1 source projection is `Candidate`/`PARTIAL` and
+therefore cannot establish a session.
 
-Fabrigent publishes versioned contract lines. Each line lives in matching
-`contracts/`, `policies/`, and `conformance/` version directories and is
-bundled into an immutable, content-addressed artifact. The current wire
-contract identifies itself as `fabrigent.relay.v2`; the published
-`fabrigent.relay.v1` artifact remains available unchanged.
+## Independent axes
 
-## Rules
+Definition status is `DRAFT`, `PARTIAL` or `COMPLETE`. Lifecycle is `Candidate`,
+`Published`, `Deprecated` or `Retired`. A line is eligible for a new session
+only when it is complete and its lifecycle policy explicitly permits it.
+Publishing freezes its exact bytes. A semantic correction or extension uses a
+new complete line and generation; it never mutates Published bytes.
 
-- A published version directory is immutable. Corrections and extensions
-  ship as a new version.
-- Implementations pin an exact artifact and verify its `digest` before
-  relying on its contents. In `v2`, SHA-256 binds the canonical
-  `artifactVersion`, `digestAlgorithm`, and embedded sources. The immutable
-  `v1` digest binds its embedded sources as originally published.
-- Consumers must treat `additionalProperties: false` as normative: an
-  envelope with unknown fields is non-conformant.
-- The governance policy's required capabilities are the minimum a conformant
-  relay deployment supports; the forbidden capabilities must never appear.
+## Multi-line selection
 
-## Compatibility Guarantees
+An Endpoint may support multiple Published generations. One session uses
+exactly one line. From future Endpoint-authenticated support statements, peers
+discard unknown, incomplete, ineligible, retired and below-either-minimum
+entries, then select the unique highest common generation. No common result or
+more than one distinct meaning at the highest generation is a terminal failure.
+String ordering, component negotiation, translation, Station selection and
+fallback are forbidden.
 
-- Within a version line, the schema, policy, and corpus never change; the
-  artifact digest is the integrity proof.
-- Across versions, no wire-level compatibility is implied. Consumers migrate
-  explicitly and reject any contract version they did not pin.
+The current Candidate has no active Pairwise Protection Profile and is always
+filtered out. Its support statement and transcript fields remain open and are
+not inferred from this lifecycle procedure.
 
-## Toolchain
+## Deprecation and retirement
 
-The generator and tests require Node.js 22 or newer, as declared in
-[../package.json](../package.json). The toolchain is a maintainer concern
-only; consumers need only the artifact JSON.
+Published bytes remain verifiable after deprecation or retirement. Lifecycle
+records own exact new-session and existing-session policy. Retired always
+forbids new sessions. An implementation, Provider, Station or unauthenticated
+input cannot independently continue, terminate, migrate, translate or rebind
+an existing session. The withdrawn Candidate Profiles require termination on
+authenticated adoption of their withdrawal and their identifiers are never
+reused.
+
+## Capability boundaries
+
+Generic Messaging, Reliable Exchange, Evidence, identity and Transport Profile
+semantics remain separate. Numeric `contentType` is protected application
+dispatch; it is not Protocol Line or Protection Profile negotiation.
+Application capabilities travel as application Payload and never rebuild a
+cryptographic session. Transport migration cannot change Endpoint identity,
+logical message identity, Protected Intent, authorization or evidence.
+
+Group v1 is a bounded per-member projection Profile with at most 64 projections
+per logical Group Message. It is not the permanent architecture for every
+future group scale.

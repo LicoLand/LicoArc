@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/v1/messaging/labels.json",
+  "registryVersion": "licoarc.messaging-labels.v1",
+  "lifecycle": "Candidate",
+  "scope": "generic-message-and-attachment-runtime-labels",
+  "wireEncoding": "deterministic-cbor-unsigned-integer-labels",
+  "unknownLabelPolicy": "reject-record",
+  "duplicateLabelPolicy": "reject-record",
+  "trailingBytePolicy": "reject-record",
+  "message": [
+    { "name": "messageId", "label": 0, "presence": "mandatory", "type": "ID128" },
+    { "name": "kind", "label": 1, "presence": "mandatory", "type": "Kind" },
+    { "name": "relatesTo", "label": 2, "presence": "conditional", "type": "ID128" },
+    { "name": "contentType", "label": 3, "presence": "mandatory", "type": "uint32" },
+    { "name": "payload", "label": 4, "presence": "mandatory", "type": "bstr" },
+    { "name": "extensions", "label": 5, "presence": "optional", "type": "map<uint32,bstr>" },
+    { "name": "critical", "label": 6, "presence": "optional", "type": "uint32[]" },
+    { "name": "chunkIndex", "label": 7, "presence": "conditional", "type": "uint64" },
+    { "name": "chunkFinal", "label": 8, "presence": "conditional", "type": "bool" },
+    { "name": "attachmentId", "label": 9, "presence": "conditional", "type": "ID128" },
+    { "name": "attachments", "label": 10, "presence": "optional", "type": "AttachmentDescriptor[]" }
+  ],
+  "descriptor": [
+    { "name": "attachmentId", "label": 0, "presence": "mandatory", "type": "ID128" },
+    { "name": "mediaType", "label": 1, "presence": "mandatory", "type": "uint32" },
+    { "name": "byteLength", "label": 2, "presence": "mandatory", "type": "uint64" },
+    { "name": "contentDigest", "label": 3, "presence": "mandatory", "type": "DIGEST256" }
+  ],
+  "range": [
+    { "name": "startChunkIndex", "label": 0, "presence": "mandatory", "type": "uint64" },
+    { "name": "endChunkIndexExclusive", "label": 1, "presence": "mandatory", "type": "uint64" }
+  ],
+  "receiveState": [
+    { "name": "attachmentId", "label": 0, "presence": "mandatory", "type": "ID128" },
+    { "name": "requestedChunkRanges", "label": 1, "presence": "mandatory", "type": "ChunkRange[]" },
+    { "name": "stateUpdate", "label": 2, "presence": "mandatory", "type": "uint64" },
+    { "name": "outcome", "label": 3, "presence": "mandatory", "type": "ReceiveOutcome" },
+    { "name": "failureCode", "label": 4, "presence": "conditional", "type": "FailureCode" },
+    { "name": "recoveryRound", "label": 5, "presence": "mandatory", "type": "uint64" }
+  ],
+  "kind": [
+    { "name": "event", "value": 0 },
+    { "name": "request", "value": 1 },
+    { "name": "response", "value": 2 },
+    { "name": "error", "value": 3 },
+    { "name": "cancel", "value": 4 },
+    { "name": "streamChunk", "value": 5 }
+  ],
+  "receiveOutcome": [
+    { "name": "pending", "value": 0 },
+    { "name": "complete", "value": 1 },
+    { "name": "cancelled", "value": 2 },
+    { "name": "failed", "value": 3 }
+  ],
+  "failureCode": [
+    { "name": "duplicateChunk", "value": 0, "terminal": false },
+    { "name": "conflictingChunk", "value": 1, "terminal": true },
+    { "name": "invalidGeometry", "value": 2, "terminal": true },
+    { "name": "invalidLength", "value": 3, "terminal": true },
+    { "name": "digestMismatch", "value": 4, "terminal": true },
+    { "name": "staleState", "value": 5, "terminal": true },
+    { "name": "resetAttempt", "value": 6, "terminal": true },
+    { "name": "stateBoundExceeded", "value": 7, "terminal": true },
+    { "name": "recoveryRoundExceeded", "value": 8, "terminal": true },
+    { "name": "retransmissionBoundExceeded", "value": 9, "terminal": true },
+    { "name": "controlBudgetExceeded", "value": 10, "terminal": true },
+    { "name": "unknownCriticalExtension", "value": 11, "terminal": true },
+    { "name": "unknownReservedMeaning", "value": 12, "terminal": true },
+    { "name": "cancelledByPeer", "value": 13, "terminal": true },
+    { "name": "sourceUnavailable", "value": 14, "terminal": true }
+  ],
+  "contentTypes": {
+    "ordinaryMaximum": 2147483647,
+    "reservedRange": [4294901760, 4294967295],
+    "reserved": [
+      { "name": "attachmentReceiveState", "value": 4294901761, "grammar": "receiveState" }
+    ],
+    "unknownReservedPolicy": "reject-record",
+    "ordinaryPayloadPolicy": "exact-opaque-bytes"
+  },
+  "extensions": {
+    "acceptedRange": [65536, 2147483647],
+    "reservedRanges": [[0, 65535], [2147483648, 4294967295]],
+    "criticalField": "6",
+    "criticalPolicy": "every-critical-label-must-be-present-in-extensions-and-recognized-by-this-line",
+    "recognizedCriticalLabels": [],
+    "unknownNonCriticalPolicy": "carry-opaque-and-ignore-semantics",
+    "unknownCriticalPolicy": "reject-record"
+  }
+}
