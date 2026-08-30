@@ -29,10 +29,10 @@ roll back the peer relationship's verification process.
 
 ## Field model and trade-offs
 
-The value is mandatory `uint64` field `verificationEpoch`. It strictly
-increases within the Endpoint relationship and prevents verification replay.
-Initialization, advancement, reset, recovery, rollover, conflict behavior,
-and encoding remain specification gaps.
+The approved semantic value is a relationship-scoped monotonic epoch. Its
+initial value, exact successor and recovery rules, bound, encoding, and
+method-transition interaction are not allocated by Protocol Line v1, so no v1
+parser accepts a `verificationEpoch` field.
 
 ## Visibility and trust
 
@@ -51,4 +51,6 @@ any conflicting explanation here.
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. Only the scope recorded by this decision and its linked normative authorities is defined; any remaining normative ambiguity requires a successor decision before entering the protocol definition.
+The definition status is `PARTIAL`. The necessity and trust boundary are
+decided, but the value is outside Protocol Line v1 until a successor authority
+closes its exact method, state, encoding, failure, and corpus semantics.

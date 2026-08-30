@@ -15,8 +15,8 @@
         "additionalProperties": false,
         "required": ["startChunkIndex", "endChunkIndexExclusive"],
         "properties": {
-          "startChunkIndex": { "type": "integer", "minimum": 0, "maximum": 9007199254740991 },
-          "endChunkIndexExclusive": { "type": "integer", "minimum": 0, "maximum": 9007199254740991 }
+          "startChunkIndex": { "type": "integer", "minimum": 0, "maximum": 128 },
+          "endChunkIndexExclusive": { "type": "integer", "minimum": 0, "maximum": 128 }
         }
       }
     },

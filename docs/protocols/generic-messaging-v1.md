@@ -60,8 +60,10 @@ adding a seventh class requires a new Protocol Line.
 
 An ordinary Payload is an exact byte string. Lico Arc carries the supplied
 bytes without parsing, compression, normalization, transcoding, or rewrite.
-The first transmission of those ordinary bytes is not Protocol Overhead;
-retransmitted bytes are overhead. A reserved Lico Arc `contentType` switches
+The complete protected packet is charged to Pairwise Protection, and each
+retransmitted packet is charged to the Reliable Exchange retransmission
+budget. Protected packet octets are never charged again as HTTPS carrier
+overhead. A reserved Lico Arc `contentType` switches
 the Payload to the one closed control grammar defined below.
 
 Extension labels are accepted only in the application namespace
@@ -156,7 +158,7 @@ Across one attachment lifetime the Endpoint enforces:
 | `MAX_ATTACHMENT_STATE_UPDATES` | 64 |
 | `MAX_ATTACHMENT_RECOVERY_ROUNDS` | 32 |
 | `MAX_ATTACHMENT_RETRANSMITTED_CHUNKS` | 256 |
-| `MAX_ATTACHMENT_CONTROL_BYTES` | 65,536 |
+| `MAX_ATTACHMENT_CONTROL_BYTES` | 16,384 |
 | `ATTACHMENT_RECOVERY_WINDOW` | 86,400 seconds |
 
 Retry, reconnect, session renewal, Route change, and Station migration cannot
@@ -168,6 +170,12 @@ refresh a bound or extend the window. A lower state update is
 `control-budget-exceeded` outcomes. Terminal tombstones and tuple deduplication
 state are retained through the recovery window; storage layout and retry
 scheduling remain implementation-local.
+
+The canonical maximum Generic Message record is 328,503 octets. The canonical
+maximum Attachment Receive State is 256 octets, including its complete map,
+labels, range array, and values. The lifetime control budget is exactly 64
+maximum-size states, or 16,384 octets; rejected or duplicate input does not
+consume that budget or mutate attachment state.
 
 ## Failure outcomes
 

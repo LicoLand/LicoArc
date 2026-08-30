@@ -7,9 +7,9 @@
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-retention` |
 | Decision status | `DECIDED` |
-| Definition status | `PARTIAL` |
+| Definition status | `SPECIFIED` |
 | Candidate spellings | `expiresAt`, absolute expiry timestamp |
-| Candidate layer | Former structured Outer Envelope body |
+| Candidate layer | Former structured transport body |
 | Observer set | Sender Endpoint and Station |
 | Existing authority | [Canonical Field Registry](../../../spec/FIELD-REGISTRY.md); this record explains the exclusion decision and is not a second field specification. |
 | Authority targets | Removal from the successor Candidate schema, registry, corpus, requirements, and bundle |
@@ -90,14 +90,16 @@ or lifecycle; every resulting decision remains wholly LicoArc-owned.
 
 After its admission evidence closed and the record reached `READY`, repository
 review approved exclusion on 2026-08-01: the target carrier has no
-structured Outer Envelope and no absolute `expiresAt` body field. Absolute Station
+structured transport container and no absolute `expiresAt` body field. Absolute Station
 retention time cannot prove Endpoint freshness, replay status, deletion, or
 delivery, and its precise timestamp adds clock dependence and correlation.
 
-This record's bounded definition remains partial. The station-facing carrier
-has no sender-supplied expiry field; the successor field decision rejects a
-relative request in favor of one fixed Transport Profile window.
+The station-facing carrier has no sender-supplied absolute or relative expiry
+field. HTTPS Transport v1 owns one fixed storage window, while Endpoint
+freshness remains protected and purpose-specific.
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. Only the scope recorded by this decision and its linked normative authorities is defined; any remaining normative ambiguity requires a successor decision before entering the protocol definition.
+The definition status is `SPECIFIED`. The linked registry and closed Transport
+schemas reject `expiresAt`, TTL, retention-duration, and retention-class input
+in favor of fixed profile constants.

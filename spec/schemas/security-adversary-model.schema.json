@@ -20,7 +20,7 @@
         "additionalProperties": false,
         "required": ["id", "name"],
         "properties": {
-          "id": {"type": "string", "pattern": "^A[0-9]+$", "maxLength": 8},
+          "id": {"type": "string", "pattern": "^A(?:[0-9]+|-[A-Z][A-Z0-9-]*)$", "maxLength": 128},
           "name": {"type": "string", "pattern": "^[a-z][a-z0-9-]+$", "maxLength": 128},
           "powers": {"type": "array", "maxItems": 64, "uniqueItems": true, "items": {"type": "string", "pattern": "^[a-z][a-z0-9-]+$", "maxLength": 128}},
           "limits": {"type": "array", "maxItems": 64, "uniqueItems": true, "items": {"type": "string", "pattern": "^[a-z][a-z0-9-]+$", "maxLength": 128}},

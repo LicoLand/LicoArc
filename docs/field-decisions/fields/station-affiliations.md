@@ -11,12 +11,12 @@ field.
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-station-affiliations` |
 | Decision status | `DECIDED` |
-| Definition status | `PARTIAL` |
+| Definition status | `SPECIFIED` |
 | Candidate spellings | home Station, guarantor list, service affiliations |
 | Candidate layer | Identity/Discovery protected control state |
 | Observer set | Peer Endpoints; hidden from Stations as a complete set |
 | Existing authority | [Canonical Field Registry](../../../spec/FIELD-REGISTRY.md) |
-| Authority targets | Future Affiliation Update schema and corpus |
+| Authority targets | The Identity Affiliation Update schema, grammar, policy, and corpus |
 | Predecessor or successor | None |
 | Current conclusion | One atomic Endpoint-wide ordered snapshot names the sole primary Station service affiliate, bounded alternates, or an explicit unaffiliated state. |
 
@@ -109,4 +109,4 @@ relationship projections bound back by digest.
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. Only the scope recorded by this decision and its linked normative authorities is defined; any remaining normative ambiguity requires a successor decision before entering the protocol definition.
+The definition status is `SPECIFIED`. The Canonical Field Registry and linked machine-readable authorities close this record’s exact active semantics.

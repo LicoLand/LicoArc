@@ -14,6 +14,13 @@
     "unknownMemberPolicy": "reject",
     "nonFiniteNumberPolicy": "reject"
   },
+  "protocolLineIdentity": {
+    "field": "compatibilityCertifications.protocolLineId",
+    "representation": "DIGEST256-content-identity",
+    "binding": "exact-enclosing-Protocol-Line-content-identity",
+    "wireAndContractNames": "source-and-catalog-locators-only",
+    "authority": "compatibility-evidence-only"
+  },
   "rootPolicy": {
     "independentByRole": true,
     "rootIdRepresentation": "digest128",

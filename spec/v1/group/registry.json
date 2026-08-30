@@ -2,7 +2,8 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://licoarc.com/spec/v1/group/registry.json",
   "registryVersion": "licoarc.group-collaboration.v1",
-  "protocolLineId": "licoarc.v1",
+  "wireId": "licoarc.group-collaboration.v1",
+  "protocolLineIdType": "DIGEST256-line-content-identity",
   "capabilityId": "licoarc.group-collaboration.v1",
   "lifecycle": "Candidate",
   "normativeLanguage": "en",
@@ -32,6 +33,19 @@
     "duplicateLabels": "reject",
     "unknownLabels": "reject",
     "trailingBytes": "reject"
+  },
+  "sourceClosure": {
+    "manifestPath": "spec/v1/group/source-manifest.json",
+    "undeclaredFiles": "reject",
+    "symlinks": "reject",
+    "sortedPaths": "required"
+  },
+  "authority": {
+    "stateAndTransition": "owning-group-capability-and-endpoint-protection",
+    "perMemberProjection": "owning-group-capability-and-endpoint-evidence",
+    "endpointAdmission": "endpoint-local",
+    "crossCapabilityTotals": "bounded-by-protocol-line",
+    "inheritance": "forbidden"
   },
   "stateIdentity": {
     "digest": "SHA-256(domain=LICOARC-GROUP-STATE\\0, canonical-state)",
@@ -78,6 +92,25 @@
     "persistedStationState": false,
     "persistedProductPermission": false,
     "retiredStateReset": "no-legacy-group-root-or-namespace-is-read"
+  },
+  "resourceAccounting": {
+    "memberSet": "MAX_GROUP_MEMBERS-bounded-sorted-unique-Endpoint-references",
+    "state": "MAX_GROUP_STATE_BYTES-is-the-complete-canonical-state-CBOR",
+    "operation": "MAX_GROUP_OPERATION_BYTES-is-the-complete-canonical-transition-CBOR",
+    "messageControl": "MAX_GROUP_MESSAGE_CONTROL_BYTES-includes-control-and-maximum-payload-length-prefix-but-not-payload-octets",
+    "payload": "MAX_GROUP_PAYLOAD_BYTES-is-opaque-payload-octets",
+    "projectionResults": "MAX_GROUP_RESULTS-equals-MAX_GROUP_PROJECTIONS-one-result-per-recipient",
+    "aggregate": "MAX_GROUP_AGGREGATE_BYTES-is-the-complete-canonical-result-CBOR",
+    "persisted": "MAX_GROUP_PERSISTED_BYTES-is-the-complete-bounded-retained-group-state",
+    "rejectedOrDuplicateInput": "no-budget-consumption-and-no-state-mutation",
+    "retryReset": "forbidden"
+  },
+  "atomicity": {
+    "transition": "validate-complete-predecessor-and-protected-operation-then-commit-successor-once",
+    "projection": "register-one-stable-projection-per-canonical-recipient-or-commit-none",
+    "result": "same-projection-and-identical-result-replays-without-reapplying-state",
+    "restart": "restore-current-state-predecessor-evidence-tombstones-and-projections-before-input",
+    "failure": "malformed-gap-fork-stale-unauthorized-or-over-bound-input-leaves-byte-identical-pre-state"
   },
   "outOfScope": [
     "Station-membership-or-ordering-authority",

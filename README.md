@@ -2,117 +2,83 @@
 
 [简体中文](README.zh-CN.md)
 
-Lico Arc Protocol is LicoLand's **Protocol Layer**: the
-implementation-neutral authority for protocol semantics, station-facing wire
-contracts and lifecycle, closed schemas, field and requirement registries, and policies,
-definition-level corpora, content-addressed protocol artifacts, compatibility,
-and federation governance semantics. This repository is the sole authority for
-those materials and checks their deterministic tracked source closure.
+Lico Arc Protocol is LicoLand's implementation-neutral **Protocol Layer**. It
+owns protocol meaning: closed schemas and registries, deterministic wire
+representations, security and lifecycle rules, definition-level conformance
+corpora, content-addressed Protocol Line artifacts, and federation governance.
 
-Products, repositories, implementations, Providers, deployments, and
-external protocols may consume LicoArc or submit proposals, but they never
-define its fields or semantics. Every protocol decision must serve the
-[LicoArc final protocol vision](PRODUCT.md#final-protocol-vision) and enter the
-repository-owned decision and definition closure.
+Products and implementations may execute an exact pinned definition or submit
+proposals, but they cannot redefine it. Publication, implementation,
+interoperability execution, audit, deployment, support, and operation remain
+separate downstream concerns.
 
 ## Core Domain Model
 
-This section is the single authoritative definition of LicoArc's core domain
-model. Other documents may summarize it and link here, but must not add,
-remove, or independently redefine its entities or trust boundaries.
+This section is the sole authority for LicoArc's three domain entities.
 
-LicoArc recognizes exactly three domain entity types:
-
-| Entity | Definition | Authority and privacy boundary |
+| Entity | Definition | Authority boundary |
 | --- | --- | --- |
-| **Endpoint** | The user-controlled origin or destination of protected communication. | The sole runtime authority for its user's keys, plaintext, protected state, peer acceptance, local trust, approval, effects, and endpoint-authenticated evidence. It is an inviolable privacy boundary: neither a Station nor a Network may assume or receive that authority. |
-| **Station** | An independently operated intermediary that transports opaque, endpoint-protected data. | Always untrusted by every Endpoint. It has transport authority only and never gains authority over plaintext, keys, Endpoint identity, authenticity, integrity, freshness, replay decisions, approval, effects, or final receipt. |
-| **Network** | A federation interoperability context in which participants mutually recognize communication under a pinned LicoArc Protocol Line. A Network may use one or more independently operated Stations. | Provides protocol recognition and carriage context only. It cannot override an Endpoint decision or become a trust root, privacy boundary, identity authority, plaintext authority, or security authority merely through membership, governance, hosting, discovery, or operation. |
-
-The communication invariant is:
+| **Endpoint** | The user-controlled origin or destination of protected communication. | Sole runtime authority for its keys, plaintext, protected state, peer acceptance, local approval, effects, and endpoint-authenticated evidence. |
+| **Station** | An independently operated intermediary that transports opaque endpoint-protected data. | Untrusted by Endpoints. It has only the transport authority explicitly granted by the pinned Protocol Line. |
+| **Network** | A federation interoperability context whose participants recognize communication under one pinned Protocol Line. | Provides recognition and transport context; it is not a trust root, identity authority, plaintext authority, or endpoint security authority. |
 
 ```text
 Endpoint A ── endpoint-protected LicoArc exchange ──▶
     Network { one or more untrusted Stations } ──▶ Endpoint B
 ```
 
-Each independently key-holding device or isolated runtime is a distinct
-Endpoint. One person may therefore control multiple Endpoints without merging
-their identities or protected state. Authority and plaintext remain inside
-each Endpoint while untrusted Stations carry opaque data through a
-LicoArc-recognized Network to the peer Endpoint. The receiving Endpoint alone
-validates and accepts the peer, protected content, and resulting local action.
+Every independently key-holding device or isolated runtime is a distinct
+Endpoint. A Group is a protected collaboration object whose members are
+Endpoints, not a fourth entity.
 
-Here, **sole authority** means sole runtime security and privacy authority for
-the user; LicoArc remains the design-time authority for protocol semantics.
-LicoArc itself is a protocol, not a fourth runtime entity. Users, Providers,
-directories, committees, Network Hosts, implementation languages, and hosted
-services may control, support, govern, or realize part of the system, but they
-do not add another LicoArc core domain entity type.
+## Current Definition
 
-A **Group** is a protected, versioned collaboration object whose members are
-Endpoints; it is not a fourth entity. A protected Endpoint Association Claim
-may describe a non-authoritative relationship among Endpoints, but it never
-merges their identities or proves shared human, device, account, ownership, or
-trust. Product actions remain namespaced opaque Payload rather than a
-protocol-owned command catalog.
+The tracked source graph defines `licoarc.protocol-line.v1` as:
 
-## Current Repository Status
+| Property | Value |
+| --- | --- |
+| Lifecycle | `Candidate` |
+| Definition status | `COMPLETE` |
+| New-session eligibility | `true` |
+| Publication eligibility | `false` |
+| Mandatory capabilities | 9, all `COMPLETE` |
+| Active Protection Profile | `stable-core`, `COMPLETE` |
 
-The current repository source projection is the **Candidate**
-`licoarc.protocol-line.v1` with definition status `PARTIAL`. Its manifest and
-generated bundle declare that exact identity and its ineligible status.
-Current definition facts are maintained in [`docs/STATUS.md`](docs/STATUS.md).
+The nine mandatory capabilities are Protocol Foundation, Identity, Pairwise
+Protection, Generic Messaging, Reliable Exchange, HTTPS Transport, Group
+Collaboration, Transferable Evidence, and Federation Governance.
 
-The [Canonical Field Registry](spec/FIELD-REGISTRY.md) is the sole authority
-for active fields. Pairwise Protection currently has zero active Profiles or
-wire schemas: Hybrid AKE, prekey consumption, transcript, key confirmation and
-Double Ratchet remain open pending an exact construction and proof.
+`stable-core` is an indivisible hybrid construction with paired X25519 and
+ML-KEM-768 one-time prekeys, dual Ed25519 and ML-DSA-65 authentication,
+transcript-bound selection and confirmation, and a bounded X25519 Double
+Ratchet. Profile and Protocol Line identities are computed from named,
+non-circular semantic projections. Proof admission, security accounting, and
+the complete declared conformance corpus are part of definition admission.
 
-Candidate governance and release artifacts use restricted JCS-canonical JSON
-with JSON Schema and content-addressed OCI, DSSE, and TUF controls. Candidate
-Endpoint wire data uses deterministic CBOR described by closed CDDL, compact
-integer labels, and raw `protectedPacket` bodies. The representation split,
-Bounded Group collaboration, Reliable Exchange, HTTPS Transport Profile,
-identity continuity and multi-root threshold governance remain specified.
-The partial Candidate is not session-eligible, publication-eligible or
-Published.
+`sessionEligible: true` means the Candidate definition permits authenticated
+new-session selection under its machine policy. It does not mean Published,
+implemented, interoperable, audited, deployed, supported, or operational.
 
-LicoArc checks the tracked definition with its own schemas, field and
-requirement registries, policies, corpora, artifact generation, and digest
-consistency. `docs/references/` is ignored local research and is not a tracked
-input or closure condition. Every implementation and real-world delivery fact
-belongs to its downstream owner and cannot advance or block this repository.
+Canonical current facts are in [`spec/v1/manifest.json`](spec/v1/manifest.json),
+[`spec/protocol-lines.json`](spec/protocol-lines.json),
+[`spec/protection-profiles.json`](spec/protection-profiles.json), and
+[`docs/STATUS.md`](docs/STATUS.md).
 
 ## Documentation
 
-- [Core domain model](#core-domain-model)
-- [Product goal and boundary](PRODUCT.md)
-- [Domain language](CONTEXT.md)
-- [Current status](docs/STATUS.md)
+- [Product authority and scope](PRODUCT.md)
 - [Architecture](ARCHITECTURE.md)
+- [Domain vocabulary](CONTEXT.md)
+- [Current status](docs/STATUS.md)
+- [Compatibility and lifecycle](docs/COMPATIBILITY.md)
+- [Protocol documents](docs/protocols/)
+- [Definition verification](docs/conformance/verification.md)
 - [Decision lifecycle](docs/DECISION-LIFECYCLE.md)
-- [Algorithm decision workspace](docs/algorithm-decisions/README.md)
-- [Canonical field registry](spec/FIELD-REGISTRY.md)
-- [Field decision workspace](docs/field-decisions/README.md)
-- [Specification index](spec/README.md)
+- [Canonical Field Registry](spec/FIELD-REGISTRY.md)
 - [Formal documentation index](docs/README.md)
-- [Contributing](CONTRIBUTING.md)
-- [Code of conduct](CODE_OF_CONDUCT.md)
-- [Security policy](SECURITY.md)
-- [Changelog](CHANGELOG.md)
-- [License](LICENSE)
 
-## Verification
-
-Run `npm run verify` to validate the Canonical Field Registry and its complete
-field-detail linkage, the Candidate schema, field and requirement registries,
-schema-to-field-registry consistency, requirement source-binding closure,
-requirement-to-evidence traceability, conformance corpus,
-machine-readable wire ID and lifecycle, generated artifact, digest
-consistency, decision-track closure, per-record explanation sections and
-decision lifecycle metadata,
-and tracked-link integrity. These checks prove definition-source consistency
-only; they make no implementation or delivery claim.
+Run `npm run verify` for the repository-owned source-integrity checks. These
+checks validate the definition graph and generated artifact only; they do not
+claim downstream execution or delivery.
 
 License: GPL-3.0-or-later.

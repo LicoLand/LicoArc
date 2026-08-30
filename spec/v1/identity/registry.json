@@ -6,7 +6,10 @@
   "lifecycle": "Candidate",
   "schemaPath": "spec/v1/identity/identity.schema.json",
   "policyPath": "spec/v1/identity/identity.policy.json",
+  "labelsPath": "spec/v1/identity/labels.json",
+  "signatureProfilesPath": "spec/v1/identity/signature-profiles.json",
   "runtimePath": "spec/v1/identity/runtime.cddl",
+  "sourceManifestPath": "spec/v1/identity/source-manifest.json",
   "unknownFieldPolicy": "reject-record",
   "closedRecordTypes": [
     "identityUpdate",
@@ -15,8 +18,39 @@
     "firstContact",
     "discoveryInput",
     "transparencyBundle",
-    "associationClaim"
+    "associationClaim",
+    "stationDescriptor"
   ],
+  "runtimeAuthority": {
+    "fieldLabels": "labelsPath records and structures",
+    "enumValues": "labelsPath enums",
+    "textNamesOnWire": "forbidden",
+    "unknownNumericValue": "reject-record"
+  },
+  "signingKeyResolution": {
+    "keyIdType": "DIGEST256",
+    "profileIdType": "DIGEST256",
+    "publicMaterial": "raw-public-verification-bytes",
+    "profileSelection": "signatureProfilesPath-only",
+    "duplicateKeyId": "reject-state",
+    "privateMaterial": "forbidden",
+    "validationOrder": [
+      "resolve-bound-identity-state",
+      "resolve-key-id-in-state",
+      "require-purpose",
+      "require-active-state",
+      "match-key-and-signature-profile-id",
+      "validate-exact-public-key-length-and-canonical-encoding",
+      "validate-exact-signature-length-and-canonical-encoding",
+      "verify-signature"
+    ]
+  },
+  "sourceClosure": {
+    "manifestPath": "spec/v1/identity/source-manifest.json",
+    "undeclaredFiles": "reject",
+    "symlinks": "reject",
+    "sortedPaths": "required"
+  },
   "chainKinds": [
     {
       "kind": "identity",
@@ -44,7 +78,29 @@
       "scope": "endpointIdentityRef-peerEndpointIdentityRef"
     }
   ],
+  "stationDescriptorState": {
+    "scope": "one-stable-station-identity",
+    "recordType": "stationDescriptor",
+    "identityField": "stationId",
+    "sequenceField": "descriptorSequence",
+    "predecessorField": "previousDescriptorDigest",
+    "contentDigest": "complete-descriptor-including-signatures",
+    "signatureCoverage": "complete-descriptor-excluding-signatures",
+    "highWater": "endpoint-retained",
+    "arrivalOrder": "never-selects",
+    "expiry": "never-resets-high-water",
+    "replacement": "atomic-after-complete-validation"
+  },
   "fieldGroups": {
+    "signingKey": [
+      "keyId",
+      "keyPurpose",
+      "keyState",
+      "keyProfileId",
+      "publicKey",
+      "validFromEpoch",
+      "revokedAtEpoch"
+    ],
     "endpointIdentity": [
       "endpointIdentityRef",
       "identityEpoch",
@@ -53,6 +109,26 @@
       "keyAuthorizations",
       "continuityProof",
       "endpointSignature"
+    ],
+    "stationDescriptor": [
+      "stationId",
+      "descriptorSequence",
+      "previousDescriptorDigest",
+      "notBefore",
+      "notAfter",
+      "listeners",
+      "signingKeys",
+      "certificationRefs",
+      "signatures"
+    ],
+    "stationListener": [
+      "transportProfileId",
+      "endpointUri"
+    ],
+    "stationSigningKey": [
+      "keyProfileId",
+      "keyId",
+      "publicKey"
     ],
     "affiliation": [
       "affiliationEpoch",

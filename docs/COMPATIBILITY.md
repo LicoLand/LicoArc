@@ -1,51 +1,43 @@
-# Compatibility and Protocol Line Lifecycle
+# Protocol Line Selection and Lifecycle
 
-LicoArc compatibility is agreement on one exact immutable complete Protocol
-Line, not agreement on a product version, transport, implementation or loose
-algorithm set. The current v1 source projection is `Candidate`/`PARTIAL` and
-therefore cannot establish a session.
+LicoArc compatibility means agreement on one exact complete Protocol Line
+content identity. It is not agreement on a product version, transport,
+implementation, or loose algorithm set.
 
-## Independent axes
+The current `licoarc.protocol-line.v1` is `Candidate` / `COMPLETE`, permits
+authenticated new-session selection, and is not publication-eligible.
 
-Definition status is `DRAFT`, `PARTIAL` or `COMPLETE`. Lifecycle is `Candidate`,
-`Published`, `Deprecated` or `Retired`. A line is eligible for a new session
-only when it is complete and its lifecycle policy explicitly permits it.
-Publishing freezes its exact bytes. A semantic correction or extension uses a
-new complete line and generation; it never mutates Published bytes.
+## Selection
 
-## Multi-line selection
+Each Endpoint authenticates its bounded support statement and monotonic
+minimum-generation floor. Selection filters in the exact machine-defined
+order: known content identity, complete definition, allowed new-session
+policy, session eligibility, both minimum-generation floors, complete
+mandatory capabilities, and complete eligible Profiles. Peers then choose the
+unique highest common generation.
 
-An Endpoint may support multiple Published generations. One session uses
-exactly one line. From future Endpoint-authenticated support statements, peers
-discard unknown, incomplete, ineligible, retired and below-either-minimum
-entries, then select the unique highest common generation. No common result or
-more than one distinct meaning at the highest generation is a terminal failure.
-String ordering, component negotiation, translation, Station selection and
-fallback are forbidden.
+No common line, more than one meaning at the highest generation, unknown or
+mismatched content identity, unauthenticated support, or downgrade input is a
+terminal failure without state advance. Fallback, component negotiation,
+substitution, Station selection, and translation are forbidden. A session is
+locked to the selected line and Profile identities.
 
-The current Candidate has no active Pairwise Protection Profile and is always
-filtered out. Its support statement and transcript fields remain open and are
-not inferred from this lifecycle procedure.
+## Lifecycle
 
-## Deprecation and retirement
+Definition status and lifecycle are independent. `COMPLETE` records semantic
+closure; `Candidate`, `Published`, `Deprecated`, and `Retired` govern use and
+distribution according to the registries. Publication is a separate action
+that cannot change the definition bytes.
 
-Published bytes remain verifiable after deprecation or retirement. Lifecycle
-records own exact new-session and existing-session policy. Retired always
-forbids new sessions. An implementation, Provider, Station or unauthenticated
-input cannot independently continue, terminate, migrate, translate or rebind
-an existing session. The withdrawn Candidate Profiles require termination on
-authenticated adoption of their withdrawal and their identifiers are never
-reused.
+A semantic change creates a new content identity and, when applicable, a new
+generation. Published bytes are immutable. Retirement forbids new sessions
+and follows the authenticated existing-session policy; no implementation or
+Station may invent a migration.
 
-## Capability boundaries
+The Profile registry retains exactly two withdrawn identifier allocations as
+non-reusable tombstones. Those entries reserve identifiers only. They do not
+retain a wire, parser, translator, implementation, or compatibility path.
 
-Generic Messaging, Reliable Exchange, Evidence, identity and Transport Profile
-semantics remain separate. Numeric `contentType` is protected application
-dispatch; it is not Protocol Line or Protection Profile negotiation.
-Application capabilities travel as application Payload and never rebuild a
-cryptographic session. Transport migration cannot change Endpoint identity,
-logical message identity, Protected Intent, authorization or evidence.
-
-Group v1 is a bounded per-member projection Profile with at most 64 projections
-per logical Group Message. It is not the permanent architecture for every
-future group scale.
+Publication, implementation, interoperability execution, audit, deployment,
+support, and operation are downstream claims and do not participate in
+definition completion or selection.

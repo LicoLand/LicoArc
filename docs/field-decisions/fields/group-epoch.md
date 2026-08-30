@@ -51,7 +51,7 @@ same epoch. The counter is Endpoint-protected and carries no time meaning.
 | --- | --- |
 | Semantic type | `uint64` |
 | Presence | Mandatory in every Group Membership State |
-| Values or range | Genesis `0`; each successor is exactly previous plus one; no reset; maximum is the unsigned 64-bit bound |
+| Values or range | Genesis `0`; each successor is exactly previous plus one; no reset; `MAX_GROUP_EPOCH = 9,007,199,254,740,991` |
 | Canonical representation | The selected Protocol Line's shortest deterministic unsigned integer |
 | Invalid input | Negative, non-canonical, overflow, rollback, gap, reset, or equal epoch with different state fails closed |
 

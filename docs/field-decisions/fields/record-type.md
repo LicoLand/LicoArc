@@ -10,7 +10,7 @@ specification; normative field semantics come only from the Field Registry.
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-record-type` |
 | Decision status | `RETIRED` |
-| Definition status | `PARTIAL` |
+| Definition status | `NOT-SPECIFIED` |
 | Existing authority | [Field Registry](../../../spec/FIELD-REGISTRY.md) |
 | Predecessor or successor | Succeeded by `FLD-record-type-evidence-checkpoint`. |
 | Current conclusion | Retired: the prior closed union omitted an independently signed evidence state machine and left ordinary Endpoint statements transferable only by a separate optional mechanism. |
@@ -68,4 +68,4 @@ preserves every prior value and adds the only successor value.
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. Only the scope recorded by this decision and its linked normative authorities is defined; any remaining normative ambiguity requires a successor decision before entering the protocol definition.
+The definition status is `NOT-SPECIFIED`. This historical record supplies no active normative definition; any successor or replacement owns its complete definition independently.

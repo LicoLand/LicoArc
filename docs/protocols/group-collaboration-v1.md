@@ -5,8 +5,13 @@ Profile v1. It is one max-64 per-member projection construction, not the
 permanent or exclusive architecture for future large groups. The
 normative source closure is [`spec/v1/group/`](../../spec/v1/group/) and its
 positive and negative corpus is [`conformance/v1/group/`](../../conformance/v1/group/).
-The profile is a Candidate definition closed by the tracked normative sources
-and definition-level corpus named above.
+The profile is a complete Candidate definition closed by the tracked normative sources
+and definition-level corpus named above. `licoarc.group-collaboration.v1` is
+the stable capability and wire locator; the enclosing Protocol Line is bound
+by a `DIGEST256` content identity selected outside this profile. This is the
+complete mandatory Group capability in the Candidate line composition. The
+enclosing line is `COMPLETE` and session-eligible but not publication-eligible;
+this capability makes no implementation or interoperability claim.
 
 ## Boundary and trust
 
@@ -29,7 +34,11 @@ deterministic CBOR with unsigned integer map labels, shortest definite lengths,
 raw byte strings, no tags, no floats, no indefinite lengths, no duplicate or
 unknown labels, and no trailing bytes. Member Endpoint references are exactly
 32 opaque bytes and are sorted by raw bytes. Role is the closed enum `member`
-or `state-authority`.
+or `state-authority`. The canonical maxima are 2,551 bytes for a Group state,
+2,512 bytes for a genesis transition, 60 bytes of Group Message control and
+length-prefix overhead (payload octets excluded), and 3,913 bytes for a
+maximum aggregate. The payload itself remains bounded by
+`MAX_GROUP_PAYLOAD_BYTES`.
 
 The Group state digest is:
 
@@ -124,7 +133,11 @@ is 128, `MAX_PENDING_GROUP_RESULTS` is 256, and
 `MAX_GROUP_EPOCH_TOMBSTONES` is 1024. Retry, reconnect, Route or Station
 change, and restart never reset or extend any bound. A parser rejects
 attacker-selected arrays, maps, raw bytes, and operation records before an
-unbounded allocation.
+unbounded allocation. Group-owned record and per-member bounds are separate
+from Protocol Line cross-capability totals; a rejected or duplicate input
+consumes neither budget nor state. Endpoint-local admission remains outside
+Group state, and no Station, Network, or product permission can extend a
+bound.
 
 ## Conformance
 

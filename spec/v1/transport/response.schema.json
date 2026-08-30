@@ -6,7 +6,6 @@
     { "$ref": "#/$defs/affiliateResponse" },
     { "$ref": "#/$defs/reserveResponse" },
     { "$ref": "#/$defs/submitResponse" },
-    { "$ref": "#/$defs/retrieveFailureResponse" },
     { "$ref": "#/$defs/claimResponse" },
     { "$ref": "#/$defs/settleResponse" }
   ],
@@ -46,7 +45,11 @@
         "stationAffiliationSignature": { "$ref": "#/$defs/signature" },
         "failureClass": { "$ref": "#/$defs/failureClass" },
         "retryAfterMs": { "type": "integer", "minimum": 0, "maximum": 60000 }
-      }
+      },
+      "allOf": [
+        { "if": { "properties": { "outcome": { "const": "accepted" } } }, "then": { "required": ["affiliationNotAfter", "stationAffiliationSignature"], "not": { "anyOf": [{ "required": ["failureClass"] }, { "required": ["retryAfterMs"] }] } }, "else": { "required": ["failureClass"], "not": { "anyOf": [{ "required": ["affiliationNotAfter"] }, { "required": ["stationAffiliationSignature"] }] } } },
+        { "if": { "properties": { "outcome": { "not": { "const": "transient" } } } }, "then": { "not": { "required": ["retryAfterMs"] } } }
+      ]
     },
     "reserveResponse": {
       "type": "object",
@@ -61,7 +64,13 @@
         "stationServiceSignature": { "$ref": "#/$defs/signature" },
         "failureClass": { "$ref": "#/$defs/failureClass" },
         "retryAfterMs": { "type": "integer", "minimum": 0, "maximum": 60000 }
-      }
+      },
+      "allOf": [
+        { "if": { "properties": { "outcome": { "const": "accepted" } } }, "then": { "required": ["deliveryHandle", "handleClass"], "not": { "anyOf": [{ "required": ["failureClass"] }, { "required": ["retryAfterMs"] }] } }, "else": { "required": ["failureClass"], "not": { "anyOf": [{ "required": ["deliveryHandle"] }, { "required": ["handleClass"] }, { "required": ["serviceUntil"] }, { "required": ["stationServiceSignature"] }] } } },
+        { "if": { "properties": { "outcome": { "const": "accepted" }, "handleClass": { "const": "async" } }, "required": ["handleClass"] }, "then": { "required": ["serviceUntil", "stationServiceSignature"] } },
+        { "if": { "properties": { "handleClass": { "const": "firstContact" } }, "required": ["handleClass"] }, "then": { "not": { "anyOf": [{ "required": ["serviceUntil"] }, { "required": ["stationServiceSignature"] }] } } },
+        { "if": { "properties": { "outcome": { "not": { "const": "transient" } } } }, "then": { "not": { "required": ["retryAfterMs"] } } }
+      ]
     },
     "submitResponse": {
       "type": "object",
@@ -72,18 +81,11 @@
         "outcome": { "$ref": "#/$defs/outcome" },
         "failureClass": { "$ref": "#/$defs/failureClass" },
         "retryAfterMs": { "type": "integer", "minimum": 0, "maximum": 60000 }
-      }
-    },
-    "retrieveFailureResponse": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["operation", "outcome"],
-      "properties": {
-        "operation": { "const": "retrieve" },
-        "outcome": { "$ref": "#/$defs/outcome", "not": { "const": "accepted" } },
-        "failureClass": { "$ref": "#/$defs/failureClass" },
-        "retryAfterMs": { "type": "integer", "minimum": 0, "maximum": 60000 }
-      }
+      },
+      "allOf": [
+        { "if": { "properties": { "outcome": { "const": "accepted" } } }, "then": { "not": { "anyOf": [{ "required": ["failureClass"] }, { "required": ["retryAfterMs"] }] } }, "else": { "required": ["failureClass"] } },
+        { "if": { "properties": { "outcome": { "not": { "const": "transient" } } } }, "then": { "not": { "required": ["retryAfterMs"] } } }
+      ]
     },
     "claimResponse": {
       "type": "object",
@@ -94,10 +96,16 @@
         "outcome": { "$ref": "#/$defs/outcome" },
         "claimId": { "$ref": "#/$defs/token256" },
         "claimEpoch": { "$ref": "#/$defs/epoch" },
-        "items": { "type": "array", "minItems": 1, "maxItems": 64, "items": { "$ref": "#/$defs/claimedItem" } },
+        "items": { "type": "array", "minItems": 1, "maxItems": 64, "uniqueItems": true, "items": { "$ref": "#/$defs/claimedItem" } },
         "failureClass": { "$ref": "#/$defs/failureClass" },
         "retryAfterMs": { "type": "integer", "minimum": 0, "maximum": 60000 }
-      }
+      },
+      "allOf": [
+        { "if": { "properties": { "outcome": { "const": "accepted" } } }, "then": { "not": { "anyOf": [{ "required": ["failureClass"] }, { "required": ["retryAfterMs"] }] } }, "else": { "required": ["failureClass"], "not": { "anyOf": [{ "required": ["claimId"] }, { "required": ["claimEpoch"] }, { "required": ["items"] }] } } },
+        { "if": { "required": ["items"] }, "then": { "required": ["claimId", "claimEpoch"] } },
+        { "if": { "anyOf": [{ "required": ["claimId"] }, { "required": ["claimEpoch"] }] }, "then": { "required": ["items", "claimId", "claimEpoch"] } },
+        { "if": { "properties": { "outcome": { "not": { "const": "transient" } } } }, "then": { "not": { "required": ["retryAfterMs"] } } }
+      ]
     },
     "settleResponse": {
       "type": "object",
@@ -106,10 +114,14 @@
       "properties": {
         "operation": { "const": "settle" },
         "outcome": { "$ref": "#/$defs/outcome" },
-        "settlementResults": { "type": "array", "minItems": 1, "maxItems": 64, "items": { "$ref": "#/$defs/settlementResult" } },
+        "settlementResults": { "type": "array", "minItems": 1, "maxItems": 64, "uniqueItems": true, "items": { "$ref": "#/$defs/settlementResult" } },
         "failureClass": { "$ref": "#/$defs/failureClass" },
         "retryAfterMs": { "type": "integer", "minimum": 0, "maximum": 60000 }
-      }
+      },
+      "allOf": [
+        { "if": { "properties": { "outcome": { "const": "accepted" } } }, "then": { "required": ["settlementResults"], "not": { "anyOf": [{ "required": ["failureClass"] }, { "required": ["retryAfterMs"] }] } }, "else": { "required": ["failureClass"], "not": { "required": ["settlementResults"] } } },
+        { "if": { "properties": { "outcome": { "not": { "const": "transient" } } } }, "then": { "not": { "required": ["retryAfterMs"] } } }
+      ]
     }
   }
 }

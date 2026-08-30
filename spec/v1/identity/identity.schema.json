@@ -2,7 +2,6 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://licoarc.com/spec/v1/identity/identity.schema.json",
   "title": "Lico Arc Protocol v1 identity, discovery, affiliation, route, and transparency records",
-  "type": "object",
   "oneOf": [
     { "$ref": "#/$defs/identityUpdate" },
     { "$ref": "#/$defs/affiliationUpdate" },
@@ -10,7 +9,8 @@
     { "$ref": "#/$defs/firstContact" },
     { "$ref": "#/$defs/discoveryInput" },
     { "$ref": "#/$defs/transparencyBundle" },
-    { "$ref": "#/$defs/associationClaim" }
+    { "$ref": "#/$defs/associationClaim" },
+    { "$ref": "#/$defs/stationDescriptor" }
   ],
   "$defs": {
     "digest256": {
@@ -41,16 +41,25 @@
     "endpointIdentityRef": {
       "$ref": "#/$defs/digest256"
     },
+    "signatureProfileId": {
+      "type": "string",
+      "enum": [
+        "176b912b9547ca9c47ace10f881457ab63fcd493ef953616f5859e76b830fd60",
+        "427e788bb9aed076acc2fb5a94715d14e694ec5fbc846ac52c8c7e118a6b1b8f"
+      ]
+    },
     "signature": {
       "type": "object",
       "additionalProperties": false,
       "required": [
+        "keyProfileId",
         "keyId",
         "signaturePurpose",
         "signatureValue"
       ],
       "properties": {
-        "keyId": { "$ref": "#/$defs/id128" },
+        "keyProfileId": { "$ref": "#/$defs/signatureProfileId" },
+        "keyId": { "$ref": "#/$defs/digest256" },
         "signaturePurpose": {
           "type": "string",
           "enum": [
@@ -64,71 +73,82 @@
             "verification"
           ]
         },
-        "signatureValue": {
-          "type": "string",
-          "pattern": "^[0-9a-f]{64,256}$"
+        "signatureValue": { "type": "string" }
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "keyProfileId": { "const": "176b912b9547ca9c47ace10f881457ab63fcd493ef953616f5859e76b830fd60" },
+            "signatureValue": { "pattern": "^[0-9a-f]{128}$" }
+          }
+        },
+        {
+          "properties": {
+            "keyProfileId": { "const": "427e788bb9aed076acc2fb5a94715d14e694ec5fbc846ac52c8c7e118a6b1b8f" },
+            "signatureValue": { "pattern": "^[0-9a-f]{6618}$" }
+          }
         }
-      }
+      ]
     },
     "endpointContinuitySignature": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "keyId",
-        "signaturePurpose",
-        "signatureValue"
-      ],
+      "required": ["keyProfileId", "keyId", "signaturePurpose", "signatureValue"],
       "properties": {
-        "keyId": { "$ref": "#/$defs/id128" },
-        "signaturePurpose": {
-          "type": "string",
-          "const": "endpoint-continuity"
-        },
-        "signatureValue": {
-          "type": "string",
-          "pattern": "^[0-9a-f]{64,256}$"
-        }
-      }
+        "keyProfileId": { "$ref": "#/$defs/signatureProfileId" },
+        "keyId": { "$ref": "#/$defs/digest256" },
+        "signaturePurpose": { "type": "string", "const": "endpoint-continuity" },
+        "signatureValue": { "type": "string" }
+      },
+      "oneOf": [
+        { "properties": { "keyProfileId": { "const": "176b912b9547ca9c47ace10f881457ab63fcd493ef953616f5859e76b830fd60" }, "signatureValue": { "pattern": "^[0-9a-f]{128}$" } } },
+        { "properties": { "keyProfileId": { "const": "427e788bb9aed076acc2fb5a94715d14e694ec5fbc846ac52c8c7e118a6b1b8f" }, "signatureValue": { "pattern": "^[0-9a-f]{6618}$" } } }
+      ]
     },
     "stationAffiliationSignature": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "keyId",
-        "signaturePurpose",
-        "signatureValue"
-      ],
+      "required": ["keyProfileId", "keyId", "signaturePurpose", "signatureValue"],
       "properties": {
-        "keyId": { "$ref": "#/$defs/id128" },
-        "signaturePurpose": {
-          "type": "string",
-          "const": "station-affiliation"
-        },
-        "signatureValue": {
-          "type": "string",
-          "pattern": "^[0-9a-f]{64,256}$"
-        }
-      }
+        "keyProfileId": { "$ref": "#/$defs/signatureProfileId" },
+        "keyId": { "$ref": "#/$defs/digest256" },
+        "signaturePurpose": { "type": "string", "const": "station-affiliation" },
+        "signatureValue": { "type": "string" }
+      },
+      "oneOf": [
+        { "properties": { "keyProfileId": { "const": "176b912b9547ca9c47ace10f881457ab63fcd493ef953616f5859e76b830fd60" }, "signatureValue": { "pattern": "^[0-9a-f]{128}$" } } },
+        { "properties": { "keyProfileId": { "const": "427e788bb9aed076acc2fb5a94715d14e694ec5fbc846ac52c8c7e118a6b1b8f" }, "signatureValue": { "pattern": "^[0-9a-f]{6618}$" } } }
+      ]
     },
     "stationServiceSignature": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "keyId",
-        "signaturePurpose",
-        "signatureValue"
-      ],
+      "required": ["keyProfileId", "keyId", "signaturePurpose", "signatureValue"],
       "properties": {
-        "keyId": { "$ref": "#/$defs/id128" },
-        "signaturePurpose": {
-          "type": "string",
-          "const": "station-route-service"
-        },
-        "signatureValue": {
-          "type": "string",
-          "pattern": "^[0-9a-f]{64,256}$"
-        }
-      }
+        "keyProfileId": { "$ref": "#/$defs/signatureProfileId" },
+        "keyId": { "$ref": "#/$defs/digest256" },
+        "signaturePurpose": { "type": "string", "const": "station-route-service" },
+        "signatureValue": { "type": "string" }
+      },
+      "oneOf": [
+        { "properties": { "keyProfileId": { "const": "176b912b9547ca9c47ace10f881457ab63fcd493ef953616f5859e76b830fd60" }, "signatureValue": { "pattern": "^[0-9a-f]{128}$" } } },
+        { "properties": { "keyProfileId": { "const": "427e788bb9aed076acc2fb5a94715d14e694ec5fbc846ac52c8c7e118a6b1b8f" }, "signatureValue": { "pattern": "^[0-9a-f]{6618}$" } } }
+      ]
+    },
+    "stationDescriptorSignature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["keyProfileId", "keyId", "signaturePurpose", "signatureValue"],
+      "properties": {
+        "keyProfileId": { "$ref": "#/$defs/signatureProfileId" },
+        "keyId": { "$ref": "#/$defs/digest256" },
+        "signaturePurpose": { "type": "string", "const": "station-descriptor" },
+        "signatureValue": { "type": "string" }
+      },
+      "oneOf": [
+        { "properties": { "keyProfileId": { "const": "176b912b9547ca9c47ace10f881457ab63fcd493ef953616f5859e76b830fd60" }, "signatureValue": { "pattern": "^[0-9a-f]{128}$" } } },
+        { "properties": { "keyProfileId": { "const": "427e788bb9aed076acc2fb5a94715d14e694ec5fbc846ac52c8c7e118a6b1b8f" }, "signatureValue": { "pattern": "^[0-9a-f]{6618}$" } } }
+      ]
     },
     "continuityProof": {
       "type": "object",
@@ -145,8 +165,7 @@
             "genesis",
             "rotation",
             "revocation",
-            "recovery",
-            "migration"
+            "recovery"
           ]
         },
         "predecessorStateDigest": {
@@ -164,12 +183,13 @@
       "required": [
         "keyId",
         "keyPurpose",
-        "keyDigest",
         "keyState",
+        "keyProfileId",
+        "publicKey",
         "validFromEpoch"
       ],
       "properties": {
-        "keyId": { "$ref": "#/$defs/id128" },
+        "keyId": { "$ref": "#/$defs/digest256" },
         "keyPurpose": {
           "type": "string",
           "enum": [
@@ -178,7 +198,6 @@
             "handshake"
           ]
         },
-        "keyDigest": { "$ref": "#/$defs/digest256" },
         "keyState": {
           "type": "string",
           "enum": [
@@ -187,9 +206,123 @@
             "recovery"
           ]
         },
+        "keyProfileId": { "$ref": "#/$defs/signatureProfileId" },
+        "publicKey": { "type": "string" },
         "validFromEpoch": { "$ref": "#/$defs/epoch" },
         "revokedAtEpoch": { "$ref": "#/$defs/epoch" }
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "keyProfileId": { "const": "176b912b9547ca9c47ace10f881457ab63fcd493ef953616f5859e76b830fd60" },
+            "publicKey": { "pattern": "^[0-9a-f]{64}$" }
+          }
+        },
+        {
+          "properties": {
+            "keyProfileId": { "const": "427e788bb9aed076acc2fb5a94715d14e694ec5fbc846ac52c8c7e118a6b1b8f" },
+            "publicKey": { "pattern": "^[0-9a-f]{3904}$" }
+          }
+        }
+      ]
+    },
+    "stationListener": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["transportProfileId", "endpointUri"],
+      "properties": {
+        "transportProfileId": { "$ref": "#/$defs/digest256" },
+        "endpointUri": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 128,
+          "pattern": "^https://(?:[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?|\\[[0-9a-f:.]+\\])(?:/[A-Za-z0-9._~!$&'()*+,;=:@%/-]*)?$"
+        }
       }
+    },
+    "stationSigningKey": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["keyProfileId", "keyId", "publicKey"],
+      "properties": {
+        "keyProfileId": { "$ref": "#/$defs/signatureProfileId" },
+        "keyId": { "$ref": "#/$defs/digest256" },
+        "publicKey": { "type": "string" }
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "keyProfileId": { "const": "176b912b9547ca9c47ace10f881457ab63fcd493ef953616f5859e76b830fd60" },
+            "publicKey": { "pattern": "^[0-9a-f]{64}$" }
+          }
+        },
+        {
+          "properties": {
+            "keyProfileId": { "const": "427e788bb9aed076acc2fb5a94715d14e694ec5fbc846ac52c8c7e118a6b1b8f" },
+            "publicKey": { "pattern": "^[0-9a-f]{3904}$" }
+          }
+        }
+      ]
+    },
+    "stationDescriptor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "recordType",
+        "stationId",
+        "descriptorSequence",
+        "notBefore",
+        "notAfter",
+        "listeners",
+        "signingKeys",
+        "signatures"
+      ],
+      "properties": {
+        "recordType": { "type": "string", "const": "stationDescriptor" },
+        "stationId": { "$ref": "#/$defs/digest256" },
+        "descriptorSequence": { "$ref": "#/$defs/epoch" },
+        "previousDescriptorDigest": { "$ref": "#/$defs/digest256" },
+        "notBefore": { "$ref": "#/$defs/unixSeconds" },
+        "notAfter": { "$ref": "#/$defs/unixSeconds" },
+        "listeners": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 4,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/stationListener" }
+        },
+        "signingKeys": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 4,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/stationSigningKey" }
+        },
+        "certificationRefs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 4,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/digest256" }
+        },
+        "signatures": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 4,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/stationDescriptorSignature" }
+        }
+      },
+      "oneOf": [
+        {
+          "properties": { "descriptorSequence": { "const": 1 } },
+          "not": { "required": ["previousDescriptorDigest"] }
+        },
+        {
+          "properties": { "descriptorSequence": { "minimum": 2 } },
+          "required": ["previousDescriptorDigest"]
+        }
+      ]
     },
     "stationAffiliation": {
       "type": "object",
@@ -280,8 +413,9 @@
           "uniqueItems": true,
           "items": { "$ref": "#/$defs/keyAuthorization" }
         },
-        "revokedKeyDigests": {
+        "revokedKeyIds": {
           "type": "array",
+          "minItems": 1,
           "maxItems": 4,
           "uniqueItems": true,
           "items": { "$ref": "#/$defs/digest256" }
@@ -323,7 +457,7 @@
             "anyOf": [
               { "required": ["previousIdentityStateDigest"] },
               { "required": ["recoveryProof"] },
-              { "required": ["revokedKeyDigests"] }
+              { "required": ["revokedKeyIds"] }
             ]
           }
         },
@@ -338,11 +472,11 @@
           "properties": {
             "identityEpoch": { "minimum": 2 },
             "transition": { "const": "revocation" },
-            "revokedKeyDigests": { "minItems": 1 }
+            "revokedKeyIds": { "minItems": 1 }
           },
           "required": [
             "previousIdentityStateDigest",
-            "revokedKeyDigests"
+            "revokedKeyIds"
           ]
         },
         {

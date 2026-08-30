@@ -10,12 +10,12 @@ This record explains the decision and defers all normative semantics to the
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-affiliation-commitment` |
 | Decision status | `DECIDED` |
-| Definition status | `PARTIAL` |
+| Definition status | `SPECIFIED` |
 | Candidate spellings | affiliation handle, subject commitment, service subject |
 | Candidate layer | Station operation and protected affiliation/route state |
 | Observer set | Calling Endpoint and Station; peer Endpoints under protection |
 | Existing authority | [Canonical Field Registry](../../../spec/FIELD-REGISTRY.md) |
-| Authority targets | Future AFFILIATE, RESERVE, affiliation, Route schemas and corpus |
+| Authority targets | HTTPS Transport AFFILIATE/RESERVE and Identity affiliation/Route schemas and corpora |
 | Predecessor or successor | None |
 | Current conclusion | One domain-separated identity-bound digest is the privacy-minimal join key between Station acceptance, global affiliation state, and relationship Route issuance. |
 
@@ -108,4 +108,4 @@ identity. The identity-bound randomized commitment was selected.
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. Only the scope recorded by this decision and its linked normative authorities is defined; any remaining normative ambiguity requires a successor decision before entering the protocol definition.
+The definition status is `SPECIFIED`. The Canonical Field Registry and linked machine-readable authorities close this record’s exact active semantics.

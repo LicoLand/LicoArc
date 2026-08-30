@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/v1/protection/handshake.schema.json",
+  "title": "Decoded Core v1 initiator first packet",
+  "$defs": {
+    "digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "x25519": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "mlKem768Ciphertext": {"type": "string", "pattern": "^[0-9a-f]{2176}$"},
+    "ed25519Signature": {"type": "string", "pattern": "^[0-9a-f]{128}$"},
+    "mlDsa65Signature": {"type": "string", "pattern": "^[0-9a-f]{6618}$"},
+    "clientConfirmCiphertext": {"type": "string", "pattern": "^[0-9a-f]{72}$"},
+    "tag": {"type": "string", "pattern": "^[0-9a-f]{32}$"}
+  },
+  "type": "object", "additionalProperties": false,
+  "required": ["initiatorSupport", "responderSupport", "selectedProtocolLineId", "selectedProtectionProfileId", "initiatorIdentityStateDigest", "responderIdentityStateDigest", "prekeyBundle", "initiatorX25519PublicKey", "mlKem768Ciphertext", "initiatorEd25519KeyId", "initiatorMlDsa65KeyId", "initiatorEd25519Signature", "initiatorMlDsa65Signature", "clientConfirmCiphertext", "clientConfirmTag"],
+  "properties": {
+    "initiatorSupport": {"$ref": "support.schema.json"},
+    "responderSupport": {"$ref": "support.schema.json"},
+    "selectedProtocolLineId": {"$ref": "#/$defs/digest"},
+    "selectedProtectionProfileId": {"$ref": "#/$defs/digest"},
+    "initiatorIdentityStateDigest": {"$ref": "#/$defs/digest"},
+    "responderIdentityStateDigest": {"$ref": "#/$defs/digest"},
+    "prekeyBundle": {"$ref": "prekey-bundle.schema.json"},
+    "initiatorX25519PublicKey": {"$ref": "#/$defs/x25519"},
+    "mlKem768Ciphertext": {"$ref": "#/$defs/mlKem768Ciphertext"},
+    "initiatorEd25519KeyId": {"$ref": "#/$defs/digest"},
+    "initiatorMlDsa65KeyId": {"$ref": "#/$defs/digest"},
+    "initiatorEd25519Signature": {"$ref": "#/$defs/ed25519Signature"},
+    "initiatorMlDsa65Signature": {"$ref": "#/$defs/mlDsa65Signature"},
+    "clientConfirmCiphertext": {"$ref": "#/$defs/clientConfirmCiphertext"},
+    "clientConfirmTag": {"$ref": "#/$defs/tag"}
+  }
+}

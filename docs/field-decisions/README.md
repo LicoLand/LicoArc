@@ -153,7 +153,7 @@ same bounded change.
 | [nonce.md](fields/nonce.md) | [plaintext.md](fields/plaintext.md) | [previous-descriptor-digest.md](fields/previous-descriptor-digest.md) | [protected-packet.md](fields/protected-packet.md) |
 | [previous-route-update-digest.md](fields/previous-route-update-digest.md) |  |  |  |
 | [protection-profile-id.md](fields/protection-profile-id.md) | [protocol-line-id.md](fields/protocol-line-id.md) | [provider-id.md](fields/provider-id.md) | [record-type.md](fields/record-type.md) |
-| [relay-format.md](fields/relay-format.md) | [requested-chunk-ranges.md](fields/requested-chunk-ranges.md) | [retention.md](fields/retention.md) | [retry-after.md](fields/retry-after.md) |
+| [transport-framing.md](fields/transport-framing.md) | [requested-chunk-ranges.md](fields/requested-chunk-ranges.md) | [retention.md](fields/retention.md) | [retry-after.md](fields/retry-after.md) |
 | [route-epoch.md](fields/route-epoch.md) |  |  |  |
 | [route-not-after.md](fields/route-not-after.md) | [routes.md](fields/routes.md) | [sequence-counter.md](fields/sequence-counter.md) | [session-id.md](fields/session-id.md) |
 | [service-until.md](fields/service-until.md) |  |  |  |
@@ -185,18 +185,18 @@ or grants a Station or product permission authority.
 | [group-id.md](fields/group-id.md) | [group-epoch.md](fields/group-epoch.md) | [previous-group-state-digest.md](fields/previous-group-state-digest.md) | [group-members.md](fields/group-members.md) |
 | [group-member-role.md](fields/group-member-role.md) | [group-message-context.md](fields/group-message-context.md) | [endpoint-association-claim.md](fields/endpoint-association-claim.md) |  |
 
-## Open proposal inventory
+## Core v1 decision inventory
 
 No Group field proposal remains open in this workspace. A future semantic
 change requires a new Message Field Decision ID and a complete registry
 migration; it cannot reopen or reinterpret one of the seven closed records.
 
-Core v1 has six independent open field questions. They record required
-semantics only; none allocates a wire field, label, object, encoding, or
-fallback before its owning decision closes and the Canonical Field Registry is
-updated in the same change.
+Core v1 has six independent decided and specified field questions. Their exact
+semantic conclusions, labels, objects, encodings, failures, and conformance
+cases are joined to the owning machine authorities and Canonical Field
+Registry. None permits component negotiation or fallback.
 
-| Open Core v1 record | Open Core v1 record | Open Core v1 record |
+| Core v1 record | Core v1 record | Core v1 record |
 | --- | --- | --- |
 | [protocol-support-statement-v1.md](fields/protocol-support-statement-v1.md) | [minimum-protocol-generation-v1.md](fields/minimum-protocol-generation-v1.md) | [prekey-bundle-v1.md](fields/prekey-bundle-v1.md) |
 | [handshake-transcript-v1.md](fields/handshake-transcript-v1.md) | [session-accept.md](fields/session-accept.md) | [ratchet-header.md](fields/ratchet-header.md) |

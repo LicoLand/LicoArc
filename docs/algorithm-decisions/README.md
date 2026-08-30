@@ -29,14 +29,15 @@ evidence.
 ## Complete current inventory
 
 The former baseline and custom high-assurance protection constructions are
-retired. Hybrid AKE and Double Ratchet successors remain open and partial;
-only the fail-closed Protocol Line selection constitution is newly specified.
+retired. The Core v1 Hybrid AKE and classic Double Ratchet decisions are
+decided and specified through their exact Profile, formal bindings,
+conformance corpus, and Candidate Protocol Line authority.
 
 | Decision ID | Question | Decision status | Definition | Record |
 | --- | --- | --- | --- | --- |
 | `ALG-baseline-pairwise-protection-suite` | Which complete mandatory composition satisfies the normative resource contract? | `RETIRED` | `NOT-SPECIFIED` | [baseline-pairwise-protection-suite.md](baseline-pairwise-protection-suite.md) |
-| `ALG-core-v1-double-ratchet` | Which exact Double Ratchet construction closes Core v1? | `OPEN` | `PARTIAL` | [core-v1-double-ratchet.md](core-v1-double-ratchet.md) |
-| `ALG-core-v1-hybrid-ake` | Which exact Hybrid AKE construction closes Core v1? | `OPEN` | `PARTIAL` | [core-v1-hybrid-ake.md](core-v1-hybrid-ake.md) |
+| `ALG-core-v1-double-ratchet` | Which exact Double Ratchet construction closes Core v1? | `DECIDED` | `SPECIFIED` | [core-v1-double-ratchet.md](core-v1-double-ratchet.md) |
+| `ALG-core-v1-hybrid-ake` | Which exact Hybrid AKE construction closes Core v1? | `DECIDED` | `SPECIFIED` | [core-v1-hybrid-ake.md](core-v1-hybrid-ake.md) |
 | `ALG-high-assurance-pairwise-protection-suite` | Which complete high-assurance composition satisfies its normative resource contract? | `RETIRED` | `NOT-SPECIFIED` | [high-assurance-pairwise-protection-suite.md](high-assurance-pairwise-protection-suite.md) |
 | `ALG-protocol-line-selection` | How is one immutable complete Protocol Line selected without downgrade? | `DECIDED` | `SPECIFIED` | [protocol-line-selection.md](protocol-line-selection.md) |
 | `ALG-protected-size-bucket-schedule` | Should a mandatory profile add a deterministic size-bucket schedule? | `REJECTED` | `NOT-SPECIFIED` | [protected-size-bucket-schedule.md](protected-size-bucket-schedule.md) |

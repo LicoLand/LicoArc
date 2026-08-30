@@ -7,7 +7,7 @@
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-routes` |
 | Decision status | `DECIDED` |
-| Definition status | `PARTIAL` |
+| Definition status | `SPECIFIED` |
 | Existing authority | [`FIELD-REGISTRY.md`](../../../spec/FIELD-REGISTRY.md) |
 | Current conclusion | Authenticated discovery needs a bounded ordered set of relationship-specific transport candidates under one exact Endpoint-wide affiliation state; order is attempt preference, not global affiliation authority. |
 
@@ -37,8 +37,10 @@ The value is mandatory field `routes`, typed `Route[1..MAX_ROUTES]`, containing
 bounded ordered transport candidates. Every Route binds one authenticated
 Station descriptor, current affiliation commitment, exact Transport Profile,
 private Delivery Handle, Station-selected service expiry, and Station route
-signature. Exact `MAX_ROUTES`, duplicate handling, canonical representation,
-and selection tie-breaking remain specification gaps.
+signature. The Identity policy fixes `MAX_ROUTES = 4`; the schema and grammar
+fix canonical representation and duplicate rejection. Declared order is
+attempt preference only, while the receiving Endpoint retains final local
+selection policy.
 
 ## Visibility and trust
 
@@ -62,4 +64,4 @@ any conflicting explanation here.
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. Only the scope recorded by this decision and its linked normative authorities is defined; any remaining normative ambiguity requires a successor decision before entering the protocol definition.
+The definition status is `SPECIFIED`. The Canonical Field Registry and linked machine-readable authorities close this record’s exact active semantics.

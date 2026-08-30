@@ -9,42 +9,48 @@ specification; normative field semantics come only from the Field Registry.
 | --- | --- |
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-capability-valid-until` |
-| Decision status | `DECIDED` |
-| Definition status | `PARTIAL` |
+| Decision status | `RETIRED` |
+| Definition status | `NOT-SPECIFIED` |
 | Existing authority | [Field Registry](../../../spec/FIELD-REGISTRY.md) |
-| Current conclusion | `validUntil` bounds capability-declaration use and is neither message expiry nor Endpoint freshness evidence. |
+| Predecessor or successor | The withdrawn Candidate Capability Declaration is replaced by `FLD-protocol-support-statement-v1`; no predecessor bytes survive. |
+| Current conclusion | The former declaration-level `validUntil` field is withdrawn. The Protocol Support Statement has no expiry field. |
 
 ## Question
 
-How does a peer reject a capability declaration after its authorized lifetime?
+How did the withdrawn Candidate Capability Declaration bound its authorized
+lifetime?
 
 ## Role in communication
 
-The declaring Endpoint sets the bound and the peer consumes it before profile
-selection. It bounds declaration validity; it is not a Station timestamp or
-proof of receipt.
+The predecessor declaration proposed an absolute lifetime. The active line
+does not parse or accept it. Support selection instead uses authenticated
+content identities and persistent minimum-generation state.
 
 ## Contribution to LicoArc's final vision
 
-Limits how long a capability declaration can participate in session
-establishment without becoming message freshness evidence.
+Avoids retaining a clock-dependent predecessor field while preserving exact
+authenticated line selection and downgrade resistance.
 
 ## Field model and trade-offs
 
-The value is mandatory unsigned Unix seconds. Its exact encoding, bounds, and
-invalid-input behavior come only from the Field Registry.
+No active value, clock model, representation, label, placement, or invalid
+input rule exists for a support-statement expiry. The separately specified
+prekey-bundle `validUntil` is purpose-scoped prekey eligibility and is not a
+successor or compatibility form for this field.
 
 ## Visibility and trust
 
-The value is trustworthy only within the authenticated declaration. A Station
-can delay or suppress the declaration and may learn its lifetime, but cannot
-extend it or establish Endpoint freshness.
+No retired value is trusted or exposed by the active line. A Station may
+delay, replay, or suppress a support statement but cannot create support,
+lower the persistent generation floor, or establish Endpoint freshness.
 
 ## Decision history
 
-The field was admitted to bound replay and lifecycle exposure independently of
-transport retention. It does not authorize Station time as a trust source.
+The field was admitted before the current support object and downgrade state
+were closed. It was retired with the Candidate Capability Declaration; no old
+label, bytes, expiry semantics, or fallback survives.
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. Only the scope recorded by this decision and its linked normative authorities is defined; any remaining normative ambiguity requires a successor decision before entering the protocol definition.
+The definition is `NOT-SPECIFIED`. This record is history only and allocates
+no current field or compatibility contract.

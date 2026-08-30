@@ -1,0 +1,28 @@
+{
+  "$schema": "https://licoarc.com/spec/schemas/conformance-corpus-manifest.schema.json",
+  "manifestVersion": "licoarc.conformance-corpus-manifest.v1",
+  "corpusId": "licoarc.protection.conformance.v1",
+  "caseCount": 21,
+  "operationIds": [
+    "licoarc.identity.compute-profile.v1",
+    "licoarc.protection.admit-prekey-pair.v1",
+    "licoarc.protection.commit-first-packet.v1",
+    "licoarc.protection.compute-session-accept.v1",
+    "licoarc.protection.delete-session.v1",
+    "licoarc.protection.encode-ratchet-header.v1",
+    "licoarc.protection.frame-protected-record.v1",
+    "licoarc.protection.hybrid-key-schedule-authority.v1",
+    "licoarc.protection.observe-prekey-bundle.v1",
+    "licoarc.protection.receive-record.v1",
+    "licoarc.protection.restart-session.v1",
+    "licoarc.protection.send-first-packet.v1",
+    "licoarc.protection.send-record.v1",
+    "licoarc.protection.validate-hybrid-result.v1",
+    "licoarc.protection.validate-profile-shapes.v1",
+    "licoarc.protection.verify-handshake-authentication.v1",
+    "licoarc.protection.verify-session-accept.v1"
+  ],
+  "envelopePaths": [
+    "conformance/v1/protection/cases.json"
+  ]
+}

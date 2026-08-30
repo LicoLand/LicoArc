@@ -1,0 +1,3109 @@
+theory LicoArc_Core_V1
+
+begin
+
+// Function signature and definition of the equational theory E
+
+functions: fst/1, h/1, ideal_hybrid/5, pair/2, pk/1, ratchet_step/2,
+           sdec/2, senc/2, sign/2, snd/1, true/0, verify/3
+equations:
+    fst(<x.1, x.2>) = x.1,
+    sdec(senc(x.1, x.2), x.2) = x.1,
+    snd(<x.1, x.2>) = x.2,
+    verify(sign(x.1, x.2), x.1, pk(x.2)) = true
+
+rule (modulo E) ProvisionPair:
+   [
+   Fr( ~pair ), Fr( ~prekey ), Fr( ~identity_secret_i ),
+   Fr( ~identity_secret_r )
+   ]
+  --[
+  PeerAcceptedLocally( $I, $R ), PrekeyPublished( $R, ~pair, h(~prekey) ),
+  EndpointIdentityProvisioned( $I, pk(~identity_secret_i) ),
+  EndpointIdentityProvisioned( $R, pk(~identity_secret_r) )
+  ]->
+   [
+   InitiatorReady( $I, $R, ~pair, h(~prekey) ),
+   ResponderReady( $R, $I, ~pair, h(~prekey) ),
+   !IdentityMaterial( $I, ~identity_secret_i ),
+   !IdentityMaterial( $R, ~identity_secret_r ),
+   !IdentityPublic( $I, pk(~identity_secret_i) ),
+   !IdentityPublic( $R, pk(~identity_secret_r) ),
+   !IdentityVerification( $I, ~identity_secret_i ),
+   !IdentityVerification( $R, ~identity_secret_r ),
+   !PrekeyMaterial( $R, ~pair, ~prekey )
+   ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) InitiatorFirstPacket:
+   [
+   InitiatorReady( $I, R, pair, prekey_pub ), Fr( ~classical_component ),
+   Fr( ~pq_component ), Fr( ~coordinate )
+   ]
+  --[
+  InitiatorStarted( $I, R, pair,
+                    h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                       'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                       'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $I, 
+                       R, pair, prekey_pub, h(~classical_component), h(~pq_component)>),
+                    ideal_hybrid(~classical_component, ~pq_component, $I, R,
+                                 h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                    'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                    'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $I, 
+                                    R, pair, prekey_pub, h(~classical_component), h(~pq_component)>))
+  ),
+  HybridEstablished( $I, R,
+                     h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                        'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                        'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $I, 
+                        R, pair, prekey_pub, h(~classical_component), h(~pq_component)>),
+                     ideal_hybrid(~classical_component, ~pq_component, $I, R,
+                                  h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                     'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                     'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $I, 
+                                     R, pair, prekey_pub, h(~classical_component), h(~pq_component)>))
+  ),
+  SessionSecret( ideal_hybrid(~classical_component, ~pq_component, $I, R,
+                              h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                 'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                 'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $I, 
+                                 R, pair, prekey_pub, h(~classical_component), h(~pq_component)>))
+  )
+  ]->
+   [
+   HandshakeOffer( $I, R, pair,
+                   h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                      'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                      'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $I, 
+                      R, pair, prekey_pub, h(~classical_component), h(~pq_component)>),
+                   ideal_hybrid(~classical_component, ~pq_component, $I, R,
+                                h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                   'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                   'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $I, 
+                                   R, pair, prekey_pub, h(~classical_component), h(~pq_component)>)),
+                   ~coordinate
+   ),
+   InitiatorPending( $I, R, pair,
+                     h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                        'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                        'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $I, 
+                        R, pair, prekey_pub, h(~classical_component), h(~pq_component)>),
+                     ideal_hybrid(~classical_component, ~pq_component, $I, R,
+                                  h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                     'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                     'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $I, 
+                                     R, pair, prekey_pub, h(~classical_component), h(~pq_component)>)),
+                     ~coordinate
+   ),
+   !HybridComponents( $I, R,
+                      h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                         'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                         'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $I, 
+                         R, pair, prekey_pub, h(~classical_component), h(~pq_component)>),
+                      ideal_hybrid(~classical_component, ~pq_component, $I, R,
+                                   h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                      'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                      'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $I, 
+                                      R, pair, prekey_pub, h(~classical_component), h(~pq_component)>)),
+                      ~classical_component, ~pq_component
+   )
+   ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) ResponderAccept:
+   [
+   ResponderReady( $R, I, pair, prekey_pub ),
+   HandshakeOffer( I, $R, pair, transcript, root, coordinate )
+   ]
+  --[
+  ResponderAccepted( $R, I, pair, transcript, root ),
+  LineSelected( 'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83'
+  ),
+  ProfileSelected( 'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf'
+  ),
+  AtomicHandshakeCommit( $R, pair, transcript )
+  ]->
+   [
+   !Established( $R, I, transcript, root ),
+   !ReplayBinding( $R, pair, transcript ),
+   ChainState( $R, I, transcript, 'i2r', coordinate, root ),
+   RatchetInitial( $R, I, transcript, root ),
+   SessionAccept( I, $R, pair, transcript, root, coordinate )
+   ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) ReplayExactFirstPacket:
+   [ !ReplayBinding( $R, pair, transcript ) ]
+  --[ ExactHandshakeReplay( $R, pair, transcript ) ]->
+   [ ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) InitiatorAccept:
+   [
+   InitiatorPending( $I, R, pair, transcript, root, coordinate ),
+   SessionAccept( $I, R, pair, transcript, root, coordinate )
+   ]
+  --[
+  InitiatorEstablished( $I, R, pair, transcript, root ),
+  AtomicHandshakeCommit( $I, pair, transcript )
+  ]->
+   [
+   !Established( $I, R, transcript, root ),
+   ChainState( $I, R, transcript, 'i2r', coordinate, root ),
+   RatchetInitial( $I, R, transcript, root )
+   ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) SendRecord:
+   [
+   ChainState( $S, R, transcript, direction, n, chain ), Fr( ~message ),
+   Fr( ~sender_metadata )
+   ]
+  --[
+  RecordSent( $S, R, transcript, direction, n, ~message,
+              senc(<~message, ~sender_metadata, transcript, direction, n>, chain),
+              chain
+  ),
+  SenderMetadataProtected( $S, R, transcript, ~sender_metadata,
+                           senc(<~message, ~sender_metadata, transcript, direction, n>, chain),
+                           chain
+  ),
+  AtomicSendCommit( $S, transcript, direction, n )
+  ]->
+   [
+   Out( senc(<~message, ~sender_metadata, transcript, direction, n>, chain)
+   )
+   ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) ReceiveRecord:
+   [
+   ChainState( $R, S, transcript, direction, n, chain ),
+   In( senc(<message, sender_metadata, transcript, direction, n>, chain) )
+   ]
+  --[
+  RecordReceived( $R, S, transcript, direction, n, message,
+                  senc(<message, sender_metadata, transcript, direction, n>, chain), chain
+  ),
+  EndpointAccepted( $R, S, transcript, direction, n, message,
+                    senc(<message, sender_metadata, transcript, direction, n>, chain), chain
+  ),
+  AtomicReceiveCommit( $R, transcript, direction, n )
+  ]->
+   [ !DurableInbox( $R, S, transcript, direction, n, h(message) ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) CompromiseSession:
+   [ !Established( $E, P, transcript, root ) ]
+  --[ SessionCompromise( $E, P, transcript, root ) ]->
+   [ Out( root ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) CompromiseClassicalComponent:
+   [ !HybridComponents( I, R, transcript, root, classical, pq ) ]
+  --[ ClassicalComponentCompromise( I, R, transcript, root ) ]->
+   [ Out( classical ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) CompromisePostQuantumComponent:
+   [ !HybridComponents( I, R, transcript, root, classical, pq ) ]
+  --[ PostQuantumComponentCompromise( I, R, transcript, root ) ]->
+   [ Out( pq ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) CompromiseIdentityMaterial:
+   [ !IdentityMaterial( $E, secret ) ]
+  --[ IdentityMaterialCompromise( $E, pk(secret) ) ]->
+   [ Out( secret ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) CompromisePrekeyMaterial:
+   [ !PrekeyMaterial( $R, pair, prekey ) ]
+  --[ PrekeyMaterialCompromise( $R, pair ) ]->
+   [ Out( prekey ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) RatchetAdvanceUncompromised:
+   [ RatchetInitial( $E, P, transcript, old ), Fr( ~fresh_dh ) ]
+  --[
+  RatchetAdvanced( $E, P, transcript, old, ratchet_step(old, ~fresh_dh) ),
+  RatchetSecret( ratchet_step(old, ~fresh_dh) )
+  ]->
+   [
+   RatchetAdvancedState( $E, P, transcript, old,
+                         ratchet_step(old, ~fresh_dh)
+   )
+   ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) RatchetCompromiseBeforeRecovery:
+   [ RatchetInitial( $E, P, transcript, old ) ]
+  --[ RatchetKeyCompromise( $E, P, transcript, old ) ]->
+   [ RatchetExposed( $E, P, transcript, old ), Out( old ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) RatchetRecoverAfterCompromise:
+   [ RatchetExposed( $E, P, transcript, old ), Fr( ~fresh_dh ) ]
+  --[
+  RatchetRecovered( $E, P, transcript, old, ratchet_step(old, ~fresh_dh) ),
+  RatchetSecret( ratchet_step(old, ~fresh_dh) )
+  ]->
+   [
+   RatchetAdvancedState( $E, P, transcript, old,
+                         ratchet_step(old, ~fresh_dh)
+   )
+   ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) RatchetCompromiseAdvanced:
+   [ RatchetAdvancedState( $E, P, transcript, old, next ) ]
+  --[ RatchetKeyCompromise( $E, P, transcript, next ) ]->
+   [ Out( next ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) AuthorizeIdentitySuccessor:
+   [ !IdentityMaterial( $E, old_secret ), Fr( ~new_secret ) ]
+  --[
+  IdentitySuccessorAuthorized( $E, pk(old_secret), pk(~new_secret),
+                               h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                  $E, pk(old_secret), pk(~new_secret)>)
+  )
+  ]->
+   [
+   Out( <pk(~new_secret), 
+         h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+            $E, pk(old_secret), pk(~new_secret)>), 
+         sign(<'identity-continuity', 
+               'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', $E, 
+               pk(old_secret), pk(~new_secret), 
+               h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                  $E, pk(old_secret), pk(~new_secret)>)
+              >,
+              old_secret)
+        >
+   )
+   ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) AcceptIdentitySuccessor:
+   [
+   !IdentityVerification( $E, old_secret ),
+   In( <new_public, successor, 
+        sign(<'identity-continuity', 
+              'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', $E, 
+              pk(old_secret), new_public, successor>,
+             old_secret)
+       >
+   )
+   ]
+  --[
+  IdentityContinuityAccepted( $E, pk(old_secret), new_public, successor )
+  ]->
+   [ ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) AuthorizeRouteMigration:
+   [ !IdentityMaterial( $E, secret ), Fr( ~old_route ), Fr( ~new_route ) ]
+  --[
+  RouteMigrationAuthorized( $E, $P, pk(secret), ~old_route, ~new_route,
+                            h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                               $E, $P, ~old_route, ~new_route>)
+  )
+  ]->
+   [
+   Out( <$E, $P, pk(secret), ~old_route, ~new_route, 
+         h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+            $E, $P, ~old_route, ~new_route>), 
+         sign(<'route-migration', 
+               'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', $E, 
+               $P, ~old_route, ~new_route, 
+               h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                  $E, $P, ~old_route, ~new_route>)
+              >,
+              secret)
+        >
+   )
+   ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) AcceptRouteMigration:
+   [
+   !IdentityVerification( $E, secret ),
+   In( <$E, P, pk(secret), old_route, new_route, route_digest, 
+        sign(<'route-migration', 
+              'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', $E, 
+              P, old_route, new_route, route_digest>,
+             secret)
+       >
+   )
+   ]
+  --[
+  RouteMigrationAccepted( $E, P, pk(secret), old_route, new_route,
+                          route_digest
+  )
+  ]->
+   [ ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) IssueEvidence:
+   [ !IdentityMaterial( $E, secret ), Fr( ~statement ) ]
+  --[
+  EvidenceIssued( $E, pk(secret), ~statement,
+                  sign(<'endpoint-evidence', 
+                        'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', $E, 
+                        ~statement>,
+                       secret)
+  )
+  ]->
+   [
+   Out( <$E, pk(secret), ~statement, 
+         sign(<'endpoint-evidence', 
+               'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', $E, 
+               ~statement>,
+              secret)
+        >
+   )
+   ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) AcceptEvidence:
+   [
+   !IdentityVerification( $E, secret ),
+   In( <$E, pk(secret), statement, 
+        sign(<'endpoint-evidence', 
+              'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', $E, 
+              statement>,
+             secret)
+       >
+   )
+   ]
+  --[
+  EvidenceAccepted( $E, pk(secret), statement,
+                    sign(<'endpoint-evidence', 
+                          'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', $E, 
+                          statement>,
+                         secret)
+  )
+  ]->
+   [ ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) CompleteEndpointEffect:
+   [ !DurableInbox( $E, S, transcript, direction, n, message_digest ) ]
+  --[
+  EndpointEffectCompleted( $E, S, transcript, direction, n, message_digest
+  )
+  ]->
+   [ ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) ClassifyWithinResourceBounds:
+   [ Fr( ~input ) ]
+  --[
+  InputClassifiedWithinBounds( ~input,
+                               'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd'
+  )
+  ]->
+   [ WithinResourceBounds( ~input ), Out( ~input ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) AcceptWithinResourceBounds:
+   [ WithinResourceBounds( input ), In( input ) ]
+  --[
+  ResourceBoundsValidated( input,
+                           'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd'
+  ),
+  ParserAccepted( input ), ParserStateCommitted( input )
+  ]->
+   [ ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) ClassifyOverResourceBounds:
+   [ Fr( ~input ) ]
+  --[
+  InputClassifiedOverBounds( ~input,
+                             'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd'
+  )
+  ]->
+   [ OverResourceBounds( ~input ), Out( ~input ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) RejectOverResourceBounds:
+   [ OverResourceBounds( input ), In( input ) ]
+  --[
+  ResourceLimitRejected( input,
+                         'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd'
+  )
+  ]->
+   [ ]
+
+  /* has exactly the trivial AC variant */
+
+lemma executable_honest_handshake:
+  exists-trace
+  "∃ I R pair td root #i #r.
+    (InitiatorStarted( I, R, pair, td, root ) @ #i) ∧
+    (ResponderAccepted( R, I, pair, td, root ) @ #r)"
+/*
+guarded formula characterizing all satisfying traces:
+"∃ I R pair td root #i #r.
+  (InitiatorStarted( I, R, pair, td, root ) @ #i) ∧
+  (ResponderAccepted( R, I, pair, td, root ) @ #r)"
+*/
+simplify
+solve( InitiatorReady( $I, $R, pair, prekey_pub ) ▶₀ #i )
+  case ProvisionPair
+  solve( ResponderReady( $R, $I, ~pair, prekey_pub ) ▶₀ #r )
+    case ProvisionPair
+    solve( HandshakeOffer( $I, $R, ~pair,
+                           h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                              'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                              'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $I, 
+                              $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>),
+                           ideal_hybrid(~classical_component, ~pq_component, $I, $R,
+                                        h(<
+                                           'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                           'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                           'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', 
+                                           $I, $R, ~pair, h(~prekey), h(~classical_component), 
+                                           h(~pq_component)>)),
+                           coordinate.1
+           ) ▶₁ #r )
+      case InitiatorFirstPacket
+      SOLVED // trace found
+    qed
+  qed
+qed
+
+lemma executable_ratchet_evolution:
+  exists-trace
+  "∃ E1 P1 td1 old1 next1 E2 P2 td2 old2 next2 #advance #recover.
+    (RatchetAdvanced( E1, P1, td1, old1, next1 ) @ #advance) ∧
+    (RatchetRecovered( E2, P2, td2, old2, next2 ) @ #recover)"
+/*
+guarded formula characterizing all satisfying traces:
+"∃ E1 P1 td1 old1 next1 E2 P2 td2 old2 next2 #advance #recover.
+  (RatchetAdvanced( E1, P1, td1, old1, next1 ) @ #advance) ∧
+  (RatchetRecovered( E2, P2, td2, old2, next2 ) @ #recover)"
+*/
+simplify
+solve( RatchetInitial( $E, P1, td1, old1 ) ▶₀ #advance )
+  case InitiatorAccept
+  solve( RatchetExposed( $E.1, P2, td2, old2 ) ▶₀ #recover )
+    case RatchetCompromiseBeforeRecovery_case_1
+    SOLVED // trace found
+  qed
+qed
+
+lemma executable_identity_and_route:
+  exists-trace
+  "∃ E P old_public new_public successor old_route new_route route_digest
+     #identity #route.
+    (IdentityContinuityAccepted( E, old_public, new_public, successor
+     ) @ #identity) ∧
+    (RouteMigrationAccepted( E, P, old_public, old_route, new_route,
+                             route_digest
+     ) @ #route)"
+/*
+guarded formula characterizing all satisfying traces:
+"∃ E P old_public new_public successor old_route new_route route_digest
+   #identity #route.
+  (IdentityContinuityAccepted( E, old_public, new_public, successor
+   ) @ #identity) ∧
+  (RouteMigrationAccepted( E, P, old_public, old_route, new_route,
+                           route_digest
+   ) @ #route)"
+*/
+simplify
+solve( !IdentityVerification( $E, old_secret ) ▶₀ #identity )
+  case ProvisionPair_case_1
+  solve( !IdentityVerification( $E, ~identity_secret_i ) ▶₀ #route )
+    case ProvisionPair
+    solve( !KU( sign(<'identity-continuity', 
+                      'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', $E, 
+                      pk(~identity_secret_i), new_public, successor>,
+                     ~identity_secret_i)
+           ) @ #vk.4 )
+      case c_sign
+      solve( !KU( ~identity_secret_i ) @ #vk.22 )
+        case CompromiseIdentityMaterial
+        solve( !KU( sign(<'route-migration', 
+                          'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', $E, 
+                          P, old_route, new_route, route_digest>,
+                         ~identity_secret_i)
+               ) @ #vk.22 )
+          case c_sign
+          solve( !KU( pk(~identity_secret_i) ) @ #vk.19 )
+            case AuthorizeRouteMigration
+            SOLVED // trace found
+          qed
+        qed
+      qed
+    qed
+  qed
+qed
+
+lemma executable_evidence:
+  exists-trace
+  "∃ E public statement signed #accept.
+    EvidenceAccepted( E, public, statement, signed ) @ #accept"
+/*
+guarded formula characterizing all satisfying traces:
+"∃ E public statement signed #accept.
+  (EvidenceAccepted( E, public, statement, signed ) @ #accept)"
+*/
+simplify
+solve( !IdentityVerification( $E, secret ) ▶₀ #accept )
+  case ProvisionPair_case_1
+  solve( !KU( sign(<'endpoint-evidence', 
+                    'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', $E, 
+                    statement>,
+                   ~identity_secret_i)
+         ) @ #vk.6 )
+    case IssueEvidence
+    solve( !KU( ~statement ) @ #vk.6 )
+      case IssueEvidence
+      solve( !KU( pk(~identity_secret_i) ) @ #vk.6 )
+        case AuthorizeRouteMigration
+        SOLVED // trace found
+      qed
+    qed
+  qed
+qed
+
+lemma executable_reliable_and_metadata:
+  exists-trace
+  "∃ S R td direction n message packet chain metadata message_digest #send
+     #accept #effect.
+    ((SenderMetadataProtected( S, R, td, metadata, packet, chain ) @ #send) ∧
+     (EndpointAccepted( R, S, td, direction, n, message, packet, chain
+      ) @ #accept)) ∧
+    (EndpointEffectCompleted( R, S, td, direction, n, message_digest
+     ) @ #effect)"
+/*
+guarded formula characterizing all satisfying traces:
+"∃ S R td direction n message packet chain metadata message_digest #send
+   #accept #effect.
+  (SenderMetadataProtected( S, R, td, metadata, packet, chain ) @ #send) ∧
+  (EndpointAccepted( R, S, td, direction, n, message, packet, chain
+   ) @ #accept) ∧
+  (EndpointEffectCompleted( R, S, td, direction, n, message_digest
+   ) @ #effect)"
+*/
+simplify
+solve( ChainState( $S, $R, td, direction, n, chain ) ▶₀ #send )
+  case InitiatorAccept
+  solve( ChainState( $R, $S,
+                     h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                        'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                        'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $S, 
+                        $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>),
+                     'i2r', ~coordinate,
+                     ideal_hybrid(~classical_component, ~pq_component, $S, $R,
+                                  h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                     'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                     'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $S, 
+                                     $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>))
+         ) ▶₀ #accept )
+    case ResponderAccept
+    solve( !DurableInbox( $R, $S,
+                          h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                             'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                             'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $S, 
+                             $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>),
+                          'i2r', ~coordinate, message_digest
+           ) ▶₀ #effect )
+      case ReceiveRecord
+      solve( !KU( senc(<~message, ~sender_metadata, 
+                        h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                           'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                           'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $S, 
+                           $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>), 
+                        'i2r', ~coordinate>,
+                       ideal_hybrid(~classical_component, ~pq_component, $S, $R,
+                                    h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                       'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                       'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', 
+                                       $S, $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)
+                                      >)))
+             ) @ #vk )
+        case SendRecord
+        SOLVED // trace found
+      qed
+    qed
+  qed
+qed
+
+lemma executable_resource_bounds:
+  exists-trace
+  "∃ accepted rejected #accept #reject.
+    (ParserAccepted( accepted ) @ #accept) ∧
+    (ResourceLimitRejected( rejected,
+                            'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd'
+     ) @ #reject)"
+/*
+guarded formula characterizing all satisfying traces:
+"∃ accepted rejected #accept #reject.
+  (ParserAccepted( accepted ) @ #accept) ∧
+  (ResourceLimitRejected( rejected,
+                          'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd'
+   ) @ #reject)"
+*/
+simplify
+solve( WithinResourceBounds( accepted ) ▶₀ #accept )
+  case ClassifyWithinResourceBounds
+  solve( OverResourceBounds( rejected ) ▶₀ #reject )
+    case ClassifyOverResourceBounds
+    solve( !KU( ~input ) @ #vk )
+      case ClassifyWithinResourceBounds
+      solve( !KU( ~input.1 ) @ #vk.1 )
+        case ClassifyOverResourceBounds
+        SOLVED // trace found
+      qed
+    qed
+  qed
+qed
+
+lemma SEC_001_hybrid_ake_key_secrecy:
+  all-traces
+  "∀ I R td root #established #know.
+    ((HybridEstablished( I, R, td, root ) @ #established) ∧
+     (K( root ) @ #know)) ⇒
+    (((∃ E P #c. (SessionCompromise( E, P, td, root ) @ #c) ∧ (#c < #know)) ∨
+      (∃ E P #c.
+        (RatchetKeyCompromise( E, P, td, root ) @ #c) ∧ (#c < #know))) ∨
+     ((∃ #c.
+        (ClassicalComponentCompromise( I, R, td, root ) @ #c) ∧ (#c < #know)) ∧
+      (∃ #q.
+        (PostQuantumComponentCompromise( I, R, td, root ) @ #q) ∧
+        (#q < #know))))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ I R td root #established #know.
+  (HybridEstablished( I, R, td, root ) @ #established) ∧
+  (K( root ) @ #know)
+ ∧
+  (∀ E P #c. (SessionCompromise( E, P, td, root ) @ #c) ⇒ ¬(#c < #know)) ∧
+  (∀ E P #c.
+    (RatchetKeyCompromise( E, P, td, root ) @ #c) ⇒ ¬(#c < #know)) ∧
+  (((∀ #c.
+      (ClassicalComponentCompromise( I, R, td, root ) @ #c) ⇒ ¬(#c < #know)) ∨
+    (∀ #q.
+      (PostQuantumComponentCompromise( I, R, td, root ) @ #q)
+     ⇒
+      ¬(#q < #know))))"
+*/
+simplify
+solve( (∀ #c.
+         (ClassicalComponentCompromise( $I, R,
+                                        h(<
+                                           'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                           'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                           'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', 
+                                           $I, R, pair, prekey_pub, h(~classical_component), h(~pq_component)
+                                          >),
+                                        ideal_hybrid(~classical_component, ~pq_component, $I, R,
+                                                     h(<
+                                                        'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                                        'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                                        'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', 
+                                                        $I, R, pair, prekey_pub, h(~classical_component), 
+                                                        h(~pq_component)>))
+          ) @ #c)
+        ⇒
+         ¬(#c < #know))  ∥
+       (∀ #q.
+         (PostQuantumComponentCompromise( $I, R,
+                                          h(<
+                                             'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                             'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                             'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', 
+                                             $I, R, pair, prekey_pub, h(~classical_component), 
+                                             h(~pq_component)>),
+                                          ideal_hybrid(~classical_component, ~pq_component, $I, R,
+                                                       h(<
+                                                          'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                                          'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                                          'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', 
+                                                          $I, R, pair, prekey_pub, h(~classical_component), 
+                                                          h(~pq_component)>))
+          ) @ #q)
+        ⇒
+         ¬(#q < #know)) )
+  case case_1
+  solve( InitiatorReady( $I, R, pair, prekey_pub ) ▶₀ #established )
+    case ProvisionPair
+    solve( !KU( ideal_hybrid(~classical_component, ~pq_component, $I, $R,
+                             h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $I, 
+                                $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>))
+           ) @ #vk )
+      case CompromiseSession_case_1
+      by contradiction /* from formulas */
+    next
+      case CompromiseSession_case_2
+      by contradiction /* from formulas */
+    next
+      case RatchetCompromiseBeforeRecovery_case_1
+      by contradiction /* from formulas */
+    next
+      case RatchetCompromiseBeforeRecovery_case_2
+      by contradiction /* from formulas */
+    next
+      case c_ideal_hybrid
+      solve( !KU( ~classical_component ) @ #vk.1 )
+        case CompromiseClassicalComponent
+        by contradiction /* from formulas */
+      qed
+    qed
+  qed
+next
+  case case_2
+  solve( InitiatorReady( $I, R, pair, prekey_pub ) ▶₀ #established )
+    case ProvisionPair
+    solve( !KU( ideal_hybrid(~classical_component, ~pq_component, $I, $R,
+                             h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $I, 
+                                $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>))
+           ) @ #vk )
+      case CompromiseSession_case_1
+      by contradiction /* from formulas */
+    next
+      case CompromiseSession_case_2
+      by contradiction /* from formulas */
+    next
+      case RatchetCompromiseBeforeRecovery_case_1
+      by contradiction /* from formulas */
+    next
+      case RatchetCompromiseBeforeRecovery_case_2
+      by contradiction /* from formulas */
+    next
+      case c_ideal_hybrid
+      solve( !KU( ~classical_component ) @ #vk.1 )
+        case CompromiseClassicalComponent
+        solve( !KU( ~pq_component ) @ #vk.2 )
+          case CompromisePostQuantumComponent
+          by contradiction /* from formulas */
+        qed
+      qed
+    qed
+  qed
+qed
+
+lemma SEC_002_mutual_endpoint_authentication:
+  all-traces
+  "∀ R I pair td root #accept.
+    (ResponderAccepted( R, I, pair, td, root ) @ #accept) ⇒
+    (∃ #start.
+      (InitiatorStarted( I, R, pair, td, root ) @ #start) ∧
+      (#start < #accept))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ R I pair td root #accept.
+  (ResponderAccepted( R, I, pair, td, root ) @ #accept)
+ ∧
+  ∀ #start.
+   (InitiatorStarted( I, R, pair, td, root ) @ #start)
+  ⇒
+   ¬(#start < #accept)"
+*/
+simplify
+solve( ResponderReady( $R, I, pair, prekey_pub ) ▶₀ #accept )
+  case ProvisionPair
+  solve( HandshakeOffer( $I, $R, ~pair, td, root, coordinate ) ▶₁ #accept )
+    case InitiatorFirstPacket
+    by contradiction /* from formulas */
+  qed
+qed
+
+lemma SEC_004_unknown_key_share_resistance:
+  all-traces
+  "∀ R I pair td root R2 I2 #a #b.
+    ((ResponderAccepted( R, I, pair, td, root ) @ #a) ∧
+     (ResponderAccepted( R2, I2, pair, td, root ) @ #b)) ⇒
+    ((R = R2) ∧ (I = I2))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ R I pair td root R2 I2 #a #b.
+  (ResponderAccepted( R, I, pair, td, root ) @ #a) ∧
+  (ResponderAccepted( R2, I2, pair, td, root ) @ #b)
+ ∧
+  ((¬(R = R2)) ∨ (¬(I = I2)))"
+*/
+simplify
+solve( (¬($R = $R.1))  ∥ (¬(I = I2)) )
+  case case_1
+  solve( ResponderReady( $R, I, pair, prekey_pub ) ▶₀ #a )
+    case ProvisionPair
+    solve( HandshakeOffer( $I, $R, ~pair, td, root, coordinate ) ▶₁ #a )
+      case InitiatorFirstPacket
+      solve( ResponderReady( $R.1, I2, ~pair, prekey_pub ) ▶₀ #b )
+        case ProvisionPair
+        by contradiction /* from formulas */
+      qed
+    qed
+  qed
+next
+  case case_2
+  solve( ResponderReady( $R, I, pair, prekey_pub ) ▶₀ #a )
+    case ProvisionPair
+    solve( HandshakeOffer( $I, $R, ~pair, td, root, coordinate ) ▶₁ #a )
+      case InitiatorFirstPacket
+      solve( ResponderReady( $R.1, I2, ~pair, prekey_pub ) ▶₀ #b )
+        case ProvisionPair
+        by contradiction /* from formulas */
+      qed
+    qed
+  qed
+qed
+
+lemma SEC_005_key_compromise_impersonation_boundary:
+  all-traces
+  "∀ I R pair td root #accept.
+    (InitiatorEstablished( I, R, pair, td, root ) @ #accept) ⇒
+    (((∃ #respond.
+        (ResponderAccepted( R, I, pair, td, root ) @ #respond) ∧
+        (#respond < #accept)) ∨
+      (∃ public #c.
+        (IdentityMaterialCompromise( R, public ) @ #c) ∧ (#c < #accept))) ∨
+     (∃ #c. (PrekeyMaterialCompromise( R, pair ) @ #c) ∧ (#c < #accept)))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ I R pair td root #accept.
+  (InitiatorEstablished( I, R, pair, td, root ) @ #accept)
+ ∧
+  (∀ #respond.
+    (ResponderAccepted( R, I, pair, td, root ) @ #respond)
+   ⇒
+    ¬(#respond < #accept)) ∧
+  (∀ public #c.
+    (IdentityMaterialCompromise( R, public ) @ #c) ⇒ ¬(#c < #accept)) ∧
+  (∀ #c. (PrekeyMaterialCompromise( R, pair ) @ #c) ⇒ ¬(#c < #accept))"
+*/
+simplify
+solve( InitiatorPending( $I, R, pair, td, root, coordinate ) ▶₀ #accept )
+  case InitiatorFirstPacket
+  solve( SessionAccept( $I, $R, ~pair,
+                        h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                           'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                           'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $I, 
+                           $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>),
+                        ideal_hybrid(~classical_component, ~pq_component, $I, $R,
+                                     h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                        'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                        'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', 
+                                        $I, $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)
+                                       >)),
+                        ~coordinate
+         ) ▶₁ #accept )
+    case ResponderAccept
+    by contradiction /* from formulas */
+  qed
+qed
+
+lemma SEC_003_classical_pq_hybrid_robustness:
+  all-traces
+  "∀ I R td root #established #know.
+    ((HybridEstablished( I, R, td, root ) @ #established) ∧
+     (K( root ) @ #know)) ⇒
+    (((∃ E P #c. (SessionCompromise( E, P, td, root ) @ #c) ∧ (#c < #know)) ∨
+      (∃ E P #c.
+        (RatchetKeyCompromise( E, P, td, root ) @ #c) ∧ (#c < #know))) ∨
+     ((∃ #c.
+        (ClassicalComponentCompromise( I, R, td, root ) @ #c) ∧ (#c < #know)) ∧
+      (∃ #q.
+        (PostQuantumComponentCompromise( I, R, td, root ) @ #q) ∧
+        (#q < #know))))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ I R td root #established #know.
+  (HybridEstablished( I, R, td, root ) @ #established) ∧
+  (K( root ) @ #know)
+ ∧
+  (∀ E P #c. (SessionCompromise( E, P, td, root ) @ #c) ⇒ ¬(#c < #know)) ∧
+  (∀ E P #c.
+    (RatchetKeyCompromise( E, P, td, root ) @ #c) ⇒ ¬(#c < #know)) ∧
+  (((∀ #c.
+      (ClassicalComponentCompromise( I, R, td, root ) @ #c) ⇒ ¬(#c < #know)) ∨
+    (∀ #q.
+      (PostQuantumComponentCompromise( I, R, td, root ) @ #q)
+     ⇒
+      ¬(#q < #know))))"
+*/
+simplify
+solve( (∀ #c.
+         (ClassicalComponentCompromise( $I, R,
+                                        h(<
+                                           'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                           'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                           'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', 
+                                           $I, R, pair, prekey_pub, h(~classical_component), h(~pq_component)
+                                          >),
+                                        ideal_hybrid(~classical_component, ~pq_component, $I, R,
+                                                     h(<
+                                                        'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                                        'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                                        'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', 
+                                                        $I, R, pair, prekey_pub, h(~classical_component), 
+                                                        h(~pq_component)>))
+          ) @ #c)
+        ⇒
+         ¬(#c < #know))  ∥
+       (∀ #q.
+         (PostQuantumComponentCompromise( $I, R,
+                                          h(<
+                                             'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                             'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                             'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', 
+                                             $I, R, pair, prekey_pub, h(~classical_component), 
+                                             h(~pq_component)>),
+                                          ideal_hybrid(~classical_component, ~pq_component, $I, R,
+                                                       h(<
+                                                          'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                                          'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                                          'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', 
+                                                          $I, R, pair, prekey_pub, h(~classical_component), 
+                                                          h(~pq_component)>))
+          ) @ #q)
+        ⇒
+         ¬(#q < #know)) )
+  case case_1
+  solve( InitiatorReady( $I, R, pair, prekey_pub ) ▶₀ #established )
+    case ProvisionPair
+    solve( !KU( ideal_hybrid(~classical_component, ~pq_component, $I, $R,
+                             h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $I, 
+                                $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>))
+           ) @ #vk )
+      case CompromiseSession_case_1
+      by contradiction /* from formulas */
+    next
+      case CompromiseSession_case_2
+      by contradiction /* from formulas */
+    next
+      case RatchetCompromiseBeforeRecovery_case_1
+      by contradiction /* from formulas */
+    next
+      case RatchetCompromiseBeforeRecovery_case_2
+      by contradiction /* from formulas */
+    next
+      case c_ideal_hybrid
+      solve( !KU( ~classical_component ) @ #vk.1 )
+        case CompromiseClassicalComponent
+        by contradiction /* from formulas */
+      qed
+    qed
+  qed
+next
+  case case_2
+  solve( InitiatorReady( $I, R, pair, prekey_pub ) ▶₀ #established )
+    case ProvisionPair
+    solve( !KU( ideal_hybrid(~classical_component, ~pq_component, $I, $R,
+                             h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $I, 
+                                $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>))
+           ) @ #vk )
+      case CompromiseSession_case_1
+      by contradiction /* from formulas */
+    next
+      case CompromiseSession_case_2
+      by contradiction /* from formulas */
+    next
+      case RatchetCompromiseBeforeRecovery_case_1
+      by contradiction /* from formulas */
+    next
+      case RatchetCompromiseBeforeRecovery_case_2
+      by contradiction /* from formulas */
+    next
+      case c_ideal_hybrid
+      solve( !KU( ~classical_component ) @ #vk.1 )
+        case CompromiseClassicalComponent
+        solve( !KU( ~pq_component ) @ #vk.2 )
+          case CompromisePostQuantumComponent
+          by contradiction /* from formulas */
+        qed
+      qed
+    qed
+  qed
+qed
+
+lemma SEC_006_protocol_line_downgrade_resistance:
+  all-traces
+  "∀ line #i.
+    (LineSelected( line ) @ #i) ⇒
+    (line =
+     'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83')"
+/*
+guarded formula characterizing all counter-examples:
+"∃ line #i.
+  (LineSelected( line ) @ #i)
+ ∧
+  ¬(line =
+    'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83')"
+*/
+simplify
+by contradiction /* from formulas */
+
+lemma SEC_007_protection_profile_downgrade_resistance:
+  all-traces
+  "∀ profile #i.
+    (ProfileSelected( profile ) @ #i) ⇒
+    (profile =
+     'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf')"
+/*
+guarded formula characterizing all counter-examples:
+"∃ profile #i.
+  (ProfileSelected( profile ) @ #i)
+ ∧
+  ¬(profile =
+    'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf')"
+*/
+simplify
+by contradiction /* from formulas */
+
+lemma SEC_008_session_independence:
+  all-traces
+  "∀ I1 R1 td1 root1 I2 R2 td2 root2 #e1 #e2 #compromise #know.
+    (((((HybridEstablished( I1, R1, td1, root1 ) @ #e1) ∧
+        (HybridEstablished( I2, R2, td2, root2 ) @ #e2)) ∧
+       (SessionCompromise( I1, R1, td1, root1 ) @ #compromise)) ∧
+      (K( root2 ) @ #know)) ∧
+     (¬(root1 = root2))) ⇒
+    (((∃ E P #c.
+        (SessionCompromise( E, P, td2, root2 ) @ #c) ∧ (#c < #know)) ∨
+      (∃ E P #c.
+        (RatchetKeyCompromise( E, P, td2, root2 ) @ #c) ∧ (#c < #know))) ∨
+     ((∃ #c.
+        (ClassicalComponentCompromise( I2, R2, td2, root2 ) @ #c) ∧
+        (#c < #know)) ∧
+      (∃ #q.
+        (PostQuantumComponentCompromise( I2, R2, td2, root2 ) @ #q) ∧
+        (#q < #know))))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ I1 R1 td1 root1 I2 R2 td2 root2 #e1 #e2 #compromise #know.
+  (HybridEstablished( I1, R1, td1, root1 ) @ #e1) ∧
+  (HybridEstablished( I2, R2, td2, root2 ) @ #e2) ∧
+  (SessionCompromise( I1, R1, td1, root1 ) @ #compromise) ∧
+  (K( root2 ) @ #know)
+ ∧
+  (¬(root1 = root2)) ∧
+  (∀ E P #c.
+    (SessionCompromise( E, P, td2, root2 ) @ #c) ⇒ ¬(#c < #know)) ∧
+  (∀ E P #c.
+    (RatchetKeyCompromise( E, P, td2, root2 ) @ #c) ⇒ ¬(#c < #know)) ∧
+  (((∀ #c.
+      (ClassicalComponentCompromise( I2, R2, td2, root2 ) @ #c)
+     ⇒
+      ¬(#c < #know)) ∨
+    (∀ #q.
+      (PostQuantumComponentCompromise( I2, R2, td2, root2 ) @ #q)
+     ⇒
+      ¬(#q < #know))))"
+*/
+simplify
+solve( (∀ #c.
+         (ClassicalComponentCompromise( $I.1, R2,
+                                        h(<
+                                           'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                           'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                           'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', 
+                                           $I.1, R2, pair.1, prekey_pub.1, h(~classical_component.1), 
+                                           h(~pq_component.1)>),
+                                        ideal_hybrid(~classical_component.1, ~pq_component.1, $I.1, R2,
+                                                     h(<
+                                                        'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                                        'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                                        'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', 
+                                                        $I.1, R2, pair.1, prekey_pub.1, 
+                                                        h(~classical_component.1), h(~pq_component.1)>))
+          ) @ #c)
+        ⇒
+         ¬(#c < #know))  ∥
+       (∀ #q.
+         (PostQuantumComponentCompromise( $I.1, R2,
+                                          h(<
+                                             'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                             'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                             'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', 
+                                             $I.1, R2, pair.1, prekey_pub.1, h(~classical_component.1), 
+                                             h(~pq_component.1)>),
+                                          ideal_hybrid(~classical_component.1, ~pq_component.1, $I.1, R2,
+                                                       h(<
+                                                          'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                                          'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                                          'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', 
+                                                          $I.1, R2, pair.1, prekey_pub.1, 
+                                                          h(~classical_component.1), h(~pq_component.1)>))
+          ) @ #q)
+        ⇒
+         ¬(#q < #know)) )
+  case case_1
+  solve( InitiatorReady( $I, R1, pair, prekey_pub ) ▶₀ #e1 )
+    case ProvisionPair
+    solve( InitiatorReady( $I.1, R2, pair.1, prekey_pub ) ▶₀ #e2 )
+      case ProvisionPair
+      solve( !Established( $I, $R,
+                           h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                              'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                              'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $I, 
+                              $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>),
+                           ideal_hybrid(~classical_component, ~pq_component, $I, $R,
+                                        h(<
+                                           'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                           'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                           'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', 
+                                           $I, $R, ~pair, h(~prekey), h(~classical_component), 
+                                           h(~pq_component)>))
+             ) ▶₀ #compromise )
+        case InitiatorAccept
+        solve( !KU( ideal_hybrid(~classical_component.1, ~pq_component.1, $I.1,
+                                 $R.1,
+                                 h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                    'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                    'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', 
+                                    $I.1, $R.1, ~pair.1, h(~prekey.1), h(~classical_component.1), 
+                                    h(~pq_component.1)>))
+               ) @ #vk )
+          case CompromiseSession_case_1
+          by contradiction /* from formulas */
+        next
+          case CompromiseSession_case_2
+          by contradiction /* from formulas */
+        next
+          case RatchetCompromiseBeforeRecovery_case_1
+          by contradiction /* from formulas */
+        next
+          case RatchetCompromiseBeforeRecovery_case_2
+          by contradiction /* from formulas */
+        next
+          case c_ideal_hybrid
+          solve( !KU( ~classical_component.1 ) @ #vk.1 )
+            case CompromiseClassicalComponent
+            by contradiction /* from formulas */
+          qed
+        qed
+      next
+        case ResponderAccept
+        solve( !KU( ideal_hybrid(~classical_component.1, ~pq_component.1, $I.1,
+                                 $R,
+                                 h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                    'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                    'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', 
+                                    $I.1, $R, ~pair.1, h(~prekey.1), h(~classical_component.1), 
+                                    h(~pq_component.1)>))
+               ) @ #vk )
+          case CompromiseSession_case_1
+          by contradiction /* from formulas */
+        next
+          case CompromiseSession_case_2
+          by contradiction /* from formulas */
+        next
+          case RatchetCompromiseBeforeRecovery_case_1
+          by contradiction /* from formulas */
+        next
+          case RatchetCompromiseBeforeRecovery_case_2
+          by contradiction /* from formulas */
+        next
+          case c_ideal_hybrid
+          solve( !KU( ~classical_component.1 ) @ #vk.1 )
+            case CompromiseClassicalComponent
+            by contradiction /* from formulas */
+          qed
+        qed
+      qed
+    qed
+  qed
+next
+  case case_2
+  solve( InitiatorReady( $I, R1, pair, prekey_pub ) ▶₀ #e1 )
+    case ProvisionPair
+    solve( InitiatorReady( $I.1, R2, pair.1, prekey_pub ) ▶₀ #e2 )
+      case ProvisionPair
+      solve( !Established( $I, $R,
+                           h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                              'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                              'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $I, 
+                              $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>),
+                           ideal_hybrid(~classical_component, ~pq_component, $I, $R,
+                                        h(<
+                                           'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                           'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                           'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', 
+                                           $I, $R, ~pair, h(~prekey), h(~classical_component), 
+                                           h(~pq_component)>))
+             ) ▶₀ #compromise )
+        case InitiatorAccept
+        solve( !KU( ideal_hybrid(~classical_component.1, ~pq_component.1, $I.1,
+                                 $R.1,
+                                 h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                    'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                    'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', 
+                                    $I.1, $R.1, ~pair.1, h(~prekey.1), h(~classical_component.1), 
+                                    h(~pq_component.1)>))
+               ) @ #vk )
+          case CompromiseSession_case_1
+          by contradiction /* from formulas */
+        next
+          case CompromiseSession_case_2
+          by contradiction /* from formulas */
+        next
+          case RatchetCompromiseBeforeRecovery_case_1
+          by contradiction /* from formulas */
+        next
+          case RatchetCompromiseBeforeRecovery_case_2
+          by contradiction /* from formulas */
+        next
+          case c_ideal_hybrid
+          solve( !KU( ~classical_component.1 ) @ #vk.1 )
+            case CompromiseClassicalComponent
+            solve( !KU( ~pq_component.1 ) @ #vk.2 )
+              case CompromisePostQuantumComponent
+              by contradiction /* from formulas */
+            qed
+          qed
+        qed
+      next
+        case ResponderAccept
+        solve( !KU( ideal_hybrid(~classical_component.1, ~pq_component.1, $I.1,
+                                 $R,
+                                 h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                    'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                    'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', 
+                                    $I.1, $R, ~pair.1, h(~prekey.1), h(~classical_component.1), 
+                                    h(~pq_component.1)>))
+               ) @ #vk )
+          case CompromiseSession_case_1
+          by contradiction /* from formulas */
+        next
+          case CompromiseSession_case_2
+          by contradiction /* from formulas */
+        next
+          case RatchetCompromiseBeforeRecovery_case_1
+          by contradiction /* from formulas */
+        next
+          case RatchetCompromiseBeforeRecovery_case_2
+          by contradiction /* from formulas */
+        next
+          case c_ideal_hybrid
+          solve( !KU( ~classical_component.1 ) @ #vk.1 )
+            case CompromiseClassicalComponent
+            solve( !KU( ~pq_component.1 ) @ #vk.2 )
+              case CompromisePostQuantumComponent
+              by contradiction /* from formulas */
+            qed
+          qed
+        qed
+      qed
+    qed
+  qed
+qed
+
+lemma SEC_009_initial_forward_secrecy:
+  all-traces
+  "∀ R I pair td root #accept #know.
+    (((ResponderAccepted( R, I, pair, td, root ) @ #accept) ∧
+      (K( root ) @ #know)) ∧
+     (#accept < #know)) ⇒
+    (((∃ E P #c. (SessionCompromise( E, P, td, root ) @ #c) ∧ (#c < #know)) ∨
+      (∃ E P #c.
+        (RatchetKeyCompromise( E, P, td, root ) @ #c) ∧ (#c < #know))) ∨
+     ((∃ #c.
+        (ClassicalComponentCompromise( I, R, td, root ) @ #c) ∧ (#c < #know)) ∧
+      (∃ #q.
+        (PostQuantumComponentCompromise( I, R, td, root ) @ #q) ∧
+        (#q < #know))))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ R I pair td root #accept #know.
+  (ResponderAccepted( R, I, pair, td, root ) @ #accept) ∧
+  (K( root ) @ #know)
+ ∧
+  (#accept < #know) ∧
+  (∀ E P #c. (SessionCompromise( E, P, td, root ) @ #c) ⇒ ¬(#c < #know)) ∧
+  (∀ E P #c.
+    (RatchetKeyCompromise( E, P, td, root ) @ #c) ⇒ ¬(#c < #know)) ∧
+  (((∀ #c.
+      (ClassicalComponentCompromise( I, R, td, root ) @ #c) ⇒ ¬(#c < #know)) ∨
+    (∀ #q.
+      (PostQuantumComponentCompromise( I, R, td, root ) @ #q)
+     ⇒
+      ¬(#q < #know))))"
+*/
+simplify
+solve( (∀ #c.
+         (ClassicalComponentCompromise( I, $R, td, root ) @ #c)
+        ⇒
+         ¬(#c < #know))  ∥
+       (∀ #q.
+         (PostQuantumComponentCompromise( I, $R, td, root ) @ #q)
+        ⇒
+         ¬(#q < #know)) )
+  case case_1
+  solve( ResponderReady( $R, I, pair, prekey_pub ) ▶₀ #accept )
+    case ProvisionPair
+    solve( HandshakeOffer( $I, $R, ~pair, td, root, coordinate ) ▶₁ #accept )
+      case InitiatorFirstPacket
+      solve( !KU( ideal_hybrid(~classical_component, ~pq_component, $I, $R,
+                               h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                  'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                  'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $I, 
+                                  $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>))
+             ) @ #vk )
+        case CompromiseSession_case_1
+        by contradiction /* from formulas */
+      next
+        case CompromiseSession_case_2
+        by contradiction /* from formulas */
+      next
+        case RatchetCompromiseBeforeRecovery_case_1
+        by contradiction /* from formulas */
+      next
+        case RatchetCompromiseBeforeRecovery_case_2
+        by contradiction /* from formulas */
+      next
+        case c_ideal_hybrid
+        solve( !KU( ~classical_component ) @ #vk.1 )
+          case CompromiseClassicalComponent
+          by contradiction /* from formulas */
+        qed
+      qed
+    qed
+  qed
+next
+  case case_2
+  solve( ResponderReady( $R, I, pair, prekey_pub ) ▶₀ #accept )
+    case ProvisionPair
+    solve( HandshakeOffer( $I, $R, ~pair, td, root, coordinate ) ▶₁ #accept )
+      case InitiatorFirstPacket
+      solve( !KU( ideal_hybrid(~classical_component, ~pq_component, $I, $R,
+                               h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                  'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                  'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $I, 
+                                  $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>))
+             ) @ #vk )
+        case CompromiseSession_case_1
+        by contradiction /* from formulas */
+      next
+        case CompromiseSession_case_2
+        by contradiction /* from formulas */
+      next
+        case RatchetCompromiseBeforeRecovery_case_1
+        by contradiction /* from formulas */
+      next
+        case RatchetCompromiseBeforeRecovery_case_2
+        by contradiction /* from formulas */
+      next
+        case c_ideal_hybrid
+        solve( !KU( ~classical_component ) @ #vk.1 )
+          case CompromiseClassicalComponent
+          solve( !KU( ~pq_component ) @ #vk.2 )
+            case CompromisePostQuantumComponent
+            by contradiction /* from formulas */
+          qed
+        qed
+      qed
+    qed
+  qed
+qed
+
+lemma SEC_010_double_ratchet_forward_secrecy:
+  all-traces
+  "∀ E P td old next #advance #know.
+    ((RatchetAdvanced( E, P, td, old, next ) @ #advance) ∧
+     (K( old ) @ #know)) ⇒
+    (((∃ E2 P2 #c.
+        (SessionCompromise( E2, P2, td, old ) @ #c) ∧ (#c < #know)) ∨
+      (∃ E2 P2 #c.
+        (RatchetKeyCompromise( E2, P2, td, old ) @ #c) ∧ (#c < #know))) ∨
+     ((∃ I R #c.
+        (ClassicalComponentCompromise( I, R, td, old ) @ #c) ∧ (#c < #know)) ∧
+      (∃ I R #q.
+        (PostQuantumComponentCompromise( I, R, td, old ) @ #q) ∧ (#q < #know))))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ E P td old next #advance #know.
+  (RatchetAdvanced( E, P, td, old, next ) @ #advance) ∧ (K( old ) @ #know)
+ ∧
+  (∀ E2 P2 #c.
+    (SessionCompromise( E2, P2, td, old ) @ #c) ⇒ ¬(#c < #know)) ∧
+  (∀ E2 P2 #c.
+    (RatchetKeyCompromise( E2, P2, td, old ) @ #c) ⇒ ¬(#c < #know)) ∧
+  (((∀ I R #c.
+      (ClassicalComponentCompromise( I, R, td, old ) @ #c) ⇒ ¬(#c < #know)) ∨
+    (∀ I R #q.
+      (PostQuantumComponentCompromise( I, R, td, old ) @ #q)
+     ⇒
+      ¬(#q < #know))))"
+*/
+simplify
+solve( (∀ I R #c.
+         (ClassicalComponentCompromise( I, R, td, old ) @ #c) ⇒ ¬(#c < #know))  ∥
+       (∀ I R #q.
+         (PostQuantumComponentCompromise( I, R, td, old ) @ #q) ⇒ ¬(#q < #know)) )
+  case case_1
+  solve( RatchetInitial( $E, P, td, old ) ▶₀ #advance )
+    case InitiatorAccept
+    solve( !KU( ideal_hybrid(~classical_component, ~pq_component, $E, $R,
+                             h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $E, 
+                                $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>))
+           ) @ #vk )
+      case CompromiseSession_case_1
+      by contradiction /* from formulas */
+    next
+      case CompromiseSession_case_2
+      by contradiction /* from formulas */
+    next
+      case RatchetCompromiseBeforeRecovery
+      by contradiction /* from formulas */
+    next
+      case c_ideal_hybrid
+      solve( !KU( ~classical_component ) @ #vk.1 )
+        case CompromiseClassicalComponent
+        by contradiction /* from formulas */
+      qed
+    qed
+  next
+    case ResponderAccept
+    solve( !KU( ideal_hybrid(~classical_component, ~pq_component, $I, $E,
+                             h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $I, 
+                                $E, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>))
+           ) @ #vk )
+      case CompromiseSession_case_1
+      by contradiction /* from formulas */
+    next
+      case CompromiseSession_case_2
+      by contradiction /* from formulas */
+    next
+      case RatchetCompromiseBeforeRecovery
+      by contradiction /* from formulas */
+    next
+      case c_ideal_hybrid
+      solve( !KU( ~classical_component ) @ #vk.1 )
+        case CompromiseClassicalComponent
+        by contradiction /* from formulas */
+      qed
+    qed
+  qed
+next
+  case case_2
+  solve( RatchetInitial( $E, P, td, old ) ▶₀ #advance )
+    case InitiatorAccept
+    solve( !KU( ideal_hybrid(~classical_component, ~pq_component, $E, $R,
+                             h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $E, 
+                                $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>))
+           ) @ #vk )
+      case CompromiseSession_case_1
+      by contradiction /* from formulas */
+    next
+      case CompromiseSession_case_2
+      by contradiction /* from formulas */
+    next
+      case RatchetCompromiseBeforeRecovery
+      by contradiction /* from formulas */
+    next
+      case c_ideal_hybrid
+      solve( !KU( ~classical_component ) @ #vk.1 )
+        case CompromiseClassicalComponent
+        solve( !KU( ~pq_component ) @ #vk.2 )
+          case CompromisePostQuantumComponent
+          by contradiction /* from formulas */
+        qed
+      qed
+    qed
+  next
+    case ResponderAccept
+    solve( !KU( ideal_hybrid(~classical_component, ~pq_component, $I, $E,
+                             h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $I, 
+                                $E, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>))
+           ) @ #vk )
+      case CompromiseSession_case_1
+      by contradiction /* from formulas */
+    next
+      case CompromiseSession_case_2
+      by contradiction /* from formulas */
+    next
+      case RatchetCompromiseBeforeRecovery
+      by contradiction /* from formulas */
+    next
+      case c_ideal_hybrid
+      solve( !KU( ~classical_component ) @ #vk.1 )
+        case CompromiseClassicalComponent
+        solve( !KU( ~pq_component ) @ #vk.2 )
+          case CompromisePostQuantumComponent
+          by contradiction /* from formulas */
+        qed
+      qed
+    qed
+  qed
+qed
+
+lemma SEC_011_double_ratchet_post_compromise_recovery:
+  all-traces
+  "∀ E P td old next #recover #know.
+    ((RatchetRecovered( E, P, td, old, next ) @ #recover) ∧
+     (K( next ) @ #know)) ⇒
+    (∃ #c. (RatchetKeyCompromise( E, P, td, next ) @ #c) ∧ (#c < #know))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ E P td old next #recover #know.
+  (RatchetRecovered( E, P, td, old, next ) @ #recover) ∧
+  (K( next ) @ #know)
+ ∧
+  ∀ #c. (RatchetKeyCompromise( E, P, td, next ) @ #c) ⇒ ¬(#c < #know)"
+*/
+simplify
+solve( RatchetExposed( $E, P, td, old ) ▶₀ #recover )
+  case RatchetCompromiseBeforeRecovery_case_1
+  solve( !KU( ratchet_step(ideal_hybrid(~classical_component,
+                                        ~pq_component, $I, $E,
+                                        h(<
+                                           'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                           'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                           'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', 
+                                           $I, $E, ~pair, h(~prekey), h(~classical_component), 
+                                           h(~pq_component)>)),
+                           ~fresh_dh)
+         ) @ #vk )
+    case RatchetCompromiseAdvanced
+    by contradiction /* from formulas */
+  next
+    case c_ratchet_step
+    by solve( !KU( ~fresh_dh ) @ #vk.2 )
+  qed
+next
+  case RatchetCompromiseBeforeRecovery_case_2
+  solve( !KU( ratchet_step(ideal_hybrid(~classical_component,
+                                        ~pq_component, $E, $R,
+                                        h(<
+                                           'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                           'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                           'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', 
+                                           $E, $R, ~pair, h(~prekey), h(~classical_component), 
+                                           h(~pq_component)>)),
+                           ~fresh_dh)
+         ) @ #vk )
+    case RatchetCompromiseAdvanced
+    by contradiction /* from formulas */
+  next
+    case c_ratchet_step
+    by solve( !KU( ~fresh_dh ) @ #vk.2 )
+  qed
+qed
+
+lemma SEC_012_replay_resistance:
+  all-traces
+  "∀ R S td direction n m1 p1 c1 m2 p2 c2 #i #j.
+    ((RecordReceived( R, S, td, direction, n, m1, p1, c1 ) @ #i) ∧
+     (RecordReceived( R, S, td, direction, n, m2, p2, c2 ) @ #j)) ⇒
+    (#i = #j)"
+/*
+guarded formula characterizing all counter-examples:
+"∃ R S td direction n m1 p1 c1 m2 p2 c2 #i #j.
+  (RecordReceived( R, S, td, direction, n, m1, p1, c1 ) @ #i) ∧
+  (RecordReceived( R, S, td, direction, n, m2, p2, c2 ) @ #j)
+ ∧
+  ¬(#i = #j)"
+*/
+simplify
+solve( (#i < #j)  ∥ (#j < #i) )
+  case case_1
+  solve( ChainState( $R, S, td, direction, n, c1 ) ▶₀ #i )
+    case InitiatorAccept
+    solve( ChainState( $R, $R.1,
+                       h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                          'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                          'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $R, 
+                          $R.1, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>),
+                       'i2r', ~coordinate, c2
+           ) ▶₀ #j )
+      case InitiatorAccept
+      by contradiction /* cyclic */
+    next
+      case ResponderAccept
+      solve( !KU( senc(<m1, sender_metadata, 
+                        h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                           'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                           'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $R, 
+                           $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>), 
+                        'i2r', ~coordinate>,
+                       ideal_hybrid(~classical_component, ~pq_component, $R, $R,
+                                    h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                       'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                       'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', 
+                                       $R, $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)
+                                      >)))
+             ) @ #vk )
+        case c_senc
+        by solve( !KU( ~coordinate ) @ #vk.11 )
+      qed
+    qed
+  next
+    case ResponderAccept
+    solve( ChainState( $R, $I,
+                       h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                          'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                          'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $I, 
+                          $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>),
+                       'i2r', ~coordinate, c2
+           ) ▶₀ #j )
+      case InitiatorAccept
+      solve( !KU( senc(<m1, sender_metadata, 
+                        h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                           'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                           'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $I, 
+                           $I, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>), 
+                        'i2r', ~coordinate>,
+                       ideal_hybrid(~classical_component, ~pq_component, $I, $I,
+                                    h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                       'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                       'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', 
+                                       $I, $I, ~pair, h(~prekey), h(~classical_component), h(~pq_component)
+                                      >)))
+             ) @ #vk )
+        case c_senc
+        by solve( !KU( ~coordinate ) @ #vk.11 )
+      qed
+    next
+      case ResponderAccept
+      by contradiction /* cyclic */
+    qed
+  qed
+next
+  case case_2
+  solve( ChainState( $R, S, td, direction, n, c1 ) ▶₀ #i )
+    case InitiatorAccept
+    solve( ChainState( $R, $R.1,
+                       h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                          'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                          'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $R, 
+                          $R.1, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>),
+                       'i2r', ~coordinate, c2
+           ) ▶₀ #j )
+      case InitiatorAccept
+      by contradiction /* cyclic */
+    next
+      case ResponderAccept
+      solve( !KU( senc(<m1, sender_metadata, 
+                        h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                           'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                           'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $R, 
+                           $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>), 
+                        'i2r', ~coordinate>,
+                       ideal_hybrid(~classical_component, ~pq_component, $R, $R,
+                                    h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                       'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                       'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', 
+                                       $R, $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)
+                                      >)))
+             ) @ #vk )
+        case c_senc
+        by solve( !KU( ~coordinate ) @ #vk.11 )
+      qed
+    qed
+  next
+    case ResponderAccept
+    solve( ChainState( $R, $I,
+                       h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                          'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                          'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $I, 
+                          $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>),
+                       'i2r', ~coordinate, c2
+           ) ▶₀ #j )
+      case InitiatorAccept
+      solve( !KU( senc(<m1, sender_metadata, 
+                        h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                           'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                           'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $I, 
+                           $I, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>), 
+                        'i2r', ~coordinate>,
+                       ideal_hybrid(~classical_component, ~pq_component, $I, $I,
+                                    h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                       'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                       'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', 
+                                       $I, $I, ~pair, h(~prekey), h(~classical_component), h(~pq_component)
+                                      >)))
+             ) @ #vk )
+        case c_senc
+        by solve( !KU( ~coordinate ) @ #vk.11 )
+      qed
+    next
+      case ResponderAccept
+      by contradiction /* cyclic */
+    qed
+  qed
+qed
+
+lemma SEC_013_state_rollback_resistance:
+  all-traces
+  "∀ E td direction n #i #j.
+    ((AtomicReceiveCommit( E, td, direction, n ) @ #i) ∧
+     (AtomicReceiveCommit( E, td, direction, n ) @ #j)) ⇒
+    (#i = #j)"
+/*
+guarded formula characterizing all counter-examples:
+"∃ E td direction n #i #j.
+  (AtomicReceiveCommit( E, td, direction, n ) @ #i) ∧
+  (AtomicReceiveCommit( E, td, direction, n ) @ #j)
+ ∧
+  ¬(#i = #j)"
+*/
+simplify
+solve( (#i < #j)  ∥ (#j < #i) )
+  case case_1
+  solve( ChainState( $R, S, td, direction, n, chain ) ▶₀ #i )
+    case InitiatorAccept
+    solve( ChainState( $R, S,
+                       h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                          'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                          'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $R, 
+                          $R.1, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>),
+                       'i2r', ~coordinate, chain
+           ) ▶₀ #j )
+      case InitiatorAccept
+      by contradiction /* cyclic */
+    next
+      case ResponderAccept
+      solve( !KU( senc(<message, sender_metadata, 
+                        h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                           'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                           'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $R, 
+                           $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>), 
+                        'i2r', ~coordinate>,
+                       ideal_hybrid(~classical_component, ~pq_component, $R, $R,
+                                    h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                       'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                       'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', 
+                                       $R, $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)
+                                      >)))
+             ) @ #vk )
+        case c_senc
+        by solve( !KU( ~coordinate ) @ #vk.11 )
+      qed
+    qed
+  next
+    case ResponderAccept
+    solve( ChainState( $R, S,
+                       h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                          'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                          'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $I, 
+                          $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>),
+                       'i2r', ~coordinate, chain
+           ) ▶₀ #j )
+      case InitiatorAccept
+      solve( !KU( senc(<message, sender_metadata, 
+                        h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                           'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                           'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $I, 
+                           $I, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>), 
+                        'i2r', ~coordinate>,
+                       ideal_hybrid(~classical_component, ~pq_component, $I, $I,
+                                    h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                       'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                       'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', 
+                                       $I, $I, ~pair, h(~prekey), h(~classical_component), h(~pq_component)
+                                      >)))
+             ) @ #vk )
+        case c_senc
+        by solve( !KU( ~coordinate ) @ #vk.11 )
+      qed
+    next
+      case ResponderAccept
+      by contradiction /* cyclic */
+    qed
+  qed
+next
+  case case_2
+  solve( ChainState( $R, S, td, direction, n, chain ) ▶₀ #i )
+    case InitiatorAccept
+    solve( ChainState( $R, S,
+                       h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                          'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                          'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $R, 
+                          $R.1, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>),
+                       'i2r', ~coordinate, chain
+           ) ▶₀ #j )
+      case InitiatorAccept
+      by contradiction /* cyclic */
+    next
+      case ResponderAccept
+      solve( !KU( senc(<message, sender_metadata, 
+                        h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                           'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                           'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $R, 
+                           $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>), 
+                        'i2r', ~coordinate>,
+                       ideal_hybrid(~classical_component, ~pq_component, $R, $R,
+                                    h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                       'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                       'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', 
+                                       $R, $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)
+                                      >)))
+             ) @ #vk )
+        case c_senc
+        by solve( !KU( ~coordinate ) @ #vk.11 )
+      qed
+    qed
+  next
+    case ResponderAccept
+    solve( ChainState( $R, S,
+                       h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                          'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                          'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $I, 
+                          $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>),
+                       'i2r', ~coordinate, chain
+           ) ▶₀ #j )
+      case InitiatorAccept
+      solve( !KU( senc(<message, sender_metadata, 
+                        h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                           'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                           'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $I, 
+                           $I, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>), 
+                        'i2r', ~coordinate>,
+                       ideal_hybrid(~classical_component, ~pq_component, $I, $I,
+                                    h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                       'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                       'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', 
+                                       $I, $I, ~pair, h(~prekey), h(~classical_component), h(~pq_component)
+                                      >)))
+             ) @ #vk )
+        case c_senc
+        by solve( !KU( ~coordinate ) @ #vk.11 )
+      qed
+    next
+      case ResponderAccept
+      by contradiction /* cyclic */
+    qed
+  qed
+qed
+
+lemma SEC_014_identity_continuity:
+  all-traces
+  "∀ E old_public new_public successor #accept.
+    (IdentityContinuityAccepted( E, old_public, new_public, successor
+     ) @ #accept) ⇒
+    ((∃ #authorize.
+       (IdentitySuccessorAuthorized( E, old_public, new_public, successor
+        ) @ #authorize) ∧
+       (#authorize < #accept)) ∨
+     (∃ #c.
+       (IdentityMaterialCompromise( E, old_public ) @ #c) ∧ (#c < #accept)))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ E old_public new_public successor #accept.
+  (IdentityContinuityAccepted( E, old_public, new_public, successor
+   ) @ #accept)
+ ∧
+  (∀ #authorize.
+    (IdentitySuccessorAuthorized( E, old_public, new_public, successor
+     ) @ #authorize)
+   ⇒
+    ¬(#authorize < #accept)) ∧
+  (∀ #c.
+    (IdentityMaterialCompromise( E, old_public ) @ #c) ⇒ ¬(#c < #accept))"
+*/
+simplify
+solve( !IdentityVerification( $E, old_secret ) ▶₀ #accept )
+  case ProvisionPair_case_1
+  solve( !KU( sign(<'identity-continuity', 
+                    'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', $E, 
+                    pk(~identity_secret_i), new_public, successor>,
+                   ~identity_secret_i)
+         ) @ #vk.4 )
+    case AuthorizeIdentitySuccessor
+    by contradiction /* from formulas */
+  next
+    case c_sign
+    solve( !KU( ~identity_secret_i ) @ #vk.7 )
+      case CompromiseIdentityMaterial
+      by contradiction /* from formulas */
+    qed
+  qed
+next
+  case ProvisionPair_case_2
+  solve( !KU( sign(<'identity-continuity', 
+                    'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', $E, 
+                    pk(~identity_secret_r), new_public, successor>,
+                   ~identity_secret_r)
+         ) @ #vk.4 )
+    case AuthorizeIdentitySuccessor
+    by contradiction /* from formulas */
+  next
+    case c_sign
+    solve( !KU( ~identity_secret_r ) @ #vk.7 )
+      case CompromiseIdentityMaterial
+      by contradiction /* from formulas */
+    qed
+  qed
+qed
+
+lemma SEC_015_route_migration_safety:
+  all-traces
+  "∀ E P public old_route new_route route_digest #accept.
+    (RouteMigrationAccepted( E, P, public, old_route, new_route, route_digest
+     ) @ #accept) ⇒
+    ((∃ #authorize.
+       (RouteMigrationAuthorized( E, P, public, old_route, new_route,
+                                  route_digest
+        ) @ #authorize) ∧
+       (#authorize < #accept)) ∨
+     (∃ #c. (IdentityMaterialCompromise( E, public ) @ #c) ∧ (#c < #accept)))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ E P public old_route new_route route_digest #accept.
+  (RouteMigrationAccepted( E, P, public, old_route, new_route, route_digest
+   ) @ #accept)
+ ∧
+  (∀ #authorize.
+    (RouteMigrationAuthorized( E, P, public, old_route, new_route,
+                               route_digest
+     ) @ #authorize)
+   ⇒
+    ¬(#authorize < #accept)) ∧
+  (∀ #c. (IdentityMaterialCompromise( E, public ) @ #c) ⇒ ¬(#c < #accept))"
+*/
+simplify
+solve( !IdentityVerification( $E, secret ) ▶₀ #accept )
+  case ProvisionPair_case_1
+  solve( !KU( sign(<'route-migration', 
+                    'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', $E, 
+                    P, old_route, new_route, route_digest>,
+                   ~identity_secret_i)
+         ) @ #vk.12 )
+    case AuthorizeRouteMigration
+    by contradiction /* from formulas */
+  next
+    case c_sign
+    solve( !KU( ~identity_secret_i ) @ #vk.18 )
+      case CompromiseIdentityMaterial
+      by contradiction /* from formulas */
+    qed
+  qed
+next
+  case ProvisionPair_case_2
+  solve( !KU( sign(<'route-migration', 
+                    'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', $E, 
+                    P, old_route, new_route, route_digest>,
+                   ~identity_secret_r)
+         ) @ #vk.12 )
+    case AuthorizeRouteMigration
+    by contradiction /* from formulas */
+  next
+    case c_sign
+    solve( !KU( ~identity_secret_r ) @ #vk.18 )
+      case CompromiseIdentityMaterial
+      by contradiction /* from formulas */
+    qed
+  qed
+qed
+
+lemma SEC_016_evidence_unforgeability:
+  all-traces
+  "∀ E public statement signed #accept.
+    (EvidenceAccepted( E, public, statement, signed ) @ #accept) ⇒
+    ((∃ #issue.
+       (EvidenceIssued( E, public, statement, signed ) @ #issue) ∧
+       (#issue < #accept)) ∨
+     (∃ #c. (IdentityMaterialCompromise( E, public ) @ #c) ∧ (#c < #accept)))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ E public statement signed #accept.
+  (EvidenceAccepted( E, public, statement, signed ) @ #accept)
+ ∧
+  (∀ #issue.
+    (EvidenceIssued( E, public, statement, signed ) @ #issue)
+   ⇒
+    ¬(#issue < #accept)) ∧
+  (∀ #c. (IdentityMaterialCompromise( E, public ) @ #c) ⇒ ¬(#c < #accept))"
+*/
+simplify
+solve( !IdentityVerification( $E, secret ) ▶₀ #accept )
+  case ProvisionPair_case_1
+  solve( !KU( sign(<'endpoint-evidence', 
+                    'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', $E, 
+                    statement>,
+                   ~identity_secret_i)
+         ) @ #vk.6 )
+    case IssueEvidence
+    by contradiction /* from formulas */
+  next
+    case c_sign
+    solve( !KU( ~identity_secret_i ) @ #vk.9 )
+      case CompromiseIdentityMaterial
+      by contradiction /* from formulas */
+    qed
+  qed
+next
+  case ProvisionPair_case_2
+  solve( !KU( sign(<'endpoint-evidence', 
+                    'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', $E, 
+                    statement>,
+                   ~identity_secret_r)
+         ) @ #vk.6 )
+    case IssueEvidence
+    by contradiction /* from formulas */
+  next
+    case c_sign
+    solve( !KU( ~identity_secret_r ) @ #vk.9 )
+      case CompromiseIdentityMaterial
+      by contradiction /* from formulas */
+    qed
+  qed
+qed
+
+lemma SEC_017_evidence_identity_attribution:
+  all-traces
+  "∀ E public statement signed #accept.
+    (EvidenceAccepted( E, public, statement, signed ) @ #accept) ⇒
+    ((∃ #provision.
+       (EndpointIdentityProvisioned( E, public ) @ #provision) ∧
+       (#provision < #accept)) ∧
+     ((∃ #issue.
+        (EvidenceIssued( E, public, statement, signed ) @ #issue) ∧
+        (#issue < #accept)) ∨
+      (∃ #c.
+        (IdentityMaterialCompromise( E, public ) @ #c) ∧ (#c < #accept))))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ E public statement signed #accept.
+  (EvidenceAccepted( E, public, statement, signed ) @ #accept)
+ ∧
+  ((∀ #provision.
+     (EndpointIdentityProvisioned( E, public ) @ #provision)
+    ⇒
+     ¬(#provision < #accept)) ∨
+   ((∀ #issue.
+      (EvidenceIssued( E, public, statement, signed ) @ #issue)
+     ⇒
+      ¬(#issue < #accept)) ∧
+    (∀ #c.
+      (IdentityMaterialCompromise( E, public ) @ #c) ⇒ ¬(#c < #accept))))"
+*/
+simplify
+solve( (∀ #provision.
+         (EndpointIdentityProvisioned( $E, pk(secret) ) @ #provision)
+        ⇒
+         ¬(#provision < #accept))  ∥
+       ((∀ #issue.
+          (EvidenceIssued( $E, pk(secret), statement,
+                           sign(<'endpoint-evidence', 
+                                 'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', $E, 
+                                 statement>,
+                                secret)
+           ) @ #issue)
+         ⇒
+          ¬(#issue < #accept)) ∧
+        (∀ #c.
+          (IdentityMaterialCompromise( $E, pk(secret) ) @ #c) ⇒ ¬(#c < #accept))) )
+  case case_1
+  solve( !IdentityVerification( $E, secret ) ▶₀ #accept )
+    case ProvisionPair_case_1
+    by contradiction /* from formulas */
+  next
+    case ProvisionPair_case_2
+    by contradiction /* from formulas */
+  qed
+next
+  case case_2
+  solve( !IdentityVerification( $E, secret ) ▶₀ #accept )
+    case ProvisionPair_case_1
+    solve( !KU( sign(<'endpoint-evidence', 
+                      'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', $E, 
+                      statement>,
+                     ~identity_secret_i)
+           ) @ #vk.6 )
+      case IssueEvidence
+      by contradiction /* from formulas */
+    next
+      case c_sign
+      solve( !KU( ~identity_secret_i ) @ #vk.9 )
+        case CompromiseIdentityMaterial
+        by contradiction /* from formulas */
+      qed
+    qed
+  next
+    case ProvisionPair_case_2
+    solve( !KU( sign(<'endpoint-evidence', 
+                      'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', $E, 
+                      statement>,
+                     ~identity_secret_r)
+           ) @ #vk.6 )
+      case IssueEvidence
+      by contradiction /* from formulas */
+    next
+      case c_sign
+      solve( !KU( ~identity_secret_r ) @ #vk.9 )
+        case CompromiseIdentityMaterial
+        by contradiction /* from formulas */
+      qed
+    qed
+  qed
+qed
+
+lemma SEC_018_station_cannot_manufacture_endpoint_accepted:
+  all-traces
+  "∀ R S td direction n message packet chain #accept.
+    (EndpointAccepted( R, S, td, direction, n, message, packet, chain
+     ) @ #accept) ⇒
+    ((((∃ #send.
+         (RecordSent( S, R, td, direction, n, message, packet, chain ) @ #send) ∧
+         (#send < #accept)) ∨
+       (∃ E P #c.
+         (SessionCompromise( E, P, td, chain ) @ #c) ∧ (#c < #accept))) ∨
+      (∃ E P #c.
+        (RatchetKeyCompromise( E, P, td, chain ) @ #c) ∧ (#c < #accept))) ∨
+     ((∃ I P #c.
+        (ClassicalComponentCompromise( I, P, td, chain ) @ #c) ∧
+        (#c < #accept)) ∧
+      (∃ I P #q.
+        (PostQuantumComponentCompromise( I, P, td, chain ) @ #q) ∧
+        (#q < #accept))))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ R S td direction n message packet chain #accept.
+  (EndpointAccepted( R, S, td, direction, n, message, packet, chain
+   ) @ #accept)
+ ∧
+  (∀ #send.
+    (RecordSent( S, R, td, direction, n, message, packet, chain ) @ #send)
+   ⇒
+    ¬(#send < #accept)) ∧
+  (∀ E P #c.
+    (SessionCompromise( E, P, td, chain ) @ #c) ⇒ ¬(#c < #accept)) ∧
+  (∀ E P #c.
+    (RatchetKeyCompromise( E, P, td, chain ) @ #c) ⇒ ¬(#c < #accept)) ∧
+  (((∀ I P #c.
+      (ClassicalComponentCompromise( I, P, td, chain ) @ #c)
+     ⇒
+      ¬(#c < #accept)) ∨
+    (∀ I P #q.
+      (PostQuantumComponentCompromise( I, P, td, chain ) @ #q)
+     ⇒
+      ¬(#q < #accept))))"
+*/
+simplify
+solve( (∀ I P #c.
+         (ClassicalComponentCompromise( I, P, td, chain ) @ #c)
+        ⇒
+         ¬(#c < #accept))  ∥
+       (∀ I P #q.
+         (PostQuantumComponentCompromise( I, P, td, chain ) @ #q)
+        ⇒
+         ¬(#q < #accept)) )
+  case case_1
+  solve( ChainState( $R, S, td, direction, n, chain ) ▶₀ #accept )
+    case InitiatorAccept
+    solve( !KU( senc(<message, sender_metadata, 
+                      h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                         'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                         'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $R, 
+                         $R.1, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>), 
+                      'i2r', ~coordinate>,
+                     ideal_hybrid(~classical_component, ~pq_component, $R, $R.1,
+                                  h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                     'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                     'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $R, 
+                                     $R.1, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>)))
+           ) @ #vk )
+      case SendRecord
+      by contradiction /* from formulas */
+    next
+      case c_senc
+      solve( !KU( ~coordinate ) @ #vk.10 )
+        case SendRecord
+        solve( !KU( ideal_hybrid(~classical_component, ~pq_component, $R, $R.1,
+                                 h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                    'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                    'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $R, 
+                                    $R.1, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>))
+               ) @ #vk.3 )
+          case CompromiseSession_case_1
+          by contradiction /* from formulas */
+        next
+          case CompromiseSession_case_2
+          by contradiction /* from formulas */
+        next
+          case RatchetCompromiseBeforeRecovery_case_1
+          by contradiction /* from formulas */
+        next
+          case RatchetCompromiseBeforeRecovery_case_2
+          by contradiction /* from formulas */
+        next
+          case c_ideal_hybrid
+          solve( !KU( ~classical_component ) @ #vk.11 )
+            case CompromiseClassicalComponent
+            by contradiction /* from formulas */
+          qed
+        qed
+      qed
+    qed
+  next
+    case ResponderAccept
+    solve( !KU( senc(<message, sender_metadata, 
+                      h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                         'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                         'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $I, 
+                         $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>), 
+                      'i2r', ~coordinate>,
+                     ideal_hybrid(~classical_component, ~pq_component, $I, $R,
+                                  h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                     'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                     'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $I, 
+                                     $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>)))
+           ) @ #vk )
+      case SendRecord
+      by contradiction /* from formulas */
+    next
+      case c_senc
+      solve( !KU( ~coordinate ) @ #vk.10 )
+        case SendRecord
+        solve( !KU( ideal_hybrid(~classical_component, ~pq_component, $I, $R,
+                                 h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                    'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                    'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $I, 
+                                    $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>))
+               ) @ #vk.3 )
+          case CompromiseSession_case_1
+          by contradiction /* from formulas */
+        next
+          case CompromiseSession_case_2
+          by contradiction /* from formulas */
+        next
+          case RatchetCompromiseBeforeRecovery_case_1
+          by contradiction /* from formulas */
+        next
+          case RatchetCompromiseBeforeRecovery_case_2
+          by contradiction /* from formulas */
+        next
+          case c_ideal_hybrid
+          solve( !KU( ~classical_component ) @ #vk.11 )
+            case CompromiseClassicalComponent
+            by contradiction /* from formulas */
+          qed
+        qed
+      qed
+    qed
+  qed
+next
+  case case_2
+  solve( ChainState( $R, S, td, direction, n, chain ) ▶₀ #accept )
+    case InitiatorAccept
+    solve( !KU( senc(<message, sender_metadata, 
+                      h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                         'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                         'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $R, 
+                         $R.1, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>), 
+                      'i2r', ~coordinate>,
+                     ideal_hybrid(~classical_component, ~pq_component, $R, $R.1,
+                                  h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                     'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                     'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $R, 
+                                     $R.1, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>)))
+           ) @ #vk )
+      case SendRecord
+      by contradiction /* from formulas */
+    next
+      case c_senc
+      solve( !KU( ~coordinate ) @ #vk.10 )
+        case SendRecord
+        solve( !KU( ideal_hybrid(~classical_component, ~pq_component, $R, $R.1,
+                                 h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                    'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                    'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $R, 
+                                    $R.1, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>))
+               ) @ #vk.3 )
+          case CompromiseSession_case_1
+          by contradiction /* from formulas */
+        next
+          case CompromiseSession_case_2
+          by contradiction /* from formulas */
+        next
+          case RatchetCompromiseBeforeRecovery_case_1
+          by contradiction /* from formulas */
+        next
+          case RatchetCompromiseBeforeRecovery_case_2
+          by contradiction /* from formulas */
+        next
+          case c_ideal_hybrid
+          solve( !KU( ~classical_component ) @ #vk.11 )
+            case CompromiseClassicalComponent
+            solve( !KU( ~pq_component ) @ #vk.12 )
+              case CompromisePostQuantumComponent
+              by contradiction /* from formulas */
+            qed
+          qed
+        qed
+      qed
+    qed
+  next
+    case ResponderAccept
+    solve( !KU( senc(<message, sender_metadata, 
+                      h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                         'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                         'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $I, 
+                         $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>), 
+                      'i2r', ~coordinate>,
+                     ideal_hybrid(~classical_component, ~pq_component, $I, $R,
+                                  h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                     'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                     'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $I, 
+                                     $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>)))
+           ) @ #vk )
+      case SendRecord
+      by contradiction /* from formulas */
+    next
+      case c_senc
+      solve( !KU( ~coordinate ) @ #vk.10 )
+        case SendRecord
+        solve( !KU( ideal_hybrid(~classical_component, ~pq_component, $I, $R,
+                                 h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                    'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                    'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $I, 
+                                    $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>))
+               ) @ #vk.3 )
+          case CompromiseSession_case_1
+          by contradiction /* from formulas */
+        next
+          case CompromiseSession_case_2
+          by contradiction /* from formulas */
+        next
+          case RatchetCompromiseBeforeRecovery_case_1
+          by contradiction /* from formulas */
+        next
+          case RatchetCompromiseBeforeRecovery_case_2
+          by contradiction /* from formulas */
+        next
+          case c_ideal_hybrid
+          solve( !KU( ~classical_component ) @ #vk.11 )
+            case CompromiseClassicalComponent
+            solve( !KU( ~pq_component ) @ #vk.12 )
+              case CompromisePostQuantumComponent
+              by contradiction /* from formulas */
+            qed
+          qed
+        qed
+      qed
+    qed
+  qed
+qed
+
+lemma SEC_019_station_cannot_manufacture_effect_completed:
+  all-traces
+  "∀ R S td direction n message_digest #complete.
+    (EndpointEffectCompleted( R, S, td, direction, n, message_digest
+     ) @ #complete) ⇒
+    (∃ message packet chain #accept.
+      (EndpointAccepted( R, S, td, direction, n, message, packet, chain
+       ) @ #accept) ∧
+      (#accept < #complete))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ R S td direction n message_digest #complete.
+  (EndpointEffectCompleted( R, S, td, direction, n, message_digest
+   ) @ #complete)
+ ∧
+  ∀ message packet chain #accept.
+   (EndpointAccepted( R, S, td, direction, n, message, packet, chain
+    ) @ #accept)
+  ⇒
+   ¬(#accept < #complete)"
+*/
+simplify
+solve( !DurableInbox( $E, S, td, direction, n, message_digest
+       ) ▶₀ #complete )
+  case ReceiveRecord_case_1
+  by contradiction /* from formulas */
+next
+  case ReceiveRecord_case_2
+  by contradiction /* from formulas */
+qed
+
+lemma SEC_020_fail_closed_resource_bounds:
+  all-traces
+  "(∀ input #accept.
+     (ParserAccepted( input ) @ #accept) ⇒
+     (ResourceBoundsValidated( input,
+                               'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd'
+      ) @ #accept)) ∧
+   (∀ input #reject.
+     (ResourceLimitRejected( input,
+                             'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd'
+      ) @ #reject) ⇒
+     (¬(∃ #commit. ParserStateCommitted( input ) @ #commit)))"
+/*
+guarded formula characterizing all counter-examples:
+"((∃ input #accept.
+    (ParserAccepted( input ) @ #accept)
+   ∧
+    ¬(ResourceBoundsValidated( input,
+                               'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd'
+      ) @ #accept)) ∨
+  (∃ input #reject.
+    (ResourceLimitRejected( input,
+                            'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd'
+     ) @ #reject)
+   ∧
+    ∃ #commit. (ParserStateCommitted( input ) @ #commit)))"
+*/
+induction
+  case empty_trace
+  by contradiction /* from formulas */
+next
+  case non_empty_trace
+  solve( (∃ input #accept.
+           (ParserAccepted( input ) @ #accept)
+          ∧
+           ¬(ResourceBoundsValidated( input,
+                                      'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd'
+             ) @ #accept))  ∥
+         (∃ input #reject.
+           (ResourceLimitRejected( input,
+                                   'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd'
+            ) @ #reject)
+          ∧
+           ∃ #commit. (ParserStateCommitted( input ) @ #commit)) )
+    case case_1
+    by contradiction /* from formulas */
+  next
+    case case_2
+    solve( (last(#reject))  ∥
+           (∀ #commit. (ParserStateCommitted( input ) @ #commit) ⇒ last(#commit)) )
+      case case_1
+      solve( OverResourceBounds( input ) ▶₀ #reject )
+        case ClassifyOverResourceBounds
+        by solve( WithinResourceBounds( ~input ) ▶₀ #commit )
+      qed
+    next
+      case case_2
+      solve( OverResourceBounds( input ) ▶₀ #reject )
+        case ClassifyOverResourceBounds
+        by solve( WithinResourceBounds( ~input ) ▶₀ #commit )
+      qed
+    qed
+  qed
+qed
+
+lemma SEC_022_pairwise_record_authentication_and_integrity:
+  all-traces
+  "∀ R S td direction n message packet chain #receive.
+    (RecordReceived( R, S, td, direction, n, message, packet, chain
+     ) @ #receive) ⇒
+    ((((∃ #send.
+         (RecordSent( S, R, td, direction, n, message, packet, chain ) @ #send) ∧
+         (#send < #receive)) ∨
+       (∃ E P #c.
+         (SessionCompromise( E, P, td, chain ) @ #c) ∧ (#c < #receive))) ∨
+      (∃ E P #c.
+        (RatchetKeyCompromise( E, P, td, chain ) @ #c) ∧ (#c < #receive))) ∨
+     ((∃ I P #c.
+        (ClassicalComponentCompromise( I, P, td, chain ) @ #c) ∧
+        (#c < #receive)) ∧
+      (∃ I P #q.
+        (PostQuantumComponentCompromise( I, P, td, chain ) @ #q) ∧
+        (#q < #receive))))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ R S td direction n message packet chain #receive.
+  (RecordReceived( R, S, td, direction, n, message, packet, chain
+   ) @ #receive)
+ ∧
+  (∀ #send.
+    (RecordSent( S, R, td, direction, n, message, packet, chain ) @ #send)
+   ⇒
+    ¬(#send < #receive)) ∧
+  (∀ E P #c.
+    (SessionCompromise( E, P, td, chain ) @ #c) ⇒ ¬(#c < #receive)) ∧
+  (∀ E P #c.
+    (RatchetKeyCompromise( E, P, td, chain ) @ #c) ⇒ ¬(#c < #receive)) ∧
+  (((∀ I P #c.
+      (ClassicalComponentCompromise( I, P, td, chain ) @ #c)
+     ⇒
+      ¬(#c < #receive)) ∨
+    (∀ I P #q.
+      (PostQuantumComponentCompromise( I, P, td, chain ) @ #q)
+     ⇒
+      ¬(#q < #receive))))"
+*/
+simplify
+solve( (∀ I P #c.
+         (ClassicalComponentCompromise( I, P, td, chain ) @ #c)
+        ⇒
+         ¬(#c < #receive))  ∥
+       (∀ I P #q.
+         (PostQuantumComponentCompromise( I, P, td, chain ) @ #q)
+        ⇒
+         ¬(#q < #receive)) )
+  case case_1
+  solve( ChainState( $R, S, td, direction, n, chain ) ▶₀ #receive )
+    case InitiatorAccept
+    solve( !KU( senc(<message, sender_metadata, 
+                      h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                         'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                         'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $R, 
+                         $R.1, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>), 
+                      'i2r', ~coordinate>,
+                     ideal_hybrid(~classical_component, ~pq_component, $R, $R.1,
+                                  h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                     'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                     'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $R, 
+                                     $R.1, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>)))
+           ) @ #vk )
+      case SendRecord
+      by contradiction /* from formulas */
+    next
+      case c_senc
+      solve( !KU( ~coordinate ) @ #vk.10 )
+        case SendRecord
+        solve( !KU( ideal_hybrid(~classical_component, ~pq_component, $R, $R.1,
+                                 h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                    'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                    'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $R, 
+                                    $R.1, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>))
+               ) @ #vk.3 )
+          case CompromiseSession_case_1
+          by contradiction /* from formulas */
+        next
+          case CompromiseSession_case_2
+          by contradiction /* from formulas */
+        next
+          case RatchetCompromiseBeforeRecovery_case_1
+          by contradiction /* from formulas */
+        next
+          case RatchetCompromiseBeforeRecovery_case_2
+          by contradiction /* from formulas */
+        next
+          case c_ideal_hybrid
+          solve( !KU( ~classical_component ) @ #vk.11 )
+            case CompromiseClassicalComponent
+            by contradiction /* from formulas */
+          qed
+        qed
+      qed
+    qed
+  next
+    case ResponderAccept
+    solve( !KU( senc(<message, sender_metadata, 
+                      h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                         'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                         'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $I, 
+                         $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>), 
+                      'i2r', ~coordinate>,
+                     ideal_hybrid(~classical_component, ~pq_component, $I, $R,
+                                  h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                     'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                     'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $I, 
+                                     $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>)))
+           ) @ #vk )
+      case SendRecord
+      by contradiction /* from formulas */
+    next
+      case c_senc
+      solve( !KU( ~coordinate ) @ #vk.10 )
+        case SendRecord
+        solve( !KU( ideal_hybrid(~classical_component, ~pq_component, $I, $R,
+                                 h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                    'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                    'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $I, 
+                                    $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>))
+               ) @ #vk.3 )
+          case CompromiseSession_case_1
+          by contradiction /* from formulas */
+        next
+          case CompromiseSession_case_2
+          by contradiction /* from formulas */
+        next
+          case RatchetCompromiseBeforeRecovery_case_1
+          by contradiction /* from formulas */
+        next
+          case RatchetCompromiseBeforeRecovery_case_2
+          by contradiction /* from formulas */
+        next
+          case c_ideal_hybrid
+          solve( !KU( ~classical_component ) @ #vk.11 )
+            case CompromiseClassicalComponent
+            by contradiction /* from formulas */
+          qed
+        qed
+      qed
+    qed
+  qed
+next
+  case case_2
+  solve( ChainState( $R, S, td, direction, n, chain ) ▶₀ #receive )
+    case InitiatorAccept
+    solve( !KU( senc(<message, sender_metadata, 
+                      h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                         'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                         'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $R, 
+                         $R.1, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>), 
+                      'i2r', ~coordinate>,
+                     ideal_hybrid(~classical_component, ~pq_component, $R, $R.1,
+                                  h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                     'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                     'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $R, 
+                                     $R.1, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>)))
+           ) @ #vk )
+      case SendRecord
+      by contradiction /* from formulas */
+    next
+      case c_senc
+      solve( !KU( ~coordinate ) @ #vk.10 )
+        case SendRecord
+        solve( !KU( ideal_hybrid(~classical_component, ~pq_component, $R, $R.1,
+                                 h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                    'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                    'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $R, 
+                                    $R.1, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>))
+               ) @ #vk.3 )
+          case CompromiseSession_case_1
+          by contradiction /* from formulas */
+        next
+          case CompromiseSession_case_2
+          by contradiction /* from formulas */
+        next
+          case RatchetCompromiseBeforeRecovery_case_1
+          by contradiction /* from formulas */
+        next
+          case RatchetCompromiseBeforeRecovery_case_2
+          by contradiction /* from formulas */
+        next
+          case c_ideal_hybrid
+          solve( !KU( ~classical_component ) @ #vk.11 )
+            case CompromiseClassicalComponent
+            solve( !KU( ~pq_component ) @ #vk.12 )
+              case CompromisePostQuantumComponent
+              by contradiction /* from formulas */
+            qed
+          qed
+        qed
+      qed
+    qed
+  next
+    case ResponderAccept
+    solve( !KU( senc(<message, sender_metadata, 
+                      h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                         'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                         'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $I, 
+                         $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>), 
+                      'i2r', ~coordinate>,
+                     ideal_hybrid(~classical_component, ~pq_component, $I, $R,
+                                  h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                     'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                     'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $I, 
+                                     $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>)))
+           ) @ #vk )
+      case SendRecord
+      by contradiction /* from formulas */
+    next
+      case c_senc
+      solve( !KU( ~coordinate ) @ #vk.10 )
+        case SendRecord
+        solve( !KU( ideal_hybrid(~classical_component, ~pq_component, $I, $R,
+                                 h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                    'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                    'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $I, 
+                                    $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>))
+               ) @ #vk.3 )
+          case CompromiseSession_case_1
+          by contradiction /* from formulas */
+        next
+          case CompromiseSession_case_2
+          by contradiction /* from formulas */
+        next
+          case RatchetCompromiseBeforeRecovery_case_1
+          by contradiction /* from formulas */
+        next
+          case RatchetCompromiseBeforeRecovery_case_2
+          by contradiction /* from formulas */
+        next
+          case c_ideal_hybrid
+          solve( !KU( ~classical_component ) @ #vk.11 )
+            case CompromiseClassicalComponent
+            solve( !KU( ~pq_component ) @ #vk.12 )
+              case CompromisePostQuantumComponent
+              by contradiction /* from formulas */
+            qed
+          qed
+        qed
+      qed
+    qed
+  qed
+qed
+
+lemma SEC_021_pairwise_record_confidentiality:
+  all-traces
+  "∀ S R td direction n message packet chain #send #know.
+    ((RecordSent( S, R, td, direction, n, message, packet, chain ) @ #send) ∧
+     (K( message ) @ #know)) ⇒
+    (((∃ E P #c.
+        (SessionCompromise( E, P, td, chain ) @ #c) ∧ (#c < #know)) ∨
+      (∃ E P #c.
+        (RatchetKeyCompromise( E, P, td, chain ) @ #c) ∧ (#c < #know))) ∨
+     ((∃ I P #c.
+        (ClassicalComponentCompromise( I, P, td, chain ) @ #c) ∧ (#c < #know)) ∧
+      (∃ I P #q.
+        (PostQuantumComponentCompromise( I, P, td, chain ) @ #q) ∧
+        (#q < #know))))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ S R td direction n message packet chain #send #know.
+  (RecordSent( S, R, td, direction, n, message, packet, chain ) @ #send) ∧
+  (K( message ) @ #know)
+ ∧
+  (∀ E P #c. (SessionCompromise( E, P, td, chain ) @ #c) ⇒ ¬(#c < #know)) ∧
+  (∀ E P #c.
+    (RatchetKeyCompromise( E, P, td, chain ) @ #c) ⇒ ¬(#c < #know)) ∧
+  (((∀ I P #c.
+      (ClassicalComponentCompromise( I, P, td, chain ) @ #c) ⇒ ¬(#c < #know)) ∨
+    (∀ I P #q.
+      (PostQuantumComponentCompromise( I, P, td, chain ) @ #q)
+     ⇒
+      ¬(#q < #know))))"
+*/
+simplify
+solve( (∀ I P #c.
+         (ClassicalComponentCompromise( I, P, td, chain ) @ #c)
+        ⇒
+         ¬(#c < #know))  ∥
+       (∀ I P #q.
+         (PostQuantumComponentCompromise( I, P, td, chain ) @ #q)
+        ⇒
+         ¬(#q < #know)) )
+  case case_1
+  solve( ChainState( $S, R, td, direction, n, chain ) ▶₀ #send )
+    case InitiatorAccept
+    solve( !KU( ~message ) @ #vk )
+      case SendRecord
+      solve( !KU( ideal_hybrid(~classical_component, ~pq_component, $S, $R,
+                               h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                  'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                  'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $S, 
+                                  $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>))
+             ) @ #vk.1 )
+        case CompromiseSession_case_1
+        by contradiction /* from formulas */
+      next
+        case CompromiseSession_case_2
+        by contradiction /* from formulas */
+      next
+        case RatchetCompromiseBeforeRecovery_case_1
+        by contradiction /* from formulas */
+      next
+        case RatchetCompromiseBeforeRecovery_case_2
+        by contradiction /* from formulas */
+      next
+        case c_ideal_hybrid
+        solve( !KU( ~classical_component ) @ #vk.2 )
+          case CompromiseClassicalComponent
+          by contradiction /* from formulas */
+        qed
+      qed
+    qed
+  next
+    case ResponderAccept
+    solve( !KU( ~message ) @ #vk )
+      case SendRecord
+      solve( !KU( ideal_hybrid(~classical_component, ~pq_component, $I, $S,
+                               h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                  'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                  'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $I, 
+                                  $S, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>))
+             ) @ #vk.1 )
+        case CompromiseSession_case_1
+        by contradiction /* from formulas */
+      next
+        case CompromiseSession_case_2
+        by contradiction /* from formulas */
+      next
+        case RatchetCompromiseBeforeRecovery_case_1
+        by contradiction /* from formulas */
+      next
+        case RatchetCompromiseBeforeRecovery_case_2
+        by contradiction /* from formulas */
+      next
+        case c_ideal_hybrid
+        solve( !KU( ~classical_component ) @ #vk.2 )
+          case CompromiseClassicalComponent
+          by contradiction /* from formulas */
+        qed
+      qed
+    qed
+  qed
+next
+  case case_2
+  solve( ChainState( $S, R, td, direction, n, chain ) ▶₀ #send )
+    case InitiatorAccept
+    solve( !KU( ~message ) @ #vk )
+      case SendRecord
+      solve( !KU( ideal_hybrid(~classical_component, ~pq_component, $S, $R,
+                               h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                  'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                  'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $S, 
+                                  $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>))
+             ) @ #vk.1 )
+        case CompromiseSession_case_1
+        by contradiction /* from formulas */
+      next
+        case CompromiseSession_case_2
+        by contradiction /* from formulas */
+      next
+        case RatchetCompromiseBeforeRecovery_case_1
+        by contradiction /* from formulas */
+      next
+        case RatchetCompromiseBeforeRecovery_case_2
+        by contradiction /* from formulas */
+      next
+        case c_ideal_hybrid
+        solve( !KU( ~classical_component ) @ #vk.2 )
+          case CompromiseClassicalComponent
+          solve( !KU( ~pq_component ) @ #vk.3 )
+            case CompromisePostQuantumComponent
+            by contradiction /* from formulas */
+          qed
+        qed
+      qed
+    qed
+  next
+    case ResponderAccept
+    solve( !KU( ~message ) @ #vk )
+      case SendRecord
+      solve( !KU( ideal_hybrid(~classical_component, ~pq_component, $I, $S,
+                               h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                  'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                  'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $I, 
+                                  $S, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>))
+             ) @ #vk.1 )
+        case CompromiseSession_case_1
+        by contradiction /* from formulas */
+      next
+        case CompromiseSession_case_2
+        by contradiction /* from formulas */
+      next
+        case RatchetCompromiseBeforeRecovery_case_1
+        by contradiction /* from formulas */
+      next
+        case RatchetCompromiseBeforeRecovery_case_2
+        by contradiction /* from formulas */
+      next
+        case c_ideal_hybrid
+        solve( !KU( ~classical_component ) @ #vk.2 )
+          case CompromiseClassicalComponent
+          solve( !KU( ~pq_component ) @ #vk.3 )
+            case CompromisePostQuantumComponent
+            by contradiction /* from formulas */
+          qed
+        qed
+      qed
+    qed
+  qed
+qed
+
+lemma SEC_023_sender_metadata_confidentiality:
+  all-traces
+  "∀ S R td metadata packet chain #send #know.
+    ((SenderMetadataProtected( S, R, td, metadata, packet, chain ) @ #send) ∧
+     (K( metadata ) @ #know)) ⇒
+    (((∃ E P #c.
+        (SessionCompromise( E, P, td, chain ) @ #c) ∧ (#c < #know)) ∨
+      (∃ E P #c.
+        (RatchetKeyCompromise( E, P, td, chain ) @ #c) ∧ (#c < #know))) ∨
+     ((∃ I P #c.
+        (ClassicalComponentCompromise( I, P, td, chain ) @ #c) ∧ (#c < #know)) ∧
+      (∃ I P #q.
+        (PostQuantumComponentCompromise( I, P, td, chain ) @ #q) ∧
+        (#q < #know))))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ S R td metadata packet chain #send #know.
+  (SenderMetadataProtected( S, R, td, metadata, packet, chain ) @ #send) ∧
+  (K( metadata ) @ #know)
+ ∧
+  (∀ E P #c. (SessionCompromise( E, P, td, chain ) @ #c) ⇒ ¬(#c < #know)) ∧
+  (∀ E P #c.
+    (RatchetKeyCompromise( E, P, td, chain ) @ #c) ⇒ ¬(#c < #know)) ∧
+  (((∀ I P #c.
+      (ClassicalComponentCompromise( I, P, td, chain ) @ #c) ⇒ ¬(#c < #know)) ∨
+    (∀ I P #q.
+      (PostQuantumComponentCompromise( I, P, td, chain ) @ #q)
+     ⇒
+      ¬(#q < #know))))"
+*/
+simplify
+solve( (∀ I P #c.
+         (ClassicalComponentCompromise( I, P, td, chain ) @ #c)
+        ⇒
+         ¬(#c < #know))  ∥
+       (∀ I P #q.
+         (PostQuantumComponentCompromise( I, P, td, chain ) @ #q)
+        ⇒
+         ¬(#q < #know)) )
+  case case_1
+  solve( ChainState( $S, R, td, direction, n, chain ) ▶₀ #send )
+    case InitiatorAccept
+    solve( !KU( ~sender_metadata ) @ #vk )
+      case SendRecord
+      solve( !KU( ideal_hybrid(~classical_component, ~pq_component, $S, $R,
+                               h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                  'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                  'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $S, 
+                                  $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>))
+             ) @ #vk.1 )
+        case CompromiseSession_case_1
+        by contradiction /* from formulas */
+      next
+        case CompromiseSession_case_2
+        by contradiction /* from formulas */
+      next
+        case RatchetCompromiseBeforeRecovery_case_1
+        by contradiction /* from formulas */
+      next
+        case RatchetCompromiseBeforeRecovery_case_2
+        by contradiction /* from formulas */
+      next
+        case c_ideal_hybrid
+        solve( !KU( ~classical_component ) @ #vk.2 )
+          case CompromiseClassicalComponent
+          by contradiction /* from formulas */
+        qed
+      qed
+    qed
+  next
+    case ResponderAccept
+    solve( !KU( ~sender_metadata ) @ #vk )
+      case SendRecord
+      solve( !KU( ideal_hybrid(~classical_component, ~pq_component, $I, $S,
+                               h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                  'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                  'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $I, 
+                                  $S, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>))
+             ) @ #vk.1 )
+        case CompromiseSession_case_1
+        by contradiction /* from formulas */
+      next
+        case CompromiseSession_case_2
+        by contradiction /* from formulas */
+      next
+        case RatchetCompromiseBeforeRecovery_case_1
+        by contradiction /* from formulas */
+      next
+        case RatchetCompromiseBeforeRecovery_case_2
+        by contradiction /* from formulas */
+      next
+        case c_ideal_hybrid
+        solve( !KU( ~classical_component ) @ #vk.2 )
+          case CompromiseClassicalComponent
+          by contradiction /* from formulas */
+        qed
+      qed
+    qed
+  qed
+next
+  case case_2
+  solve( ChainState( $S, R, td, direction, n, chain ) ▶₀ #send )
+    case InitiatorAccept
+    solve( !KU( ~sender_metadata ) @ #vk )
+      case SendRecord
+      solve( !KU( ideal_hybrid(~classical_component, ~pq_component, $S, $R,
+                               h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                  'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                  'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $S, 
+                                  $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>))
+             ) @ #vk.1 )
+        case CompromiseSession_case_1
+        by contradiction /* from formulas */
+      next
+        case CompromiseSession_case_2
+        by contradiction /* from formulas */
+      next
+        case RatchetCompromiseBeforeRecovery_case_1
+        by contradiction /* from formulas */
+      next
+        case RatchetCompromiseBeforeRecovery_case_2
+        by contradiction /* from formulas */
+      next
+        case c_ideal_hybrid
+        solve( !KU( ~classical_component ) @ #vk.2 )
+          case CompromiseClassicalComponent
+          solve( !KU( ~pq_component ) @ #vk.3 )
+            case CompromisePostQuantumComponent
+            by contradiction /* from formulas */
+          qed
+        qed
+      qed
+    qed
+  next
+    case ResponderAccept
+    solve( !KU( ~sender_metadata ) @ #vk )
+      case SendRecord
+      solve( !KU( ideal_hybrid(~classical_component, ~pq_component, $I, $S,
+                               h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 
+                                  'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83', 
+                                  'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $I, 
+                                  $S, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>))
+             ) @ #vk.1 )
+        case CompromiseSession_case_1
+        by contradiction /* from formulas */
+      next
+        case CompromiseSession_case_2
+        by contradiction /* from formulas */
+      next
+        case RatchetCompromiseBeforeRecovery_case_1
+        by contradiction /* from formulas */
+      next
+        case RatchetCompromiseBeforeRecovery_case_2
+        by contradiction /* from formulas */
+      next
+        case c_ideal_hybrid
+        solve( !KU( ~classical_component ) @ #vk.2 )
+          case CompromiseClassicalComponent
+          solve( !KU( ~pq_component ) @ #vk.3 )
+            case CompromisePostQuantumComponent
+            by contradiction /* from formulas */
+          qed
+        qed
+      qed
+    qed
+  qed
+qed
+
+/* All wellformedness checks were successful. */
+
+end

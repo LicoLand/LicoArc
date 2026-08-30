@@ -1,0 +1,145 @@
+{
+  "evidenceVersion": "licoarc.tamarin-proof-evidence.v1",
+  "prover": "tamarin-prover-1.12.0",
+  "sourceCommit": "82780bbaf3328a45f624ddb41e51bf75425f851c",
+  "platform": "linux/amd64",
+  "imageDigest": "sha256:bd9b8170e061a092d06ed20fa61ed53bf7af9e9495fc9672324c259d017fe8d2",
+  "baseImageDigest": "sha256:5ae3c39ebd15e229dcedd5cee596b2497182493d41ff162e824ba13fc1b2b867",
+  "runtimeContractDigest": "9ae49fc24302791f3b42d74cadba1eec33725741b4071adc5a385060326c7431",
+  "generatedTheoryDigest": "34e83cd2630215f5dc700abd601052d37bdf2fd16d6006305ced89d69a3c2fd3",
+  "provedTheoryDigest": "c0f8990bc7c789e7364ec0b5189d792e7266173d9848d25aae594b7d44debfb3",
+  "formalBindingsDigest": "5067946fbf6aeda6784a25b789af079d47c97c2dd5281577516220a42e5ea9f7",
+  "semanticSourceDigest": "ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd",
+  "execution": {
+    "locale": "C.UTF-8",
+    "heuristic": "s",
+    "threads": 1,
+    "network": "none",
+    "arguments": [
+      "--prove",
+      "--heuristic=s",
+      "+RTS",
+      "-N1",
+      "-RTS"
+    ]
+  },
+  "replay": "verified",
+  "lemmas": [
+    {
+      "name": "executable_honest_handshake",
+      "result": "verified"
+    },
+    {
+      "name": "executable_ratchet_evolution",
+      "result": "verified"
+    },
+    {
+      "name": "executable_identity_and_route",
+      "result": "verified"
+    },
+    {
+      "name": "executable_evidence",
+      "result": "verified"
+    },
+    {
+      "name": "executable_reliable_and_metadata",
+      "result": "verified"
+    },
+    {
+      "name": "executable_resource_bounds",
+      "result": "verified"
+    },
+    {
+      "name": "SEC_001_hybrid_ake_key_secrecy",
+      "result": "verified"
+    },
+    {
+      "name": "SEC_002_mutual_endpoint_authentication",
+      "result": "verified"
+    },
+    {
+      "name": "SEC_003_classical_pq_hybrid_robustness",
+      "result": "verified"
+    },
+    {
+      "name": "SEC_004_unknown_key_share_resistance",
+      "result": "verified"
+    },
+    {
+      "name": "SEC_005_key_compromise_impersonation_boundary",
+      "result": "verified"
+    },
+    {
+      "name": "SEC_006_protocol_line_downgrade_resistance",
+      "result": "verified"
+    },
+    {
+      "name": "SEC_007_protection_profile_downgrade_resistance",
+      "result": "verified"
+    },
+    {
+      "name": "SEC_008_session_independence",
+      "result": "verified"
+    },
+    {
+      "name": "SEC_009_initial_forward_secrecy",
+      "result": "verified"
+    },
+    {
+      "name": "SEC_010_double_ratchet_forward_secrecy",
+      "result": "verified"
+    },
+    {
+      "name": "SEC_011_double_ratchet_post_compromise_recovery",
+      "result": "verified"
+    },
+    {
+      "name": "SEC_012_replay_resistance",
+      "result": "verified"
+    },
+    {
+      "name": "SEC_013_state_rollback_resistance",
+      "result": "verified"
+    },
+    {
+      "name": "SEC_014_identity_continuity",
+      "result": "verified"
+    },
+    {
+      "name": "SEC_015_route_migration_safety",
+      "result": "verified"
+    },
+    {
+      "name": "SEC_016_evidence_unforgeability",
+      "result": "verified"
+    },
+    {
+      "name": "SEC_017_evidence_identity_attribution",
+      "result": "verified"
+    },
+    {
+      "name": "SEC_018_station_cannot_manufacture_endpoint_accepted",
+      "result": "verified"
+    },
+    {
+      "name": "SEC_019_station_cannot_manufacture_effect_completed",
+      "result": "verified"
+    },
+    {
+      "name": "SEC_020_fail_closed_resource_bounds",
+      "result": "verified"
+    },
+    {
+      "name": "SEC_021_pairwise_record_confidentiality",
+      "result": "verified"
+    },
+    {
+      "name": "SEC_022_pairwise_record_authentication_and_integrity",
+      "result": "verified"
+    },
+    {
+      "name": "SEC_023_sender_metadata_confidentiality",
+      "result": "verified"
+    }
+  ]
+}

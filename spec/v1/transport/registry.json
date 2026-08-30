@@ -3,8 +3,6 @@
   "$id": "https://licoarc.com/spec/v1/transport/registry.json",
   "registryVersion": "licoarc.https-transport.v1",
   "wireId": "licoarc.https-transport.v1",
-  "profileId": "licoarc.https-transport.v1",
-  "protocolLineId": "licoarc.v1",
   "lifecycle": "Candidate",
   "scope": "https-tls13-raw-protected-packet-store-and-forward-v1",
   "sourcePaths": {
@@ -66,13 +64,6 @@
       "lowercase": "required-by-http2",
       "unknownExtensionHeaders": "ignored-only-when-not-profile-semantic"
     },
-    "responseHeaders": {
-      "outcome": "licoarc-outcome",
-      "failureClass": "licoarc-failure-class",
-      "retryAfterMs": "licoarc-retry-after-ms",
-      "claimId": "licoarc-claim-id",
-      "claimEpoch": "licoarc-claim-epoch"
-    },
     "framing": {
       "contentLength": "required-and-equals-body-octets",
       "contentLengthSyntax": "canonical-decimal-no-leading-zero",
@@ -82,8 +73,7 @@
       "streaming": "forbidden",
       "query": "forbidden",
       "fragment": "forbidden",
-      "bodyBoundary": "carrier-content-length-only",
-      "explicitPacketLengthField": "forbidden"
+      "bodyBoundary": "carrier-content-length-only"
     },
     "mediaTypes": {
       "control": "application/licoarc-transport+cbor",
@@ -92,12 +82,7 @@
     "mediaTypeParameters": "forbidden"
   },
   "headers": {
-    "operationId": "LicoArc-Operation-Id",
-    "outcome": "LicoArc-Outcome",
-    "failureClass": "LicoArc-Failure-Class",
-    "retryAfterMs": "LicoArc-Retry-After-Ms",
-    "claimId": "LicoArc-Claim-Id",
-    "claimEpoch": "LicoArc-Claim-Epoch"
+    "operationId": "LicoArc-Operation-Id"
   },
   "operations": {
     "AFFILIATE": {
@@ -133,17 +118,6 @@
       "target": "one-delivery-handle",
       "idempotency": "required-operation-id-fixed-window"
     },
-    "RETRIEVE": {
-      "method": "POST",
-      "path": "/v1/handles/{deliveryHandle}/retrieve",
-      "requestMediaType": "application/licoarc-transport+cbor",
-      "responseMediaType": "application/licoarc-protected-packet",
-      "requestBody": "retrieve-request",
-      "responseBody": "one-raw-protected-packet-on-accepted",
-      "acceptedStatus": 200,
-      "target": "one-delivery-handle",
-      "idempotency": "required-operation-id-fixed-window"
-    },
     "CLAIM": {
       "method": "POST",
       "path": "/v1/handles/{deliveryHandle}/claim",
@@ -170,16 +144,11 @@
   "bodyRules": {
     "control": "one-deterministic-cbor-closed-map",
     "submit": "exactly-one-raw-protected-packet",
-    "retrieveAccepted": "one-raw-protected-packet-response",
     "claimPackets": "each-claimed-item-has-one-bounded-protected-packet",
-    "json": "forbidden",
-    "outerEnvelope": "forbidden",
-    "senderEnvelopeId": "forbidden",
-    "explicitPacketLength": "forbidden",
-    "expiry": "forbidden",
-    "retentionClass": "forbidden",
-    "receiptToken": "forbidden",
-    "pollingResource": "forbidden"
+    "responseAuthority": "deterministic-CBOR-body-is-the-sole-outcome-failure-and-payload-authority",
+    "httpStatus": "consistency-check-only-and-never-creates-or-replaces-body-semantics",
+    "semanticResponseHeaders": "forbidden",
+    "json": "forbidden"
   },
   "outcomes": {
     "values": ["accepted", "rejected", "transient", "ambiguous"],
@@ -188,7 +157,6 @@
         "affiliate": 201,
         "reserve": 201,
         "submit": 202,
-        "retrieve": 200,
         "claim": 200,
         "settle": 200
       },
@@ -210,6 +178,21 @@
     "endpointEvidence": "never-created-by-station-outcome",
     "acceptedStoragePrecondition": "station-must-be-able-to-honor-fixed-window-before-accepting-submit"
   },
+  "statusConsistency": {
+    "validationOrder": "validate-carrier-then-canonical-response-body-then-status-consistency-before-state-change",
+    "mismatch": "carrier-status-mismatch-with-byte-identical-pre-state",
+    "missingOrMalformedBody": "invalid-response-with-byte-identical-pre-state",
+    "unknownStatus": "carrier-status-mismatch-with-byte-identical-pre-state"
+  },
+  "resourceAccounting": {
+    "claimPacketBytes": "sum-of-protectedPacket-octets-at-most-MAX_CLAIM_BYTES",
+    "claimControlBytes": "complete-claim-response-CBOR-minus-protectedPacket-octets-at-most-MAX_CLAIM_RESPONSE_CONTROL_BYTES",
+    "claimResponseBytes": "claimPacketBytes-plus-claimControlBytes-at-most-MAX_CLAIM_RESPONSE_BYTES",
+    "controlBodyBytes": "canonical-CBOR-octets-excluding-embedded-protectedPacket-octets",
+    "transportOverhead": "request-and-response-header-field-sections-plus-request-target-plus-control-body-octets-excluding-protectedPacket-octets",
+    "protectedPacketBytes": "charged-only-to-Pairwise-Protection-and-Reliable-retransmission-budgets",
+    "http2TlsFraming": "implementation-carriage-outside-the-deterministic-profile-overhead-count"
+  },
   "retry": {
     "accepted": "same-operation-id-and-identical-canonical-request-replays-identical-result",
     "rejected": "do-not-retry-unless-request-is-corrected-or-new-operation-id-is-used",
@@ -219,6 +202,13 @@
     "submitBytes": "retry-must-use-identical-protected-packet-octets",
     "windowReset": "retry-reconnect-route-change-and-station-migration-never-reset-or-extend"
   },
+  "atomicity": {
+    "operation": "validate-complete-request-against-one-tentative-state-then-commit-operation-result-once",
+    "idempotency": "commit-canonical-request-digest-and-canonical-response-body-in-the-same-transaction-as-operation-state",
+    "retry": "same-operation-id-and-identical-request-replays-the-committed-body-without-reapplying-state",
+    "restart": "restore-queue-claim-and-idempotency-state-before-accepting-an-operation",
+    "failure": "malformed-conflicting-stale-over-bound-and-status-mismatched-input-leaves-state-byte-identical"
+  },
   "stateLifecycle": {
     "affiliate": "accepted-affiliation-is-finite-and-station-scoped",
     "reserve": "returns-one-short-lived-opaque-handle-and-finite-service-window",
@@ -226,8 +216,7 @@
     "firstContactHandle": "one-accepted-submission-then-consumed",
     "submit": "accepted-packet-is-stored-with-one-fixed-storage-window",
     "claim": "returns-bounded-items-and-one-live-claim-epoch",
-    "retrieve": "returns-only-an-opaque-protected-packet-for-a-live-claim-item",
-    "settle": "complete-removes-or-release-returns-each-item-atomically",
+    "settle": "complete-removes-or-release-returns-each-item-and-closes-each-claim-membership-atomically-for-the-whole-request",
     "stationSignals": "never-advance-endpoint-accepted-or-effect-completed"
   },
   "metadataBudget": {

@@ -9,8 +9,8 @@
 | Decision status | `RETIRED` |
 | Definition status | `NOT-SPECIFIED` |
 | Existing authority | [Canonical Field Registry](../../../spec/FIELD-REGISTRY.md) |
-| Predecessor or successor | Candidate placement replaced by open `FLD-protocol-support-statement-v1` and `FLD-handshake-transcript-v1`. |
-| Current conclusion | Exact line content identity must be authenticated, but the former mandatory handshake `DIGEST256` and inherited placement are withdrawn. |
+| Predecessor or successor | Candidate placement replaced by the specified `FLD-protocol-support-statement-v1` and `FLD-handshake-transcript-v1`; no predecessor bytes survive. |
+| Current conclusion | Exact line content identity is authenticated by the specified support and transcript records; the former standalone handshake field and per-record repetition are withdrawn. |
 
 ## Preserved requirement
 
@@ -21,7 +21,9 @@ content mismatch cannot fall back to a lower line.
 ## Retirement rationale
 
 The old placement preceded the exact Hybrid AKE and transcript construction.
-No digest width, field, label, record, or inheritance rule remains active.
+The active transcript binds the selected Protocol Line identity and established
+records inherit it from committed session state. No predecessor field, label,
+record, or compatibility rule remains active.
 
 ## Definition evidence
 

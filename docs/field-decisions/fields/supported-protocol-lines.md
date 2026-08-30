@@ -12,13 +12,13 @@ specification.
 | Decision status | `RETIRED` |
 | Definition status | `NOT-SPECIFIED` |
 | Existing authority | [Canonical Field Registry](../../../spec/FIELD-REGISTRY.md) |
-| Predecessor or successor | Replaced by open `FLD-protocol-support-statement-v1`; preserves no bytes. |
+| Predecessor or successor | Replaced by the specified `FLD-protocol-support-statement-v1`; preserves no bytes. |
 | Current conclusion | The former `supportedProtocolLines` digest collection is withdrawn. |
 
 ## Preserved requirement
 
 Support cannot be inferred from transport, product, or implementation
-identity. Future selection consumes only Endpoint-authenticated exact Protocol
+identity. Active selection consumes only Endpoint-authenticated exact Protocol
 Line content identities. A Station cannot add support or authorize fallback.
 
 ## Retirement rationale

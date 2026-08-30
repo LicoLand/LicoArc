@@ -1,11 +1,10 @@
 # Lico Arc Protocol Foundation v1
 
-Status: Candidate foundation source only. This document closes the
-representation, registry, schema, parser, and generation contract required by
-future capability Candidates. It does not define Pairwise Protection,
-Generic Messaging, Reliable Exchange, or a Transport Profile. The current
-Protocol Line integration binds this foundation to the one closed Candidate
-wire identity.
+Status: complete mandatory capability in the Candidate Protocol Line. This
+document closes the representation, registry, schema, parsing, and generation
+contract shared by the other eight capabilities. Their own source roots define
+their semantics. The current Protocol Line integration binds all nine complete
+capabilities to one content identity.
 
 ## Authority and source closure
 
@@ -62,14 +61,16 @@ CBOR:
   documentation only and never become wire text.
 - Integer and length arguments use their shortest definite representation.
   Map keys are sorted by their encoded byte strings.
-- Raw bytes use definite-length `bstr` and are bounded by `MAX_RAW_BYTES`.
+- Raw bytes in the Foundation encoding fixture use definite-length `bstr` and
+  are bounded by Foundation's `MAX_RAW_BYTES`.
 - Tags, floating-point values, indefinite-length items, text map labels,
   duplicate labels, non-canonical integer/length forms, and trailing bytes are
   rejected.
 - The foundation runtime record is only an encoding fixture: label `0` is an
-  unsigned record kind, optional label `1` is bounded raw bytes, and optional
-  label `2` is an unsigned sequence. Capability Tasks allocate their own
-  decided fields and do not inherit these fixture semantics.
+  unsigned fixture kind, optional label `1` is bounded opaque fixture bytes,
+  and optional label `2` is an unsigned fixture coordinate. Capability Tasks
+  allocate their own decided fields and do not inherit these labels, values,
+  record limits, raw-byte limits, collection limits, or reset semantics.
 
 The deterministic source encoder is in
 [`tools/protocol/deterministic-cbor.mjs`](../../tools/protocol/deterministic-cbor.mjs).
@@ -85,9 +86,13 @@ assertion.
 
 [`registry.json`](../../spec/v1/foundation/registry.json) links the bounds,
 identifier, lifecycle, label, representation, schema, and source-closure
-contracts. Every parser-relevant numeric value comes from
+contracts. Every Foundation parser-relevant numeric value comes from
 [`bounds.json`](../../spec/v1/foundation/bounds.json); callers cannot raise a
-bound by sending a self-reported length or budget.
+bound by sending a self-reported length or budget. These values apply only to
+Foundation source parsing, Foundation governance artifacts, and the
+Foundation runtime encoding fixture. Each capability and Protection Profile
+owns its record and state limits; only the Protocol Line owns cross-capability
+totals. No Foundation limit is inherited as a universal protocol ceiling.
 
 | Symbol | Value | Use |
 | --- | ---: | --- |
@@ -95,13 +100,13 @@ bound by sending a self-reported length or budget.
 | `MAX_SOURCE_BYTES` | 1,048,576 | One source before canonicalization |
 | `MAX_MANIFEST_BYTES` | 65,536 | Foundation source manifest |
 | `MAX_GOVERNANCE_BYTES` | 1,048,576 | One governance JSON document |
-| `MAX_RUNTIME_RECORD_BYTES` | 1,048,576 | One deterministic CBOR item |
-| `MAX_RAW_BYTES` | 262,144 | One runtime `bstr` |
-| `MAX_TEXT_BYTES` | 4,096 | One governance/runtime text value |
+| `MAX_RUNTIME_RECORD_BYTES` | 1,048,576 | One Foundation fixture CBOR item |
+| `MAX_RAW_BYTES` | 262,144 | One Foundation fixture `bstr` |
+| `MAX_TEXT_BYTES` | 4,096 | One Foundation governance/fixture text value |
 | `MAX_IDENTIFIER_BYTES` | 128 | One foundation identifier |
-| `MAX_ARRAY_ITEMS` | 64 | One JSON/CBOR array |
-| `MAX_MAP_ENTRIES` | 64 | One runtime map |
-| `MAX_OBJECT_MEMBERS` | 64 | One governance object |
+| `MAX_ARRAY_ITEMS` | 64 | One Foundation JSON/CBOR fixture array |
+| `MAX_MAP_ENTRIES` | 64 | One Foundation fixture runtime map |
+| `MAX_OBJECT_MEMBERS` | 64 | One Foundation governance object |
 | `MAX_NESTING_DEPTH` | 16 | Recursive parser depth |
 | `MAX_INTEGER` | 9,007,199,254,740,991 | Safe integer ceiling |
 

@@ -10,12 +10,12 @@ This page is decision history, not a second specification. See the
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-affiliation-nonce` |
 | Decision status | `DECIDED` |
-| Definition status | `PARTIAL` |
+| Definition status | `SPECIFIED` |
 | Candidate spellings | binding salt, affiliation randomizer |
 | Candidate layer | Protected `StationAffiliation` |
 | Observer set | Peer Endpoints; hidden from Station during issuance |
 | Existing authority | [Canonical Field Registry](../../../spec/FIELD-REGISTRY.md) |
-| Authority targets | Future affiliation schema and corpus |
+| Authority targets | The Identity affiliation schema, grammar, policy, and corpus |
 | Predecessor or successor | None |
 | Current conclusion | A fresh 256-bit randomizer hides stable Endpoint identity from the Station while allowing peers to verify the Station-signed commitment is identity-bound. |
 
@@ -105,4 +105,4 @@ opening for the admitted identity-bound commitment.
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. Only the scope recorded by this decision and its linked normative authorities is defined; any remaining normative ambiguity requires a successor decision before entering the protocol definition.
+The definition status is `SPECIFIED`. The Canonical Field Registry and linked machine-readable authorities close this record’s exact active semantics.

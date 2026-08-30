@@ -7,12 +7,12 @@
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-delivery-handle` |
 | Decision status | `DECIDED` |
-| Definition status | `PARTIAL` |
+| Definition status | `SPECIFIED` |
 | Candidate spellings | `mailboxId`, `deliveryHandle`, push resource, request target |
 | Candidate layer | Transport Profile request target |
 | Observer set | Sender Endpoint, Station, receiving Endpoint's transport client |
 | Existing authority | [Canonical Field Registry](../../../spec/FIELD-REGISTRY.md); this record explains the decision and is not a second field specification. |
-| Authority targets | Future Transport Profile schema, registry, corpus, and Protocol Line manifest |
+| Authority targets | The HTTPS Transport schema, registry, corpus, and complete Protocol Line manifest |
 | Predecessor or successor | None |
 | Current conclusion | Asynchronous and first-contact Station routing use one short-lived opaque Delivery Handle in the Transport Profile request target; when projected into a current Route, the exact handle is covered by the Station's bounded service signature and never becomes a structured-body `mailboxId`, independent invitation token, or Endpoint identity. |
 
@@ -66,11 +66,13 @@ An accepted asynchronous reservation returns a Station-signed commitment to
 the exact affiliation commitment, handle, Transport Profile, descriptor, and
 `serviceUntil` value. The Endpoint-wide Affiliation Update selects the
 Station; the Route Update only supplies private paths under that exact state.
-The Station never signs `endpointIdentityRef` for this purpose.
-Exact audience, route scope, rotation, expiry, concurrent-consumption, replay,
-and revocation constants remain Transport Profile work. Human-readable names,
-domains, user IDs, device IDs, and implementation database keys are not
-acceptable substitutes.
+The Station never signs `endpointIdentityRef` for this purpose. HTTPS
+Transport v1 makes the handle Station-scoped, bounds the asynchronous route by
+signed `serviceUntil`, consumes a first-contact handle on its one accepted
+submission, preserves fixed idempotency state across retry and restart, and
+rejects unknown, malformed, expired, conflicting, or already consumed use.
+Human-readable names, domains, user IDs, device IDs, and implementation
+database keys are not acceptable substitutes.
 
 ## Alternatives
 
@@ -110,13 +112,12 @@ Station-affiliation review added a Station signature and service expiry around
 the Route projection without changing the Delivery Handle into an identity or
 availability guarantee.
 
-Definition remains partial until the Transport Profile closes exact token
-entropy, byte bounds, encoding, scope, lifetime, rotation, revocation,
-first-contact single-use and concurrent-redemption behavior, route-change
-behavior, and invalid-input handling. The rejected independent first-contact
-token alternative is recorded in
+HTTPS Transport v1 closes the 32-octet token, unpadded base64url target
+encoding, Station scope, signed asynchronous service bound, first-contact
+single-use behavior, atomic idempotency, restart, and invalid-input rules. The
+rejected independent first-contact token alternative is recorded in
 [`FLD-first-contact-token`](first-contact-token.md).
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. Only the scope recorded by this decision and its linked normative authorities is defined; any remaining normative ambiguity requires a successor decision before entering the protocol definition.
+The definition status is `SPECIFIED`. The Canonical Field Registry and linked machine-readable authorities close this record’s exact active semantics.

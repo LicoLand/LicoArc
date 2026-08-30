@@ -9,45 +9,50 @@ specification; normative field semantics come only from the Field Registry.
 | --- | --- |
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-capability-signature` |
-| Decision status | `DECIDED` |
-| Definition status | `PARTIAL` |
+| Decision status | `RETIRED` |
+| Definition status | `NOT-SPECIFIED` |
 | Existing authority | [Field Registry](../../../spec/FIELD-REGISTRY.md) |
-| Current conclusion | Mandatory `signature` contains `keyId` and `signatureValue` and covers the complete canonical capability declaration excluding the `signature` field itself. |
+| Predecessor or successor | The withdrawn Candidate Capability Declaration is replaced by `FLD-protocol-support-statement-v1`; no predecessor bytes survive. |
+| Current conclusion | The former single `signature` field is withdrawn. The specified Protocol Support Statement owns its exact dual-signature fields and coverage independently. |
 
 ## Question
 
-How does a peer authenticate the declaration and detect alteration of its
+How did the withdrawn Candidate Capability Declaration authenticate its
 selection inputs and lifecycle bounds?
 
 ## Role in communication
 
-The declaring Endpoint produces the authentication value and the peer verifies
-it before using any declaration member. The field carries output of the
-selected signature construction but does not select or define that algorithm.
+The predecessor declaration proposed one generic signature. It is not parsed
+or accepted by the active line. The current support statement instead carries
+the exact classical and post-quantum signature values, key identifiers, and
+coverage fixed by the stable-core Profile.
 
 ## Contribution to LicoArc's final vision
 
-Makes a capability declaration attributable to the Endpoint identity that
-offers it, closing an unauthenticated negotiation path.
+Preserves the requirement that Endpoint support be authenticated while
+preventing a generic predecessor signature from becoming a compatibility path
+around the current dual-signature construction.
 
 ## Field model and trade-offs
 
-The semantic value is a mandatory `Signature` containing registry-owned
-`keyId` and `signatureValue`. Coverage excludes the signature field itself;
-final profile bounds and failure behavior remain Protocol Line work.
+No active value, label, placement, bound, or encoding exists for this field.
+The Protocol Support Statement has its own specified canonical coverage and
+closed signature fields.
 
 ## Visibility and trust
 
-The value is transferable authentication material and may enable correlation.
-A Station may replay or suppress it, but alteration or substitution must fail
-Endpoint validation.
+No retired value is trusted or exposed by the current line. The support
+statement's own authenticated material remains Endpoint-visible and may still
+be replayed, delayed, or suppressed by a Station without gaining authority.
 
 ## Decision history
 
-The field was admitted because declaration authenticity cannot be inherited
-from transport or inferred from its contents. Algorithm selection remains on
-the independent Algorithm Decision track.
+The field was admitted before the support object and its indivisible
+classical/post-quantum authentication were closed. It was retired with the
+Candidate Capability Declaration; the current statement reuses no field,
+label, bytes, or fallback behavior.
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. Only the scope recorded by this decision and its linked normative authorities is defined; any remaining normative ambiguity requires a successor decision before entering the protocol definition.
+The definition is `NOT-SPECIFIED`. This record is history only and allocates
+no current field or compatibility contract.

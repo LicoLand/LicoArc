@@ -30,10 +30,10 @@ consistently without letting the evidence set trust by itself.
 
 ## Field model and trade-offs
 
-The value is mandatory `DIGEST256` field `verificationMethodId`, selecting one
-exact verification procedure. Procedure publication, identifier derivation,
-retirement, unknown-value behavior, and canonical representation remain
-specification gaps.
+The approved semantic value is a content identity selecting one exact
+verification procedure. Protocol Line v1 admits no verification-method
+registry or field allocation; procedure identity, retirement, encoding, and
+unknown-value behavior remain successor-definition work.
 
 ## Visibility and trust
 
@@ -52,4 +52,5 @@ explanation here.
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. Only the scope recorded by this decision and its linked normative authorities is defined; any remaining normative ambiguity requires a successor decision before entering the protocol definition.
+The definition status is `PARTIAL`. The necessity and trust boundary are
+decided, but no Protocol Line v1 method identifier or wire allocation exists.

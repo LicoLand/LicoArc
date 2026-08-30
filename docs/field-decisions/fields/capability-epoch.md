@@ -9,45 +9,48 @@ specification; normative field semantics come only from the Field Registry.
 | --- | --- |
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-capability-epoch` |
-| Decision status | `DECIDED` |
-| Definition status | `PARTIAL` |
+| Decision status | `RETIRED` |
+| Definition status | `NOT-SPECIFIED` |
 | Existing authority | [Field Registry](../../../spec/FIELD-REGISTRY.md) |
-| Current conclusion | `capabilityEpoch` strictly increases for one Endpoint identity and prevents capability rollback. |
+| Predecessor or successor | The withdrawn Candidate Capability Declaration is replaced by `FLD-protocol-support-statement-v1` and `FLD-minimum-protocol-generation-v1`; no predecessor bytes survive. |
+| Current conclusion | The former `capabilityEpoch` field is withdrawn. Persistent `minimumProtocolGeneration` owns the current downgrade floor with different semantics. |
 
 ## Question
 
-How does a peer distinguish a newer capability declaration from a replayed or
-rolled-back declaration issued by the same Endpoint?
+How did the withdrawn Candidate Capability Declaration distinguish a newer
+declaration from replay or rollback?
 
 ## Role in communication
 
-The declaring Endpoint produces the epoch and the peer consumes it when
-checking declaration freshness and rollback. It is security-authoritative only
-as part of the authenticated declaration.
+The predecessor declaration proposed a per-declaration epoch. The active line
+does not parse or accept it. Instead, an Endpoint persists the authenticated
+`minimumProtocolGeneration` high-water floor before selection or emission.
 
 ## Contribution to LicoArc's final vision
 
-Prevents rollback to an older still-valid capability declaration for the same
-Endpoint identity.
+Preserves downgrade resistance without retaining a second declaration-order
+coordinate or compatibility path.
 
 ## Field model and trade-offs
 
-The value is a mandatory `uint64`. Receivers apply its exact representation,
-ordering, and invalid-input rules from the Field Registry.
+No active value, range, representation, label, placement, or reset rule exists
+for `capabilityEpoch`. It is not an alias for
+`minimumProtocolGeneration`.
 
 ## Visibility and trust
 
-The peer may trust the value only after authenticating the declaration. A
-Station may observe, replay, suppress, or delay a declaration but cannot make
-an unauthenticated epoch authoritative; epochs may correlate declaration
-updates.
+No retired epoch is trusted by the active line. A Station may replay, suppress,
+or delay a support statement but cannot lower the Endpoint's authenticated
+persistent minimum-generation floor.
 
 ## Decision history
 
-The field was admitted because expiry alone cannot distinguish a rollback to a
-still-unexpired declaration. It does not authorize a clock, storage design, or
-signature algorithm.
+The field was admitted before line generation, support entries, and persistent
+minimum-generation state were closed. It was retired with the Candidate
+Capability Declaration; the successor state reuses no old label, bytes, or
+ordering semantics.
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. Only the scope recorded by this decision and its linked normative authorities is defined; any remaining normative ambiguity requires a successor decision before entering the protocol definition.
+The definition is `NOT-SPECIFIED`. This record is history only and allocates
+no current field or compatibility contract.

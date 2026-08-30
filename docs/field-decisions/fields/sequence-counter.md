@@ -7,11 +7,11 @@
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-sequence-counter` |
 | Decision status | `DECIDED` |
-| Definition status | `PARTIAL` |
+| Definition status | `SPECIFIED` |
 | Candidate spellings | sequence, message number, generation, epoch, previous-chain length |
 | Candidate layer | Pairwise Protection and possibly Reliable Exchange |
 | Observer set | Endpoints; visibility to Station depends on protection framing |
-| Existing authority | [Canonical Field Registry](../../../spec/FIELD-REGISTRY.md); this record explains a profile-owned disposition and is not a second field specification. |
+| Existing authority | [Canonical Field Registry](../../../spec/FIELD-REGISTRY.md), `spec/v1/protection/runtime.cddl`, `spec/v1/protection/bounds.json`, and `spec/v1/protection/state.json`; this record is not a second field specification. |
 | Current conclusion | No common `sequenceCounter` field exists. Any counter, generation, or ratchet number belongs exclusively to the selected Protection Profile's closed frame schema. |
 
 ## Question
@@ -55,9 +55,13 @@ meaning.
 
 ## Value model
 
-Potential values are bounded unsigned integers or structured epoch/generation
-pairs. Width, wrap behavior, reset, maximum skip, previous-chain count,
-visibility, and replay-window persistence depend on the selected profile.
+The stable-core Profile carries only `PN` and `N` in its canonical
+`ratchet-header`, each in `0..MAX_RATCHET_COUNTER` where
+`MAX_RATCHET_COUNTER = 4,294,967,295`. They are authenticated as record AAD;
+wrap, rollback, and over-bound skipped-key derivation fail closed. Retry reuses
+the exact committed packet and never advances either coordinate. No common
+`sequenceCounter`, transport counter, session counter, or compatibility field
+exists.
 
 ## Alternatives
 
@@ -88,12 +92,13 @@ or lifecycle; every resulting decision remains wholly LicoArc-owned.
 ## Decision history
 
 The review first left the representation open because replay and skipped-key
-handling clearly need ordered state while different reviewed constructions
-encode it differently. The canonical registry resolved the layer boundary:
-there is no algorithm-neutral common counter. Each admitted Protection Profile
-must define its own authenticated counter or ratchet coordinates, bounds,
-rollback behavior, and invalid-input rules in one closed frame schema.
+handling clearly need ordered state while different constructions encode it
+differently. The canonical registry resolved the common-layer question, and
+the stable-core Profile now closes the exact `PN` and `N` representation,
+bounds, persistence, replay, retry, rollback, and failure rules.
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. Only the scope recorded by this decision and its linked normative authorities is defined; any remaining normative ambiguity requires a successor decision before entering the protocol definition.
+The definition status is `SPECIFIED`. The active Profile's closed ratchet
+header, bounds, and durable state rules own every transmitted counter and
+admit no profile-neutral field.

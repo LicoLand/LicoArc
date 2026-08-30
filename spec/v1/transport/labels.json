@@ -13,36 +13,6 @@
       "type": "ID128",
       "representation": "32-lowercase-hex-characters",
       "presence": "mandatory-on-every-operation"
-    },
-    "outcome": {
-      "name": "LicoArc-Outcome",
-      "type": "outcome",
-      "representation": "lowercase-ascii",
-      "presence": "mandatory-on-every-response"
-    },
-    "failureClass": {
-      "name": "LicoArc-Failure-Class",
-      "type": "failureClass",
-      "representation": "lowercase-ascii",
-      "presence": "conditional-on-nonaccepted-response"
-    },
-    "retryAfterMs": {
-      "name": "LicoArc-Retry-After-Ms",
-      "type": "uint",
-      "representation": "canonical-decimal",
-      "presence": "conditional-on-transient-response"
-    },
-    "claimId": {
-      "name": "LicoArc-Claim-Id",
-      "type": "TOKEN256",
-      "representation": "43-unpadded-base64url-characters",
-      "presence": "conditional-on-claim-result-with-items"
-    },
-    "claimEpoch": {
-      "name": "LicoArc-Claim-Epoch",
-      "type": "uint64",
-      "representation": "canonical-decimal",
-      "presence": "conditional-on-claim-result-with-items"
     }
   },
   "request": {
@@ -55,11 +25,6 @@
       { "label": 1, "name": "affiliationCommitment", "type": "DIGEST256", "presence": "mandatory" },
       { "label": 2, "name": "transportProfileId", "type": "DIGEST256", "presence": "mandatory" },
       { "label": 3, "name": "handleClass", "type": "uint", "presence": "mandatory" }
-    ],
-    "retrieve": [
-      { "label": 0, "name": "claimId", "type": "TOKEN256", "presence": "mandatory" },
-      { "label": 1, "name": "claimEpoch", "type": "uint64", "presence": "mandatory" },
-      { "label": 2, "name": "itemId", "type": "TOKEN256", "presence": "mandatory" }
     ],
     "claim": [
       { "label": 0, "name": "maxItems", "type": "uint", "presence": "mandatory" }

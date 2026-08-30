@@ -7,7 +7,7 @@
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-confirmation-outcome` |
 | Decision status | `RETIRED` |
-| Definition status | `PARTIAL` |
+| Definition status | `NOT-SPECIFIED` |
 | Existing authority | [`FIELD-REGISTRY.md`](../../../spec/FIELD-REGISTRY.md) |
 | Predecessor or successor | Succeeded by `FLD-confirmation-outcome-compact`. |
 | Current conclusion | Retired: the successor shares one outcome over a bounded Message set and removes routine successful attachment chunk confirmation. |
@@ -56,4 +56,4 @@ current grouped outcomes to `FLD-confirmation-outcome-compact`.
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. Only the scope recorded by this decision and its linked normative authorities is defined; any remaining normative ambiguity requires a successor decision before entering the protocol definition.
+The definition status is `NOT-SPECIFIED`. This historical record supplies no active normative definition; any successor or replacement owns its complete definition independently.

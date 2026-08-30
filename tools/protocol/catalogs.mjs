@@ -1,5 +1,8 @@
 import { validateClosedSchema } from "./schema.mjs";
 
+export const CATALOG_COMMON_SCHEMA_ID =
+  "https://licoarc.com/spec/schemas/catalog-common.schema.json";
+
 export class CatalogError extends TypeError {
   constructor(message, details = undefined) {
     super(message);
@@ -9,30 +12,63 @@ export class CatalogError extends TypeError {
 }
 
 export function assertValidProtocolCatalogs(protocolLines, protectionProfiles, schemas) {
-  const lineErrors = validateClosedSchema(protocolLines, schemas.protocolLines);
-  const profileErrors = validateClosedSchema(protectionProfiles, schemas.protectionProfiles);
+  if (schemas?.common?.$id !== CATALOG_COMMON_SCHEMA_ID) {
+    throw new CatalogError("the shared catalog schema must be supplied as schemas.common");
+  }
+  const sharedSchemas = Object.values(schemas).filter((schema) =>
+    schema !== schemas.protocolLines && schema !== schemas.protectionProfiles &&
+    typeof schema?.$schema === "string");
+  const lineErrors = validateClosedSchema(protocolLines, schemas.protocolLines, { schemas: sharedSchemas });
+  const profileErrors = validateClosedSchema(protectionProfiles, schemas.protectionProfiles, { schemas: sharedSchemas });
   const errors = [...lineErrors, ...profileErrors];
   if (errors.length > 0) throw new CatalogError(`catalog schema rejection: ${errors.join("; ")}`, errors);
 
   assertSortedUnique(protocolLines.lines.map(lineIdentity), "Protocol Line identities");
-  const activeProfileIds = protectionProfiles.activeProfiles.map(({ profileId }) => profileId);
+  const profileIds = protectionProfiles.profiles
+    .map(({ profileId }) => profileId)
+    .filter((profileId) => profileId !== null);
+  const activeProfileIds = protectionProfiles.activeProfileIds;
   const reservedProfileIds = protectionProfiles.reservedIdentifiers.map(({ id }) => id);
+  assertSortedUnique(protectionProfiles.profiles.map(profileIdentity), "Profile catalog identities");
+  assertSortedUnique(profileIds, "assigned Profile identities");
   assertSortedUnique(activeProfileIds, "active Profile identities");
   assertSortedUnique(reservedProfileIds, "reserved Profile identities");
-  if (activeProfileIds.some((profileId) => reservedProfileIds.includes(profileId))) {
+  const reservedProfileSet = new Set(reservedProfileIds);
+  if (profileIds.some((profileId) => reservedProfileSet.has(profileId))) {
     throw new CatalogError("a reserved Profile identifier cannot become active");
   }
 
-  const profileById = new Map(protectionProfiles.activeProfiles.map((profile) => [profile.profileId, profile]));
-  for (const profile of protectionProfiles.activeProfiles) {
-    if (profile.definitionStatus !== "COMPLETE" || !profile.contentDigest) {
-      throw new CatalogError("an active Profile must be complete and content-bound");
-    }
+  const profileById = new Map(protectionProfiles.profiles
+    .filter(({ profileId }) => profileId !== null)
+    .map((profile) => [profile.profileId, profile]));
+  const activeProfileSet = new Set(activeProfileIds);
+  for (const profile of protectionProfiles.profiles) {
     if (profile.minimumGeneration > profile.generation) {
       throw new CatalogError("a Profile minimum generation cannot exceed its generation");
     }
     assertSortedUnique(profile.requiredClaimIds, "Profile claim identities");
+    assertSortedUnique(profile.stableNonClaimIds, "Profile nonclaim identities");
+    assertSortedUnique(profile.blockers, "Profile blockers");
+    const active = profile.profileId !== null && activeProfileSet.has(profile.profileId);
+    if (active && (profile.definitionStatus !== "COMPLETE" || profile.blockers.length > 0)) {
+      throw new CatalogError("an active Profile must be complete, content-bound, and unblocked");
+    }
+    if (!active && (profile.sessionEligible !== false || profile.newSessionPolicy === "allow-authenticated")) {
+      throw new CatalogError("an inactive Profile must remain ineligible");
+    }
+    if (profile.definitionStatus !== "COMPLETE" &&
+        (profile.profileId !== null || profile.sessionEligible !== false ||
+         profile.publicationEligible !== false || profile.newSessionPolicy !== "forbid-incomplete" ||
+         profile.blockers.length === 0)) {
+      throw new CatalogError("an incomplete Profile must remain unidentified, ineligible, and explicitly blocked");
+    }
     assertPolicyConsistency(profile, "Profile");
+  }
+  if (activeProfileIds.some((profileId) => !profileById.has(profileId))) {
+    throw new CatalogError("an active Profile identity must resolve to exactly one catalog entry");
+  }
+  if (protectionProfiles.reservedIdentifiers.length !== 2) {
+    throw new CatalogError("exactly two retired Profile identifier allocations must remain tombstoned");
   }
   for (const tombstone of protectionProfiles.reservedIdentifiers) {
     if (tombstone.lifecycle !== "Retired" || tombstone.newSessionPolicy !== "forbid-retired" || tombstone.reusable !== false) {
@@ -48,19 +84,20 @@ export function assertValidProtocolCatalogs(protocolLines, protectionProfiles, s
     assertSortedUnique(line.mandatoryCapabilities, "mandatory capability identities");
     assertSortedUnique(line.definedCapabilities, "defined capability identities");
     assertSortedUnique(line.protectionProfileIds, "Protocol Line Profile identities");
+    assertSortedUnique(line.stableClaimIds, "Protocol Line claim identities");
     assertSortedUnique(line.blockers, "Protocol Line blockers");
     const missing = line.mandatoryCapabilities.filter((capabilityId) =>
       !line.definedCapabilities.includes(capabilityId));
 
     if (line.definitionStatus === "COMPLETE") {
-      if (typeof line.contentDigest !== "string" || missing.length > 0 || line.blockers.length > 0) {
+      if (typeof line.protocolLineId !== "string" || missing.length > 0 || line.blockers.length > 0) {
         throw new CatalogError("a complete Protocol Line must be content-bound with no missing capability or blocker");
       }
       if (line.mandatoryCapabilities.includes("licoarc.pairwise-protection.v1") &&
           line.protectionProfileIds.length === 0) {
         throw new CatalogError("a complete Pairwise-capable Protocol Line must bind a complete Protection Profile");
       }
-    } else if (line.contentDigest !== null || line.sessionEligible !== false ||
+    } else if (line.protocolLineId !== null || line.sessionEligible !== false ||
                line.publicationEligible !== false ||
                line.newSessionPolicy !== "forbid-incomplete" ||
                line.blockers.length === 0) {
@@ -69,12 +106,12 @@ export function assertValidProtocolCatalogs(protocolLines, protectionProfiles, s
 
     for (const profileId of line.protectionProfileIds) {
       const profile = profileById.get(profileId);
-      if (!profile || profile.definitionStatus !== "COMPLETE") {
+      if (!profile || profile.definitionStatus !== "COMPLETE" || !activeProfileSet.has(profileId)) {
         throw new CatalogError("a Protocol Line references an unknown or incomplete Protection Profile");
       }
     }
     if (["Published", "Deprecated", "Retired"].includes(line.lifecycle) &&
-        (line.definitionStatus !== "COMPLETE" || typeof line.contentDigest !== "string")) {
+        (line.definitionStatus !== "COMPLETE" || typeof line.protocolLineId !== "string")) {
       throw new CatalogError("a published lifecycle record must target complete immutable content");
     }
     assertPolicyConsistency(line, "Protocol Line");
@@ -92,7 +129,7 @@ export function selectProtocolLine({ protocolLines, protectionProfiles, localSup
     for (const entry of support.lines) {
       const knownGeneration = byWireGeneration.get(wireGeneration(entry));
       if (!knownGeneration) return rejection(protocolLines.selection.unknown);
-      if (!knownGeneration.some((line) => line.contentDigest === entry.contentDigest)) {
+      if (!knownGeneration.some((line) => line.protocolLineId === entry.protocolLineId)) {
         return rejection(protocolLines.selection.contentIdentityMismatch);
       }
     }
@@ -108,7 +145,10 @@ export function selectProtocolLine({ protocolLines, protectionProfiles, localSup
   }
 
   const peerIdentities = new Set(peerSupport.lines.map(supportIdentity));
-  const activeProfiles = new Map(protectionProfiles.activeProfiles.map((profile) => [profile.profileId, profile]));
+  const activeIds = new Set(protectionProfiles.activeProfileIds);
+  const activeProfiles = new Map(protectionProfiles.profiles
+    .filter((profile) => profile.profileId !== null && activeIds.has(profile.profileId))
+    .map((profile) => [profile.profileId, profile]));
   const candidates = [];
   for (const localEntry of localSupport.lines) {
     if (!peerIdentities.has(supportIdentity(localEntry))) continue;
@@ -129,7 +169,7 @@ export function selectProtocolLine({ protocolLines, protectionProfiles, localSup
     selected: {
       wireId: selected.wireId,
       generation: selected.generation,
-      contentDigest: selected.contentDigest
+      protocolLineId: selected.protocolLineId
     },
     sessionEstablished: false,
     stateAdvanced: false
@@ -141,7 +181,7 @@ export function resolveExistingSessionPolicy({ protocolLines, registryAuthentica
   const generationEntries = protocolLines.lines.filter((candidate) =>
     candidate.wireId === line.wireId && candidate.generation === line.generation);
   if (generationEntries.length === 0) return rejection(protocolLines.selection.unknown);
-  const exact = generationEntries.find((candidate) => candidate.contentDigest === line.contentDigest);
+  const exact = generationEntries.find((candidate) => candidate.protocolLineId === line.protocolLineId);
   if (!exact) return rejection(protocolLines.selection.contentIdentityMismatch);
   return {
     status: "registry-policy",
@@ -194,7 +234,7 @@ function isAuthenticatedSupport(value) {
     value.minimumGeneration >= 1 && Array.isArray(value.lines) &&
     value.lines.every((entry) => typeof entry?.wireId === "string" &&
       Number.isSafeInteger(entry.generation) && entry.generation >= 1 &&
-      (typeof entry.contentDigest === "string" || entry.contentDigest === null)) &&
+      typeof entry.protocolLineId === "string" && /^[0-9a-f]{64}$/u.test(entry.protocolLineId)) &&
     new Set(value.lines.map(supportIdentity)).size === value.lines.length;
 }
 
@@ -214,7 +254,7 @@ function groupSupportByWireGeneration(lines) {
   for (const line of lines) {
     const key = wireGeneration(line);
     const group = groups.get(key) ?? new Set();
-    group.add(line.contentDigest);
+    group.add(line.protocolLineId);
     groups.set(key, group);
   }
   return groups;
@@ -222,7 +262,7 @@ function groupSupportByWireGeneration(lines) {
 
 function lineMatchesSupport(line, support) {
   return line.wireId === support.wireId && line.generation === support.generation &&
-    line.contentDigest === support.contentDigest;
+    line.protocolLineId === support.protocolLineId;
 }
 
 function wireGeneration(value) {
@@ -230,11 +270,15 @@ function wireGeneration(value) {
 }
 
 function supportIdentity(value) {
-  return `${wireGeneration(value)}\u0000${value.contentDigest}`;
+  return `${wireGeneration(value)}\u0000${value.protocolLineId}`;
 }
 
 function lineIdentity(value) {
   return supportIdentity(value);
+}
+
+function profileIdentity(value) {
+  return `${value.profileLocator}\u0000${value.generation}`;
 }
 
 function rejection(reason) {

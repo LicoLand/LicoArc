@@ -5,6 +5,7 @@
 
 digest256 = bstr .size 32
 id128 = bstr .size 16
+epoch = uint .le 9007199254740991
 role = 0 / 1                         ; member / state-authority
 operation-kind = 0 / 1 / 2 / 3       ; genesis / add / remove / role
 result-outcome = 0 / 1 / 2 / 3        ; pending / delivered / rejected / failed
@@ -17,7 +18,7 @@ group-member = {
 
 group-state = {
   0: digest256,                       ; groupId
-  1: uint,                            ; groupEpoch, <= MAX_GROUP_EPOCH
+  1: epoch,                           ; groupEpoch
   ? 2: digest256,                     ; previousGroupStateDigest
   3: [1*64 group-member],             ; members, byte-sorted and unique
   4: digest256                        ; transitionDigest
@@ -33,7 +34,7 @@ group-operation = {
 group-transition = {
   0: digest256,                       ; groupId
   ? 1: digest256,                     ; previousGroupStateDigest
-  2: uint,                            ; nextGroupEpoch
+  2: epoch,                           ; nextGroupEpoch
   3: digest256,                       ; authorEndpointRef
   4: group-operation
 }
@@ -55,7 +56,7 @@ group-result = {
   0: id128,
   1: digest256,
   2: result-outcome,
-  ? 3: uint,                          ; closed failure code
+  ? 3: uint .le 12,                   ; closed failure code
   4: 0 / 1                            ; endpoint-evidence / none
 }
 
@@ -64,5 +65,5 @@ group-aggregate = {
   1: digest256,
   2: [1*64 group-result],
   3: aggregate-outcome,
-  4: { 0: uint, 1: uint, 2: uint, 3: uint }
+  4: { 0: uint .le 64, 1: uint .le 64, 2: uint .le 64, 3: uint .le 64 }
 }

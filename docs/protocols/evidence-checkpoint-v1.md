@@ -3,9 +3,10 @@
 Status: Candidate. This document is the normative projection of the machine
 sources in [`spec/v1/evidence`](../../spec/v1/evidence/) and the positive and
 negative corpus in [`conformance/v1/evidence`](../../conformance/v1/evidence/).
-The implementation-neutral algorithm decision remains the lifecycle authority
-for the construction; this profile closes its schemas, bounds, and failure
-states without claiming an implementation or publication.
+The implementation-neutral algorithm decision records the durable construction;
+the machine sources close its schemas, bounds, failure states, proof bindings,
+and corpus. This complete mandatory capability makes no implementation or
+publication claim.
 
 ## Transferable Statement projection
 
@@ -30,20 +31,41 @@ confirmation or checkpoint.
 
 ## Evidence Checkpoint
 
-An Evidence Checkpoint carries the Protocol Line, signer and counterparty
+An Evidence Checkpoint carries the Protocol Line content identity, signer and counterparty
 Endpoint references, the exact signer Identity continuity-state digest, and a
 non-empty sorted unique set of one to `MAX_EVIDENCE_STATEMENTS` statement
-digests. The baseline signature set is exactly one `Ed25519` and one
-`ML-DSA-65` signature, both with `endpoint-evidence` purpose. Unknown,
-missing, repeated, surplus, malformed, or wrong-purpose signatures reject the
-whole checkpoint. The signed input is deterministic CBOR prefixed by
+digests. The baseline signature set is exactly two entries in registry order:
+the content-addressed Ed25519 signature Profile followed by the
+content-addressed ML-DSA-65 signature Profile. Both carry
+`endpoint-evidence` purpose. `keyProfileId` and `keyId` are exact 32-byte
+`DIGEST256` values; algorithm names are not runtime selectors. Ed25519 uses an
+exact 64-byte canonical signature and ML-DSA-65 an exact 3,309-byte canonical
+signature. Unknown, missing, repeated, reordered, surplus, malformed,
+non-canonical, or wrong-purpose signatures reject the whole checkpoint. The
+signed input is deterministic CBOR prefixed by
 `LP-EVIDENCE-CHECKPOINT\0` and excludes the signatures member itself.
 
 An independent verifier resolves both signing keys through a bounded Endpoint
-Identity continuity bundle. A missing predecessor, gap, rollback, fork,
-revoked or wrong-purpose key, cross-line value, or conflicting identity state
-is a typed rejection. A Station, Route, session, directory, timestamp, or
-transport receipt cannot become permanent evidence-key authority.
+Identity continuity bundle. It validates genesis and every exact successor
+through the bound state before resolving either key. Each selected state
+carries the canonical Identity transition, continuity proof, Endpoint
+signature, exact evidence-purpose signing-key records, Profile IDs, and raw
+public verification bytes. Key lookup is scoped to that state. The verifier
+then checks purpose, active state, Profile equality, exact public-key length,
+canonical public-key encoding, exact signature length, canonical signature
+encoding, and finally the signature. A missing predecessor, gap, rollback,
+fork, revoked/recovery or wrong-purpose key, Profile mismatch, cross-line
+value, or conflicting identity state is a typed rejection with no partial
+state mutation. A Station, Route, session, directory, timestamp, or transport
+receipt cannot become permanent evidence-key authority.
+
+All CDDL collections have explicit cardinalities. The deterministic-CBOR
+maximum is 4,760 bytes for a checkpoint, 524,549 bytes for one statement,
+1,841,831 bytes for the complete 64-state Identity bundle, and 2,371,144 bytes
+for a one-statement verification package containing its checkpoint and bundle.
+[`bounds.json`](../../spec/v1/evidence/bounds.json) stores the exact positive
+component totals used to derive those values; it contains no unevaluated
+relationship strings, sender-selected trade, or inherited Foundation ceiling.
 
 ## Checkpoint-before-finality join
 

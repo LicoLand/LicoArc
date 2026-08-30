@@ -5,244 +5,280 @@ import test from "node:test";
 import {
   assertClosedJsonSchema,
   assertValidProtocolCatalogs,
-  resolveExistingSessionPolicy,
-  selectProtocolLine
+  cborBytesToHex,
+  encodeDeterministicCbor
 } from "../tools/protocol/index.mjs";
 
 const root = resolve(import.meta.dirname, "..");
 const readJson = (sourcePath) => readFile(resolve(root, sourcePath), "utf8").then(JSON.parse);
+const sourcePaths = {
+  profile: "spec/v1/protection/profile.json",
+  algorithms: "spec/v1/protection/algorithms.json",
+  domains: "spec/v1/protection/domains.json",
+  bounds: "spec/v1/protection/bounds.json",
+  state: "spec/v1/protection/state.json",
+  registry: "spec/v1/protection/registry.json",
+  vectors: "conformance/v1/protection/cases.json"
+};
 
-const [registry, profiles, lines, manifest, lineSchema, profileSchema, selectionCorpus] =
+const [profile, algorithms, domains, bounds, stateContract, registry, vectors, catalogs, schemas] =
   await Promise.all([
-    readJson("spec/v1/protection/registry.json"),
-    readJson("spec/protection-profiles.json"),
-    readJson("spec/protocol-lines.json"),
-    readJson("spec/v1/manifest.json"),
-    readJson("spec/schemas/protocol-lines.schema.json"),
-    readJson("spec/schemas/protection-profiles.schema.json"),
-    readJson("conformance/v1/foundation/selection.json")
+    ...Object.values(sourcePaths).map(readJson),
+    Promise.all(["spec/protocol-lines.json", "spec/protection-profiles.json"].map(readJson)),
+    Promise.all([
+      ["protocolLines", "spec/schemas/protocol-lines.schema.json"],
+      ["protectionProfiles", "spec/schemas/protection-profiles.schema.json"],
+      ["common", "spec/schemas/catalog-common.schema.json"]
+    ].map(async ([name, sourcePath]) => [name, await readJson(sourcePath)]))
+      .then(Object.fromEntries)
   ]);
-const schemas = { protocolLines: lineSchema, protectionProfiles: profileSchema };
 
-test("Pairwise Protection is an honest partial definition with no active wire", () => {
-  assert.equal(registry.definitionStatus, "PARTIAL");
-  assert.equal(registry.sessionEligible, false);
-  assert.deepEqual(registry.activeProfiles, []);
-  assert.deepEqual(registry.wireSchemas, []);
-  assert.equal(registry.runtimeGrammar, null);
-  assert.equal(registry.conformanceCorpus, null);
+test("Protection Profile semantic sources expose one complete indivisible construction", () => {
+  assert.equal(profile.semanticSourceStatus, "COMPLETE");
+  assert.equal(profile.indivisible, true);
+  assert.equal(profile.componentNegotiation, false);
+  assert.equal(profile.fallback, "forbidden");
+  const semanticSources = new Set(Object.values(profile.semanticSources));
+  for (const sourcePath of [...registry.wireSchemas, registry.runtimeGrammar,
+    sourcePaths.algorithms, sourcePaths.domains, sourcePaths.bounds, sourcePaths.state,
+    sourcePaths.vectors]) assert.ok(semanticSources.has(sourcePath), sourcePath);
+  assert.equal(semanticSources.size, Object.keys(profile.semanticSources).length);
+
+  for (const schema of Object.values(schemas)) assert.doesNotThrow(() => assertClosedJsonSchema(schema));
+  assert.doesNotThrow(() => assertValidProtocolCatalogs(catalogs[0], catalogs[1], schemas));
 });
 
-test("Protocol Line and Profile catalogs are closed, coherent, and non-selectable", () => {
-  assert.doesNotThrow(() => assertClosedJsonSchema(lineSchema));
-  assert.doesNotThrow(() => assertClosedJsonSchema(profileSchema));
-  assert.doesNotThrow(() => assertValidProtocolCatalogs(lines, profiles, schemas));
+test("final-standard primitive and wire shapes agree exactly across algorithms, bounds, and schemas", async () => {
+  const primitives = new Map(algorithms.primitives.map((primitive) => [primitive.name, primitive]));
+  const expected = {
+    "X25519": { privateKeyBytes: 32, publicKeyBytes: 32, sharedSecretBytes: 32 },
+    "ML-KEM-768": { dkSeedBytes: 64, encapsulationKeyBytes: 1184, ciphertextBytes: 1088, sharedSecretBytes: 32 },
+    "Ed25519": { seedBytes: 32, publicKeyBytes: 32, signatureBytes: 64 },
+    "ML-DSA-65": { seedBytes: 32, publicKeyBytes: 1952, signatureBytes: 3309 },
+    "ChaCha20-Poly1305": { keyBytes: 32, nonceBytes: 12, tagBytes: 16 }
+  };
+  for (const [name, shape] of Object.entries(expected)) {
+    const primitive = primitives.get(name);
+    assert.ok(primitive, name);
+    for (const [field, byteLength] of Object.entries(shape)) {
+      assert.equal(primitive[field], byteLength, `${name}.${field}`);
+    }
+  }
+  assert.equal(primitives.get("HMAC-SHA-256").outputBytes, 32);
+  assert.equal(primitives.get("HMAC-SHA-256").truncation, "forbidden");
+  assert.equal(primitives.get("ChaCha20-Poly1305").xchacha, false);
 
-  assert.deepEqual(profiles.activeProfiles, []);
-  assert.equal(profiles.reservedIdentifiers.length, 2);
-  assert.ok(profiles.reservedIdentifiers.every((entry) =>
-    entry.status === "withdrawn-candidate" && entry.reusable === false &&
-    entry.lifecycle === "Retired" && entry.newSessionPolicy === "forbid-retired"));
-  assert.equal(profiles.admission.reducedSecurityFallback, "forbidden");
-  assert.equal(profiles.admission.componentNegotiation, "forbidden");
+  assert.equal(bounds.primitiveBytes.ML_KEM_768_ENCAPSULATION_KEY, 1184);
+  assert.equal(bounds.primitiveBytes.ML_KEM_768_CIPHERTEXT, 1088);
+  assert.equal(bounds.primitiveBytes.ML_DSA_65_PUBLIC_KEY, 1952);
+  assert.equal(bounds.primitiveBytes.ML_DSA_65_SIGNATURE, 3309);
+  assert.equal(bounds.primitiveBytes.CHACHA20_POLY1305_TAG, 16);
+  assert.equal(bounds.bounds.MAX_PLAINTEXT_BYTES + 64, bounds.bounds.MAX_PROTECTED_PACKET_BYTES);
+  assert.equal(22 + bounds.primitiveBytes.DIGEST256 + bounds.bounds.MAX_RATCHET_HEADER_BYTES,
+    bounds.bounds.MAX_RECORD_AAD_BYTES);
 
-  const line = lines.lines[0];
-  assert.equal(line.contentDigest, null);
-  assert.equal(line.definitionStatus, "PARTIAL");
-  assert.equal(line.sessionEligible, false);
-  assert.equal(line.publicationEligible, false);
-  assert.ok(line.mandatoryCapabilities.includes("licoarc.pairwise-protection.v1"));
-  assert.ok(!line.definedCapabilities.includes("licoarc.pairwise-protection.v1"));
-  assert.ok(manifest.missingMandatoryCapabilities.includes("licoarc.pairwise-protection.v1"));
-  assert.ok(!manifest.capabilities.some(({ capabilityId }) =>
-    capabilityId === "licoarc.pairwise-protection.v1"));
+  const wireSchemas = await Promise.all(registry.wireSchemas.map(readJson));
+  const [supportSchema, prekeySchema, handshakeSchema, acceptSchema, recordSchema] = wireSchemas;
+  assert.equal(supportSchema.properties.ed25519Signature.$ref, "#/$defs/sig64");
+  assert.equal(supportSchema.properties.mlDsa65Signature.$ref, "#/$defs/sig3309");
+  assert.equal(prekeySchema.$defs.mlKem768Ek.pattern, "^[0-9a-f]{2368}$");
+  assert.equal(handshakeSchema.$defs.mlKem768Ciphertext.pattern, "^[0-9a-f]{2176}$");
+  assert.equal(acceptSchema.properties.mac.pattern, "^[0-9a-f]{64}$");
+  assert.equal(recordSchema.properties.tag.pattern, "^[0-9a-f]{32}$");
+  assert.equal(recordSchema.properties.ciphertext.maxLength, bounds.bounds.MAX_PLAINTEXT_BYTES * 2);
 });
 
-test("selection corpus executes unique-highest, minimum, lifecycle, ambiguity, and no-fallback policy", () => {
-  const fixture = syntheticCatalogs();
-  assert.doesNotThrow(() => assertValidProtocolCatalogs(
-    fixture.protocolLines, fixture.protectionProfiles, schemas));
-
-  for (const corpusCase of selectionCorpus.cases) {
-    if (corpusCase.existing) {
-      const result = resolveExistingSessionPolicy({
-        protocolLines: fixture.protocolLines,
-        registryAuthenticated: corpusCase.registryAuthenticated,
-        line: supportEntry(fixture.aliases.get(corpusCase.existing))
-      });
-      assert.equal(result.existingSessionPolicy, corpusCase.expected, corpusCase.id);
-      assert.equal(result.implementationChoice, false, corpusCase.id);
-      assert.equal(result.stateAdvanced, false, corpusCase.id);
-      continue;
-    }
-
-    const result = selectProtocolLine({
-      protocolLines: fixture.protocolLines,
-      protectionProfiles: fixture.protectionProfiles,
-      localSupport: supportStatement(
-        corpusCase.local.map((alias) => fixture.aliases.get(alias)),
-        corpusCase.localMinimumGeneration,
-        corpusCase.localAuthenticated ?? true),
-      peerSupport: supportStatement(
-        corpusCase.peer.map((alias) => fixture.aliases.get(alias)),
-        corpusCase.peerMinimumGeneration,
-        corpusCase.peerAuthenticated ?? true)
-    });
-    assert.equal(result.status, corpusCase.expected, corpusCase.id);
-    assert.equal(result.stateAdvanced, false, corpusCase.id);
-    assert.equal(result.sessionEstablished, false, corpusCase.id);
-    if (corpusCase.selectedGeneration !== undefined) {
-      assert.equal(result.selected?.generation, corpusCase.selectedGeneration, corpusCase.id);
-    } else {
-      assert.equal(result.selected, null, corpusCase.id);
-    }
+test("domain separators are fixed distinct ASCII byte strings with one terminal NUL", () => {
+  const encoded = Object.values(domains.domains).map((domain) => Buffer.from(domain, "utf8"));
+  assert.equal(new Set(encoded.map((bytes) => bytes.toString("hex"))).size, encoded.length);
+  for (const bytes of encoded) {
+    assert.equal(bytes.at(-1), 0);
+    assert.ok(bytes.subarray(0, -1).every((byte) => byte > 0 && byte < 128));
+    assert.ok(!bytes.subarray(0, -1).includes(0));
   }
 });
 
-test("catalog mutations reject unknown members, capability gaps, and tombstone reuse", () => {
-  const fixture = syntheticCatalogs();
+test("ratchet header and protected record framing are computed from public semantic inputs", () => {
+  const headerCase = oneVector("encode-ratchet-header");
+  const frameCase = oneVector("frame-protected-record");
+  const header = encodeDeterministicCbor(new Map([
+    [0, Buffer.from(headerCase.input.dhHex, "hex")],
+    [1, headerCase.input.pn],
+    [2, headerCase.input.n]
+  ]));
+  assert.equal(cborBytesToHex(header), headerCase.expected.hex);
+  assert.ok(header.byteLength <= bounds.bounds.MAX_RATCHET_HEADER_BYTES);
 
-  const unknownMember = structuredClone(fixture.protocolLines);
-  unknownMember.selection.implementationDefault = "fallback";
-  assert.throws(() => assertValidProtocolCatalogs(
-    unknownMember, fixture.protectionProfiles, schemas), /catalog schema rejection/);
-
-  const capabilityGap = structuredClone(fixture.protocolLines);
-  capabilityGap.lines.find(({ generation }) => generation === 1).definedCapabilities =
-    capabilityGap.lines.find(({ generation }) => generation === 1)
-      .definedCapabilities.filter((id) => id !== "licoarc.pairwise-protection.v1");
-  assert.throws(() => assertValidProtocolCatalogs(
-    capabilityGap, fixture.protectionProfiles, schemas), /missing capability/);
-
-  const reused = structuredClone(fixture.protectionProfiles);
-  reused.activeProfiles[0].profileId = reused.reservedIdentifiers[0].id;
-  assert.throws(() => assertValidProtocolCatalogs(
-    fixture.protocolLines, reused, schemas), /reserved Profile identifier/);
-
-  const unknownProfile = structuredClone(fixture.protocolLines);
-  unknownProfile.lines.find(({ generation }) => generation === 1).protectionProfileIds =
-    ["f".repeat(64)];
-  assert.throws(() => assertValidProtocolCatalogs(
-    unknownProfile, fixture.protectionProfiles, schemas), /unknown or incomplete/);
+  const framed = Buffer.concat([
+    Buffer.from(frameCase.input.headerHex, "hex"),
+    Buffer.from(frameCase.input.ciphertextHex, "hex"),
+    Buffer.from(frameCase.input.tagHex, "hex")
+  ]);
+  assert.equal(framed.toString("hex"), frameCase.expected.hex);
+  assert.equal(Buffer.from(frameCase.input.tagHex, "hex").byteLength,
+    bounds.primitiveBytes.CHACHA20_POLY1305_TAG);
+  assert.equal(algorithms.record.frame, "complete-canonical-header || ciphertext || tag");
 });
 
-function syntheticCatalogs() {
-  const profileId = "a".repeat(64);
-  const mandatory = [...lines.lines[0].mandatoryCapabilities];
-  const defined = [...new Set([
-    ...mandatory,
-    "licoarc.federation-governance.v1",
-    "licoarc.group-collaboration.v1"
-  ])].sort();
-  const aliases = new Map();
-  const complete = (alias, generation, digest, overrides = {}) => {
-    const line = {
-      wireId: "licoarc.selection-line.v1",
-      generation,
-      minimumGeneration: 1,
-      contentDigest: digest.repeat(64),
-      lifecycle: "Candidate",
-      definitionStatus: "COMPLETE",
-      sessionEligible: true,
-      publicationEligible: true,
-      newSessionPolicy: "allow-authenticated",
-      existingSessionPolicy: "continue-authenticated",
-      authenticatedEffectiveGeneration: null,
-      mandatoryCapabilities: mandatory,
-      definedCapabilities: defined,
-      protectionProfileIds: [profileId],
-      blockers: [],
-      ...overrides
-    };
-    aliases.set(alias, line);
-    return line;
-  };
+test("paired prekey redemption and session admission are one compare-and-commit", () => {
+  const transition = stateContract.handshakeTransitions.find(({ event }) =>
+    event === "authenticated-first-packet");
+  assert.equal(transition.atomicCompareAndCommit, true);
+  assert.deepEqual(new Set(transition.commit), new Set([
+    "session-state",
+    "remove-complete-pair-from-active-map",
+    "non-reusable-sequence-by-high-water",
+    "identical-session-accept",
+    "state-generation+1"
+  ]));
+  assert.deepEqual(stateContract.prekeyInventory.reservationStates, []);
 
-  const records = [
-    complete("complete-v1", 1, "1"),
-    complete("complete-v2", 2, "2"),
-    complete("alternate-v2", 2, "3"),
-    complete("deprecated-v3", 3, "4", {
-      lifecycle: "Deprecated",
-      sessionEligible: false,
-      publicationEligible: false,
-      newSessionPolicy: "forbid-deprecated",
-      existingSessionPolicy: "terminate-on-authenticated-adoption"
-    }),
-    (() => {
-      const line = {
-        ...complete("partial-v3", 3, "7"),
-        contentDigest: null,
-        definitionStatus: "PARTIAL",
-        sessionEligible: false,
-        publicationEligible: false,
-        newSessionPolicy: "forbid-incomplete",
-        existingSessionPolicy: "terminate-on-authenticated-adoption",
-        protectionProfileIds: [],
-        blockers: ["ALG-core-v1-hybrid-ake"]
-      };
-      aliases.set("partial-v3", line);
-      return line;
-    })(),
-    complete("retired-v4", 4, "5", {
-      lifecycle: "Retired",
-      sessionEligible: false,
-      publicationEligible: false,
-      newSessionPolicy: "forbid-retired",
-      existingSessionPolicy: "terminate-on-authenticated-adoption"
-    }),
-    complete("deprecated-continue-v5", 5, "6", {
-      lifecycle: "Deprecated",
-      sessionEligible: false,
-      publicationEligible: false,
-      newSessionPolicy: "forbid-deprecated",
-      existingSessionPolicy: "continue-authenticated"
-    })
-  ].sort((left, right) => lineIdentity(left).localeCompare(lineIdentity(right), "en"));
-
-  aliases.set("unknown-v5", {
-    wireId: "licoarc.unknown-line.v1",
-    generation: 5,
-    contentDigest: "8".repeat(64)
+  const before = inventoryState({ generation: 7, highWater: 10, activeSequences: [9, 10] });
+  const winner = commitFirstPacket(before, {
+    expectedGeneration: 7,
+    pairSequence: 10,
+    packetDigest: "11".repeat(32),
+    sessionAccept: "22".repeat(32),
+    authenticated: true
   });
+  assert.equal(winner.status, "committed");
+  assert.equal(winner.state.generation, 8);
+  assert.equal(winner.state.activePairs.has(10), false);
+  assert.equal(winner.state.sessions.has(10), true);
+  assert.equal(winner.state.committedReplay.get(10).sessionAccept, "22".repeat(32));
+  assert.equal(before.activePairs.has(10), true, "the tentative pre-state must remain unchanged");
 
-  const protocolLines = structuredClone(lines);
-  protocolLines.lines = records;
-  const protectionProfiles = structuredClone(profiles);
-  protectionProfiles.activeProfiles = [{
-    profileId,
-    generation: 1,
-    minimumGeneration: 1,
-    contentDigest: "b".repeat(64),
-    lifecycle: "Candidate",
-    definitionStatus: "COMPLETE",
-    sessionEligible: true,
-    publicationEligible: true,
-    newSessionPolicy: "allow-authenticated",
-    existingSessionPolicy: "continue-authenticated",
-    authenticatedEffectiveGeneration: null,
-    sourceManifestPath: "spec/v1/protection/source-manifest.json",
-    requiredClaimIds: ["SEC-001"]
-  }];
-  return { protocolLines, protectionProfiles, aliases };
+  const losingConcurrentCommit = commitFirstPacket(winner.state, {
+    expectedGeneration: 7,
+    pairSequence: 10,
+    packetDigest: "33".repeat(32),
+    sessionAccept: "44".repeat(32),
+    authenticated: true
+  });
+  assert.equal(losingConcurrentCommit.status, "prekey-consumed");
+  assert.strictEqual(losingConcurrentCommit.state, winner.state);
+
+  const replay = commitFirstPacket(winner.state, {
+    expectedGeneration: 8,
+    pairSequence: 10,
+    packetDigest: "11".repeat(32),
+    sessionAccept: "ignored",
+    authenticated: true
+  });
+  assert.equal(replay.status, "identical-committed-session-accept");
+  assert.equal(replay.sessionAccept, "22".repeat(32));
+  assert.strictEqual(replay.state, winner.state);
+});
+
+test("ratchet receive publishes state and plaintext only after authentication", () => {
+  assert.match(stateContract.tentativeRule, /isolated snapshot/);
+  assert.match(stateContract.tentativeRule, /only the named atomic commit may mutate durable state/);
+  assert.match(stateContract.receive.commit,
+    /atomically-durably-store-ratchet-advance-skipped-key-delta-replay-state-inbox-record-and-state-generation/);
+
+  const before = ratchetState({ generation: 3, nextReceive: 2 });
+  const rejected = receiveRecord(before, { messageNumber: 5, authenticated: false });
+  assert.equal(rejected.status, "record-authentication");
+  assert.strictEqual(rejected.state, before);
+  assert.equal(rejected.plaintextReleased, false);
+
+  const accepted = receiveRecord(before, { messageNumber: 5, authenticated: true });
+  assert.equal(accepted.status, "committed");
+  assert.equal(accepted.state.generation, 4);
+  assert.equal(accepted.state.nextReceive, 6);
+  assert.deepEqual([...accepted.state.skippedKeys.keys()], [2, 3, 4]);
+  assert.equal(accepted.state.skippedKeys.has(5), false);
+  assert.equal(accepted.state.durableInbox.length, 1);
+  assert.equal(accepted.plaintextReleased, true);
+  assert.equal(before.nextReceive, 2);
+
+  const overBound = receiveRecord(before, {
+    messageNumber: before.nextReceive + bounds.bounds.MAX_SKIP_PER_RECORD + 1,
+    authenticated: true
+  });
+  assert.equal(overBound.status, "skip-bound");
+  assert.strictEqual(overBound.state, before);
+});
+
+function oneVector(operation) {
+  const matching = vectors.cases.filter(({ target }) =>
+    target.operationId === `licoarc.protection.${operation}.v1`);
+  assert.equal(matching.length, 1, `one authority vector for ${operation}`);
+  return { ...matching[0], expected: matching[0].expected.result };
 }
 
-function supportStatement(lineRecords, minimumGeneration, authenticated) {
+function inventoryState({ generation, highWater, activeSequences }) {
+  return Object.freeze({
+    generation,
+    highWater,
+    activePairs: new Map(activeSequences.map((sequence) => [sequence, Object.freeze({ sequence })])),
+    sessions: new Map(),
+    committedReplay: new Map()
+  });
+}
+
+function commitFirstPacket(state, input) {
+  const replay = state.committedReplay.get(input.pairSequence);
+  if (replay?.packetDigest === input.packetDigest) {
+    return { status: "identical-committed-session-accept", sessionAccept: replay.sessionAccept, state };
+  }
+  if (!input.authenticated || input.expectedGeneration !== state.generation ||
+      !state.activePairs.has(input.pairSequence)) {
+    return { status: "prekey-consumed", state };
+  }
+
+  const activePairs = new Map(state.activePairs);
+  const sessions = new Map(state.sessions);
+  const committedReplay = new Map(state.committedReplay);
+  activePairs.delete(input.pairSequence);
+  sessions.set(input.pairSequence, Object.freeze({ packetDigest: input.packetDigest }));
+  committedReplay.set(input.pairSequence, Object.freeze({
+    packetDigest: input.packetDigest,
+    sessionAccept: input.sessionAccept
+  }));
   return {
-    authenticated,
-    minimumGeneration,
-    lines: lineRecords.map(supportEntry)
+    status: "committed",
+    state: Object.freeze({
+      generation: state.generation + 1,
+      highWater: state.highWater,
+      activePairs,
+      sessions,
+      committedReplay
+    })
   };
 }
 
-function supportEntry(line) {
-  return {
-    wireId: line.wireId,
-    generation: line.generation,
-    contentDigest: line.contentDigest
-  };
+function ratchetState({ generation, nextReceive }) {
+  return Object.freeze({
+    generation,
+    nextReceive,
+    skippedKeys: new Map(),
+    durableInbox: Object.freeze([])
+  });
 }
 
-function lineIdentity(line) {
-  return `${line.wireId}\u0000${line.generation}\u0000${line.contentDigest}`;
+function receiveRecord(state, { messageNumber, authenticated }) {
+  const skipped = messageNumber - state.nextReceive;
+  if (skipped < 0) return { status: "replay", state, plaintextReleased: false };
+  if (skipped > bounds.bounds.MAX_SKIP_PER_RECORD ||
+      state.skippedKeys.size + skipped > bounds.bounds.MAX_SKIPPED_KEYS) {
+    return { status: "skip-bound", state, plaintextReleased: false };
+  }
+
+  const tentativeSkippedKeys = new Map(state.skippedKeys);
+  for (let number = state.nextReceive; number < messageNumber; number += 1) {
+    tentativeSkippedKeys.set(number, Object.freeze({ coordinate: number }));
+  }
+  if (!authenticated) return { status: "record-authentication", state, plaintextReleased: false };
+  tentativeSkippedKeys.delete(messageNumber);
+  return {
+    status: "committed",
+    state: Object.freeze({
+      generation: state.generation + 1,
+      nextReceive: messageNumber + 1,
+      skippedKeys: tentativeSkippedKeys,
+      durableInbox: Object.freeze([...state.durableInbox, Object.freeze({ messageNumber })])
+    }),
+    plaintextReleased: true
+  };
 }

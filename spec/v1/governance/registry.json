@@ -3,6 +3,7 @@
   "$id": "https://licoarc.com/spec/v1/governance/registry.json",
   "registryVersion": "licoarc.federation-governance.v1",
   "wireId": "licoarc.federation-governance.v1",
+  "protocolLineIdType": "DIGEST256-line-content-identity",
   "lifecycle": "Candidate",
   "scope": "protocol-governance-input-only",
   "schemaPath": "spec/v1/governance/governance.schema.json",
@@ -25,6 +26,24 @@
     "undeclaredFiles": "reject",
     "symlinks": "reject",
     "sortedPaths": "required"
+  },
+  "authority": {
+    "governanceEvidence": "bounded-offline-input-only",
+    "endpointAdmission": "endpoint-local",
+    "crossCapabilityTotals": "bounded-by-protocol-line",
+    "inheritance": "forbidden"
+  },
+  "resourceAccounting": {
+    "bundle": "schema-bounded-restricted-JCS-governance-record",
+    "collections": "every-schema-array-has-a-fixed-maxItems",
+    "digestAndSignatureFields": "fixed-lowercase-hex-lengths",
+    "rejectedOrReplayInput": "no-local-state-mutation-and-no-bound-extension",
+    "retryReset": "forbidden"
+  },
+  "atomicity": {
+    "evaluation": "validate-complete-bundle-and-all-role-evidence-before-commit",
+    "replay": "same-bundle-digest-and-epoch-is-idempotent-without-mutation",
+    "failure": "stale-rollback-expired-equivocating-or-insufficient-input-leaves-byte-identical-pre-state"
   },
   "forbiddenAuthority": [
     "one-signer-authorizes",

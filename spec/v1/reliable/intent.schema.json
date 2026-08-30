@@ -6,7 +6,6 @@
   "additionalProperties": false,
   "required": [
     "recordType",
-    "protocolLineId",
     "logicalMessageId",
     "protectedIntentDigest",
     "applicationIdempotencyKey",
@@ -16,7 +15,6 @@
   ],
   "properties": {
     "recordType": { "type": "string", "const": "protectedIntent" },
-    "protocolLineId": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
     "logicalMessageId": { "type": "string", "pattern": "^[0-9a-f]{32}$" },
     "protectedIntentDigest": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
     "applicationIdempotencyKey": { "type": "string", "pattern": "^[0-9a-f]{2,512}$" },

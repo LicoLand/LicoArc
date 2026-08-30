@@ -25,7 +25,9 @@ export function assertValidSecurityAccounting({
   adversaries,
   bindings,
   registry,
-  schemas
+  schemas,
+  requiredProfileClaimIds = [],
+  requireComplete = false
 }) {
   for (const binding of bindings?.bindings ?? []) {
     if (typeof binding?.authorityPath === "string" &&
@@ -42,7 +44,9 @@ export function assertValidSecurityAccounting({
     [registry, schemas.registry]
   ];
   for (const [value, schema] of schemaInputs) {
-    const errors = validateClosedSchema(value, schema);
+    const errors = validateClosedSchema(value, schema, {
+      schemas: Object.values(schemas).filter((candidate) => candidate !== schema)
+    });
     if (errors.length > 0) {
       throw new SecurityAccountingError("reject-closed-schema",
         `security accounting schema rejection: ${errors.join("; ")}`, errors);
@@ -61,8 +65,12 @@ export function assertValidSecurityAccounting({
   assertSortedUnique(claimIds, "security claim identities");
   const claimSet = new Set(claimIds);
   const properties = new Set(claims.claims.map(({ property }) => property));
+  const explicitNonClaims = new Set(claims.nonClaims);
   if ([...REQUIRED_PROPERTIES].some((property) => !properties.has(property))) {
     throw new SecurityAccountingError("reject-missing-required-claim");
+  }
+  if (claims.claims.some(({ property }) => explicitNonClaims.has(property))) {
+    throw new SecurityAccountingError("reject-nonclaim-promoted-to-claim");
   }
   if (claims.claims.some((claim) => claim.adversary.some((id) => !adversarySet.has(id)))) {
     throw new SecurityAccountingError("reject-unknown-adversary");
@@ -86,21 +94,62 @@ export function assertValidSecurityAccounting({
         throw new SecurityAccountingError("reject-missing-proof-reference");
       }
       const kinds = new Set((bindingsByClaim.get(claim.id) ?? []).map(({ kind }) => kind));
+      if (kinds.size !== (bindingsByClaim.get(claim.id) ?? []).length) {
+        throw new SecurityAccountingError("reject-duplicate-proof-binding-kind");
+      }
       if (bindings.requiredKinds.some((kind) => !kinds.has(kind))) {
         throw new SecurityAccountingError("reject-missing-proof-binding");
       }
+      if ((bindingsByClaim.get(claim.id) ?? []).some((binding) =>
+        binding.proofModel !== claim.proofModel || binding.proofLemma !== claim.proofLemma)) {
+        throw new SecurityAccountingError("reject-proof-binding-reference-mismatch");
+      }
+      if (claim.counterexampleStatus !== "no-counterexample-found") {
+        throw new SecurityAccountingError("reject-nonterminal-proof-result");
+      }
     } else if (claim.proofModel !== null || claim.proofLemma !== null) {
       throw new SecurityAccountingError("reject-unproved-proof-reference");
+    } else if ((bindingsByClaim.get(claim.id) ?? []).length > 0) {
+      throw new SecurityAccountingError("reject-binding-for-unproved-claim");
     }
   }
 
-  if (registry.definitionStatus !== "PARTIAL" ||
-      registry.missingMandatoryBindingPolicy !== "line-ineligible" ||
+  assertSortedUnique(requiredProfileClaimIds, "Profile claim identities");
+  const claimById = new Map(claims.claims.map((claim) => [claim.id, claim]));
+  for (const claimId of requiredProfileClaimIds) {
+    const claim = claimById.get(claimId);
+    if (!claim) throw new SecurityAccountingError("reject-unknown-profile-claim");
+    if (claim.status !== "proved") throw new SecurityAccountingError("reject-unproved-profile-claim");
+  }
+
+  const terminal = claims.claims.every(({ status }) => status === "proved" || status === "explicit-nonclaim");
+  const bindingComplete = bindings.status === "complete";
+  if (bindingComplete !== terminal) {
+    throw new SecurityAccountingError("reject-binding-completion-mismatch");
+  }
+  if ((registry.definitionStatus === "COMPLETE") !== (terminal && bindingComplete)) {
+    throw new SecurityAccountingError("reject-security-definition-status");
+  }
+  if (requireComplete && registry.definitionStatus !== "COMPLETE") {
+    throw new SecurityAccountingError("reject-incomplete-security-accounting");
+  }
+
+  const completeProofEvidenceInvalid = registry.definitionStatus === "COMPLETE" &&
+    (registry.proofEvidencePath !== "formal/evidence.json" ||
+     typeof registry.proofEvidenceDigest !== "string" ||
+     !/^[0-9a-f]{64}$/u.test(registry.proofEvidenceDigest));
+  if (registry.missingMandatoryBindingPolicy !== "line-ineligible" ||
+      completeProofEvidenceInvalid ||
       registry.downstreamEvidenceDoesNotAdvanceDefinition !== true ||
+      registry.proofDoesNotDefineProtocol !== true ||
       bindings.missingBindingPolicy !== "claim-remains-unproved-and-line-ineligible") {
     throw new SecurityAccountingError("reject-security-boundary");
   }
-  return true;
+  return Object.freeze({
+    complete: registry.definitionStatus === "COMPLETE",
+    provedClaimIds: Object.freeze(claims.claims.filter(({ status }) => status === "proved").map(({ id }) => id)),
+    explicitNonClaimIds: Object.freeze(claims.claims.filter(({ status }) => status === "explicit-nonclaim").map(({ id }) => id))
+  });
 }
 
 function assertSortedUnique(values, label) {

@@ -4,6 +4,10 @@ Status: Candidate specification. This document projects the machine-readable
 contract in [`spec/v1/identity/identity.schema.json`](../../spec/v1/identity/identity.schema.json),
 the bounds and observer policy in
 [`identity.policy.json`](../../spec/v1/identity/identity.policy.json), and the
+numeric runtime authority in
+[`labels.json`](../../spec/v1/identity/labels.json). The closed source set is
+owned by
+[`source-manifest.json`](../../spec/v1/identity/source-manifest.json), with the
 focused corpus in [`conformance/v1/identity/`](../../conformance/v1/identity/).
 It does not claim an Endpoint runtime, private-key custody, local trust policy,
 user-interface behavior, hosted directory, or publication of a Published
@@ -21,9 +25,58 @@ Handle. Those values are either lower-layer transport inputs or protected
 protocol context and cannot become an identity alias.
 
 This contract describes public references and authorization state, not private
-keys or their custody. A `keyDigest` and key purpose identify an authorized
-state without carrying private material. Key generation, storage, deletion,
-Provider choice, and local approval remain outside the Protocol Layer.
+keys or their custody. Each signing-key record carries a scoped 32-byte
+`keyId`, a 32-byte content-addressed `keyProfileId`, its purpose and state, and
+the exact raw public verification bytes. The Profile registry fixes Ed25519 at
+32 public-key bytes and 64 signature bytes, and ML-DSA-65 at 1,952 public-key
+bytes and 3,309 signature bytes. A digest-only key, algorithm name, variable
+length encoding, private seed, private key, or Provider-native object is not a
+signing key. Key generation, private storage, deletion, Provider choice, and
+local approval remain outside the Protocol Layer.
+
+Runtime records use only the compact unsigned labels and enums in
+`labels.json`. Text field names, transition names, purpose names, key-state
+names, and algorithm names are governance projections and are forbidden as
+runtime wire values. Unknown or duplicate numeric labels and unknown enum
+values reject the complete record without mutation.
+
+## Station descriptor identity and lineage
+
+A `stationDescriptor` is the sole machine-defined Station discovery object.
+Its `stationId` is
+`SHA-256("LICOARC-V1/STATION-ID\0" || stationIdentitySeed)`, where the seed is
+32 unpredictable bytes generated once, never transmitted, and never derived
+from a host, URI, Provider, Endpoint, or signing key. A Station key identifier
+is `SHA-256("LICOARC-V1/STATION-KEY-ID\0" || stationId || keyProfileId ||
+publicKey)`. These derivations keep Station identity stable while listeners,
+operators, and admitted signing keys change.
+
+The descriptor contains one to four listeners, one to four signing keys, zero
+to four certification references, and one to four signatures. All four
+collections are strictly ordered by their deterministic-CBOR encodings and
+reject duplicates. A listener contains one exact Transport Profile content
+identity and one canonical ASCII HTTPS absolute URI of at most 128 UTF-8
+octets. The URI has a lowercase scheme and DNS host (or canonical IP literal),
+and no user information, query, fragment, port, or dot segment. It is a
+location only and never contributes to `stationId`.
+
+Descriptor sequence `1` is genesis and omits `previousDescriptorDigest`.
+Every later descriptor keeps the same `stationId`, has a sequence strictly
+above the retained high-water value, and names the complete predecessor digest.
+Lower sequence is rollback; equal sequence with unequal content is a fork;
+equal sequence with equal content is replay. None mutates retained state.
+Expiry can stop descriptor use but never lowers the retained high-water mark.
+
+The descriptor content digest is
+`SHA-256("LICOARC-V1/STATION-DESCRIPTOR\0" || deterministicCBOR(descriptor))`,
+including `signatures`. Each signature instead covers
+`"LICOARC-V1/STATION-DESCRIPTOR/SIGN\0" || deterministicCBOR(descriptor
+without signatures)` and has exact purpose `station-descriptor`. Genesis must
+have a signature from a listed key; a successor must have at least one
+signature from a predecessor-authorized key. Closed-schema, canonical order,
+validity, key/profile, and signature validation all complete before atomic
+replacement. Certification references remain bounded local-policy inputs and
+never become a mandatory federation root.
 
 ## Three independent chains
 
@@ -40,11 +93,13 @@ the immediate logical predecessor. Every chain retains its own scope:
 
 The exact closed record grammar, including transition fields and observer
 inputs, is in the schema and CDDL. State is bounded by the policy registry:
-64 records per chain, four Stations in an affiliation snapshot, four Route
-candidates, and at most eight inputs in each transparency category. A parser
-also rejects records larger than `MAX_RECORD_BYTES`, evidence larger than
-`MAX_VERIFICATION_EVIDENCE_BYTES`, and values beyond the declared epoch and
-byte bounds. No bound is extended by a sender-selected value.
+64 records per chain, four signing keys, four Stations in an affiliation
+snapshot, four Route candidates, and at most eight inputs in each transparency
+category. A parser also rejects records larger than `MAX_RECORD_BYTES`, one
+verification input larger than `MAX_VERIFICATION_EVIDENCE_BYTES`, public keys
+or signatures beyond their exact Profile size, and values beyond the declared
+epoch and byte bounds. No Foundation limit or sender-selected value extends a
+capability bound.
 
 ### Validation and atomic replacement
 
@@ -80,12 +135,21 @@ validated in order before one atomic commit.
 
 An identity successor keeps the same `endpointIdentityRef` and increments the
 identity chain. `rotation` introduces an authorized replacement key state;
-`revocation` marks the affected key digest unusable for its declared purpose;
+`revocation` marks the affected key identifier unusable for its declared purpose;
 and `recovery` is an explicit, predecessor-bound transition with bounded
 witness inputs. A recovery never resets the epoch or rewrites old evidence.
 The Endpoint resolves which keys and purposes are acceptable. An old key,
 revoked key, Station signature, or directory observation cannot authorize a
 new identity state on its own.
+
+Signature verification first resolves the exact continuity state, then the
+`keyId` within that state. It requires the field-specific key purpose, an
+acceptable active state, equality of the signature and key `keyProfileId`, the
+Profile's exact public-key and signature lengths, canonical Profile encodings,
+and finally cryptographic verification. This order prevents length guessing,
+trial parsing, Provider algorithm selection, or a key from another state or
+purpose from becoming authority. Every failure leaves the retained chain and
+key state unchanged.
 
 Continuity-preserving rotation leaves the Endpoint identity, affiliation
 high-water, Route high-water, protected sessions where their profile permits,
@@ -161,11 +225,13 @@ invitation context, including its purpose and audience; a Station-visible
 Handle does not authenticate either Endpoint or the invitation.
 
 The first protected relationship begins with Endpoint-local
-`peerVerificationState` `unverified`. Verification Records and evidence are
-protected, replay-resistant inputs to the receiving Endpoint's local decision;
-no received field, Station receipt, directory result, witness, or handshake
-success directly sets local trust. A replayed first-contact submission fails
-single-use validation and must not upgrade or downgrade local verification.
+`peerVerificationState` `unverified`. Protocol Line v1 allocates no
+Verification Record fields or method registry. A transparency bundle may carry
+a bounded authenticated digest input tagged `verificationRecord`, but v1 does
+not parse it or change local peer trust from it. No received field, Station
+receipt, directory result, witness, or handshake success directly sets local
+trust. A replayed first-contact submission fails single-use validation and
+must not upgrade or downgrade local verification.
 
 ## Discovery and transparency
 

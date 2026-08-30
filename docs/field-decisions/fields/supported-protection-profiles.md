@@ -17,7 +17,8 @@ specification.
 
 ## Preserved requirement
 
-A future complete line may bind only complete, proof-bound Profiles. Unknown,
+A complete line may bind only complete, proof-bound Profiles. The active line
+binds exactly one stable-core Profile. Unknown,
 incomplete, deprecated-for-new-session, or retired Profiles fail closed.
 
 ## Retirement rationale

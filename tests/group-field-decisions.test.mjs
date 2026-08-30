@@ -177,9 +177,10 @@ test("the Canonical Field Registry contains the smallest protected Group state",
 test("Group field inventory is closed and the Candidate Group schema is admitted", async () => {
   const index = await readFile(fieldWorkspace, "utf8");
   const status = await readFile(statusPath, "utf8");
-  const groupRegistry = JSON.parse(
-    await readFile(path.join(repositoryRoot, "spec/v1/group/registry.json"), "utf8")
-  );
+  const [groupRegistry, groupBounds] = await Promise.all([
+    readFile(path.join(repositoryRoot, "spec/v1/group/registry.json"), "utf8").then(JSON.parse),
+    readFile(path.join(repositoryRoot, "spec/v1/group/bounds.json"), "utf8").then(JSON.parse)
+  ]);
 
   for (const expected of groupRecords) {
     const link = `](fields/${expected.name})`;
@@ -193,12 +194,19 @@ test("Group field inventory is closed and the Candidate Group schema is admitted
   assert.match(index, /No Group field proposal remains open/);
   assert.doesNotMatch(index, /\| Decision status \| `OPEN` \|/);
 
+  assert.match(status, /\| Lifecycle \| `Candidate` \|/);
+  assert.match(status, /\| Definition status \| `COMPLETE` \|/);
   assert.match(
     status,
-    /Bounded Group Collaboration Profile v1 \| Candidate definition complete/i
+    /\| Mandatory capability closure \| 9 of 9 `COMPLETE` \|/
   );
+  assert.match(status, /The nine capabilities are[\s\S]*Group Collaboration/);
   assert.equal(groupRegistry.lifecycle, "Candidate");
   assert.equal(groupRegistry.capabilityId, "licoarc.group-collaboration.v1");
+  assert.equal(groupBounds.bounds.MAX_GROUP_EPOCH, Number.MAX_SAFE_INTEGER);
+  assert.equal(groupRegistry.stateIdentity.genesisEpoch, 0);
+  assert.equal(groupRegistry.stateIdentity.successorRule,
+    "exactly-predecessor-epoch-plus-one");
 
   await assert.doesNotReject(() => access(path.join(repositoryRoot, "spec/v1/group")));
 });

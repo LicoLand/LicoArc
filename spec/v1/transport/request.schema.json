@@ -5,7 +5,6 @@
   "oneOf": [
     { "$ref": "#/$defs/affiliateRequest" },
     { "$ref": "#/$defs/reserveRequest" },
-    { "$ref": "#/$defs/retrieveRequest" },
     { "$ref": "#/$defs/claimRequest" },
     { "$ref": "#/$defs/settleRequest" }
   ],
@@ -37,18 +36,6 @@
         "affiliationCommitment": { "$ref": "#/$defs/digest256" },
         "transportProfileId": { "$ref": "#/$defs/digest256" },
         "handleClass": { "$ref": "#/$defs/handleClass" }
-      }
-    },
-    "retrieveRequest": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["operation", "operationId", "claimId", "claimEpoch", "itemId"],
-      "properties": {
-        "operation": { "const": "retrieve" },
-        "operationId": { "$ref": "#/$defs/id128" },
-        "claimId": { "$ref": "#/$defs/token256" },
-        "claimEpoch": { "$ref": "#/$defs/epoch" },
-        "itemId": { "$ref": "#/$defs/token256" }
       }
     },
     "claimRequest": {
@@ -83,6 +70,7 @@
           "type": "array",
           "minItems": 1,
           "maxItems": 64,
+          "uniqueItems": true,
           "items": { "$ref": "#/$defs/settlement" }
         }
       }

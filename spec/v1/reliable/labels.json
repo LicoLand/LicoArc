@@ -17,8 +17,7 @@
     { "label": 0, "name": "eventKind", "type": "uint", "presence": "mandatory" },
     { "label": 1, "name": "logicalMessageId", "type": "id128", "presence": "mandatory" },
     { "label": 2, "name": "intentDigest", "type": "digest256", "presence": "mandatory" },
-    { "label": 3, "name": "routeEpoch", "type": "uint64", "presence": "mandatory" },
-    { "label": 4, "name": "protectedPacket", "type": "bytes", "presence": "optional" },
+    { "label": 3, "name": "routeEpoch", "type": "uint53", "presence": "conditional" },
     { "label": 5, "name": "protectedPacketDigest", "type": "digest256", "presence": "optional" },
     { "label": 6, "name": "applicationResultDigest", "type": "digest256", "presence": "optional" },
     { "label": 7, "name": "failureCode", "type": "uint", "presence": "optional" },
@@ -28,8 +27,10 @@
     { "label": 11, "name": "attachmentId", "type": "id128", "presence": "optional" },
     { "label": 12, "name": "recoveryRound", "type": "uint", "presence": "optional" },
     { "label": 13, "name": "requestedChunkRanges", "type": "range[]", "presence": "optional" },
-    { "label": 14, "name": "projectionResults", "type": "result[]", "presence": "optional" }
+    { "label": 14, "name": "projectionResults", "type": "result[]", "presence": "optional" },
+    { "label": 15, "name": "expectedStateGeneration", "type": "uint53", "presence": "mandatory" }
   ],
+  "eventReservedLabels": [4],
   "confirmation": [
     { "label": 0, "name": "confirmationId", "type": "id128", "presence": "mandatory" },
     { "label": 1, "name": "stage", "type": "uint", "presence": "mandatory" },
@@ -37,6 +38,29 @@
     { "label": 3, "name": "confirmedMessageIds", "type": "id128[]", "presence": "mandatory" },
     { "label": 4, "name": "failureCode", "type": "uint", "presence": "optional" },
     { "label": 5, "name": "evidenceDigest", "type": "digest256", "presence": "optional" }
+  ],
+  "snapshot": [
+    { "label": 0, "name": "stateType", "type": "uint", "presence": "mandatory" },
+    { "label": 1, "name": "stateTag", "type": "uint", "presence": "mandatory" },
+    { "label": 2, "name": "logicalMessageId", "type": "id128", "presence": "mandatory" },
+    { "label": 3, "name": "intentDigest", "type": "digest256", "presence": "mandatory" },
+    { "label": 4, "name": "applicationIdempotencyKey", "type": "bytes", "presence": "optional" },
+    { "label": 5, "name": "routeEpoch", "type": "uint53", "presence": "optional" },
+    { "label": 6, "name": "protectedPacketDigest", "type": "digest256", "presence": "optional" },
+    { "label": 7, "name": "retryTransmissions", "type": "uint", "presence": "optional" },
+    { "label": 8, "name": "routeMigrations", "type": "uint", "presence": "optional" },
+    { "label": 9, "name": "transitionCount", "type": "uint", "presence": "mandatory" },
+    { "label": 10, "name": "terminalFailureCode", "type": "uint", "presence": "optional" },
+    { "label": 11, "name": "applicationResultDigest", "type": "digest256", "presence": "optional" },
+    { "label": 12, "name": "evidenceDigest", "type": "digest256", "presence": "optional" },
+    { "label": 13, "name": "attachmentId", "type": "id128", "presence": "optional" },
+    { "label": 14, "name": "recoveryRound", "type": "uint", "presence": "optional" },
+    { "label": 15, "name": "stateUpdate", "type": "uint", "presence": "optional" },
+    { "label": 16, "name": "requestedChunkRanges", "type": "range[]", "presence": "optional" },
+    { "label": 17, "name": "projectionResults", "type": "result[]", "presence": "optional" },
+    { "label": 18, "name": "memberResultsDigest", "type": "digest256", "presence": "optional" },
+    { "label": 19, "name": "retainedProtectedPacket", "type": "bytes", "presence": "conditional-on-retryable-outbox" },
+    { "label": 20, "name": "stateGeneration", "type": "uint53", "presence": "mandatory" }
   ],
   "range": [
     { "label": 0, "name": "startChunkIndex", "type": "uint", "presence": "mandatory" },
@@ -55,7 +79,8 @@
     { "value": 9, "name": "attachmentRecoveryBoundExceeded" },
     { "value": 10, "name": "groupProjectionConflict" },
     { "value": 11, "name": "ambiguousTransport" },
-    { "value": 12, "name": "sourceUnavailable" }
+    { "value": 12, "name": "sourceUnavailable" },
+    { "value": 13, "name": "stateRollback" }
   ],
   "eventKinds": [
     { "value": 0, "name": "create" },
@@ -72,17 +97,13 @@
     { "value": 11, "name": "terminalFailure" }
   ],
   "stages": [
-    { "value": 0, "name": "received" },
-    { "value": 1, "name": "accepted" },
-    { "value": 2, "name": "completed" },
-    { "value": 3, "name": "terminal" }
+    { "value": 0, "name": "endpointAccepted" },
+    { "value": 1, "name": "effectCompleted" }
   ],
   "outcomes": [
-    { "value": 0, "name": "pending" },
-    { "value": 1, "name": "success" },
-    { "value": 2, "name": "cancelled" },
-    { "value": 3, "name": "failed" },
-    { "value": 4, "name": "ambiguous" }
+    { "value": 0, "name": "succeeded" },
+    { "value": 1, "name": "rejected" },
+    { "value": 2, "name": "failed" }
   ],
   "stationOutcomes": [
     { "value": 0, "name": "accepted" },

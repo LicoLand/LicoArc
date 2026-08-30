@@ -35,23 +35,19 @@ The repository currently contains the Candidate `v1` Protocol Line. Its
 explicit source manifest is [`v1/manifest.json`](v1/manifest.json). The
 manifest and generated bundle both declare exact wire ID
 `licoarc.protocol-line.v1` and lifecycle `Candidate`; the bundle digest binds
-those fields and all embedded sources. This content addressing pins one exact
-Candidate snapshot without making the Candidate line immutable.
+those fields and all embedded sources. Its definition status is `COMPLETE`, it
+is eligible for authenticated new-session selection, and publication remains
+separately unauthorized. This content addressing pins one exact Candidate
+snapshot without making the Candidate line immutable.
 
 ## Definition composition
 
 The v1 manifest binds the complete Protocol Line definition, including the
 foundation, identity, protection, messaging, Group, reliable exchange,
-evidence, transport, governance, and retained relay source families. Each
+evidence, transport, and governance source families. Each
 capability's schemas, registries, policies, bounds, and definition-level
 positive and negative corpus describe exact protocol meaning; none is runtime
 or delivery evidence.
-
-The retained `v1/relay/field-registry.json` projects its bounded legacy carrier
-fields only. It neither defines the active target inventory nor overrides the
-Canonical Field Registry. The shared requirement schema and relay requirement
-registry define stable implementation-neutral obligations and their source
-bindings.
 
 Pairwise Protection is defined in its own v1 profile sources. Endpoint
 implementations hold private keys and execute the pinned profile downstream.
@@ -67,10 +63,11 @@ spec/vN/
   manifest.json
   requirement-registry.schema.json
   <capability>/
-    requirements.json
+    source-manifest.json
     *.schema.json
-    *-registry.json
+    registry.json
     *.policy.json
+    *.cddl
 ```
 
 Human-readable projections live under `docs/protocols/`; executable examples,

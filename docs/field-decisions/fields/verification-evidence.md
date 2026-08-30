@@ -29,11 +29,11 @@ exclusive authority to decide local peer trust.
 
 ## Field model and trade-offs
 
-The value is mandatory bounded byte string field `verificationEvidence`. It is
-input to local verification and cannot directly set local peer-verification
-state. Exact bounds, method-specific byte interpretation, transcript and
-identity bindings, canonical representation, and invalid-input behavior
-remain specification gaps.
+The approved semantic value is bounded method-specific evidence that cannot
+directly set local peer-verification state. Protocol Line v1 admits no
+verification-method registry or evidence field allocation; exact bounds,
+interpretation, bindings, representation, and invalid-input behavior remain
+successor-definition work.
 
 ## Visibility and trust
 
@@ -52,4 +52,5 @@ semantics authority and wins over any conflicting explanation here.
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. Only the scope recorded by this decision and its linked normative authorities is defined; any remaining normative ambiguity requires a successor decision before entering the protocol definition.
+The definition status is `PARTIAL`. The necessity and trust boundary are
+decided, but no Protocol Line v1 evidence bytes or wire allocation exists.

@@ -20,39 +20,39 @@ reliable-event = {
   0 => uint .le 11,                   ; closed event kind
   1 => id128,
   2 => digest256,
-  ? 3 => uint,                        ; route epoch; never a message identity
-  ? 4 => bytes .size (1..524288),     ; exact protected packet when carried
+  ? 3 => uint .le 9007199254740991,   ; route epoch; never a message identity
   ? 5 => digest256,
   ? 6 => digest256,                   ; application result digest
-  ? 7 => uint .le 12,                 ; closed failure code
+  ? 7 => uint .le 13,                 ; closed failure code
   ? 8 => uint .le 3,                  ; Station hint only
   ? 9 => id128,
   ? 10 => digest256,
   ? 11 => id128,
   ? 12 => uint .le 32,
-  ? 13 => [* chunk-range],
-  ? 14 => [* projection-result]
+  ? 13 => [0*32 chunk-range],
+  ? 14 => [0*64 projection-result],
+  15 => uint .le 9007199254740991     ; compare-and-commit generation
 }
 
 confirmation = {
   0 => id128,                         ; confirmation identity
-  1 => uint .le 3,                   ; received/accepted/completed/terminal
-  2 => uint .le 4,                   ; pending/success/cancelled/failed/ambiguous
-  3 => [+ id128],                     ; sorted unique bounded IDs
-  ? 4 => uint .le 12,
+  1 => uint .le 1,                   ; Endpoint Accepted/Effect Completed
+  2 => uint .le 2,                   ; succeeded/rejected/failed
+  3 => [1*32 id128],                  ; sorted unique bounded IDs
+  ? 4 => uint .le 13,
   ? 5 => digest256
 }
 
 chunk-range = {
-  0 => uint,
-  1 => uint
+  0 => uint .le 128,
+  1 => uint .le 128
 }
 
 projection-result = {
   0 => id128,
   1 => digest256,
   2 => uint .le 3,                    ; pending/delivered/rejected/failed
-  ? 3 => uint .le 12,
+  ? 3 => uint .le 13,
   4 => uint .le 1                      ; endpoint-evidence or none
 }
 
@@ -62,31 +62,39 @@ state-snapshot = {
   2 => id128,
   3 => digest256,
   ? 4 => bytes .size (1..256),
-  ? 5 => uint,
+  ? 5 => uint .le 9007199254740991,
   ? 6 => digest256,
   ? 7 => uint .le 32,
   ? 8 => uint .le 16,
   9 => uint .le 256,                  ; immutable lifetime transition count
-  ? 10 => uint .le 12,
+  ? 10 => uint .le 13,
   ? 11 => digest256,
   ? 12 => digest256,
   ? 13 => id128,
   ? 14 => uint .le 32,
   ? 15 => uint .le 64,
-  ? 16 => [* chunk-range],
-  ? 17 => [* projection-result],
-  ? 18 => digest256
+  ? 16 => [0*32 chunk-range],
+  ? 17 => [0*64 projection-result],
+  ? 18 => digest256,
+  ? 19 => bytes .size (1..524288),    ; exact retry packet, outbox only
+  20 => uint .le 9007199254740991     ; monotonic snapshot generation
 }
 
 id128 = bytes .size 16
 digest256 = bytes .size 32
 bytes = bstr
 
-; Event validation is atomic: intent identity, digest, route epoch, exact
-; packet identity, evidence digest, and all caller-provided bounds are checked
-; together.  Same logical identity plus different meaning is terminal
-; conflict. Retry, restart, session renewal, Route change, Station migration,
-; and replay do not reset transition, retry, confirmation, or recovery bounds.
+; Event metadata never embeds a protected packet. A retryable outbox snapshot
+; retains the exact packet plus its digest and accounts packet octets separately
+; from event metadata. Event validation is atomic: intent identity, digest,
+; route epoch, expected state generation, packet identity, evidence digest, and
+; all caller-provided bounds are checked against a tentative snapshot together.
+; Send commits the advanced snapshot and exact retry packet before emission;
+; restart restores the complete monotonic snapshot before accepting input.
+; Same logical identity plus different meaning is terminal conflict. Retry,
+; restart, session renewal, Route change, Station migration, and replay do not
+; reset transition, retry, confirmation, or recovery bounds. Every rejection
+; returns the byte-identical pre-state and emits no packet or application effect.
 ; A Station outcome is never enough to cross Endpoint Accepted or Effect
 ; Completed. A terminal state accepts only an identical replay/ack and rejects
 ; all reopen attempts.

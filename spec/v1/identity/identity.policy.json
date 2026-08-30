@@ -10,8 +10,8 @@
   "retiredPolicy": "reject",
   "downgradePolicy": "reject",
   "bounds": {
-    "MAX_RECORD_BYTES": 65536,
-    "MAX_STATE_BYTES": 262144,
+    "MAX_RECORD_BYTES": 141501,
+    "MAX_STATE_BYTES": 424503,
     "MAX_DIGEST_BYTES": 32,
     "MAX_NONCE_BYTES": 32,
     "MAX_DELIVERY_HANDLE_BYTES": 32,
@@ -28,9 +28,31 @@
     "MAX_VERIFICATION_INPUTS": 8,
     "MAX_ASSOCIATED_ENDPOINTS": 8,
     "MAX_SIGNATURES": 4,
+    "MAX_LISTENERS": 4,
+    "MAX_STATION_KEYS": 4,
+    "MAX_CERTIFICATION_REFS": 4,
+    "MAX_ENDPOINT_URI_BYTES": 128,
+    "MAX_PUBLIC_KEY_BYTES": 1952,
+    "MAX_SIGNATURE_BYTES": 3309,
     "MAX_PATH_DIGESTS": 64,
-    "MAX_VERIFICATION_EVIDENCE_BYTES": 1024,
+    "MAX_VERIFICATION_EVIDENCE_BYTES": 3535,
     "MAX_EPOCH": 9007199254740991
+  },
+  "signatureProfiles": {
+    "registryPath": "spec/v1/identity/signature-profiles.json",
+    "keyId": "DIGEST256-scoped-to-containing-identity-or-descriptor",
+    "profileId": "DIGEST256-content-identity",
+    "publicKey": "exact-raw-public-verification-bytes",
+    "algorithmNamesOnWire": "forbidden",
+    "privateMaterial": "forbidden"
+  },
+  "canonicalMaxima": {
+    "encoding": "deterministic-cbor",
+    "maximumSignatureRecordBytes": 3386,
+    "maximumAuthenticatedInputBytes": 3535,
+    "maximumEightInputArrayBytes": 28281,
+    "maximumTransparencyRecordBytes": 141501,
+    "threeChainHighWaterBytes": 424503
   },
   "chains": {
     "identity": {
@@ -97,6 +119,32 @@
     "rollback": "reject-lower-epoch-and-no-mutation",
     "continuityFailure": "new-endpoint-requires-repairing-not-migration",
     "overflow": "reject-without-wrap"
+  },
+  "stationDescriptor": {
+    "stationIdDerivation": "SHA-256(UTF8(\"LICOARC-V1/STATION-ID\u0000\") || 32-byte-unpredictable-station-identity-seed)",
+    "stationIdentitySeed": "generated-once;-never-transmitted;-never-derived-from-host-uri-provider-endpoint-or-signing-key",
+    "contentDigest": "SHA-256(UTF8(\"LICOARC-V1/STATION-DESCRIPTOR\u0000\") || deterministic-CBOR-complete-station-descriptor-including-signatures)",
+    "signatureInput": "UTF8(\"LICOARC-V1/STATION-DESCRIPTOR/SIGN\u0000\") || deterministic-CBOR-complete-station-descriptor-excluding-signatures",
+    "signaturePurpose": "station-descriptor",
+    "genesis": "descriptorSequence-equals-1;-previousDescriptorDigest-absent;-at-least-one-signature-resolves-to-a-listed-signing-key",
+    "successor": "same-stationId;-descriptorSequence-strictly-greater-than-retained-high-water;-previousDescriptorDigest-equals-complete-predecessor-contentDigest;-at-least-one-signature-resolves-to-a-signing-key-authorized-by-the-predecessor",
+    "equalSequence": "equal-contentDigest-is-replay-without-mutation;-different-contentDigest-is-fork-without-mutation",
+    "rollback": "lower-descriptorSequence-reject-without-mutation",
+    "replacement": "atomic-after-closed-schema-canonical-order-validity-key-and-signature-validation",
+    "validity": "notBefore-must-not-exceed-notAfter;-local-time-controls-use-only-and-never-selects-lineage-or-proves-freshness",
+    "keyIdDerivation": "SHA-256(UTF8(\"LICOARC-V1/STATION-KEY-ID\u0000\") || stationId || keyProfileId || publicKey)",
+    "collectionOrder": "listeners-signingKeys-certificationRefs-and-signatures-are-strictly-ascending-by-their-deterministic-CBOR-encoding;-duplicates-reject",
+    "endpointUri": "canonical-ASCII-HTTPS-absolute-URI;-lowercase-scheme-and-DNS-host;-canonical-IP-literal;-no-userinfo-query-fragment-or-port;-percent-escapes-uppercase;-dot-segments-forbidden;-UTF8-length-at-most-MAX_ENDPOINT_URI_BYTES",
+    "certificationAuthority": "local-policy-input-only;-never-a-mandatory-federation-root",
+    "forbiddenClaims": [
+      "endpoint-identity",
+      "station-honesty",
+      "availability",
+      "federation-membership",
+      "provider-identity",
+      "message-freshness",
+      "key-deletion"
+    ]
   },
   "stationBoundary": {
     "identityVisibility": "never",

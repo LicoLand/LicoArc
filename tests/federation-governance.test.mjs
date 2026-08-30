@@ -14,14 +14,10 @@ import {
 
 const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const governanceRoot = path.join(repositoryRoot, "spec/v1/governance");
-const conformanceRoot = path.join(repositoryRoot, "conformance/v1/governance");
 const schema = await readJson("spec/v1/governance/governance.schema.json");
 const policy = await readJson("spec/v1/governance/governance.policy.json");
 const registry = await readJson("spec/v1/governance/registry.json");
 const sourceManifest = await readJson("spec/v1/governance/source-manifest.json");
-const conformanceManifest = await readJson("conformance/v1/governance/manifest.json");
-const validCases = await readJson("conformance/v1/governance/valid.json");
-const invalidCases = await readJson("conformance/v1/governance/invalid.json");
 
 const ROLE_ORDER = ["membership", "compatibility", "revocation", "distribution", "consistency", "recovery", "abuse"];
 const DIGEST_ZERO = "0".repeat(64);
@@ -35,6 +31,7 @@ test("governance source closure is explicit, sorted, and JCS-only", async () => 
   assert.equal(sourceManifest.symlinks, "reject");
   assert.deepEqual(sourceManifest.sources, [...sourceManifest.sources].sort());
   assert.equal(new Set(sourceManifest.sources).size, sourceManifest.sources.length);
+  assert.ok(sourceManifest.sources.includes("conformance/v1/governance/manifest.json"));
 
   const actual = [];
   for (const root of sourceManifest.sourceRoots) await collectFiles(path.join(repositoryRoot, root), actual);
@@ -77,38 +74,81 @@ test("restricted JCS canonicalization and role signature domains are determinist
   }
 });
 
-test("valid governance corpus accepts complete thresholds and commits atomically", () => {
-  assert.deepEqual(conformanceManifest.caseIds, validCases.map(({ id }) => id));
-  for (const fixture of validCases) {
-    const base = buildBundle();
-    const bundle = fixture.fixture === "rotation" ? buildRotation(base.bundleDigest) : base;
-    const state = localStateForFixture(fixture, base);
-    const before = structuredClone(state);
-    const result = evaluate(bundle, state, fixture.now);
-    assert.equal(result.outcome, fixture.expected.outcome, fixture.id);
-    assert.equal(result.rejectionClass, fixture.expected.rejectionClass, fixture.id);
-    if (fixture.expected.mutation === "no-mutation") assert.deepEqual(result.nextState, before, fixture.id);
-    else {
-      assert.equal(result.nextState.bundleDigest, bundle.bundleDigest, fixture.id);
-      assert.equal(result.nextState.bundleEpoch, bundle.bundleEpoch, fixture.id);
-    }
-    assert.doesNotThrow(() => assertValidAgainstClosedSchema(bundle, schema), fixture.id);
-  }
+test("complete governance bundles, rotation, and replay commit atomically", () => {
+  const base = buildBundle();
+  const initialState = emptyLocalState();
+  const accepted = evaluate(base, initialState, 2000);
+  assert.equal(accepted.outcome, "accept");
+  assert.equal(accepted.rejectionClass, "none");
+  assert.equal(accepted.nextState.bundleDigest, base.bundleDigest);
+  assert.equal(accepted.nextState.bundleEpoch, base.bundleEpoch);
+  assert.deepEqual(initialState, emptyLocalState());
+  assert.doesNotThrow(() => assertValidAgainstClosedSchema(base, schema));
+
+  const rotation = buildRotation(base.bundleDigest);
+  const rotated = evaluate(rotation, installedLocalState(base), 2500);
+  assert.equal(rotated.outcome, "accept");
+  assert.equal(rotated.rejectionClass, "none");
+  assert.equal(rotated.nextState.bundleDigest, rotation.bundleDigest);
+  assert.equal(rotated.nextState.bundleEpoch, rotation.bundleEpoch);
+  assert.doesNotThrow(() => assertValidAgainstClosedSchema(rotation, schema));
+
+  const installed = installedLocalState(base);
+  const replay = evaluate(base, installed, 2000);
+  assert.equal(replay.outcome, "accept");
+  assert.equal(replay.rejectionClass, "replay");
+  assert.deepEqual(replay.nextState, installed);
 });
 
-test("negative governance corpus fails closed and never mutates local high-water state", () => {
-  assert.deepEqual(conformanceManifest.negativeCaseIds, invalidCases.map(({ id }) => id));
-  for (const fixture of invalidCases) {
-    const base = buildBundle();
-    const source = fixture.fixture === "rotation" ? buildRotation(base.bundleDigest) : base;
-    const bundle = applyMutation(source, fixture.mutation);
-    const state = localStateForFixture(fixture, base);
-    const before = structuredClone(state);
-    const result = evaluate(bundle, state, fixture.now);
-    assert.equal(result.outcome, fixture.expected.outcome, fixture.id);
-    assert.equal(result.rejectionClass, fixture.expected.rejectionClass, fixture.id);
-    assert.deepEqual(result.nextState, before, fixture.id);
-  }
+test("invalid governance inputs fail closed without mutating local high-water state", () => {
+  const base = buildBundle();
+  const initial = emptyLocalState();
+
+  const unknownRole = structuredClone(base);
+  unknownRole.authorizations[0].role = "operator";
+  assertRejectedWithoutMutation(unknownRole, initial, 2000, "unknown-role");
+
+  const insufficientThreshold = structuredClone(base);
+  insufficientThreshold.authorizations[0].signatures.length = 0;
+  assertRejectedWithoutMutation(insufficientThreshold, initial, 2000, "insufficient-threshold");
+
+  assertRejectedWithoutMutation(base, initial, base.distribution.timestamp.expiresAt, "expired");
+
+  const inconsistentSnapshot = structuredClone(base);
+  inconsistentSnapshot.distribution.timestamp.snapshotDigest = DIGEST_A;
+  assertRejectedWithoutMutation(inconsistentSnapshot, initial, 2000, "inconsistent-snapshot");
+
+  const equivocation = structuredClone(base);
+  equivocation.consistency.observations[0].observedDigest = DIGEST_A;
+  assertRejectedWithoutMutation(equivocation, initial, 2000, "equivocation");
+
+  const splitView = structuredClone(base);
+  splitView.consistency.splitView = true;
+  assertRejectedWithoutMutation(splitView, initial, 2000, "split-view");
+
+  const partialCommittee = structuredClone(base);
+  partialCommittee.authorizations[0].signatures.length = 2;
+  assertRejectedWithoutMutation(partialCommittee, initial, 2000, "partial-committee");
+
+  const wrongSignatureScope = structuredClone(base);
+  wrongSignatureScope.authorizations[0].signatures[0].signatureScope = `licoarc.federation-governance.v1|wrong|${base.bundleDigest}`;
+  assertRejectedWithoutMutation(wrongSignatureScope, initial, 2000, "signature-scope");
+
+  const stationAdmission = structuredClone(base);
+  stationAdmission.endpointAdmission.authority = "station";
+  assertRejectedWithoutMutation(stationAdmission, initial, 2000, "authority-boundary");
+
+  const staleState = installedLocalState(base);
+  staleState.bundleEpoch = 2;
+  assertRejectedWithoutMutation(base, staleState, 2000, "stale");
+
+  const replayConflict = structuredClone(base);
+  replayConflict.bundleDigest = DIGEST_A;
+  assertRejectedWithoutMutation(replayConflict, installedLocalState(base), 2000, "replay");
+
+  const rotation = buildRotation(base.bundleDigest);
+  rotation.recovery.previousBundleDigest = DIGEST_A;
+  assertRejectedWithoutMutation(rotation, installedLocalState(base), 2500, "invalid-recovery");
 });
 
 test("role separation, distribution bindings, recovery, and local authority boundaries are explicit", () => {
@@ -259,7 +299,7 @@ function statementForMembership(seed) {
 function statementForCertification(seed) {
   const statement = {
     subjectRef: digestTag(seed + 10),
-    protocolLineId: "licoarc.protocol-line.v1",
+    protocolLineId: digestTag(seed + 19),
     capabilityDigests: [digestTag(seed + 20), digestTag(seed + 21)],
     certificationEpoch: 1,
     validFrom: 1000,
@@ -518,28 +558,26 @@ function signatureDigest(signature) {
   return digest({ rootId: signature.rootId, keyId: signature.keyId, role: signature.role, signatureScope: signature.signatureScope, signedDigest: signature.signedDigest });
 }
 
-function applyMutation(source, mutation = undefined) {
-  const result = structuredClone(source);
-  if (!mutation) return result;
-  const segments = mutation.path.split(".");
-  let target = result;
-  for (let index = 0; index < segments.length - 1; index += 1) target = target[Number.isInteger(Number(segments[index])) && segments[index] === String(Number(segments[index])) ? Number(segments[index]) : segments[index]];
-  const key = segments.at(-1);
-  const property = Number.isInteger(Number(key)) && key === String(Number(key)) ? Number(key) : key;
-  if (mutation.op === "replace") target[property] = mutation.value;
-  else if (mutation.op === "truncate") target[property].length = mutation.length;
-  return result;
+function emptyLocalState() {
+  return { networkRef: NETWORK_REF, bundleEpoch: 0, bundleDigest: null, roleVersions: {} };
 }
 
-function localStateForFixture(fixture, base) {
-  const source = fixture.localState ?? { networkRef: NETWORK_REF, bundleEpoch: 0, bundleDigest: null, roleVersions: {} };
-  const state = structuredClone(source);
-  if (state.bundleDigest === DIGEST_A) state.bundleDigest = base.bundleDigest;
-  if (fixture.id === "governance-v1.reject.stale-bundle") {
-    state.bundleEpoch = 1;
-    state.bundleDigest = base.bundleDigest;
-  }
-  return state;
+function installedLocalState(bundle) {
+  return {
+    networkRef: bundle.networkRef,
+    bundleEpoch: bundle.bundleEpoch,
+    bundleDigest: bundle.bundleDigest,
+    roleVersions: Object.fromEntries(ROLE_ORDER.map((role) => [role, 1]))
+  };
+}
+
+function assertRejectedWithoutMutation(bundle, state, now, rejectionClass) {
+  const before = structuredClone(state);
+  const result = evaluate(bundle, state, now);
+  assert.equal(result.outcome, "reject");
+  assert.equal(result.rejectionClass, rejectionClass);
+  assert.deepEqual(result.nextState, before);
+  assert.deepEqual(state, before);
 }
 
 function without(value, key) {

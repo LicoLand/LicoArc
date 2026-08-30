@@ -12,6 +12,12 @@
   "scripts": {
     "artifacts:generate": "node tools/generate-artifact.mjs",
     "artifacts:check": "node tools/generate-artifact.mjs --check",
+    "formal:generate": "node tools/formal/generate.mjs",
+    "formal:build": "node tools/formal/runtime.mjs build",
+    "formal:check": "node tools/formal/check.mjs",
+    "conformance:check": "node tools/run-conformance.mjs",
+    "test:focused": "node --test tests/protocol-line-complete.test.mjs tests/pairwise-protection.test.mjs tests/security-claims.test.mjs tests/candidate-integration.test.mjs tests/conformance.test.mjs tests/protocol-foundation.test.mjs tests/identity.test.mjs tests/reliable-evidence.test.mjs tests/generic-messaging.test.mjs tests/group-collaboration.test.mjs tests/https-transport.test.mjs tests/federation-governance.test.mjs tests/algorithm-decisions.test.mjs tests/status-boundaries.test.mjs",
+    "check:focused": "npm run formal:check && npm run conformance:check && npm run test:focused && npm run artifacts:check",
     "test": "node --test tests/*.test.mjs",
     "verify": "npm run artifacts:check && npm test"
   },

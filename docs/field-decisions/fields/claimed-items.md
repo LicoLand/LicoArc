@@ -10,7 +10,7 @@ specification; normative field semantics come only from the Field Registry.
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-claimed-items` |
 | Decision status | `DECIDED` |
-| Definition status | `PARTIAL` |
+| Definition status | `SPECIFIED` |
 | Existing authority | [`FIELD-REGISTRY.md`](../../../spec/FIELD-REGISTRY.md) |
 | Current conclusion | A `CLAIM` result conditionally contains `items` as `ClaimedItem[1..MAX_CLAIM_ITEMS]`, present only when items are available, with item count and aggregate bytes fixed and bounded. |
 
@@ -27,7 +27,7 @@ Station-local settlement handles to the claiming Endpoint.
 ## Contribution to LicoArc's final vision
 
 Carries a bounded unit of opaque Station-held delivery work so an Endpoint can
-retrieve without unbounded allocation or plaintext exposure.
+claim without unbounded allocation or plaintext exposure.
 
 ## Field model and trade-offs
 
@@ -50,4 +50,4 @@ semantics come only from `FIELD-REGISTRY.md`.
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. Only the scope recorded by this decision and its linked normative authorities is defined; any remaining normative ambiguity requires a successor decision before entering the protocol definition.
+The definition status is `SPECIFIED`. The Canonical Field Registry and linked machine-readable authorities close this record’s exact active semantics.

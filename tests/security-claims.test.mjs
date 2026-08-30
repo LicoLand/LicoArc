@@ -1,102 +1,169 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import test from "node:test";
 import {
   assertClosedJsonSchema,
-  assertValidSecurityAccounting,
-  validateClosedSchema
+  assertValidSecurityAccounting
 } from "../tools/protocol/index.mjs";
 
 const root = resolve(import.meta.dirname, "..");
 const readJson = (sourcePath) => readFile(resolve(root, sourcePath), "utf8").then(JSON.parse);
-const [claims, adversaries, bindings, registry, valid, invalid, schemas] = await Promise.all([
+const [claims, adversaries, bindings, registry, schemas] = await Promise.all([
   readJson("spec/v1/security/claims.json"),
   readJson("spec/v1/security/adversary-model.json"),
   readJson("spec/v1/security/formal-bindings.json"),
   readJson("spec/v1/security/registry.json"),
-  readJson("conformance/v1/security/valid.json"),
-  readJson("conformance/v1/security/invalid.json"),
   Promise.all([
     ["claims", "spec/schemas/security-claims.schema.json"],
     ["adversaries", "spec/schemas/security-adversary-model.schema.json"],
     ["bindings", "spec/schemas/security-formal-bindings.schema.json"],
-    ["registry", "spec/schemas/security-registry.schema.json"],
-    ["corpus", "spec/schemas/security-corpus.schema.json"]
+    ["registry", "spec/schemas/security-registry.schema.json"]
   ].map(async ([name, sourcePath]) => [name, await readJson(sourcePath)]))
     .then(Object.fromEntries)
 ]);
 const accounting = { claims, adversaries, bindings, registry, schemas };
+const [protectionProfiles, algorithms, protocolLines, proofEvidenceBytes, generatedTheory] = await Promise.all([
+  readJson("spec/protection-profiles.json"),
+  readJson("spec/v1/protection/algorithms.json"),
+  readJson("spec/protocol-lines.json"),
+  readFile(resolve(root, "formal/evidence.json")),
+  readFile(resolve(root, "formal/generated/licoarc-core-v1.spthy"), "utf8")
+]);
+const proofEvidence = JSON.parse(proofEvidenceBytes);
 
-test("closed security accounting records every required claim without fabricated proof", () => {
+test("security accounting is closed, source-authoritative, and lifecycle-generic", () => {
   for (const schema of Object.values(schemas)) assert.doesNotThrow(() => assertClosedJsonSchema(schema));
-  assert.deepEqual(validateClosedSchema(valid, schemas.corpus), []);
-  assert.deepEqual(validateClosedSchema(invalid, schemas.corpus), []);
-  assert.doesNotThrow(() => assertValidSecurityAccounting(accounting));
+  const summary = assertValidSecurityAccounting(accounting);
+  assert.equal(summary.complete, registry.definitionStatus === "COMPLETE");
+  assert.equal(bindings.status === "complete", registry.definitionStatus === "COMPLETE");
+  assert.equal(registry.missingMandatoryBindingPolicy, "line-ineligible");
+  assert.equal(registry.proofDoesNotDefineProtocol, true);
+  assert.equal(registry.downstreamEvidenceDoesNotAdvanceDefinition, true);
+  assert.equal(bindings.bindings.length, 161);
+  assert.equal(bindings.requiredKinds.length, 7);
+  assert.ok(bindings.semanticSources.includes("spec/v1/manifest.json"));
 
-  assert.deepEqual(claims.claims.map(({ id }) => id),
-    Array.from({ length: 23 }, (_, index) => `SEC-${String(index + 1).padStart(3, "0")}`));
-  assert.ok(claims.claims.every((claim) =>
-    claim.status === "unproved" && claim.proofModel === null &&
-    claim.proofLemma === null && claim.counterexampleStatus === "not-evaluated"));
+  const ids = claims.claims.map(({ id }) => id);
+  assert.equal(new Set(ids).size, ids.length);
+  assert.deepEqual([...ids].sort(), ids);
   for (const property of [
+    "hybrid-ake-key-secrecy",
+    "mutual-endpoint-authentication",
+    "protocol-line-downgrade-resistance",
+    "double-ratchet-forward-secrecy",
+    "double-ratchet-post-compromise-recovery",
     "pairwise-record-confidentiality",
     "pairwise-record-authentication-and-integrity",
     "sender-metadata-confidentiality"
   ]) assert.ok(claims.claims.some((claim) => claim.property === property), property);
-  assert.deepEqual(bindings.bindings, []);
-  assert.equal(bindings.status, "incomplete");
-  assert.equal(registry.missingMandatoryBindingPolicy, "line-ineligible");
 });
 
-test("security negative corpus executes closed-schema, reference, proof, and authority rejection", () => {
-  for (const corpusCase of invalid.cases) {
-    const mutated = structuredClone(accounting);
-    applyMutation(mutated, corpusCase.mutation);
-    assert.throws(() => assertValidSecurityAccounting(mutated), (error) => {
-      assert.equal(error.code, corpusCase.expected, corpusCase.id);
-      return true;
-    });
+test("every proved claim carries every exact formal binding kind and reference", () => {
+  const byClaim = Map.groupBy(bindings.bindings, (binding) => binding.claimId);
+  for (const claim of claims.claims) {
+    const claimBindings = byClaim.get(claim.id) ?? [];
+    if (claim.status !== "proved") {
+      assert.equal(claimBindings.length, 0, claim.id);
+      assert.equal(claim.proofModel, null, claim.id);
+      assert.equal(claim.proofLemma, null, claim.id);
+      continue;
+    }
+    assert.equal(claim.counterexampleStatus, "no-counterexample-found", claim.id);
+    assert.deepEqual(
+      new Set(claimBindings.map(({ kind }) => kind)),
+      new Set(bindings.requiredKinds),
+      claim.id
+    );
+    assert.ok(claimBindings.every((binding) =>
+      binding.proofModel === claim.proofModel && binding.proofLemma === claim.proofLemma), claim.id);
   }
 });
 
-test("adversary and explicit non-claim boundaries remain machine-visible", () => {
-  assert.deepEqual(adversaries.models.map(({ id }) => id),
-    ["A0", "A1", "A2", "A3", "A4", "A5", "A6"]);
+test("the active Profile claim and nonclaim sets are exact and substantive", () => {
+  const expectedClaimIds = Array.from({ length: 23 }, (_, index) =>
+    `SEC-${String(index + 1).padStart(3, "0")}`);
+  assert.deepEqual(claims.claims.map(({ id }) => id), expectedClaimIds);
+  assert.ok(claims.claims.every(({ status }) => status === "proved"));
+
+  const activeProfile = protectionProfiles.profiles.find(({ profileId }) =>
+    protectionProfiles.activeProfileIds.includes(profileId));
+  assert.deepEqual(activeProfile.requiredClaimIds, [
+    ...expectedClaimIds.slice(0, 13),
+    ...expectedClaimIds.slice(19)
+  ]);
+  const exactProfileNonclaims = [
+    "ongoing-post-quantum-post-compromise-recovery",
+    "physical-zeroization",
+    "ratchet-header-confidentiality",
+    "rollback-detection-under-fully-compromised-store",
+    "transferable-session-authentication"
+  ];
+  assert.deepEqual(activeProfile.stableNonClaimIds, exactProfileNonclaims);
+  assert.deepEqual([...algorithms.nonclaims].sort(), exactProfileNonclaims);
+  assert.ok(exactProfileNonclaims.every((nonclaim) => claims.nonClaims.includes(nonclaim)));
+});
+
+test("formal bindings, model constants, immutable runtime, and bundle proof evidence use content identities", () => {
+  const lineId = protocolLines.lines.find(({ sessionEligible }) => sessionEligible).protocolLineId;
+  const profileId = protectionProfiles.activeProfileIds[0];
+  for (const binding of bindings.bindings) {
+    if (binding.kind === "protocol-line-id") {
+      assert.equal(binding.authorityPath, "spec/protocol-lines.json");
+      assert.equal(binding.authorityPointer, "/lines/0/protocolLineId");
+    }
+    if (binding.kind === "profile-id") {
+      assert.equal(binding.authorityPath, "spec/protection-profiles.json");
+      assert.equal(binding.authorityPointer, "/profiles/0/profileId");
+    }
+  }
+  assert.match(generatedTheory, new RegExp(lineId, "u"));
+  assert.match(generatedTheory, new RegExp(profileId, "u"));
+  assert.ok(claims.claims.every(({ residualRisk }) => !residualRisk.includes("injection-pending")));
+  assert.equal(registry.proofEvidenceDigest,
+    createHash("sha256").update(proofEvidenceBytes).digest("hex"));
+  assert.match(proofEvidence.imageDigest, /^sha256:[0-9a-f]{64}$/u);
+  assert.deepEqual(proofEvidence.execution.arguments,
+    ["--prove", "--heuristic=s", "+RTS", "-N1", "-RTS"]);
+  assert.ok(proofEvidence.lemmas.some(({ name, result }) =>
+    name === "executable_ratchet_evolution" && result === "verified"));
+});
+
+test("unknown adversaries and downstream proof authority fail closed", () => {
+  const unknownAdversary = structuredClone(accounting);
+  unknownAdversary.claims.claims[0].adversary = ["A-UNKNOWN"];
+  assert.throws(() => assertValidSecurityAccounting(unknownAdversary),
+    errorWithCode("reject-unknown-adversary"));
+
+  if (bindings.bindings.length > 0) {
+    const downstream = structuredClone(accounting);
+    downstream.bindings.bindings[0].authorityPath = "downstream/provider-result.json";
+    assert.throws(() => assertValidSecurityAccounting(downstream),
+      errorWithCode("reject-wrong-authority"));
+  }
+});
+
+test("explicit nonclaims remain unavailable as positive guarantees", () => {
   assert.ok(claims.nonClaims.includes("anonymity"));
   assert.ok(claims.nonClaims.includes("traffic-analysis-resistance"));
   assert.ok(claims.nonClaims.includes("exactly-once-effects-without-application-idempotency"));
-  assert.ok(valid.cases.every(({ expected }) => expected === "accept-source-status"));
+  assert.ok(claims.nonClaims.includes("security-after-full-live-endpoint-compromise-before-recovery"));
+
+  const positiveProperties = new Set(claims.claims
+    .filter(({ status }) => status === "proved")
+    .map(({ property }) => property));
+  for (const nonClaim of claims.nonClaims) assert.ok(!positiveProperties.has(nonClaim), nonClaim);
+
+  const promoted = structuredClone(accounting);
+  promoted.claims.claims[2].property = claims.nonClaims[0];
+  assert.throws(() => assertValidSecurityAccounting(promoted),
+    errorWithCode("reject-nonclaim-promoted-to-claim"));
 });
 
-function applyMutation(value, mutation) {
-  const claim = value.claims.claims.find(({ id }) => id === mutation.claimId);
-  switch (mutation.operation) {
-    case "prove-without-binding":
-      claim.status = "proved";
-      claim.proofModel = "future-model";
-      claim.proofLemma = "future-lemma";
-      break;
-    case "unknown-adversary":
-      claim.adversary = ["A99"];
-      break;
-    case "unknown-claim-member":
-      claim.unowned = true;
-      break;
-    case "remove-required-claim":
-      value.claims.claims = value.claims.claims.filter(({ id }) => id !== mutation.claimId);
-      break;
-    case "add-downstream-binding":
-      value.bindings.bindings.push({
-        bindingId: "BIND-001",
-        claimId: mutation.claimId,
-        kind: "protocol-line-id",
-        authorityPath: "downstream/results/model.json",
-        authorityPointer: "/result",
-        authorityDigest: "0".repeat(64)
-      });
-      break;
-    default:
-      throw new TypeError(`unknown security mutation ${mutation.operation}`);
-  }
+function errorWithCode(code) {
+  return (error) => {
+    assert.equal(error.code, code);
+    return true;
+  };
 }

@@ -18,10 +18,10 @@ const evidenceCorpusRoot = path.join(repositoryRoot, "conformance/v1/evidence");
 
 const readJson = async (file) => JSON.parse(await readFile(file, "utf8"));
 const [reliableBounds, reliableLabels, reliableRegistry, reliableSourceManifest,
-  reliableConformanceManifest, reliableValid, reliableInvalid, reliableIntentSchema,
+  reliableConformanceManifest, reliableIntentSchema,
   reliableEventSchema, reliableStateSchema, evidenceBounds, evidenceLabels,
   evidenceRegistry, evidenceSourceManifest, evidenceConformanceManifest,
-  evidenceValid, evidenceInvalid, evidenceStatementSchema, evidenceCheckpointSchema,
+  evidenceStatementSchema, evidenceCheckpointSchema,
   evidenceIdentityBundleSchema, reliableDocumentation, evidenceDocumentation,
   algorithmDecision] = await Promise.all([
   readJson(path.join(reliableRoot, "bounds.json")),
@@ -29,8 +29,6 @@ const [reliableBounds, reliableLabels, reliableRegistry, reliableSourceManifest,
   readJson(path.join(reliableRoot, "registry.json")),
   readJson(path.join(reliableRoot, "source-manifest.json")),
   readJson(path.join(reliableCorpusRoot, "manifest.json")),
-  readJson(path.join(reliableCorpusRoot, "valid.json")),
-  readJson(path.join(reliableCorpusRoot, "invalid.json")),
   readJson(path.join(reliableRoot, "intent.schema.json")),
   readJson(path.join(reliableRoot, "event.schema.json")),
   readJson(path.join(reliableRoot, "state.schema.json")),
@@ -39,8 +37,6 @@ const [reliableBounds, reliableLabels, reliableRegistry, reliableSourceManifest,
   readJson(path.join(evidenceRoot, "registry.json")),
   readJson(path.join(evidenceRoot, "source-manifest.json")),
   readJson(path.join(evidenceCorpusRoot, "manifest.json")),
-  readJson(path.join(evidenceCorpusRoot, "valid.json")),
-  readJson(path.join(evidenceCorpusRoot, "invalid.json")),
   readJson(path.join(evidenceRoot, "statement.schema.json")),
   readJson(path.join(evidenceRoot, "checkpoint.schema.json")),
   readJson(path.join(evidenceRoot, "identity-bundle.schema.json")),
@@ -61,7 +57,7 @@ const RELIABLE_CBOR_LIMITS = Object.freeze({
   maxInteger: Number.MAX_SAFE_INTEGER
 });
 const EVIDENCE_CBOR_LIMITS = Object.freeze({
-  maxBytes: EB.MAX_EVIDENCE_BUNDLE_BYTES,
+  maxBytes: EB.MAX_EVIDENCE_VERIFICATION_PACKAGE_BYTES,
   maxDepth: 16,
   maxArrayItems: Math.max(EB.MAX_EVIDENCE_STATEMENTS, EB.MAX_EVIDENCE_SIGNATURES, EB.MAX_KEYS_PER_IDENTITY_STATE),
   maxMapEntries: 32,
@@ -109,15 +105,26 @@ test("source closures, schemas, manifests, and protocol projections are explicit
   assert.deepEqual(evidenceSourceManifest.sourceRoots, ["conformance/v1/evidence", "spec/v1/evidence"]);
   assert.deepEqual(reliableSourceManifest.sources, [...reliableSourceManifest.sources].sort());
   assert.deepEqual(evidenceSourceManifest.sources, [...evidenceSourceManifest.sources].sort());
-  assert.deepEqual(reliableConformanceManifest.caseIds, reliableValid.map(({ id }) => id));
-  assert.deepEqual(reliableConformanceManifest.negativeCaseIds, reliableInvalid.map(({ id }) => id));
-  assert.deepEqual(evidenceConformanceManifest.caseIds, evidenceValid.map(({ id }) => id));
-  assert.deepEqual(evidenceConformanceManifest.negativeCaseIds, evidenceInvalid.map(({ id }) => id));
+  for (const [name, manifest] of [
+    ["reliable", reliableConformanceManifest],
+    ["evidence", evidenceConformanceManifest]
+  ]) {
+    assert.equal(manifest.$schema,
+      "https://licoarc.com/spec/schemas/conformance-corpus-manifest.schema.json");
+    assert.equal(manifest.manifestVersion, "licoarc.conformance-corpus-manifest.v1");
+    assert.equal(Number.isSafeInteger(manifest.caseCount) && manifest.caseCount > 0, true);
+    assert.deepEqual(manifest.operationIds, [...manifest.operationIds].sort());
+    assert.equal(new Set(manifest.operationIds).size, manifest.operationIds.length);
+    assert.deepEqual(manifest.envelopePaths, [...manifest.envelopePaths].sort());
+    assert.equal(new Set(manifest.envelopePaths).size, manifest.envelopePaths.length);
+    assert.equal(manifest.envelopePaths.every((sourcePath) =>
+      sourcePath.startsWith(`conformance/v1/${name}/`) && sourcePath.endsWith(".json")), true);
+  }
   assert.equal(RB.MAX_RETRY_TRANSMISSIONS, 32);
   assert.equal(RB.MAX_CONFIRMATION_IDS, 32);
   assert.equal(RB.MAX_GROUP_PROJECTIONS, 64);
   assert.equal(EB.MAX_EVIDENCE_STATEMENTS, 32);
-  assert.equal(EB.MAX_EVIDENCE_SIGNATURES, 4);
+  assert.equal(EB.MAX_EVIDENCE_SIGNATURES, 2);
   assert.equal(EB.EVIDENCE_PENDING_WINDOW, 60);
   assert.equal(reliableRegistry.delivery.exactlyOnceEffects, "forbidden-claim");
   assert.equal(reliableRegistry.delivery.guaranteedStationDelivery, "forbidden-claim");
@@ -148,39 +155,60 @@ test("source closures, schemas, manifests, and protocol projections are explicit
   }
 });
 
-test("reliable positive corpus has deterministic bytes and closed records", () => {
-  for (const fixture of reliableValid) {
-    const value = decodeFixtureValue(fixture.value);
-    const bytes = encodeReliable(value);
-    assert.equal(toHex(bytes), fixture.expectedHex, fixture.id);
-    assert.equal(bytes.byteLength <= RB.MAX_RELIABLE_SNAPSHOT_BYTES, true, fixture.id);
-    const roundTrip = decodeReliable(bytes);
-    if (fixture.kind === "intent") validateIntent(roundTrip);
-    else if (fixture.kind === "event") validateEvent(roundTrip);
-    else if (fixture.kind === "confirmation") validateConfirmation(roundTrip);
-    else if (fixture.kind === "snapshot") validateSnapshot(roundTrip);
-    else throw new Error(`unknown reliable fixture kind ${fixture.kind}`);
-    assert.deepEqual(normalize(roundTrip), normalize(value), fixture.id);
+test("closed schema conditionals and tuple tails fail closed", () => {
+  const conditional = {
+    type: "object",
+    additionalProperties: false,
+    required: ["kind"],
+    properties: {
+      kind: { type: "string", enum: ["plain", "tagged"] },
+      tag: { type: "string" }
+    },
+    if: { properties: { kind: { const: "tagged" } }, required: ["kind"] },
+    then: { required: ["tag"] },
+    else: { not: { required: ["tag"] } }
+  };
+  assert.deepEqual(validateClosedSchema({ kind: "tagged", tag: "x" }, conditional), []);
+  assert.equal(validateClosedSchema({ kind: "tagged" }, conditional).length > 0, true);
+  assert.equal(validateClosedSchema({ kind: "plain", tag: "x" }, conditional).length > 0, true);
+
+  const tuple = { type: "array", prefixItems: [{ const: 1 }], items: false };
+  assert.deepEqual(validateClosedSchema([1], tuple), []);
+  assert.equal(validateClosedSchema([1, 2], tuple).length > 0, true);
+});
+
+test("reliable public records have deterministic bytes and closed round trips", () => {
+  const intent = makeIntent({ messageId: bytes16(1), payload: bytesOf(0x61, 5), idempotencyKey: bytesOf(0x69, 4) });
+  const confirmation = makeConfirmation({ confirmationId: bytes16(2), ids: [bytes16(3), bytes16(4)] });
+  const state = stateToWire(createOutbox(intent, bytesOf(0xaa, 8), 0));
+  const event = { "0": EVENT_KIND.get("create"), "1": intent["0"], "2": intentDigest(intent), "15": 0 };
+  for (const [value, validate] of [
+    [intent, validateIntent], [event, validateEvent], [confirmation, validateConfirmation], [state, validateSnapshot]
+  ]) {
+    const first = encodeReliable(value);
+    const second = encodeReliable(clone(value));
+    assert.deepEqual(first, second);
+    assert.equal(first.byteLength <= RB.MAX_RELIABLE_SNAPSHOT_BYTES, true);
+    const roundTrip = decodeReliable(first);
+    assert.doesNotThrow(() => validate(roundTrip));
+    assert.deepEqual(roundTrip, value);
   }
 });
 
-test("evidence positive corpus has deterministic statements, checkpoints, and signature sets", () => {
-  const statementDigests = [];
-  for (const fixture of evidenceValid) {
-    const value = decodeFixtureValue(fixture.value);
-    const bytes = encodeEvidence(value);
-    assert.equal(toHex(bytes), fixture.expectedHex, fixture.id);
-    assert.equal(bytes.byteLength <= EB.MAX_EVIDENCE_BUNDLE_BYTES, true, fixture.id);
-    const roundTrip = decodeEvidence(bytes);
-    if (fixture.kind === "statement") {
-      validateStatement(roundTrip);
-      statementDigests.push(digestStatement(statementFromWire(roundTrip)));
-    } else if (fixture.kind === "checkpoint") {
-      validateCheckpoint(roundTrip);
-    } else throw new Error(`unknown evidence fixture kind ${fixture.kind}`);
-    assert.deepEqual(normalize(roundTrip), normalize(value), fixture.id);
+test("evidence public records have deterministic statement and checkpoint bytes", () => {
+  const statement = makeStatement();
+  const statementWireValue = projectStatement(statement);
+  const checkpointWireValue = checkpointWire(makeCheckpoint({ statementDigests: [digestStatement(statement)] }));
+  for (const [value, validate] of [
+    [statementWireValue, validateStatement], [checkpointWireValue, validateCheckpoint]
+  ]) {
+    const first = encodeEvidence(value);
+    assert.deepEqual(first, encodeEvidence(clone(value)));
+    assert.equal(first.byteLength <= EB.MAX_EVIDENCE_VERIFICATION_PACKAGE_BYTES, true);
+    const roundTrip = decodeEvidence(first);
+    assert.doesNotThrow(() => validate(roundTrip));
+    assert.deepEqual(roundTrip, value);
   }
-  assert.equal(statementDigests.length, 2);
 });
 
 test("at-least-once send/receive preserves Protected Intent and deduplicates exact duplicates", () => {
@@ -305,10 +333,14 @@ test("attachment recovery and Group partial results remain bounded and terminal"
   );
 });
 
-test("invalid reliable corpus maps to typed fail-closed outcomes", () => {
-  for (const fixture of reliableInvalid) {
-    assert.equal(runReliableInvalidFixture(fixture), fixture.outcome, fixture.id);
-  }
+test("reliable malformed and over-bound public inputs fail closed", () => {
+  assert.throws(() => decodeReliable(fromHex("a1000100")), errorWithCode("trailing-bytes"));
+  assert.throws(() => decodeReliable(fromHex("a1001801")), errorWithCode("non-canonical-wire"));
+  const duplicate = makeConfirmation({ confirmationId: bytes16(8), ids: [bytes16(1)] });
+  duplicate["3"] = [bytes16(1), bytes16(1)];
+  assert.throws(() => validateConfirmation(duplicate), errorWithCode("duplicate-confirmed-message-id"));
+  const overBound = { "0": 0, "1": 1, "2": bytes16(1), "3": bytes32(2), "9": RB.MAX_STATE_TRANSITIONS + 1 };
+  assert.throws(() => validateSnapshot(overBound), errorWithCode("state-bound-exceeded"));
 });
 
 test("Transferable Statement projection is deterministic and excludes transport/session carriage", () => {
@@ -391,10 +423,17 @@ test("checkpoint-before-finality joins in either order, keeps orphans bounded, a
   assert.equal(expired.delivered.size, 0);
 });
 
-test("invalid evidence corpus maps to bounded rejection classes", () => {
-  for (const fixture of evidenceInvalid) {
-    assert.equal(runEvidenceInvalidFixture(fixture), fixture.outcome, fixture.id);
-  }
+test("evidence malformed public inputs map to bounded rejection classes", () => {
+  const statement = makeStatement({ statementKind: "endpointAccepted" });
+  const checkpoint = makeCheckpoint({ statementDigests: [digestStatement(statement)] });
+  assert.throws(() => validateCheckpoint({ ...checkpoint, signatures: [] }), errorWithCode("missing-signature"));
+  assert.throws(() => validateCheckpoint({
+    ...checkpoint,
+    signatures: [...checkpoint.signatures, clone(checkpoint.signatures[0])]
+  }), errorWithCode("surplus-signature"));
+  assert.throws(() => verifyCheckpoint(checkpoint, [
+    makeStatement({ statementKind: "endpointAccepted", logicalMessageId: bytes16(99) })
+  ], makeIdentityBundle()), errorWithCode("statement-mismatch"));
 });
 
 test("terminal failure is absorbing and guarantee limits remain explicit", () => {
@@ -660,7 +699,7 @@ function acceptConfirmation(store, confirmation) {
   throw new ReliableError("confirmation-conflict");
 }
 
-function makeConfirmation({ confirmationId, ids, stage = "accepted", outcome = "success", failureCode = undefined, evidenceDigest = undefined }) {
+function makeConfirmation({ confirmationId, ids, stage = "endpointAccepted", outcome = "succeeded", failureCode = undefined, evidenceDigest = undefined }) {
   const value = {
     "0": cloneBytes(confirmationId),
     "1": STAGE.get(stage),
@@ -1132,60 +1171,6 @@ class EvidenceStore {
   }
 }
 
-function runReliableInvalidFixture(fixture) {
-  if (fixture.kind === "wire") {
-    try { decodeReliable(fromHex(fixture.hex)); return "accepted"; } catch (error) { return error.code; }
-  }
-  if (fixture.kind === "confirmation") {
-    try { validateConfirmation(decodeFixtureValue(fixture.value)); return "accepted"; } catch (error) { return error.code; }
-  }
-  const value = fixture.value ?? {};
-  try {
-    if (fixture.id === "same-id-different-intent") throw new ReliableError("intent-conflict");
-    if (fixture.id === "station-receipt-authority") throw new ReliableError("station-authority");
-    if (fixture.id === "retry-over-bound") throw new ReliableError("retry-bound-exceeded");
-    if (fixture.id === "route-reset") throw new ReliableError("route-reset");
-    if (fixture.id === "terminal-reopen") throw new ReliableError("terminal-reopen");
-    if (fixture.id === "group-projection-conflict") throw new ReliableError("group-projection-conflict");
-    if (fixture.id === "snapshot-over-bound") throw new ReliableError("state-bound-exceeded");
-    void value;
-    return "accepted";
-  } catch (error) { return error.code; }
-}
-
-function runEvidenceInvalidFixture(fixture) {
-  const value = fixture.value ?? {};
-  try {
-    if (fixture.id === "checkpoint-unsorted-digests" || fixture.id === "checkpoint-duplicate-digest" || fixture.id === "checkpoint-missing-ed25519" || fixture.id === "checkpoint-surplus-signature" || fixture.id === "checkpoint-wrong-purpose" || fixture.id === "checkpoint-invalid-signature") {
-      const semantic = value.statementDigests ? {
-        "0": "base64:ERERERERERERERERERERERERERERERERERERERERERE=",
-        "1": "base64:IiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiI=",
-        "2": "base64:MzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzM=",
-        "3": "base64:NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ=",
-        "4": value.statementDigests,
-        "5": value.signatures
-      } : {
-        "0": value["0"] ?? "base64:ERERERERERERERERERERERERERERERERERERERERERE=",
-        "1": value["1"] ?? "base64:IiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiI=",
-        "2": value["2"] ?? "base64:MzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzM=",
-        "3": value["3"] ?? "base64:NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ=",
-        "4": value["4"] ?? ["base64:ERERERERERERERERERERERERERERERERERERERERERE="],
-        "5": value["5"] ?? []
-      };
-      const wire = decodeFixtureValue(semantic);
-      validateCheckpoint(wire);
-      return "accepted";
-    }
-    if (fixture.id === "statement-checkpoint-mismatch") throw new EvidenceError("statement-mismatch");
-    if (fixture.id === "orphan-pending-exhausted") throw new EvidenceError("pending-exhausted");
-    if (fixture.id === "pending-expired") throw new EvidenceError("pending-expired");
-    if (fixture.id === "identity-rollback") throw new EvidenceError("identity-rollback");
-    if (fixture.id === "recursive-checkpoint") throw new EvidenceError("recursive-checkpoint");
-    void value;
-    return "accepted";
-  } catch (error) { return error.code; }
-}
-
 function statementWire(statement) {
   const kind = STATEMENT_KIND.get(statement.statementKind);
   if (kind === undefined) throw new EvidenceError("unknown-statement-kind");
@@ -1258,25 +1243,11 @@ function structuredCloneTransition(value) {
   return clone(value);
 }
 
-function normalize(value) {
-  if (value instanceof Uint8Array) return toHex(value);
-  if (Array.isArray(value)) return value.map(normalize);
-  if (value && typeof value === "object") return Object.fromEntries(Object.keys(value).sort().map((key) => [key, normalize(value[key])]));
-  return value;
-}
-
 function canonicalValue(value) {
   if (value instanceof Uint8Array) return `b:${toHex(value)}`;
   if (Array.isArray(value)) return `[${value.map(canonicalValue).join(",")}]`;
   if (value && typeof value === "object") return `{${Object.keys(value).sort().map((key) => `${JSON.stringify(key)}:${canonicalValue(value[key])}`).join(",")}}`;
   return JSON.stringify(value);
-}
-
-function decodeFixtureValue(value) {
-  if (typeof value === "string" && value.startsWith("base64:")) return fromBase64(value.slice(7));
-  if (Array.isArray(value)) return value.map(decodeFixtureValue);
-  if (value && typeof value === "object") return Object.fromEntries(Object.entries(value).map(([key, child]) => [key, decodeFixtureValue(child)]));
-  return value;
 }
 
 function collectFiles(directory, root, output) {
@@ -1362,10 +1333,6 @@ function toHex(value) {
 }
 
 function fromHex(value) {
-  if (typeof value !== "string" || value.length % 2 !== 0 || !/^[0-9a-f]*$/u.test(value)) throw new TypeError("invalid hex fixture");
+  if (typeof value !== "string" || value.length % 2 !== 0 || !/^[0-9a-f]*$/u.test(value)) throw new TypeError("invalid hex input");
   return Uint8Array.from(Buffer.from(value, "hex"));
-}
-
-function fromBase64(value) {
-  return Uint8Array.from(Buffer.from(value, "base64"));
 }

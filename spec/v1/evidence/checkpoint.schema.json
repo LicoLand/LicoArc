@@ -13,6 +13,30 @@
     "statementDigests",
     "signatures"
   ],
+  "$defs": {
+    "ed25519Signature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["keyProfileId", "keyId", "purpose", "value"],
+      "properties": {
+        "keyProfileId": { "const": "176b912b9547ca9c47ace10f881457ab63fcd493ef953616f5859e76b830fd60" },
+        "keyId": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "purpose": { "const": "endpoint-evidence" },
+        "value": { "type": "string", "pattern": "^[0-9a-f]{128}$" }
+      }
+    },
+    "mlDsa65Signature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["keyProfileId", "keyId", "purpose", "value"],
+      "properties": {
+        "keyProfileId": { "const": "427e788bb9aed076acc2fb5a94715d14e694ec5fbc846ac52c8c7e118a6b1b8f" },
+        "keyId": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "purpose": { "const": "endpoint-evidence" },
+        "value": { "type": "string", "pattern": "^[0-9a-f]{6618}$" }
+      }
+    }
+  },
   "properties": {
     "recordType": { "type": "string", "const": "evidenceCheckpoint" },
     "protocolLineId": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
@@ -29,19 +53,13 @@
     "signatures": {
       "type": "array",
       "minItems": 2,
-      "maxItems": 4,
+      "maxItems": 2,
       "uniqueItems": true,
-      "items": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": ["algorithm", "keyId", "purpose", "value"],
-        "properties": {
-          "algorithm": { "type": "string", "enum": ["Ed25519", "ML-DSA-65"] },
-          "keyId": { "type": "string", "pattern": "^[0-9a-f]{32}$" },
-          "purpose": { "type": "string", "const": "endpoint-evidence" },
-          "value": { "type": "string", "pattern": "^[0-9a-f]{2,8192}$" }
-        }
-      }
+      "prefixItems": [
+        { "$ref": "#/$defs/ed25519Signature" },
+        { "$ref": "#/$defs/mlDsa65Signature" }
+      ],
+      "items": false
     }
   }
 }

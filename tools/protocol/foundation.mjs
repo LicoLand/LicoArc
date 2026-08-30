@@ -40,6 +40,7 @@ export const FOUNDATION_REGISTRY_PATHS = Object.freeze({
 const DEFAULT_REPOSITORY_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const BOUNDS_SCHEMA_PATH = "spec/v1/schemas/foundation-bounds.schema.json";
 const SCHEMA_PATHS = Object.freeze({
+  common: "spec/schemas/catalog-common.schema.json",
   bounds: BOUNDS_SCHEMA_PATH,
   identifiers: "spec/v1/schemas/foundation-identifiers.schema.json",
   lifecycle: "spec/v1/schemas/foundation-lifecycle.schema.json",
@@ -162,8 +163,11 @@ export function canonicalizeGovernanceDocument(value, contextOrLimits = {}) {
 
 export function validateProtocolLineManifest(value, context) {
   const schema = context?.schemas?.protocolLineManifest;
-  if (!schema) throw new FoundationError("protocol-line manifest schema is required");
-  const errors = validateClosedSchema(value, schema);
+  const common = context?.schemas?.common;
+  if (!schema || !common) {
+    throw new FoundationError("protocol-line manifest and shared catalog schemas are required");
+  }
+  const errors = validateClosedSchema(value, schema, { schemas: [common] });
   if (errors.length > 0) return errors;
   if (!Array.isArray(value.capabilities) ||
       !Array.isArray(value.sourceClosure?.roots) ||

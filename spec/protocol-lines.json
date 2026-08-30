@@ -2,23 +2,34 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://licoarc.com/spec/protocol-lines.json",
   "registryVersion": "licoarc.protocol-lines.v1",
-  "definitionStates": ["DRAFT", "PARTIAL", "COMPLETE"],
-  "lifecycleStates": ["Candidate", "Published", "Deprecated", "Retired"],
+  "definitionStates": [
+    "DRAFT",
+    "PARTIAL",
+    "COMPLETE"
+  ],
+  "lifecycleStates": [
+    "Candidate",
+    "Published",
+    "Deprecated",
+    "Retired"
+  ],
   "lines": [
     {
       "wireId": "licoarc.protocol-line.v1",
       "generation": 1,
       "minimumGeneration": 1,
-      "contentDigest": null,
+      "protocolLineId": "c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83",
       "lifecycle": "Candidate",
-      "definitionStatus": "PARTIAL",
-      "sessionEligible": false,
+      "definitionStatus": "COMPLETE",
+      "sessionEligible": true,
       "publicationEligible": false,
-      "newSessionPolicy": "forbid-incomplete",
+      "newSessionPolicy": "allow-authenticated",
       "existingSessionPolicy": "terminate-on-authenticated-adoption",
       "authenticatedEffectiveGeneration": null,
       "mandatoryCapabilities": [
+        "licoarc.federation-governance.v1",
         "licoarc.generic-messaging.v1",
+        "licoarc.group-collaboration.v1",
         "licoarc.https-transport.v1",
         "licoarc.identity.v1",
         "licoarc.pairwise-protection.v1",
@@ -32,30 +43,48 @@
         "licoarc.group-collaboration.v1",
         "licoarc.https-transport.v1",
         "licoarc.identity.v1",
+        "licoarc.pairwise-protection.v1",
         "licoarc.protocol-foundation.v1",
         "licoarc.reliable-exchange.v1",
         "licoarc.transferable-evidence.v1"
       ],
-      "protectionProfileIds": [],
-      "blockers": [
-        "ALG-core-v1-double-ratchet",
-        "ALG-core-v1-hybrid-ake",
-        "FLD-handshake-transcript-v1",
-        "FLD-minimum-protocol-generation-v1",
-        "FLD-prekey-bundle-v1",
-        "FLD-protocol-support-statement-v1",
-        "FLD-ratchet-header",
-        "FLD-session-accept",
-        "SEC-formal-security-bindings"
-      ]
+      "protectionProfileIds": [
+        "c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf"
+      ],
+      "stableClaimIds": [
+        "SEC-001",
+        "SEC-002",
+        "SEC-003",
+        "SEC-004",
+        "SEC-005",
+        "SEC-006",
+        "SEC-007",
+        "SEC-008",
+        "SEC-009",
+        "SEC-010",
+        "SEC-011",
+        "SEC-012",
+        "SEC-013",
+        "SEC-014",
+        "SEC-015",
+        "SEC-016",
+        "SEC-017",
+        "SEC-018",
+        "SEC-019",
+        "SEC-020",
+        "SEC-021",
+        "SEC-022",
+        "SEC-023"
+      ],
+      "blockers": []
     }
   ],
   "selection": {
     "supportStatementAuthority": "endpoint-authenticated",
-    "supportEntry": "wire-id-generation-and-content-digest",
+    "supportEntry": "wire-id-generation-and-protocol-line-id",
     "minimumGeneration": "endpoint-authenticated-monotonic-floor",
     "filterOrder": [
-      "known-exact-content-identity",
+      "known-exact-protocol-line-identity",
       "complete-definition",
       "new-session-policy-allows",
       "session-eligible",
@@ -64,7 +93,7 @@
       "all-protection-profiles-complete-and-eligible"
     ],
     "choice": "unique-highest-common-generation",
-    "success": "selected-pending-future-transcript-authentication",
+    "success": "selected-pending-transcript-authentication",
     "zeroResult": "terminal-no-common-line",
     "ambiguousHighest": "terminal-ambiguous-generation",
     "unknown": "terminal-unknown-line",
@@ -75,9 +104,30 @@
     "translation": "forbidden",
     "stateAdvanceOnFailure": false
   },
+  "contentIdentity": {
+    "name": "ProtocolLineSemanticProjectionV1",
+    "algorithm": "SHA-256-over-domain-and-deterministic-CBOR",
+    "include": [
+      "generation",
+      "mandatory-capability-semantic-identities",
+      "active-protection-profile-identities",
+      "stable-positive-claim-identifiers",
+      "selection-rules",
+      "session-rules"
+    ],
+    "exclude": [
+      "protocolLineId",
+      "wireId",
+      "catalogs-containing-identities",
+      "lifecycle-and-publication",
+      "proof-results-and-tools",
+      "formal-bindings",
+      "source-and-artifact-digests"
+    ]
+  },
   "immutability": {
-    "publishedBytes": "content-digest-bound-and-immutable",
-    "lifecycleRecord": "may-change-without-changing-content-digest",
+    "publishedBytes": "protocol-line-id-bound-and-immutable",
+    "lifecycleRecord": "may-change-without-changing-protocol-line-id",
     "semanticChange": "new-complete-line-and-generation",
     "identifierReuse": "forbidden"
   },

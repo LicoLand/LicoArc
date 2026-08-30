@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/v1/protection/algorithms.json",
+  "registryVersion": "licoarc.pairwise-protection-algorithms.v1",
+  "profileLocator": "stable-core",
+  "composition": "indivisible-no-component-negotiation",
+  "primitives": [
+    {"name": "X25519", "variant": "raw-RFC7748", "privateKeyBytes": 32, "publicKeyBytes": 32, "sharedSecretBytes": 32, "validation": "reject-all-zero-shared-secret"},
+    {"name": "ML-KEM-768", "variant": "final-FIPS203", "dkSeedBytes": 64, "encapsulationKeyBytes": 1184, "ciphertextBytes": 1088, "sharedSecretBytes": 32, "validation": "implicit-rejection"},
+    {"name": "Ed25519", "variant": "plain-RFC8032", "seedBytes": 32, "publicKeyBytes": 32, "signatureBytes": 64, "validation": "strict-canonical-encoding-small-order-and-equation-checks"},
+    {"name": "ML-DSA-65", "variant": "final-FIPS204", "seedBytes": 32, "publicKeyBytes": 1952, "signatureBytes": 3309, "validation": "exact-profile-and-length"},
+    {"name": "HKDF-SHA-256", "extractBytes": 32, "maximumExpandBytes": 8160},
+    {"name": "HMAC-SHA-256", "outputBytes": 32, "truncation": "forbidden"},
+    {"name": "ChaCha20-Poly1305", "variant": "IETF-RFC8439", "keyBytes": 32, "nonceBytes": 12, "tagBytes": 16, "xchacha": false}
+  ],
+  "aliasesForbidden": ["Kyber", "Dilithium", "DHKEM(X25519,HKDF-SHA256)", "Ed25519ctx", "Ed25519ph", "XChaCha20-Poly1305"],
+  "dualAuthentication": {
+    "signatureInput": "the exact operation domain followed by deterministic-CBOR of the named unsigned projection",
+    "ed25519": "plain Ed25519 over the complete signatureInput; no prehash and no context variant",
+    "mlDsa65": "ML-DSA-65 verification over the same complete signatureInput with empty external context",
+    "cardinality": "exactly-one-valid-Ed25519-and-exactly-one-valid-ML-DSA-65-signature",
+    "keyAuthority": "both referenced keys must be active for the exact identity state and operation purpose",
+    "partialSuccess": "terminal-handshake-rejected-without-state-advance-or-primitive-detail"
+  },
+  "canonicalProjections": {
+    "supportStatementUnsigned": ["identityStateDigest", "minimumProtocolGeneration", "entries", "ed25519KeyId", "mlDsa65KeyId"],
+    "prekeyBundleUnsigned": ["protocolLineId", "protectionProfileId", "responderIdentityStateDigest", "ed25519KeyId", "mlDsa65KeyId", "pairSequence", "x25519PublicKey", "mlKem768EncapsulationKey", "validFrom", "validUntil"],
+    "prekeyTranscript": ["protocolLineId", "protectionProfileId", "initiatorSupportUnsigned", "responderSupportUnsigned", "prekeyBundleUnsigned"],
+    "handshakeCore": ["prekeyTranscriptDigest", "selectedProtocolLineId", "selectedProtectionProfileId", "initiatorIdentityStateDigest", "responderIdentityStateDigest", "initiatorEd25519KeyId", "initiatorMlDsa65KeyId", "initiatorX25519PublicKey", "mlKem768Ciphertext"],
+    "initiatorSignatureInput": ["initiatorHandshakeSignatureDomain", "handshakeCoreDigest"],
+    "firstPacketTranscript": ["initiatorSupport", "responderSupport", "selectedProtocolLineId", "selectedProtectionProfileId", "initiatorIdentityStateDigest", "responderIdentityStateDigest", "prekeyBundle", "initiatorX25519PublicKey", "mlKem768Ciphertext", "initiatorEd25519KeyId", "initiatorMlDsa65KeyId", "initiatorEd25519Signature", "initiatorMlDsa65Signature", "clientConfirmCiphertext", "clientConfirmTag"],
+    "sessionAcceptUnsigned": ["transcriptDigest", "sessionContextDigest", "responderIdentityStateDigest", "pairSequence"],
+    "ratchetHeader": ["dh", "pn", "n"]
+  },
+  "validationOrder": {
+    "support": ["bounded-input", "deterministic-CBOR", "closed-labels-and-exact-shapes", "identity-key-resolution", "strict-dual-signatures", "monotonic-minimum-generation", "canonical-unique-support-entries", "known-content-identities", "complete-session-eligible-line-and-profile", "unique-highest-common-selection"],
+    "handshake": ["bounded-input", "deterministic-CBOR", "closed-labels-and-exact-shapes", "support-validation-and-selection", "identity-continuity-and-key-purpose", "bundle-validity-and-active-pair", "strict-bundle-dual-signatures", "strict-initiator-dual-signatures", "transcript-reproduction", "x25519-all-zero-rejection", "ml-kem-implicit-rejection", "hybrid-key-schedule", "client-confirm-AEAD", "tentative-state-bounds", "atomic-compare-and-commit"],
+    "receiveRecord": ["bounded-frame", "deterministic-header", "closed-labels-and-counter-range", "rollback-generation-check", "skipped-key-exact-lookup-or-bounded-tentative-derivation", "x25519-all-zero-rejection-on-DH-transition", "AEAD-authentication-with-exact-AAD", "tentative-state-bounds", "atomic-durable-commit", "plaintext-release"]
+  },
+  "bundleValidity": {
+    "unit": "unsigned-seconds-since-1970-01-01T00:00:00Z-without-leap-second-representation",
+    "relation": "validFrom < validUntil and validUntil - validFrom <= MAX_BUNDLE_VALIDITY_SPAN_SECONDS using checked integer arithmetic",
+    "eligibility": "the responder and initiator each require its trusted Endpoint clock to be within the half-open interval [validFrom, validUntil) during validation",
+    "stationTimeAuthority": false,
+    "expiryMutation": "none; expiry neither reserves, redeems nor removes an active pair"
+  },
+  "hybridKeySchedule": {
+    "prekeyTranscriptDigest": "SHA-256(prekeyTranscriptDigest-domain || deterministic-CBOR(prekeyTranscript))",
+    "extractSalt": "SHA-256(hybridExtractSalt-domain || prekeyTranscriptDigest)",
+    "ikm": "x25519SharedSecret || mlKem768SharedSecret",
+    "prk": "HKDF-Extract-SHA-256(extractSalt, ikm)",
+    "handshakeCoreDigest": "SHA-256(handshakeTranscriptDigest-domain || deterministic-CBOR(handshakeCore))",
+    "hybridRoot": "HKDF-Expand-SHA-256(prk, hybridRoot-domain || handshakeCoreDigest, 32)",
+    "clientConfirmKey": "HKDF-Expand-SHA-256(prk, clientConfirmKey-domain || handshakeCoreDigest, 32)",
+    "clientConfirmNonce": "HKDF-Expand-SHA-256(prk, clientConfirmNonce-domain || handshakeCoreDigest, 12)",
+    "sessionAcceptKey": "HKDF-Expand-SHA-256(prk, sessionAcceptKey-domain || handshakeCoreDigest, 32)",
+    "handshakeTranscriptDigest": "SHA-256(handshakeTranscriptDigest-domain || deterministic-CBOR(firstPacketTranscript))",
+    "sessionContextDigest": "SHA-256(sessionContext-domain || deterministic-CBOR([protocolLineId, protectionProfileId, handshakeTranscriptDigest, initiatorIdentityStateDigest, responderIdentityStateDigest, pairSequence]))"
+  },
+  "confirmation": {
+    "clientPlaintext": "exact-clientConfirmPlaintext-domain-bytes",
+    "clientAad": "handshakeCoreDigest",
+    "clientCiphertext": "ChaCha20-Poly1305(clientConfirmKey, clientConfirmNonce, clientPlaintext, clientAad) as ciphertext || tag",
+    "sessionAcceptMac": "HMAC-SHA-256(sessionAcceptKey, sessionAcceptMac-domain || deterministic-CBOR(sessionAcceptUnsigned))",
+    "sessionAcceptMacBytes": 32
+  },
+  "ratchetKeySchedule": {
+    "initialRoot": "HKDF-Expand-SHA-256(hybridRoot, ratchetInitialRoot-domain || sessionContextDigest, 32)",
+    "initialI2RChain": "HKDF-Expand-SHA-256(hybridRoot, ratchetChainInitiatorToResponder-domain || sessionContextDigest, 32)",
+    "dhRatchetPrk": "HKDF-Extract-SHA-256(rootKey, X25519(localRatchetPrivate, peerRatchetPublic))",
+    "nextRootI2R": "HKDF-Expand-SHA-256(dhRatchetPrk, ratchetRootInitiatorToResponder-domain || sessionContextDigest, 32)",
+    "nextRootR2I": "HKDF-Expand-SHA-256(dhRatchetPrk, ratchetRootResponderToInitiator-domain || sessionContextDigest, 32)",
+    "nextChainI2R": "HKDF-Expand-SHA-256(dhRatchetPrk, ratchetChainInitiatorToResponder-domain || sessionContextDigest, 32)",
+    "nextChainR2I": "HKDF-Expand-SHA-256(dhRatchetPrk, ratchetChainResponderToInitiator-domain || sessionContextDigest, 32)",
+    "messageKey": "HKDF-Expand-SHA-256(chainKey, ratchetMessageKey-domain || uint32be(N), 32)",
+    "nonce": "HKDF-Expand-SHA-256(chainKey, ratchetNonce-domain || uint32be(N), 12)",
+    "nextChainKey": "HKDF-Expand-SHA-256(chainKey, ratchetNextChain-domain || uint32be(N), 32)",
+    "directionRule": "the sender and receiver of an initiator-to-responder chain both use I2R domains; both sides of a responder-to-initiator chain use R2I domains",
+    "bootstrapRule": "only the initiator-to-responder chain exists at commit; the responder must create a fresh local ratchet key and perform the first R2I root/chain step before its first established send"
+  },
+  "record": {
+    "header": "deterministic-CBOR({0: dh, 1: pn, 2: n})",
+    "associatedData": "recordAssociatedData-domain || sessionContextDigest || complete-canonical-header",
+    "body": "ChaCha20-Poly1305 ciphertext followed immediately by the 16-byte tag",
+    "frame": "complete-canonical-header || ciphertext || tag",
+    "headerConfidentiality": false
+  },
+  "nonclaims": ["ongoing-post-quantum-post-compromise-recovery", "ratchet-header-confidentiality", "transferable-session-authentication", "physical-zeroization", "rollback-detection-under-fully-compromised-store"]
+}

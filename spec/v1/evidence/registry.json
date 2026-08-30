@@ -3,7 +3,7 @@
   "$id": "https://licoarc.com/spec/v1/evidence/registry.json",
   "registryVersion": "licoarc.transferable-evidence.v1",
   "wireId": "licoarc.evidence.v1",
-  "protocolLineId": "licoarc.v1",
+  "protocolLineIdType": "DIGEST256-line-content-identity",
   "lifecycle": "Candidate",
   "scope": "transferable-evidence-checkpoint-v1",
   "sourcePaths": {
@@ -30,12 +30,42 @@
     "trailingBytes": "reject"
   },
   "algorithm": {
-    "statementDomain": "LP-EVIDENCE-STATEMENT\\u0000",
-    "checkpointDomain": "LP-EVIDENCE-CHECKPOINT\\u0000",
+    "statementDomain": "LP-EVIDENCE-STATEMENT\u0000",
+    "checkpointDomain": "LP-EVIDENCE-CHECKPOINT\u0000",
     "digest": "SHA-256",
     "canonicalProjection": "deterministic-cbor",
-    "baselineSignatureSet": ["Ed25519", "ML-DSA-65"],
-    "signaturePurpose": "endpoint-evidence"
+    "baselineSignatureProfileIds": [
+      "176b912b9547ca9c47ace10f881457ab63fcd493ef953616f5859e76b830fd60",
+      "427e788bb9aed076acc2fb5a94715d14e694ec5fbc846ac52c8c7e118a6b1b8f"
+    ],
+    "signaturePurpose": "endpoint-evidence",
+    "signatureProfileAuthority": "spec/v1/identity/signature-profiles.json",
+    "signatureOrder": "baselineSignatureProfileIds-order",
+    "signatureCount": 2
+  },
+  "verification": {
+    "identityStateBinding": "checkpoint identityStateDigest selects exactly one state in the supplied continuity bundle",
+    "continuity": "validate genesis then every exact epoch-plus-one predecessor-bound successor through the selected state",
+    "continuityKeyPurpose": "identity",
+    "keyResolution": "resolve keyId only within the selected identity state",
+    "keyPurpose": "evidence",
+    "keyState": "active",
+    "profileMatch": "signature keyProfileId equals resolved key keyProfileId and the required ordered profile",
+    "publicKey": "exact raw bytes and canonical encoding required by the signature Profile",
+    "signature": "exact length and canonical encoding required by the signature Profile",
+    "validationOrder": [
+      "closed-canonical-record",
+      "protocol-line-and-endpoint-binding",
+      "identity-continuity-through-selected-state",
+      "key-id-resolution-in-selected-state",
+      "evidence-purpose",
+      "active-key-state",
+      "required-profile-and-order",
+      "exact-public-key-length-and-canonical-encoding",
+      "exact-signature-length-and-canonical-encoding",
+      "cryptographic-verification"
+    ],
+    "failureMutation": "none"
   },
   "attribution": {
     "proves": "exact-statement-by-authorized-endpoint-key-state",

@@ -12,7 +12,7 @@ machine-readable definition authorities and source-integrity checks agree.
 
 | ADR | Decision | Status |
 | --- | --- | --- |
-| [0001](0001-immutable-versioned-artifacts.md) | Versioned, content-addressed candidate artifacts with publication-time immutability | Current definition sources agree |
+| [0001](0001-immutable-versioned-artifacts.md) | Content-addressed Candidate definitions and immutable Published bytes | Implemented and source-integrity verified |
 
 The [three-entity Core Domain Model](../../README.md#core-domain-model) is an
 approved product invariant, but no new ADR is indexed until a corresponding

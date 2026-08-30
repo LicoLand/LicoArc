@@ -7,40 +7,172 @@
   "required": ["recordType", "endpointIdentityRef", "states"],
   "properties": {
     "recordType": { "type": "string", "const": "evidenceIdentityBundle" },
-    "endpointIdentityRef": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "endpointIdentityRef": { "$ref": "#/$defs/digest256" },
     "states": {
       "type": "array",
       "minItems": 1,
       "maxItems": 64,
-      "items": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": ["identityStateDigest", "epoch", "predecessorDigest", "keys"],
-        "properties": {
-          "identityStateDigest": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
-          "epoch": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 },
-          "predecessorDigest": {
-            "type": ["string", "null"],
-            "pattern": "^[0-9a-f]{64}$"
-          },
-          "keys": {
-            "type": "array",
-            "minItems": 1,
-            "maxItems": 4,
-            "items": {
-              "type": "object",
-              "additionalProperties": false,
-              "required": ["keyId", "purpose", "state", "keyDigest"],
-              "properties": {
-                "keyId": { "type": "string", "pattern": "^[0-9a-f]{32}$" },
-                "purpose": { "type": "string", "const": "endpoint-evidence" },
-                "state": { "type": "string", "enum": ["active", "revoked", "recovery"] },
-                "keyDigest": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
-              }
-            }
+      "items": { "$ref": "#/$defs/identityState" }
+    }
+  },
+  "$defs": {
+    "digest256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "epoch": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 },
+    "profileId": {
+      "type": "string",
+      "enum": [
+        "176b912b9547ca9c47ace10f881457ab63fcd493ef953616f5859e76b830fd60",
+        "427e788bb9aed076acc2fb5a94715d14e694ec5fbc846ac52c8c7e118a6b1b8f"
+      ]
+    },
+    "identityKey": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["keyId", "keyPurpose", "keyState", "keyProfileId", "publicKey"],
+      "properties": {
+        "keyId": { "$ref": "#/$defs/digest256" },
+        "keyPurpose": { "type": "string", "enum": ["identity", "evidence"] },
+        "keyState": { "type": "string", "enum": ["active", "revoked", "recovery"] },
+        "keyProfileId": { "$ref": "#/$defs/profileId" },
+        "publicKey": { "type": "string" }
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "keyProfileId": { "const": "176b912b9547ca9c47ace10f881457ab63fcd493ef953616f5859e76b830fd60" },
+            "publicKey": { "pattern": "^[0-9a-f]{64}$" }
+          }
+        },
+        {
+          "properties": {
+            "keyProfileId": { "const": "427e788bb9aed076acc2fb5a94715d14e694ec5fbc846ac52c8c7e118a6b1b8f" },
+            "publicKey": { "pattern": "^[0-9a-f]{3904}$" }
           }
         }
+      ]
+    },
+    "signature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["keyProfileId", "keyId", "purpose", "value"],
+      "properties": {
+        "keyProfileId": { "$ref": "#/$defs/profileId" },
+        "keyId": { "$ref": "#/$defs/digest256" },
+        "purpose": { "type": "string", "const": "endpoint-continuity" },
+        "value": { "type": "string" }
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "keyProfileId": { "const": "176b912b9547ca9c47ace10f881457ab63fcd493ef953616f5859e76b830fd60" },
+            "value": { "pattern": "^[0-9a-f]{128}$" }
+          }
+        },
+        {
+          "properties": {
+            "keyProfileId": { "const": "427e788bb9aed076acc2fb5a94715d14e694ec5fbc846ac52c8c7e118a6b1b8f" },
+            "value": { "pattern": "^[0-9a-f]{6618}$" }
+          }
+        }
+      ]
+    },
+    "continuityProof": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["proofKind", "predecessorStateDigest", "signature"],
+      "properties": {
+        "proofKind": { "type": "string", "enum": ["genesis", "rotation", "revocation", "recovery"] },
+        "predecessorStateDigest": {
+          "anyOf": [
+            { "$ref": "#/$defs/digest256" },
+            { "type": "null" }
+          ]
+        },
+        "signature": { "$ref": "#/$defs/signature" }
       }
+    },
+    "recoveryProof": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["recoveryDigest", "witnesses"],
+      "properties": {
+        "recoveryDigest": { "$ref": "#/$defs/digest256" },
+        "witnesses": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 4,
+          "items": { "$ref": "#/$defs/signature" }
+        }
+      }
+    },
+    "identityState": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolLineId",
+        "identityEpoch",
+        "previousIdentityStateDigest",
+        "transition",
+        "identityStateDigest",
+        "keys",
+        "continuityProof",
+        "endpointSignature"
+      ],
+      "properties": {
+        "protocolLineId": { "$ref": "#/$defs/digest256" },
+        "identityEpoch": { "$ref": "#/$defs/epoch" },
+        "previousIdentityStateDigest": {
+          "anyOf": [
+            { "$ref": "#/$defs/digest256" },
+            { "type": "null" }
+          ]
+        },
+        "transition": { "type": "string", "enum": ["genesis", "rotation", "revocation", "recovery"] },
+        "identityStateDigest": { "$ref": "#/$defs/digest256" },
+        "keys": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 4,
+          "items": { "$ref": "#/$defs/identityKey" }
+        },
+        "revokedKeyIds": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 4,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/digest256" }
+        },
+        "recoveryProof": { "$ref": "#/$defs/recoveryProof" },
+        "continuityProof": { "$ref": "#/$defs/continuityProof" },
+        "endpointSignature": { "$ref": "#/$defs/signature" }
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "identityEpoch": { "const": 1 },
+            "previousIdentityStateDigest": { "type": "null" },
+            "transition": { "const": "genesis" },
+            "continuityProof": {
+              "properties": {
+                "proofKind": { "const": "genesis" },
+                "predecessorStateDigest": { "type": "null" }
+              }
+            }
+          },
+          "not": { "anyOf": [{ "required": ["revokedKeyIds"] }, { "required": ["recoveryProof"] }] }
+        },
+        {
+          "properties": { "identityEpoch": { "minimum": 2 }, "transition": { "const": "rotation" } }
+        },
+        {
+          "properties": { "identityEpoch": { "minimum": 2 }, "transition": { "const": "revocation" } },
+          "required": ["revokedKeyIds"]
+        },
+        {
+          "properties": { "identityEpoch": { "minimum": 2 }, "transition": { "const": "recovery" } },
+          "required": ["recoveryProof"]
+        }
+      ]
     }
   }
 }

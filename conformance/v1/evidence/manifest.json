@@ -1,40 +1,13 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://licoarc.com/spec/v1/evidence/conformance-manifest.json",
-  "manifestVersion": "licoarc.transferable-evidence-conformance-manifest.v1",
-  "contractVersion": "licoarc.transferable-evidence.v1",
-  "lifecycle": "Candidate",
-  "validCasesPath": "conformance/v1/evidence/valid.json",
-  "invalidCasesPath": "conformance/v1/evidence/invalid.json",
-  "caseIds": [
-    "statement-user-intent",
-    "statement-attachment-declared",
-    "checkpoint-single",
-    "checkpoint-batch-sorted"
+  "$schema": "https://licoarc.com/spec/schemas/conformance-corpus-manifest.schema.json",
+  "manifestVersion": "licoarc.conformance-corpus-manifest.v1",
+  "corpusId": "licoarc.evidence.conformance.v1",
+  "caseCount": 15,
+  "operationIds": [
+    "licoarc.foundation.canonicalize-governance-json.v1",
+    "licoarc.foundation.encode-deterministic-cbor.v1"
   ],
-  "negativeCaseIds": [
-    "checkpoint-unsorted-digests",
-    "checkpoint-duplicate-digest",
-    "checkpoint-missing-ed25519",
-    "checkpoint-surplus-signature",
-    "checkpoint-wrong-purpose",
-    "checkpoint-invalid-signature",
-    "statement-checkpoint-mismatch",
-    "orphan-pending-exhausted",
-    "pending-expired",
-    "identity-rollback",
-    "recursive-checkpoint"
-  ],
-  "assertions": [
-    "exact-user-payload-and-peer-visible-meaning-projection",
-    "route-and-session-exclusion-from-transferable-statements",
-    "sorted-unique-bounded-digest-set",
-    "baseline-dual-signature-purpose-set",
-    "identity-continuity-and-rollback-rejection",
-    "checkpoint-before-finality",
-    "bounded-orphan-and-pending-exhaustion",
-    "identical-signed-checkpoint-retransmission",
-    "endpoint-key-authorship-only",
-    "no-human-truth-time-custody-or-legal-guarantee"
+  "envelopePaths": [
+    "conformance/v1/evidence/cases.json"
   ]
 }

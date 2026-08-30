@@ -10,12 +10,12 @@ This record explains the field. The
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-affiliation-state-digest` |
 | Decision status | `DECIDED` |
-| Definition status | `PARTIAL` |
+| Definition status | `SPECIFIED` |
 | Candidate spellings | affiliation ref, home state digest, binding-set digest |
 | Candidate layer | Relationship-scoped Route Update |
 | Observer set | Peer Endpoints; hidden from Stations |
 | Existing authority | [Canonical Field Registry](../../../spec/FIELD-REGISTRY.md) |
-| Authority targets | Future Route Update and affiliation schemas and corpus |
+| Authority targets | The Identity Route Update and affiliation schemas, grammar, policy, and corpus |
 | Predecessor or successor | None |
 | Current conclusion | Every private Route snapshot names one exact accepted Endpoint-wide affiliation state so routes cannot outlive or bypass global migration. |
 
@@ -107,4 +107,4 @@ dependency edge between those authorities.
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. Only the scope recorded by this decision and its linked normative authorities is defined; any remaining normative ambiguity requires a successor decision before entering the protocol definition.
+The definition status is `SPECIFIED`. The Canonical Field Registry and linked machine-readable authorities close this record’s exact active semantics.

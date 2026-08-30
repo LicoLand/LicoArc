@@ -1,60 +1,86 @@
 # Definition Source Integrity
 
-This document describes deterministic integrity checks over tracked protocol
-definitions. The executable authorities are
-[`tools/generate-artifact.mjs`](../../tools/generate-artifact.mjs),
-[`tests/candidate-integration.test.mjs`](../../tests/candidate-integration.test.mjs),
-and [`tests/conformance.test.mjs`](../../tests/conformance.test.mjs).
+This document describes deterministic checks over the tracked protocol
+definition. They establish only definition and source-integrity facts.
 
-## Closed Candidate source set
+## Current admission target
 
-`spec/v1/manifest.json` is the sorted Protocol Line source manifest. It binds
-the current wire identity, Candidate lifecycle, minimum-safe capability
-versions, governance and runtime source families, bounds registry, handshake
-binding, session lock, and forbidden translation policy. Its nine capability
-records bind one source digest and one version per capability.
+The canonical manifest defines `licoarc.protocol-line.v1` as
+`Candidate` / `COMPLETE`, with `sessionEligible: true` and
+`publicationEligible: false`. It binds exactly nine complete capabilities, one
+complete active `stable-core` Protection Profile, 23 stable positive security
+claims, no missing definitions, and no blockers.
 
-`conformance/v1/manifest.json` closes the same set with explicit capability
-registries, policies, schemas, requirement paths, vectors, positive and
-negative corpora, raw source digests, and per-capability source-map digests.
-The generator rejects missing, extra, symlinked, non-JSON/non-CDDL, stale,
-mutated, mixed-line, fallback, or downgraded inputs.
+## Closed source graph
+
+`spec/v1/manifest.json` declares the Protocol Line content identity,
+capability source manifests, Profile catalog, security claim set, field
+registry digest, lifecycle and selection policy, and allowed source roots.
+Undeclared files and symbolic links are rejected.
+
+Each capability source manifest declares its schemas, registries, policies,
+bounds, labels, runtime grammar where applicable, and exact source digest.
+`conformance/v1/manifest.json` binds the matching capability and Profile
+corpus manifests. Every corpus uses one source-bound `cases.json` envelope
+containing synthetic positive and negative cases with an exact operation ID,
+input context, and expected result.
+
+The conformance engine dispatches only through the declared generic operation
+registry. A case ID is reporting metadata, and an expected value is compared
+only after execution; neither can select behavior. Private-key material,
+implicit aliases, undeclared source input, and runtime data are rejected.
+
+## Content identities
+
+The active Profile identity is recomputed from
+`ProtectionProfileSemanticProjectionV1`. The line identity is recomputed from
+`ProtocolLineSemanticProjectionV1`. Both use deterministic CBOR and SHA-256.
+The projections include semantic source bytes and stable semantic identifiers,
+while excluding self-identifiers, lifecycle and publication state, proof-tool
+output, formal-binding metadata, and artifact/source digests. This keeps the
+identities content-bound and non-circular.
+
+Complete admission requires every mandatory capability semantic identity,
+every active Profile identity, every stable claim, and every declared corpus
+to agree. Missing, extra, incomplete, unproved, mismatched, or circular input
+fails admission.
+
+## Source-bound proofs
+
+`formal/licoarc-core-v1.spthy` owns the symbolic Core model. Source-derived
+formal bindings connect stable claim IDs to the exact model, lemma, authority
+path, JSON pointer, and digest. Every proved claim must have every required
+binding kind; non-proved claims must have none.
+
+The pinned Tamarin contract proves and replays the theory, then validates all
+named lemmas and bindings. A prover exit status alone is insufficient. The
+model treats the declared hybrid construction, classic ratchet, signatures,
+authenticated transitions, bounds, and atomic durable commit as ideal
+operations. Computational primitive security and downstream resource behavior
+remain outside this proof.
+
+The explicit Profile nonclaims are ongoing post-quantum post-compromise
+recovery, physical zeroization, ratchet-header confidentiality, rollback
+detection under a fully compromised store, and transferable session
+authentication.
 
 ## Artifact integrity
 
-`npm run artifacts:check` regenerates the tracked Candidate bundle in memory
-and fails if the checked-in bytes differ. The artifact contains the two
-manifests and every declared source exactly once. Its SHA-256 digest covers
-artifact version, wire identity, lifecycle, digest algorithm, and the sorted
-embedded source map. Generation has no timestamp, host, account, process,
-absolute path, dependency-graph, or runtime-state input.
-
-The integration test generates the replacement bundle twice and requires byte
-identity, then checks the artifact with `--check`. It also exercises omission,
-mutation, extra-source, mixed-line, fallback, and downgrade mutations in
-isolated temporary fixtures.
-
-## Conformance corpus
-
-Every capability conformance manifest declares its positive and negative
-corpus paths, case IDs, and Candidate lifecycle. The conformance test checks
-that corpus IDs are unique and exactly match their manifest, that positive
-and negative IDs are disjoint, that both vectors are source-bound, and that
-each registry remains Candidate. CDDL values are required to be UTF-8,
-newline-terminated, and free of carriage returns and NUL bytes.
-
-## Integrity boundary
-
-The checks above prove source closure, manifest and registry bindings,
-definition-level corpus closure, deterministic generation, and artifact
-integrity. They do not consume or report downstream implementation or delivery
-facts.
+`tools/generate-artifact.mjs` embeds every declared source exactly once in
+sorted order and computes the Candidate bundle deterministically. The artifact
+has no timestamp, host, account, process, absolute-path, dependency-graph, or
+runtime-state input. In-memory regeneration must match
+`artifacts/v1/licoarc.bundle.json` byte for byte.
 
 ## Commands
 
-| Command | Behavior |
+| Command | Definition-only evidence |
 | --- | --- |
-| `npm run artifacts:generate` | Rewrite the bundle from the closed Candidate sources |
-| `npm run artifacts:check` | Fail if the tracked bundle is stale |
-| `npm test` | Run conformance, source-closure, projection, and repository tests |
-| `npm run verify` | Artifact check plus the complete repository test suite |
+| `npm run artifacts:check` | Checked bundle equals deterministic regeneration |
+| `npm run formal:generate` | Formal constants and bindings match normative sources |
+| `npm run formal:check` | Pinned proof, replay, claim, binding, and digest closure |
+| `npm test` | Schema, registry, corpus, identity, lifecycle, projection, and source-closure tests |
+| `npm run verify` | Artifact staleness check plus the complete repository test suite |
+
+These commands do not establish publication, downstream implementation,
+executable interoperability, audit, deployment, support, or operation.

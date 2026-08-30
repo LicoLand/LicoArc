@@ -1,0 +1,436 @@
+theory LicoArc_Core_V1
+begin
+
+builtins: hashing, symmetric-encryption, signing
+
+functions:
+  ideal_hybrid/5,
+  ratchet_step/2
+
+/* generated semantic-source binding: ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd */
+
+/*
+This source-bound model verifies the protocol state/event invariants named by
+its lemmas. ideal_hybrid, signature verification, authenticated record
+protection, and source-derived bound classification are explicit ideal
+abstractions: the model does not claim computational security or downstream
+implementation resource accounting of the admitted algorithms and bounds.
+
+Linear Prekey, HandshakeOffer, and ChainState facts model one atomic durable
+compare-and-commit. A rule consumes one complete prior snapshot and emits one
+complete successor, or performs no mutation. Rollback detection under complete
+store compromise, physical zeroization, ratchet-header confidentiality,
+transferable session authentication, and ongoing post-quantum post-compromise
+recovery are the modeled Profile's explicit nonclaims. Ratchet recovery below
+models only a fresh uncompromised classical DH input.
+
+The Dolev-Yao network represents the untrusted Station carrier. Only Endpoint
+rules emit EndpointAccepted and EndpointEffectCompleted. Identity, route, and
+Evidence acceptance require the exact persistent verification authority
+created for an Endpoint key; compromise is an explicit alternate trace.
+*/
+
+rule ProvisionPair:
+  [ Fr(~pair), Fr(~prekey), Fr(~identity_secret_i), Fr(~identity_secret_r) ]
+  --[ PeerAcceptedLocally($I, $R), PrekeyPublished($R, ~pair, h(~prekey)),
+      EndpointIdentityProvisioned($I, pk(~identity_secret_i)),
+      EndpointIdentityProvisioned($R, pk(~identity_secret_r)) ]->
+  [ InitiatorReady($I, $R, ~pair, h(~prekey)),
+    ResponderReady($R, $I, ~pair, h(~prekey)),
+    !IdentityMaterial($I, ~identity_secret_i),
+    !IdentityMaterial($R, ~identity_secret_r),
+    !IdentityPublic($I, pk(~identity_secret_i)),
+    !IdentityPublic($R, pk(~identity_secret_r)),
+    !IdentityVerification($I, ~identity_secret_i),
+    !IdentityVerification($R, ~identity_secret_r),
+    !PrekeyMaterial($R, ~pair, ~prekey) ]
+
+rule InitiatorFirstPacket:
+  let transcript = h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83',
+                      'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $I, R, pair, prekey_pub,
+                      h(~classical_component), h(~pq_component)>)
+      root = ideal_hybrid(~classical_component, ~pq_component, $I, R, transcript)
+  in
+  [ InitiatorReady($I, R, pair, prekey_pub),
+    Fr(~classical_component), Fr(~pq_component), Fr(~coordinate) ]
+  --[ InitiatorStarted($I, R, pair, transcript, root),
+      HybridEstablished($I, R, transcript, root),
+      SessionSecret(root) ]->
+  [ HandshakeOffer($I, R, pair, transcript, root, ~coordinate),
+    InitiatorPending($I, R, pair, transcript, root, ~coordinate),
+    !HybridComponents($I, R, transcript, root,
+                      ~classical_component, ~pq_component) ]
+
+rule ResponderAccept:
+  [ ResponderReady($R, I, pair, prekey_pub),
+    HandshakeOffer(I, $R, pair, transcript, root, coordinate) ]
+  --[ ResponderAccepted($R, I, pair, transcript, root),
+      LineSelected('c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83'), ProfileSelected('c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf'),
+      AtomicHandshakeCommit($R, pair, transcript) ]->
+  [ !Established($R, I, transcript, root),
+    !ReplayBinding($R, pair, transcript),
+    ChainState($R, I, transcript, 'i2r', coordinate, root),
+    RatchetInitial($R, I, transcript, root),
+    SessionAccept(I, $R, pair, transcript, root, coordinate) ]
+
+rule ReplayExactFirstPacket:
+  [ !ReplayBinding($R, pair, transcript) ]
+  --[ ExactHandshakeReplay($R, pair, transcript) ]->
+  [ ]
+
+rule InitiatorAccept:
+  [ InitiatorPending($I, R, pair, transcript, root, coordinate),
+    SessionAccept($I, R, pair, transcript, root, coordinate) ]
+  --[ InitiatorEstablished($I, R, pair, transcript, root),
+      AtomicHandshakeCommit($I, pair, transcript) ]->
+  [ !Established($I, R, transcript, root),
+    ChainState($I, R, transcript, 'i2r', coordinate, root),
+    RatchetInitial($I, R, transcript, root) ]
+
+rule SendRecord:
+  let packet = senc(<~message, ~sender_metadata, transcript, direction, n>, chain)
+  in
+  [ ChainState($S, R, transcript, direction, n, chain),
+    Fr(~message), Fr(~sender_metadata) ]
+  --[ RecordSent($S, R, transcript, direction, n, ~message, packet, chain),
+      SenderMetadataProtected($S, R, transcript, ~sender_metadata, packet, chain),
+      AtomicSendCommit($S, transcript, direction, n) ]->
+  [ Out(packet) ]
+
+rule ReceiveRecord:
+  let packet = senc(<message, sender_metadata, transcript, direction, n>, chain)
+  in
+  [ ChainState($R, S, transcript, direction, n, chain), In(packet) ]
+  --[ RecordReceived($R, S, transcript, direction, n, message, packet, chain),
+      EndpointAccepted($R, S, transcript, direction, n, message, packet, chain),
+      AtomicReceiveCommit($R, transcript, direction, n) ]->
+  [ !DurableInbox($R, S, transcript, direction, n, h(message)) ]
+
+rule CompromiseSession:
+  [ !Established($E, P, transcript, root) ]
+  --[ SessionCompromise($E, P, transcript, root) ]->
+  [ Out(root) ]
+
+rule CompromiseClassicalComponent:
+  [ !HybridComponents(I, R, transcript, root, classical, pq) ]
+  --[ ClassicalComponentCompromise(I, R, transcript, root) ]->
+  [ Out(classical) ]
+
+rule CompromisePostQuantumComponent:
+  [ !HybridComponents(I, R, transcript, root, classical, pq) ]
+  --[ PostQuantumComponentCompromise(I, R, transcript, root) ]->
+  [ Out(pq) ]
+
+rule CompromiseIdentityMaterial:
+  [ !IdentityMaterial($E, secret) ]
+  --[ IdentityMaterialCompromise($E, pk(secret)) ]->
+  [ Out(secret) ]
+
+rule CompromisePrekeyMaterial:
+  [ !PrekeyMaterial($R, pair, prekey) ]
+  --[ PrekeyMaterialCompromise($R, pair) ]->
+  [ Out(prekey) ]
+
+rule RatchetAdvanceUncompromised:
+  let next = ratchet_step(old, ~fresh_dh)
+  in
+  [ RatchetInitial($E, P, transcript, old), Fr(~fresh_dh) ]
+  --[ RatchetAdvanced($E, P, transcript, old, next), RatchetSecret(next) ]->
+  [ RatchetAdvancedState($E, P, transcript, old, next) ]
+
+rule RatchetCompromiseBeforeRecovery:
+  [ RatchetInitial($E, P, transcript, old) ]
+  --[ RatchetKeyCompromise($E, P, transcript, old) ]->
+  [ RatchetExposed($E, P, transcript, old), Out(old) ]
+
+rule RatchetRecoverAfterCompromise:
+  let next = ratchet_step(old, ~fresh_dh)
+  in
+  [ RatchetExposed($E, P, transcript, old), Fr(~fresh_dh) ]
+  --[ RatchetRecovered($E, P, transcript, old, next), RatchetSecret(next) ]->
+  [ RatchetAdvancedState($E, P, transcript, old, next) ]
+
+rule RatchetCompromiseAdvanced:
+  [ RatchetAdvancedState($E, P, transcript, old, next) ]
+  --[ RatchetKeyCompromise($E, P, transcript, next) ]->
+  [ Out(next) ]
+
+rule AuthorizeIdentitySuccessor:
+  let successor = h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', $E, pk(old_secret), pk(~new_secret)>)
+      signed = sign(<'identity-continuity', 'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', $E,
+                     pk(old_secret), pk(~new_secret), successor>, old_secret)
+  in
+  [ !IdentityMaterial($E, old_secret), Fr(~new_secret) ]
+  --[ IdentitySuccessorAuthorized($E, pk(old_secret), pk(~new_secret), successor) ]->
+  [ Out(<pk(~new_secret), successor, signed>) ]
+
+rule AcceptIdentitySuccessor:
+  [ !IdentityVerification($E, old_secret),
+    In(<new_public, successor,
+        sign(<'identity-continuity', 'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', $E,
+              pk(old_secret), new_public, successor>, old_secret)>) ]
+  --[ IdentityContinuityAccepted($E, pk(old_secret), new_public, successor) ]->
+  [ ]
+
+rule AuthorizeRouteMigration:
+  let route_digest = h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', $E, $P, ~old_route, ~new_route>)
+      signed = sign(<'route-migration', 'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', $E, $P,
+                     ~old_route, ~new_route, route_digest>, secret)
+  in
+  [ !IdentityMaterial($E, secret), Fr(~old_route), Fr(~new_route) ]
+  --[ RouteMigrationAuthorized($E, $P, pk(secret), ~old_route, ~new_route,
+                               route_digest) ]->
+  [ Out(<$E, $P, pk(secret), ~old_route, ~new_route, route_digest, signed>) ]
+
+rule AcceptRouteMigration:
+  [ !IdentityVerification($E, secret),
+    In(<$E, P, pk(secret), old_route, new_route, route_digest,
+        sign(<'route-migration', 'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', $E, P,
+              old_route, new_route, route_digest>, secret)>) ]
+  --[ RouteMigrationAccepted($E, P, pk(secret), old_route, new_route,
+                             route_digest) ]->
+  [ ]
+
+rule IssueEvidence:
+  let signed = sign(<'endpoint-evidence', 'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd',
+                     $E, ~statement>, secret)
+  in
+  [ !IdentityMaterial($E, secret), Fr(~statement) ]
+  --[ EvidenceIssued($E, pk(secret), ~statement, signed) ]->
+  [ Out(<$E, pk(secret), ~statement, signed>) ]
+
+rule AcceptEvidence:
+  [ !IdentityVerification($E, secret),
+    In(<$E, pk(secret), statement,
+        sign(<'endpoint-evidence', 'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd',
+              $E, statement>, secret)>) ]
+  --[ EvidenceAccepted($E, pk(secret), statement,
+                       sign(<'endpoint-evidence', 'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd',
+                             $E, statement>, secret)) ]->
+  [ ]
+
+rule CompleteEndpointEffect:
+  [ !DurableInbox($E, S, transcript, direction, n, message_digest) ]
+  --[ EndpointEffectCompleted($E, S, transcript, direction, n, message_digest) ]->
+  [ ]
+
+rule ClassifyWithinResourceBounds:
+  [ Fr(~input) ]
+  --[ InputClassifiedWithinBounds(~input, 'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd') ]->
+  [ WithinResourceBounds(~input), Out(~input) ]
+
+rule AcceptWithinResourceBounds:
+  [ WithinResourceBounds(input), In(input) ]
+  --[ ResourceBoundsValidated(input, 'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd'),
+      ParserAccepted(input), ParserStateCommitted(input) ]->
+  [ ]
+
+rule ClassifyOverResourceBounds:
+  [ Fr(~input) ]
+  --[ InputClassifiedOverBounds(~input, 'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd') ]->
+  [ OverResourceBounds(~input), Out(~input) ]
+
+rule RejectOverResourceBounds:
+  [ OverResourceBounds(input), In(input) ]
+  --[ ResourceLimitRejected(input, 'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd') ]->
+  [ ]
+
+lemma executable_honest_handshake:
+  exists-trace
+  "Ex I R pair td root #i #r. InitiatorStarted(I, R, pair, td, root) @ i
+   & ResponderAccepted(R, I, pair, td, root) @ r"
+
+lemma executable_ratchet_evolution:
+  exists-trace
+  "Ex E1 P1 td1 old1 next1 E2 P2 td2 old2 next2 #advance #recover.
+   RatchetAdvanced(E1, P1, td1, old1, next1) @ advance
+   & RatchetRecovered(E2, P2, td2, old2, next2) @ recover"
+
+lemma executable_identity_and_route:
+  exists-trace
+  "Ex E P old_public new_public successor old_route new_route route_digest
+      #identity #route.
+   IdentityContinuityAccepted(E, old_public, new_public, successor) @ identity
+   & RouteMigrationAccepted(E, P, old_public, old_route, new_route,
+                            route_digest) @ route"
+
+lemma executable_evidence:
+  exists-trace
+  "Ex E public statement signed #accept.
+   EvidenceAccepted(E, public, statement, signed) @ accept"
+
+lemma executable_reliable_and_metadata:
+  exists-trace
+  "Ex S R td direction n message packet chain metadata message_digest #send #accept #effect.
+   SenderMetadataProtected(S, R, td, metadata, packet, chain) @ send
+   & EndpointAccepted(R, S, td, direction, n, message, packet, chain) @ accept
+   & EndpointEffectCompleted(R, S, td, direction, n, message_digest) @ effect"
+
+lemma executable_resource_bounds:
+  exists-trace
+  "Ex accepted rejected #accept #reject.
+   ParserAccepted(accepted) @ accept
+   & ResourceLimitRejected(rejected, 'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd') @ reject"
+
+lemma SEC_001_hybrid_ake_key_secrecy:
+  "All I R td root #established #know.
+   HybridEstablished(I, R, td, root) @ established & K(root) @ know
+   ==> (Ex E P #c. SessionCompromise(E, P, td, root) @ c & c < know)
+     | (Ex E P #c. RatchetKeyCompromise(E, P, td, root) @ c & c < know)
+     | ((Ex #c. ClassicalComponentCompromise(I, R, td, root) @ c & c < know)
+      & (Ex #q. PostQuantumComponentCompromise(I, R, td, root) @ q & q < know))"
+
+lemma SEC_002_mutual_endpoint_authentication:
+  "All R I pair td root #accept. ResponderAccepted(R, I, pair, td, root) @ accept
+   ==> Ex #start. InitiatorStarted(I, R, pair, td, root) @ start & start < accept"
+
+lemma SEC_004_unknown_key_share_resistance:
+  "All R I pair td root R2 I2 #a #b. ResponderAccepted(R, I, pair, td, root) @ a
+   & ResponderAccepted(R2, I2, pair, td, root) @ b ==> R = R2 & I = I2"
+
+lemma SEC_005_key_compromise_impersonation_boundary:
+  "All I R pair td root #accept.
+   InitiatorEstablished(I, R, pair, td, root) @ accept
+   ==> (Ex #respond. ResponderAccepted(R, I, pair, td, root) @ respond
+                       & respond < accept)
+     | (Ex public #c. IdentityMaterialCompromise(R, public) @ c & c < accept)
+     | (Ex #c. PrekeyMaterialCompromise(R, pair) @ c & c < accept)"
+
+lemma SEC_003_classical_pq_hybrid_robustness:
+  "All I R td root #established #know.
+   HybridEstablished(I, R, td, root) @ established & K(root) @ know
+   ==> (Ex E P #c. SessionCompromise(E, P, td, root) @ c & c < know)
+     | (Ex E P #c. RatchetKeyCompromise(E, P, td, root) @ c & c < know)
+     | ((Ex #c. ClassicalComponentCompromise(I, R, td, root) @ c & c < know)
+      & (Ex #q. PostQuantumComponentCompromise(I, R, td, root) @ q & q < know))"
+
+lemma SEC_006_protocol_line_downgrade_resistance:
+  "All line #i. LineSelected(line) @ i ==> line = 'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83'"
+
+lemma SEC_007_protection_profile_downgrade_resistance:
+  "All profile #i. ProfileSelected(profile) @ i ==> profile = 'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf'"
+
+lemma SEC_008_session_independence:
+  "All I1 R1 td1 root1 I2 R2 td2 root2 #e1 #e2 #compromise #know.
+   HybridEstablished(I1, R1, td1, root1) @ e1
+   & HybridEstablished(I2, R2, td2, root2) @ e2
+   & SessionCompromise(I1, R1, td1, root1) @ compromise
+   & K(root2) @ know & not(root1 = root2)
+   ==> (Ex E P #c. SessionCompromise(E, P, td2, root2) @ c & c < know)
+     | (Ex E P #c. RatchetKeyCompromise(E, P, td2, root2) @ c & c < know)
+     | ((Ex #c. ClassicalComponentCompromise(I2, R2, td2, root2) @ c & c < know)
+      & (Ex #q. PostQuantumComponentCompromise(I2, R2, td2, root2) @ q & q < know))"
+
+lemma SEC_009_initial_forward_secrecy:
+  "All R I pair td root #accept #know.
+   ResponderAccepted(R, I, pair, td, root) @ accept & K(root) @ know & accept < know
+   ==> (Ex E P #c. SessionCompromise(E, P, td, root) @ c & c < know)
+     | (Ex E P #c. RatchetKeyCompromise(E, P, td, root) @ c & c < know)
+     | ((Ex #c. ClassicalComponentCompromise(I, R, td, root) @ c & c < know)
+      & (Ex #q. PostQuantumComponentCompromise(I, R, td, root) @ q & q < know))"
+
+lemma SEC_010_double_ratchet_forward_secrecy:
+  "All E P td old next #advance #know.
+   RatchetAdvanced(E, P, td, old, next) @ advance & K(old) @ know
+   ==> (Ex E2 P2 #c. SessionCompromise(E2, P2, td, old) @ c & c < know)
+     | (Ex E2 P2 #c. RatchetKeyCompromise(E2, P2, td, old) @ c & c < know)
+     | ((Ex I R #c. ClassicalComponentCompromise(I, R, td, old) @ c & c < know)
+      & (Ex I R #q. PostQuantumComponentCompromise(I, R, td, old) @ q & q < know))"
+
+lemma SEC_011_double_ratchet_post_compromise_recovery:
+  "All E P td old next #recover #know.
+   RatchetRecovered(E, P, td, old, next) @ recover & K(next) @ know
+   ==> Ex #c. RatchetKeyCompromise(E, P, td, next) @ c & c < know"
+
+lemma SEC_012_replay_resistance:
+  "All R S td direction n m1 p1 c1 m2 p2 c2 #i #j.
+   RecordReceived(R, S, td, direction, n, m1, p1, c1) @ i
+   & RecordReceived(R, S, td, direction, n, m2, p2, c2) @ j ==> #i = #j"
+
+lemma SEC_013_state_rollback_resistance:
+  "All E td direction n #i #j. AtomicReceiveCommit(E, td, direction, n) @ i
+   & AtomicReceiveCommit(E, td, direction, n) @ j ==> #i = #j"
+
+lemma SEC_014_identity_continuity:
+  "All E old_public new_public successor #accept.
+   IdentityContinuityAccepted(E, old_public, new_public, successor) @ accept
+   ==> (Ex #authorize.
+        IdentitySuccessorAuthorized(E, old_public, new_public, successor) @ authorize
+        & authorize < accept)
+     | (Ex #c. IdentityMaterialCompromise(E, old_public) @ c & c < accept)"
+
+lemma SEC_015_route_migration_safety:
+  "All E P public old_route new_route route_digest #accept.
+   RouteMigrationAccepted(E, P, public, old_route, new_route, route_digest) @ accept
+   ==> (Ex #authorize.
+        RouteMigrationAuthorized(E, P, public, old_route, new_route,
+                                 route_digest) @ authorize
+        & authorize < accept)
+     | (Ex #c. IdentityMaterialCompromise(E, public) @ c & c < accept)"
+
+lemma SEC_016_evidence_unforgeability:
+  "All E public statement signed #accept.
+   EvidenceAccepted(E, public, statement, signed) @ accept
+   ==> (Ex #issue. EvidenceIssued(E, public, statement, signed) @ issue
+                   & issue < accept)
+     | (Ex #c. IdentityMaterialCompromise(E, public) @ c & c < accept)"
+
+lemma SEC_017_evidence_identity_attribution:
+  "All E public statement signed #accept.
+   EvidenceAccepted(E, public, statement, signed) @ accept
+   ==> (Ex #provision. EndpointIdentityProvisioned(E, public) @ provision
+                       & provision < accept)
+     & ((Ex #issue. EvidenceIssued(E, public, statement, signed) @ issue
+                    & issue < accept)
+       | (Ex #c. IdentityMaterialCompromise(E, public) @ c & c < accept))"
+
+lemma SEC_018_station_cannot_manufacture_endpoint_accepted:
+  "All R S td direction n message packet chain #accept.
+   EndpointAccepted(R, S, td, direction, n, message, packet, chain) @ accept
+   ==> (Ex #send. RecordSent(S, R, td, direction, n, message, packet, chain) @ send
+                   & send < accept)
+     | (Ex E P #c. SessionCompromise(E, P, td, chain) @ c & c < accept)
+     | (Ex E P #c. RatchetKeyCompromise(E, P, td, chain) @ c & c < accept)
+     | ((Ex I P #c. ClassicalComponentCompromise(I, P, td, chain) @ c & c < accept)
+      & (Ex I P #q. PostQuantumComponentCompromise(I, P, td, chain) @ q & q < accept))"
+
+lemma SEC_019_station_cannot_manufacture_effect_completed:
+  "All R S td direction n message_digest #complete.
+   EndpointEffectCompleted(R, S, td, direction, n, message_digest) @ complete
+   ==> Ex message packet chain #accept.
+       EndpointAccepted(R, S, td, direction, n, message, packet, chain) @ accept
+       & accept < complete"
+
+lemma SEC_020_fail_closed_resource_bounds:
+  "(All input #accept. ParserAccepted(input) @ accept
+    ==> ResourceBoundsValidated(input, 'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd') @ accept)
+   & (All input #reject. ResourceLimitRejected(input, 'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd') @ reject
+      ==> not (Ex #commit. ParserStateCommitted(input) @ commit))"
+
+lemma SEC_022_pairwise_record_authentication_and_integrity:
+  "All R S td direction n message packet chain #receive.
+   RecordReceived(R, S, td, direction, n, message, packet, chain) @ receive
+   ==> (Ex #send. RecordSent(S, R, td, direction, n, message, packet, chain) @ send & send < receive)
+     | (Ex E P #c. SessionCompromise(E, P, td, chain) @ c & c < receive)
+     | (Ex E P #c. RatchetKeyCompromise(E, P, td, chain) @ c & c < receive)
+     | ((Ex I P #c. ClassicalComponentCompromise(I, P, td, chain) @ c & c < receive)
+      & (Ex I P #q. PostQuantumComponentCompromise(I, P, td, chain) @ q & q < receive))"
+
+lemma SEC_021_pairwise_record_confidentiality:
+  "All S R td direction n message packet chain #send #know.
+   RecordSent(S, R, td, direction, n, message, packet, chain) @ send & K(message) @ know
+   ==> (Ex E P #c. SessionCompromise(E, P, td, chain) @ c & c < know)
+     | (Ex E P #c. RatchetKeyCompromise(E, P, td, chain) @ c & c < know)
+     | ((Ex I P #c. ClassicalComponentCompromise(I, P, td, chain) @ c & c < know)
+      & (Ex I P #q. PostQuantumComponentCompromise(I, P, td, chain) @ q & q < know))"
+
+lemma SEC_023_sender_metadata_confidentiality:
+  "All S R td metadata packet chain #send #know.
+   SenderMetadataProtected(S, R, td, metadata, packet, chain) @ send
+   & K(metadata) @ know
+   ==> (Ex E P #c. SessionCompromise(E, P, td, chain) @ c & c < know)
+     | (Ex E P #c. RatchetKeyCompromise(E, P, td, chain) @ c & c < know)
+     | ((Ex I P #c. ClassicalComponentCompromise(I, P, td, chain) @ c & c < know)
+      & (Ex I P #q. PostQuantumComponentCompromise(I, P, td, chain) @ q & q < know))"
+
+end

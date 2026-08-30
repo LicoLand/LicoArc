@@ -1,39 +1,13 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://licoarc.com/spec/v1/group/conformance-manifest.json",
-  "manifestVersion": "licoarc.group-collaboration-conformance-manifest.v1",
-  "contractVersion": "licoarc.group-collaboration.v1",
-  "lifecycle": "Candidate",
-  "validCasesPath": "conformance/v1/group/valid.json",
-  "invalidCasesPath": "conformance/v1/group/invalid.json",
-  "caseIds": [
-    "group-genesis-two-endpoints",
-    "group-successor-add",
-    "group-projection-sorted-excluding-sender",
-    "group-partial-aggregate"
+  "$schema": "https://licoarc.com/spec/schemas/conformance-corpus-manifest.schema.json",
+  "manifestVersion": "licoarc.conformance-corpus-manifest.v1",
+  "corpusId": "licoarc.group.conformance.v1",
+  "caseCount": 13,
+  "operationIds": [
+    "licoarc.foundation.canonicalize-governance-json.v1",
+    "licoarc.foundation.decode-deterministic-cbor.v1"
   ],
-  "negativeCaseIds": [
-    "group-state-duplicate-member",
-    "group-state-empty-members",
-    "group-state-unknown-role",
-    "group-transition-unauthorized-member",
-    "group-transition-gap",
-    "group-transition-station-order-authority",
-    "group-message-removed-member-replay",
-    "group-malformed-trailing-cbor",
-    "group-malformed-indefinite-cbor"
-  ],
-  "assertions": [
-    "canonical-state-digest",
-    "genesis-and-exact-successor",
-    "closed-role-authorization",
-    "duplicate-and-fork-rejection",
-    "gap-stale-and-removal-replay-rejection",
-    "bounded-member-and-projection-sets",
-    "stable-per-member-projection-identities",
-    "deterministic-partial-aggregation",
-    "bounded-restart-convergence",
-    "malformed-wire-fail-closed",
-    "no-station-or-product-authority"
+  "envelopePaths": [
+    "conformance/v1/group/cases.json"
   ]
 }

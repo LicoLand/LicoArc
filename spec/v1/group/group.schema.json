@@ -16,6 +16,24 @@
     "role": { "type": "string", "enum": ["member", "state-authority"] },
     "operationKind": { "type": "string", "enum": ["genesis", "add", "remove", "role"] },
     "resultOutcome": { "type": "string", "enum": ["pending", "delivered", "rejected", "failed"] },
+    "failureCode": {
+      "type": "string",
+      "enum": [
+        "malformed",
+        "unauthorized",
+        "duplicate",
+        "fork",
+        "gap",
+        "stale",
+        "removed-member",
+        "over-bound",
+        "unknown-state",
+        "station-authority",
+        "conflict",
+        "tombstone-overflow",
+        "timeout"
+      ]
+    },
     "aggregateOutcome": { "type": "string", "enum": ["complete", "partial", "failed"] },
     "groupMember": {
       "type": "object",
@@ -38,6 +56,7 @@
           "type": "array",
           "minItems": 1,
           "maxItems": 64,
+          "uniqueItems": true,
           "items": { "$ref": "#/$defs/groupMember" }
         }
       }
@@ -54,6 +73,7 @@
           "type": "array",
           "minItems": 1,
           "maxItems": 64,
+          "uniqueItems": true,
           "items": { "$ref": "#/$defs/groupMember" }
         },
         "transitionDigest": { "$ref": "#/$defs/digest256" }
@@ -100,7 +120,7 @@
         "projectionId": { "$ref": "#/$defs/id128" },
         "recipientEndpointRef": { "$ref": "#/$defs/digest256" },
         "outcome": { "$ref": "#/$defs/resultOutcome" },
-        "failureCode": { "type": "string", "pattern": "^[a-z][a-z0-9-]{0,31}$" },
+        "failureCode": { "$ref": "#/$defs/failureCode" },
         "authority": { "type": "string", "enum": ["endpoint-evidence", "none"] }
       }
     },
@@ -111,7 +131,7 @@
       "properties": {
         "messageId": { "$ref": "#/$defs/id128" },
         "groupStateDigest": { "$ref": "#/$defs/digest256" },
-        "results": { "type": "array", "minItems": 1, "maxItems": 64, "items": { "$ref": "#/$defs/groupResult" } },
+        "results": { "type": "array", "minItems": 1, "maxItems": 64, "uniqueItems": true, "items": { "$ref": "#/$defs/groupResult" } },
         "outcome": { "$ref": "#/$defs/aggregateOutcome" },
         "counts": {
           "type": "object",

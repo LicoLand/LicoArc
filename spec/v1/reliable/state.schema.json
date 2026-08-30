@@ -4,7 +4,7 @@
   "title": "Lico Arc Reliable Exchange serializable tagged state",
   "type": "object",
   "additionalProperties": false,
-  "required": ["stateType", "stateTag", "logicalMessageId", "intentDigest", "transitionCount"],
+  "required": ["stateType", "stateTag", "logicalMessageId", "intentDigest", "transitionCount", "stateGeneration"],
   "properties": {
     "stateType": { "type": "string", "enum": ["outbox", "inbox", "attachment", "aggregate"] },
     "stateTag": {
@@ -20,17 +20,68 @@
     "applicationIdempotencyKey": { "type": "string", "pattern": "^[0-9a-f]{2,512}$" },
     "routeEpoch": { "type": "integer", "minimum": 0, "maximum": 9007199254740991 },
     "protectedPacketDigest": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "retainedProtectedPacket": { "type": "string", "pattern": "^[0-9a-f]{2,1048576}$" },
     "retryTransmissions": { "type": "integer", "minimum": 0, "maximum": 32 },
     "routeMigrations": { "type": "integer", "minimum": 0, "maximum": 16 },
     "transitionCount": { "type": "integer", "minimum": 0, "maximum": 256 },
-    "terminalFailureCode": { "type": "integer", "minimum": 0, "maximum": 12 },
+    "terminalFailureCode": { "type": "integer", "minimum": 0, "maximum": 13 },
     "applicationResultDigest": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
     "evidenceDigest": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
     "attachmentId": { "type": "string", "pattern": "^[0-9a-f]{32}$" },
     "recoveryRound": { "type": "integer", "minimum": 0, "maximum": 32 },
     "stateUpdate": { "type": "integer", "minimum": 0, "maximum": 64 },
-    "requestedChunkRanges": { "type": "array", "maxItems": 32 },
-    "projectionResults": { "type": "array", "maxItems": 64 },
-    "memberResultsDigest": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+    "requestedChunkRanges": { "type": "array", "maxItems": 32, "items": { "$ref": "#/$defs/chunkRange" } },
+    "projectionResults": { "type": "array", "maxItems": 64, "items": { "$ref": "#/$defs/projectionResult" } },
+    "memberResultsDigest": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "stateGeneration": { "type": "integer", "minimum": 0, "maximum": 9007199254740991 }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "stateTag": { "enum": ["in-flight", "ambiguous"] } }, "required": ["stateTag"] },
+      "then": { "properties": { "stateType": { "const": "outbox" } }, "required": ["protectedPacketDigest", "retainedProtectedPacket"] }
+    },
+    {
+      "if": { "required": ["retainedProtectedPacket"] },
+      "then": { "properties": { "stateType": { "const": "outbox" } }, "required": ["protectedPacketDigest"] }
+    },
+    {
+      "if": { "properties": { "stateType": { "const": "outbox" } }, "required": ["stateType"] },
+      "then": { "properties": { "stateTag": { "enum": ["created", "in-flight", "ambiguous", "accepted", "completed", "cancelled", "failed"] } } }
+    },
+    {
+      "if": { "properties": { "stateType": { "const": "inbox" } }, "required": ["stateType"] },
+      "then": { "properties": { "stateTag": { "enum": ["new", "pending-evidence", "accepted", "effect-pending", "completed", "cancelled", "failed"] } } }
+    },
+    {
+      "if": { "properties": { "stateType": { "const": "attachment" } }, "required": ["stateType"] },
+      "then": { "properties": { "stateTag": { "enum": ["pending", "complete", "cancelled", "failed"] } } }
+    },
+    {
+      "if": { "properties": { "stateType": { "const": "aggregate" } }, "required": ["stateType"] },
+      "then": { "properties": { "stateTag": { "enum": ["pending", "partial", "complete", "failed"] } } }
+    }
+  ],
+  "$defs": {
+    "chunkRange": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["startChunkIndex", "endChunkIndexExclusive"],
+      "properties": {
+        "startChunkIndex": { "type": "integer", "minimum": 0, "maximum": 128 },
+        "endChunkIndexExclusive": { "type": "integer", "minimum": 0, "maximum": 128 }
+      }
+    },
+    "projectionResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["projectionId", "recipientEndpointRef", "outcome", "authority"],
+      "properties": {
+        "projectionId": { "type": "string", "pattern": "^[0-9a-f]{32}$" },
+        "recipientEndpointRef": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "outcome": { "type": "string", "enum": ["pending", "delivered", "rejected", "failed"] },
+        "failureCode": { "type": "integer", "minimum": 0, "maximum": 13 },
+        "authority": { "type": "string", "enum": ["endpoint-evidence", "none"] }
+      }
+    }
   }
 }

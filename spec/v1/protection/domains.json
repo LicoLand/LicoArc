@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/v1/protection/domains.json",
+  "registryVersion": "licoarc.pairwise-protection-domains.v1",
+  "encoding": "exact-ASCII-bytes-including-one-terminal-NUL",
+  "callerSelected": false,
+  "domains": {
+    "supportStatementSignature": "LICOARC-V1/SUPPORT-STATEMENT/SIGN\u0000",
+    "prekeyBundleSignature": "LICOARC-V1/PREKEY-BUNDLE/SIGN\u0000",
+    "prekeyTranscriptDigest": "LICOARC-V1/PREKEY-TRANSCRIPT/DIGEST\u0000",
+    "handshakeTranscriptDigest": "LICOARC-V1/HANDSHAKE-TRANSCRIPT/DIGEST\u0000",
+    "initiatorHandshakeSignature": "LICOARC-V1/HANDSHAKE/INITIATOR-SIGN\u0000",
+    "hybridExtractSalt": "LICOARC-V1/HYBRID/EXTRACT-SALT\u0000",
+    "hybridExtract": "LICOARC-V1/HYBRID/EXTRACT\u0000",
+    "hybridRoot": "LICOARC-V1/HYBRID/ROOT\u0000",
+    "clientConfirmKey": "LICOARC-V1/HANDSHAKE/CLIENT-CONFIRM-KEY\u0000",
+    "clientConfirmNonce": "LICOARC-V1/HANDSHAKE/CLIENT-CONFIRM-NONCE\u0000",
+    "clientConfirmPlaintext": "LICOARC-V1/HANDSHAKE/CLIENT-CONFIRM\u0000",
+    "sessionAcceptKey": "LICOARC-V1/HANDSHAKE/SESSION-ACCEPT-KEY\u0000",
+    "sessionAcceptMac": "LICOARC-V1/HANDSHAKE/SESSION-ACCEPT-MAC\u0000",
+    "sessionContext": "LICOARC-V1/SESSION/CONTEXT\u0000",
+    "ratchetInitialRoot": "LICOARC-V1/RATCHET/ROOT/INITIAL\u0000",
+    "ratchetRootInitiatorToResponder": "LICOARC-V1/RATCHET/ROOT/I2R\u0000",
+    "ratchetRootResponderToInitiator": "LICOARC-V1/RATCHET/ROOT/R2I\u0000",
+    "ratchetChainInitiatorToResponder": "LICOARC-V1/RATCHET/CHAIN/I2R\u0000",
+    "ratchetChainResponderToInitiator": "LICOARC-V1/RATCHET/CHAIN/R2I\u0000",
+    "ratchetMessageKey": "LICOARC-V1/RATCHET/MESSAGE-KEY\u0000",
+    "ratchetNonce": "LICOARC-V1/RATCHET/NONCE\u0000",
+    "ratchetNextChain": "LICOARC-V1/RATCHET/NEXT-CHAIN\u0000",
+    "recordAssociatedData": "LICOARC-V1/RECORD/AAD\u0000"
+  },
+  "concatenationRule": "domain-bytes-followed-by-the-exact-canonical-projection-or-fixed-input-named-by-the-operation"
+}

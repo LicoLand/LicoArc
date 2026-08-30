@@ -9,7 +9,7 @@
 | Decision status | `RETIRED` |
 | Definition status | `NOT-SPECIFIED` |
 | Existing authority | [Canonical Field Registry](../../../spec/FIELD-REGISTRY.md) |
-| Predecessor or successor | Candidate placement replaced by open `FLD-protocol-support-statement-v1` and `FLD-handshake-transcript-v1`. |
+| Predecessor or successor | Candidate placement replaced by the specified `FLD-protocol-support-statement-v1` and `FLD-handshake-transcript-v1`; no predecessor bytes survive. |
 | Current conclusion | The former mandatory handshake `capabilityDigest` is not allocated. |
 
 ## Preserved requirement
@@ -20,9 +20,10 @@ a loose capability mix, is the selection boundary.
 
 ## Retirement rationale
 
-The Candidate field allocated a digest before declaration structure,
-content-identity scope, and transcript authentication were decided. No digest
-width, object, label, or inheritance rule survives.
+The Candidate field allocated a digest before support structure,
+content-identity scope, and transcript authentication were specified. The
+active records bind exact line and Profile identities directly. No predecessor
+digest, object, label, or compatibility rule survives.
 
 ## Definition evidence
 

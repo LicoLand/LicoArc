@@ -1,55 +1,14 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://licoarc.com/spec/v1/messaging/conformance-manifest.json",
-  "manifestVersion": "licoarc.messaging-conformance-manifest.v1",
-  "contractVersion": "licoarc.generic-messaging.v1",
-  "lifecycle": "Candidate",
-  "validCasesPath": "conformance/v1/messaging/valid.json",
-  "invalidCasesPath": "conformance/v1/messaging/invalid.json",
-  "caseIds": [
-    "message-event-empty-payload",
-    "message-request-opaque-binary",
-    "message-response-correlated",
-    "message-error-correlated",
-    "message-cancel-correlated",
-    "message-stream-final",
-    "message-attachment-descriptor-boundary",
-    "message-attachment-chunk",
-    "receive-state-ranges",
-    "receive-state-complete"
+  "$schema": "https://licoarc.com/spec/schemas/conformance-corpus-manifest.schema.json",
+  "manifestVersion": "licoarc.conformance-corpus-manifest.v1",
+  "corpusId": "licoarc.messaging.conformance.v1",
+  "caseCount": 32,
+  "operationIds": [
+    "licoarc.foundation.canonicalize-governance-json.v1",
+    "licoarc.foundation.decode-deterministic-cbor.v1",
+    "licoarc.foundation.encode-deterministic-cbor.v1"
   ],
-  "negativeCaseIds": [
-    "message-unknown-core-label",
-    "message-unknown-kind",
-    "message-missing-correlation",
-    "message-attachment-final-conflict",
-    "message-reserved-content-type",
-    "message-unknown-critical",
-    "message-reserved-extension",
-    "message-payload-over-bound",
-    "attachment-byte-length-over-bound",
-    "attachment-chunk-index-overflow",
-    "attachment-chunk-wrong-length",
-    "attachment-chunk-conflict",
-    "receive-state-unsorted-range",
-    "receive-state-adjacent-range",
-    "receive-state-covered-over-bound",
-    "receive-state-empty-before-complete",
-    "receive-state-stale",
-    "receive-state-reset",
-    "receive-state-terminal-reopen",
-    "receive-state-control-over-budget",
-    "wire-noncanonical-integer",
-    "wire-trailing-byte"
-  ],
-  "assertions": [
-    "deterministic-cbor-shortest-encoding",
-    "exact-opaque-payload-round-trip",
-    "closed-core-and-reserved-labels",
-    "fixed-chunk-grid-derived-geometry",
-    "canonical-half-open-recovery-ranges",
-    "typed-terminal-outcomes",
-    "bounded-streaming-digest-accounting",
-    "no-lifetime-bound-reset"
+  "envelopePaths": [
+    "conformance/v1/messaging/cases.json"
   ]
 }

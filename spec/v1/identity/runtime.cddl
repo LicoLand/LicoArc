@@ -1,186 +1,146 @@
-; Lico Arc Protocol identity line v1 semantic runtime grammar.
-; The Protocol Line maps these members to compact unsigned CBOR labels.
-; Governance JSON names remain source projections and are never a second wire.
+; Lico Arc Protocol Identity v1 deterministic-CBOR runtime grammar.
+; Every map key and enum is the exact unsigned value in labels.json. Textual
+; governance names are not wire values. Definite lengths and canonical CBOR
+; ordering are mandatory; unknown or duplicate labels fail closed.
 
 identity-record = identity-update / affiliation-update / route-update /
                   first-contact / discovery-input / transparency-bundle /
-                  association-claim
+                  association-claim / station-descriptor
 
 identity-update = {
-  record-type: "identityUpdate",
-  protocol-line-id: digest256,
-  endpoint-identity-ref: digest256,
-  identity-epoch: epoch,
-  ? previous-identity-state-digest: digest256,
-  transition: identity-transition,
-  state-digest: digest256,
-  key-authorizations: [* key-authorization],
-  ? revoked-key-digests: [* digest256],
-  ? recovery-proof: recovery-proof,
-  continuity-proof: continuity-proof,
-  endpoint-signature: signature
+  0 => 0, 1 => digest256, 2 => digest256, 3 => epoch,
+  ? 4 => digest256, 5 => identity-transition, 6 => digest256,
+  7 => [1*4 signing-key], ? 8 => [1*4 digest256],
+  ? 9 => recovery-proof, 10 => continuity-proof,
+  11 => endpoint-continuity-signature
 }
 
 affiliation-update = {
-  record-type: "affiliationUpdate",
-  protocol-line-id: digest256,
-  endpoint-identity-ref: digest256,
-  affiliation-epoch: epoch,
-  ? previous-affiliation-update-digest: digest256,
-  transition: affiliation-transition,
-  station-affiliations: [* station-affiliation],
-  state-digest: digest256,
-  endpoint-signature: signature
+  0 => 1, 1 => digest256, 2 => digest256, 3 => epoch,
+  ? 4 => digest256, 5 => chain-transition,
+  6 => [*4 station-affiliation], 7 => digest256,
+  8 => endpoint-continuity-signature
 }
 
 route-update = {
-  record-type: "routeUpdate",
-  protocol-line-id: digest256,
-  endpoint-identity-ref: digest256,
-  peer-endpoint-identity-ref: digest256,
-  route-epoch: epoch,
-  ? previous-route-update-digest: digest256,
-  transition: route-transition,
-  affiliation-state-digest: digest256,
-  route-not-after: unix-seconds,
-  routes: [* route],
-  endpoint-signature: signature
+  0 => 2, 1 => digest256, 2 => digest256, 3 => digest256,
+  4 => epoch, ? 5 => digest256, 6 => chain-transition,
+  7 => digest256, 8 => unix-seconds, 9 => [1*4 route],
+  10 => endpoint-continuity-signature
 }
 
 first-contact = {
-  record-type: "firstContact",
-  handle-class: "firstContact",
-  delivery-handle: token256,
-  audience-digest: digest256,
-  invitation-binding: digest256,
-  purpose: "firstContact",
-  single-use: true,
-  expires-at: unix-seconds,
-  protected-invitation: protected-invitation,
-  peer-verification-state: "unverified"
+  0 => 3, 1 => 1, 2 => token256, 3 => digest256,
+  4 => digest256, 5 => 0, 6 => true, 7 => unix-seconds,
+  8 => protected-invitation, 9 => 0
 }
 
 discovery-input = {
-  record-type: "discoveryInput",
-  input-id: id128,
-  source-kind: "directory" / "witness" / "gossip" / "station",
-  source-ref: digest256,
-  subject-endpoint-identity-ref: digest256,
-  chain-kind: "identity" / "affiliation" / "route",
-  state-epoch: epoch,
-  state-digest: digest256,
-  statement-digest: digest256,
-  observed-at: unix-seconds,
-  expires-at: unix-seconds,
-  source-signature: signature,
-  ? authenticated-input-only: true
+  0 => 4, 1 => id128, 2 => uint .le 3, 3 => digest256,
+  4 => digest256, 5 => chain-kind, 6 => epoch, 7 => digest256,
+  8 => digest256, 9 => unix-seconds, 10 => unix-seconds,
+  11 => signature, 12 => true
 }
 
 transparency-bundle = {
-  record-type: "transparencyBundle",
-  subject-endpoint-identity-ref: digest256,
-  chain-kind: "identity" / "affiliation" / "route",
-  state-epoch: epoch,
-  state-digest: digest256,
-  witness-inputs: [* authenticated-input],
-  gossip-inputs: [* authenticated-input],
-  discovery-inputs: [* authenticated-input],
-  station-signature-inputs: [* authenticated-input],
-  verification-inputs: [* authenticated-input],
-  authority: "bounded-authenticated-input-only",
-  endpoint-retains-continuity: true,
-  ? split-view: bool
+  0 => 5, 1 => digest256, 2 => chain-kind, 3 => epoch,
+  4 => digest256, 5 => [*8 authenticated-input],
+  6 => [*8 authenticated-input], 7 => [*8 authenticated-input],
+  8 => [*8 authenticated-input], 9 => [*8 authenticated-input],
+  10 => 0, 11 => true, ? 12 => bool
 }
 
 association-claim = {
-  record-type: "associationClaim",
-  claim-id: id128,
-  issuer-endpoint-identity-ref: digest256,
-  subject-endpoint-identity-refs: [+ digest256],
-  claim-epoch: epoch,
-  ? previous-claim-digest: digest256,
-  claim-digest: digest256,
-  expires-at: unix-seconds,
-  authority: "non-authoritative-protected-input",
-  issuer-signature: signature
+  0 => 6, 1 => id128, 2 => digest256, 3 => [1*8 digest256],
+  4 => epoch, ? 5 => digest256, 6 => digest256,
+  7 => unix-seconds, 8 => 0, 9 => signature
+}
+
+station-descriptor = {
+  0 => 7, 1 => digest256, 2 => epoch, ? 3 => digest256,
+  4 => unix-seconds, 5 => unix-seconds,
+  6 => [1*4 station-listener], 7 => [1*4 station-signing-key],
+  ? 8 => [1*4 digest256], 9 => [1*4 station-descriptor-signature]
+}
+
+station-listener = { 0 => digest256, 1 => endpoint-uri }
+station-signing-key = ed25519-station-signing-key / ml-dsa-65-station-signing-key
+ed25519-station-signing-key = {
+  0 => ed25519-profile-id, 1 => digest256, 2 => bstr .size 32
+}
+ml-dsa-65-station-signing-key = {
+  0 => ml-dsa-65-profile-id, 1 => digest256, 2 => bstr .size 1952
 }
 
 station-affiliation = {
-  station-descriptor-digest: digest256,
-  affiliation-commitment: digest256,
-  affiliation-nonce: token256,
-  affiliation-not-after: unix-seconds,
-  station-affiliation-signature: signature
+  0 => digest256, 1 => digest256, 2 => token256,
+  3 => unix-seconds, 4 => station-affiliation-signature
 }
 
 route = {
-  station-descriptor-digest: digest256,
-  affiliation-commitment: digest256,
-  transport-profile-id: digest256,
-  handle-class: "async",
-  delivery-handle: token256,
-  service-until: unix-seconds,
-  station-service-signature: signature
+  0 => digest256, 1 => digest256, 2 => digest256, 3 => 0,
+  4 => token256, 5 => unix-seconds, 6 => station-route-signature
 }
 
 protected-invitation = {
-  inviter-endpoint-identity-ref: digest256,
-  ? invitee-endpoint-identity-ref: digest256,
-  invitation-binding: digest256,
-  purpose: "firstContact",
-  audience-digest: digest256,
-  ? handshake-nonce: token256
+  0 => digest256, ? 1 => digest256, 2 => digest256,
+  3 => 0, 4 => digest256, ? 5 => token256
 }
 
 authenticated-input = {
-  input-id: id128,
-  input-kind: "witness" / "gossip" / "discovery" /
-              "stationSignature" / "verificationRecord",
-  source-ref: digest256,
-  state-epoch: epoch,
-  state-digest: digest256,
-  statement-digest: digest256,
-  expires-at: unix-seconds,
-  signature: signature,
-  ? authenticated-input-only: true
+  0 => id128, 1 => uint .le 4, 2 => digest256, 3 => epoch,
+  4 => digest256, 5 => digest256, 6 => unix-seconds,
+  7 => signature, 8 => true
 }
 
-key-authorization = {
-  key-id: id128,
-  key-purpose: "identity" / "evidence" / "handshake",
-  key-digest: digest256,
-  key-state: "active" / "revoked" / "recovery",
-  valid-from-epoch: epoch,
-  ? revoked-at-epoch: epoch
+signing-key = ed25519-signing-key / ml-dsa-65-signing-key
+ed25519-signing-key = {
+  0 => digest256, 1 => key-purpose, 2 => key-state,
+  3 => ed25519-profile-id, 4 => bstr .size 32,
+  5 => epoch, ? 6 => epoch
+}
+ml-dsa-65-signing-key = {
+  0 => digest256, 1 => key-purpose, 2 => key-state,
+  3 => ml-dsa-65-profile-id, 4 => bstr .size 1952,
+  5 => epoch, ? 6 => epoch
 }
 
 continuity-proof = {
-  proof-kind: "genesis" / "rotation" / "revocation" /
-              "recovery" / "migration",
-  predecessor-state-digest: digest256 / null,
-  signature: signature
+  0 => identity-transition,
+  1 => digest256 / null,
+  2 => endpoint-continuity-signature
 }
+recovery-proof = { 0 => digest256, 1 => [1*4 signature] }
 
-recovery-proof = {
-  recovery-digest: digest256,
-  witnesses: [+ signature]
-}
+signature = ed25519-signature / ml-dsa-65-signature
+endpoint-continuity-signature = ed25519-continuity-signature / ml-dsa-65-continuity-signature
+station-affiliation-signature = ed25519-station-affiliation-signature / ml-dsa-65-station-affiliation-signature
+station-route-signature = ed25519-station-route-signature / ml-dsa-65-station-route-signature
+station-descriptor-signature = ed25519-station-descriptor-signature / ml-dsa-65-station-descriptor-signature
 
-signature = {
-  key-id: id128,
-  signature-purpose: "endpoint-continuity" / "endpoint-evidence" /
-                     "station-affiliation" / "station-route-service" /
-                     "witness" / "gossip" / "discovery" / "verification",
-  signature-value: bytes
-}
+ed25519-signature = { 0 => ed25519-profile-id, 1 => digest256, 2 => signature-purpose, 3 => bstr .size 64 }
+ml-dsa-65-signature = { 0 => ml-dsa-65-profile-id, 1 => digest256, 2 => signature-purpose, 3 => bstr .size 3309 }
+ed25519-continuity-signature = { 0 => ed25519-profile-id, 1 => digest256, 2 => 0, 3 => bstr .size 64 }
+ml-dsa-65-continuity-signature = { 0 => ml-dsa-65-profile-id, 1 => digest256, 2 => 0, 3 => bstr .size 3309 }
+ed25519-station-affiliation-signature = { 0 => ed25519-profile-id, 1 => digest256, 2 => 2, 3 => bstr .size 64 }
+ml-dsa-65-station-affiliation-signature = { 0 => ml-dsa-65-profile-id, 1 => digest256, 2 => 2, 3 => bstr .size 3309 }
+ed25519-station-route-signature = { 0 => ed25519-profile-id, 1 => digest256, 2 => 3, 3 => bstr .size 64 }
+ml-dsa-65-station-route-signature = { 0 => ml-dsa-65-profile-id, 1 => digest256, 2 => 3, 3 => bstr .size 3309 }
+ed25519-station-descriptor-signature = { 0 => ed25519-profile-id, 1 => digest256, 2 => 8, 3 => bstr .size 64 }
+ml-dsa-65-station-descriptor-signature = { 0 => ml-dsa-65-profile-id, 1 => digest256, 2 => 8, 3 => bstr .size 3309 }
 
-identity-transition = "genesis" / "rotation" / "revocation" / "recovery"
-affiliation-transition = "genesis" / "migration" / "rotation" /
-                         "revocation" / "recovery"
-route-transition = "genesis" / "migration" / "rotation" /
-                   "revocation" / "recovery"
-digest256 = bytes .size 32
-token256 = bytes .size 32
-id128 = bytes .size 16
+identity-transition = 0 / 1 / 2 / 3
+chain-transition = 0 / 1 / 2 / 3 / 4
+key-purpose = 0 / 1 / 2
+key-state = 0 / 1 / 2
+signature-purpose = 0 / 1 / 2 / 3 / 4 / 5 / 6 / 7
+chain-kind = 0 / 1 / 2
+
+ed25519-profile-id = h'176b912b9547ca9c47ace10f881457ab63fcd493ef953616f5859e76b830fd60'
+ml-dsa-65-profile-id = h'427e788bb9aed076acc2fb5a94715d14e694ec5fbc846ac52c8c7e118a6b1b8f'
+digest256 = bstr .size 32
+token256 = bstr .size 32
+id128 = bstr .size 16
 epoch = uint .between 1 9007199254740991
 unix-seconds = uint .between 0 9007199254740991
+endpoint-uri = tstr .size (10..128)

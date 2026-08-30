@@ -2,126 +2,142 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "manifestVersion": "licoarc.protocol-line-manifest.v2",
   "wireId": "licoarc.protocol-line.v1",
+  "protocolLineId": "c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83",
   "generation": 1,
   "lifecycle": "Candidate",
-  "definitionStatus": "PARTIAL",
-  "sessionEligible": false,
+  "definitionStatus": "COMPLETE",
+  "sessionEligible": true,
   "publicationEligible": false,
   "protocolLineCatalog": "spec/protocol-lines.json",
   "protectionProfileCatalog": "spec/protection-profiles.json",
+  "fieldRegistry": {
+    "path": "spec/FIELD-REGISTRY.md",
+    "sourceDigest": "c303294c12798a0817645400122c19e59a733e2c157a61892c00c0da38c4fa8d",
+    "authority": "canonical-field-registry"
+  },
   "capabilities": [
     {
       "capabilityId": "licoarc.federation-governance.v1",
       "version": 1,
       "definitionStatus": "COMPLETE",
+      "semanticIdentity": "2c4ea340f250c2255bf1f01906e77f9e92b296ce41bb3f1e20c7ba1cdcca1de5",
       "sourceManifestPath": "spec/v1/governance/source-manifest.json",
       "sourceRoots": [],
       "sourcePaths": [],
-      "sourceDigest": "1b16c5508e00d48f226653ca0837d2d3b332626b03306ce90bab9e16a549c396"
+      "sourceDigest": "2c4ea340f250c2255bf1f01906e77f9e92b296ce41bb3f1e20c7ba1cdcca1de5"
     },
     {
       "capabilityId": "licoarc.generic-messaging.v1",
       "version": 1,
       "definitionStatus": "COMPLETE",
+      "semanticIdentity": "3a50a25021f62bcd907ccf196b86ab071b4b10253acc89c1f0fa1ca2f40e3fb6",
       "sourceManifestPath": "spec/v1/messaging/source-manifest.json",
       "sourceRoots": [],
       "sourcePaths": [],
-      "sourceDigest": "eb1c15f47a84b5fd000a6be7cbd5273e1081577143d7e0846c1adb0e256b7b4d"
+      "sourceDigest": "3a50a25021f62bcd907ccf196b86ab071b4b10253acc89c1f0fa1ca2f40e3fb6"
     },
     {
       "capabilityId": "licoarc.group-collaboration.v1",
       "version": 1,
       "definitionStatus": "COMPLETE",
+      "semanticIdentity": "3cc2f007c08efef2802599ffbc451e5c69a898bb1362fd6875bd18b1eae01edc",
       "sourceManifestPath": "spec/v1/group/source-manifest.json",
       "sourceRoots": [],
       "sourcePaths": [],
-      "sourceDigest": "6a69bd1c8c90fd8275304cf8f0a014cb1fa665aeb46e066a593ef19849cd98fe"
+      "sourceDigest": "3cc2f007c08efef2802599ffbc451e5c69a898bb1362fd6875bd18b1eae01edc"
     },
     {
       "capabilityId": "licoarc.https-transport.v1",
       "version": 1,
       "definitionStatus": "COMPLETE",
+      "semanticIdentity": "9acd5f74119612b3479d908a1c72a8a86d47a35d001cad8049e00e7341e449c5",
       "sourceManifestPath": "spec/v1/transport/source-manifest.json",
       "sourceRoots": [],
       "sourcePaths": [],
-      "sourceDigest": "803bad3c71795068502600e3169e1b83686f67af9fa440a203bfdfb1ccea447c"
+      "sourceDigest": "a9d0f795eb0032b8228c67f40bea808ae4d5239dde0ce7e75a94d7d950e6abde"
     },
     {
       "capabilityId": "licoarc.identity.v1",
       "version": 1,
       "definitionStatus": "COMPLETE",
-      "sourceManifestPath": null,
-      "sourceRoots": [
-        "conformance/v1/identity",
-        "spec/v1/identity"
-      ],
-      "sourcePaths": [
-        "conformance/v1/identity/invalid.json",
-        "conformance/v1/identity/manifest.json",
-        "conformance/v1/identity/valid.json",
-        "spec/v1/identity/identity.policy.json",
-        "spec/v1/identity/identity.schema.json",
-        "spec/v1/identity/registry.json",
-        "spec/v1/identity/runtime.cddl"
-      ],
-      "sourceDigest": "f761d649f8e14cd190b82a139371a8118724a22123bcc3d83682b60dc7e282b2"
+      "semanticIdentity": "6d1a77a52baa56f471364c7c1de9508086998659c34e9b447937c72901723096",
+      "sourceManifestPath": "spec/v1/identity/source-manifest.json",
+      "sourceRoots": [],
+      "sourcePaths": [],
+      "sourceDigest": "6d1a77a52baa56f471364c7c1de9508086998659c34e9b447937c72901723096"
+    },
+    {
+      "capabilityId": "licoarc.pairwise-protection.v1",
+      "version": 1,
+      "definitionStatus": "COMPLETE",
+      "semanticIdentity": "c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf",
+      "sourceManifestPath": "spec/v1/protection/source-manifest.json",
+      "sourceRoots": [],
+      "sourcePaths": [],
+      "sourceDigest": "8ff27e0453cd187997daf32be1258512a54ccbb3b5a5f48b8eed529d3f3d16fe"
     },
     {
       "capabilityId": "licoarc.protocol-foundation.v1",
       "version": 1,
       "definitionStatus": "COMPLETE",
+      "semanticIdentity": "93989534d02789ed811b54bd8049ee16f87676b2ee8c262cd17016bb883cf712",
       "sourceManifestPath": "spec/v1/foundation/source-manifest.json",
       "sourceRoots": [],
       "sourcePaths": [],
-      "sourceDigest": "976fbac8ab121b244d3d56083a23cee33dac89e8cd9e4ff314f193bb509c5f0f"
+      "sourceDigest": "93989534d02789ed811b54bd8049ee16f87676b2ee8c262cd17016bb883cf712"
     },
     {
       "capabilityId": "licoarc.reliable-exchange.v1",
       "version": 1,
       "definitionStatus": "COMPLETE",
+      "semanticIdentity": "08ca2e5789db48513b9dfa389893c19d5bce292300ea8a21a01800d8215dbc3c",
       "sourceManifestPath": "spec/v1/reliable/source-manifest.json",
       "sourceRoots": [],
       "sourcePaths": [],
-      "sourceDigest": "4dbc0b187a0ab2d6b8b933f48ee2036464f6700eb5b4ca31050bb617687dceaa"
+      "sourceDigest": "08ca2e5789db48513b9dfa389893c19d5bce292300ea8a21a01800d8215dbc3c"
     },
     {
       "capabilityId": "licoarc.transferable-evidence.v1",
       "version": 1,
       "definitionStatus": "COMPLETE",
+      "semanticIdentity": "def39a90f77d2727af37c7c7716617130cbd417663cba10bc0d784d74b959a7f",
       "sourceManifestPath": "spec/v1/evidence/source-manifest.json",
       "sourceRoots": [],
       "sourcePaths": [],
-      "sourceDigest": "393e1ee33591576a31ae5bcb868b859ca5c9b8d43caa67bb891203edd91b8fbf"
+      "sourceDigest": "def39a90f77d2727af37c7c7716617130cbd417663cba10bc0d784d74b959a7f"
     }
   ],
-  "missingMandatoryCapabilities": [
-    "licoarc.pairwise-protection.v1"
+  "protectionProfileIds": [
+    "c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf"
   ],
-  "openDefinitions": [
-    {
-      "definitionId": "pairwise-protection",
-      "definitionStatus": "PARTIAL",
-      "sourceManifestPath": "spec/v1/protection/source-manifest.json",
-      "sourceDigest": "5487852a64be744fba8ff4c79bbf5e0063b33affe15dfa933dc10dbac75e53dc"
-    },
-    {
-      "definitionId": "security-accounting",
-      "definitionStatus": "PARTIAL",
-      "sourceManifestPath": "spec/v1/security/source-manifest.json",
-      "sourceDigest": "89fef1f43ce715deb877815107054f7454db66a116232a6e1a25c640da95f200"
-    }
+  "stableClaimIds": [
+    "SEC-001",
+    "SEC-002",
+    "SEC-003",
+    "SEC-004",
+    "SEC-005",
+    "SEC-006",
+    "SEC-007",
+    "SEC-008",
+    "SEC-009",
+    "SEC-010",
+    "SEC-011",
+    "SEC-012",
+    "SEC-013",
+    "SEC-014",
+    "SEC-015",
+    "SEC-016",
+    "SEC-017",
+    "SEC-018",
+    "SEC-019",
+    "SEC-020",
+    "SEC-021",
+    "SEC-022",
+    "SEC-023"
   ],
-  "blockers": [
-    "ALG-core-v1-double-ratchet",
-    "ALG-core-v1-hybrid-ake",
-    "FLD-handshake-transcript-v1",
-    "FLD-minimum-protocol-generation-v1",
-    "FLD-prekey-bundle-v1",
-    "FLD-protocol-support-statement-v1",
-    "FLD-ratchet-header",
-    "FLD-session-accept",
-    "SEC-formal-security-bindings"
-  ],
+  "missingMandatoryCapabilities": [],
+  "openDefinitions": [],
+  "blockers": [],
   "sourceClosure": {
     "roots": [
       "conformance/v1",
@@ -129,8 +145,13 @@
       "spec/v1"
     ],
     "additionalSources": [
+      "spec/FIELD-REGISTRY.md",
       "spec/protection-profiles.json",
       "spec/protocol-lines.json",
+      "spec/schemas/catalog-common.schema.json",
+      "spec/schemas/conformance-case.schema.json",
+      "spec/schemas/conformance-corpus-manifest.schema.json",
+      "spec/schemas/conformance-envelope.schema.json",
       "spec/schemas/conformance-manifest.schema.json",
       "spec/schemas/protection-profiles.schema.json",
       "spec/schemas/protocol-lines.schema.json",
@@ -138,9 +159,9 @@
     ],
     "undeclaredFiles": "reject",
     "symlinks": "reject",
-    "encoding": "restricted-jcs-json-plus-canonical-utf8-cddl"
+    "encoding": "restricted-jcs-json-plus-canonical-utf8-cddl-and-markdown"
   },
-  "handshakeBinding": "unavailable-until-open-decisions-close",
-  "sessionLock": false,
+  "handshakeBinding": "protocol-line-and-profile-identities-transcript-bound",
+  "sessionLock": true,
   "translationPolicy": "forbidden"
 }

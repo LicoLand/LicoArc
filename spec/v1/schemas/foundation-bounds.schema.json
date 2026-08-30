@@ -4,13 +4,38 @@
   "title": "LicoArc foundation bounds registry",
   "type": "object",
   "additionalProperties": false,
-  "required": ["$schema", "$id", "registryVersion", "lifecycle", "scope", "bounds"],
+  "required": ["$schema", "$id", "registryVersion", "lifecycle", "scope", "authority", "bounds"],
   "properties": {
     "$schema": { "type": "string", "const": "https://json-schema.org/draft/2020-12/schema" },
     "$id": { "type": "string", "const": "https://licoarc.com/spec/v1/schemas/foundation-bounds.schema.json" },
     "registryVersion": { "type": "string", "const": "licoarc.foundation-bounds.v1" },
     "lifecycle": { "type": "string", "enum": ["Candidate", "Published", "Retired"] },
-    "scope": { "type": "string", "const": "foundation-source-and-runtime-parser" },
+    "scope": { "type": "string", "const": "foundation-source-and-foundation-record-parser-only" },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["appliesTo", "capabilityRecords", "protectionProfiles", "crossCapabilityTotals", "inheritance"],
+      "properties": {
+        "appliesTo": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": [
+              "spec/v1/foundation source parsing",
+              "foundation governance artifact parsing",
+              "foundation runtime encoding fixture parsing"
+            ]
+          }
+        },
+        "capabilityRecords": { "type": "string", "const": "bounded-by-owning-capability" },
+        "protectionProfiles": { "type": "string", "const": "bounded-by-owning-profile" },
+        "crossCapabilityTotals": { "type": "string", "const": "bounded-by-protocol-line" },
+        "inheritance": { "type": "string", "const": "forbidden" }
+      }
+    },
     "bounds": {
       "type": "object",
       "additionalProperties": false,
