@@ -6,10 +6,11 @@
 | --- | --- |
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-verification-evidence` |
-| Decision status | `DECIDED` |
-| Definition status | `PARTIAL` |
+| Decision status | `RETIRED` |
+| Definition status | `NOT-SPECIFIED` |
 | Existing authority | [`FIELD-REGISTRY.md`](../../../spec/FIELD-REGISTRY.md) |
-| Current conclusion | A protected, method-bound evidence value is required for interoperable peer-verification transitions, without carrying local trust policy or private UI state. |
+| Predecessor or successor | Retired without successor; Generation 1 defines user authority and leaves peer trust local. |
+| Current conclusion | No verification-evidence field is active. |
 
 ## Question
 
@@ -29,11 +30,11 @@ exclusive authority to decide local peer trust.
 
 ## Field model and trade-offs
 
-The value is mandatory bounded byte string field `verificationEvidence`. It is
-input to local verification and cannot directly set local peer-verification
-state. Exact bounds, method-specific byte interpretation, transcript and
-identity bindings, canonical representation, and invalid-input behavior
-remain specification gaps.
+The approved semantic value is bounded method-specific evidence that cannot
+directly set local peer-verification state. Protocol Line v1 admits no
+verification-method registry or evidence field allocation; exact bounds,
+interpretation, bindings, representation, and invalid-input behavior remain
+successor-definition work.
 
 ## Visibility and trust
 
@@ -52,4 +53,4 @@ semantics authority and wins over any conflicting explanation here.
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. Only the scope recorded by this decision and its linked normative authorities is defined; any remaining normative ambiguity requires a successor decision before entering the protocol definition.
+The definition is retired and `NOT-SPECIFIED`; this record remains history only.

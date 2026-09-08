@@ -9,9 +9,8 @@
     "spec/v1/messaging"
   ],
   "sources": [
-    "conformance/v1/messaging/invalid.json",
+    "conformance/v1/messaging/cases.json",
     "conformance/v1/messaging/manifest.json",
-    "conformance/v1/messaging/valid.json",
     "spec/v1/messaging/bounds.json",
     "spec/v1/messaging/control.schema.json",
     "spec/v1/messaging/labels.json",

@@ -10,7 +10,7 @@ specification; normative field semantics come only from the Field Registry.
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-attachment-byte-length` |
 | Decision status | `DECIDED` |
-| Definition status | `PARTIAL` |
+| Definition status | `SPECIFIED` |
 | Existing authority | [Field Registry](../../../spec/FIELD-REGISTRY.md) |
 | Current conclusion | `byteLength` is the total raw attachment length used for resource bounds, chunk-count derivation, final-chunk validation, and completion. |
 
@@ -56,4 +56,4 @@ final-length role without adding count, offset, length, or final-marker fields.
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. Only the scope recorded by this decision and its linked normative authorities is defined; any remaining normative ambiguity requires a successor decision before entering the protocol definition.
+The definition status is `SPECIFIED`. The Canonical Field Registry and linked machine-readable authorities close this record’s exact active semantics.

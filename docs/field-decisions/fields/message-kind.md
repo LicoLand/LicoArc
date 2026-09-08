@@ -7,7 +7,7 @@
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-message-kind` |
 | Decision status | `DECIDED` |
-| Definition status | `PARTIAL` |
+| Definition status | `SPECIFIED` |
 | Candidate spellings | `kind`, `type`, record class |
 | Candidate layer | Generic Message inside protection |
 | Observer set | Peer Endpoints |
@@ -96,9 +96,9 @@ or lifecycle; every resulting decision remains wholly LicoArc-owned.
 ## Decision history
 
 The original decision fixed six semantics while leaving exact spelling and
-encoding open. The Canonical Field Registry selected the protected field name
-`kind` and exact values, including camel-case `streamChunk`; the future
-versioned schema still closes every variant and invalid union.
+encoding open. The Canonical Field Registry and complete Messaging schema now
+select the protected semantic field `kind`, exact compact values including
+`streamChunk`, every valid variant, and fail-closed invalid unions.
 
 LicoArc review on 2026-08-03 confirmed that selective attachment recovery
 requires no seventh kind: a protected `event` reports receive state and
@@ -106,4 +106,4 @@ existing `streamChunk` carries immutable raw-byte slices.
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. Only the scope recorded by this decision and its linked normative authorities is defined; any remaining normative ambiguity requires a successor decision before entering the protocol definition.
+The definition status is `SPECIFIED`. The Canonical Field Registry and linked machine-readable authorities close this record’s exact active semantics.

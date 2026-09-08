@@ -7,7 +7,7 @@
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-plaintext` |
 | Decision status | `DECIDED` |
-| Definition status | `PARTIAL` |
+| Definition status | `SPECIFIED` |
 | Candidate spellings | `plaintext`, debug payload, fallback content |
 | Candidate layer | Rejected from every Station-visible protected-message carrier |
 | Observer set | Station and carrier observers if admitted |
@@ -81,9 +81,13 @@ or lifecycle; every resulting decision remains wholly LicoArc-owned.
 
 ## Decision history
 
-The field is excluded. No further design vote is required unless the LicoArc
-trust model itself is explicitly replaced.
+The field is excluded by the closed Transport and Pairwise Protection
+grammars. Unknown outer members and any application plaintext outside the
+protected packet fail closed. No further design vote is required unless the
+LicoArc trust model itself is explicitly replaced.
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. Only the scope recorded by this decision and its linked normative authorities is defined; any remaining normative ambiguity requires a successor decision before entering the protocol definition.
+The definition status is `SPECIFIED`. The linked closed carrier, protection,
+schema, and registry authorities admit no outer plaintext representation or
+compatibility form.

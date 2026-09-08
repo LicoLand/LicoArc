@@ -11,12 +11,12 @@ specification. Normative field semantics come only from the
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-affiliation-epoch` |
 | Decision status | `DECIDED` |
-| Definition status | `PARTIAL` |
+| Definition status | `SPECIFIED` |
 | Candidate spellings | affiliation version, home Station generation, service epoch |
 | Candidate layer | Identity/Discovery protected control state |
 | Observer set | Peer Endpoints; hidden from Stations |
 | Existing authority | [Canonical Field Registry](../../../spec/FIELD-REGISTRY.md) |
-| Authority targets | Future Affiliation Update schema and corpus |
+| Authority targets | The Identity Affiliation Update schema, grammar, policy, and corpus |
 | Predecessor or successor | None |
 | Current conclusion | One Endpoint-wide epoch orders the current primary and alternate Station affiliations consistently across every peer. |
 
@@ -108,4 +108,4 @@ global ordering value and paired with an exact predecessor digest.
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. Only the scope recorded by this decision and its linked normative authorities is defined; any remaining normative ambiguity requires a successor decision before entering the protocol definition.
+The definition status is `SPECIFIED`. The Canonical Field Registry and linked machine-readable authorities close this record’s exact active semantics.

@@ -7,7 +7,7 @@
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-hop-trace` |
 | Decision status | `REJECTED` |
-| Definition status | `PARTIAL` |
+| Definition status | `NOT-SPECIFIED` |
 | Existing authority | [`FIELD-REGISTRY.md`](../../../spec/FIELD-REGISTRY.md) |
 | Current conclusion | A message-carried list of traversed Stations or network hops is rejected. |
 
@@ -24,7 +24,7 @@ as LicoArc message state and cannot establish authenticity, delivery, or trust.
 
 ## Contribution to LicoArc's final vision
 
-Rejecting a hop trace prevents a globally correlatable relay history and keeps
+Rejecting a hop trace prevents a globally correlatable forwarding history and keeps
 transport observations outside Endpoint security authority.
 
 ## Field model and trade-offs
@@ -51,4 +51,4 @@ semantics authority and wins over any conflicting explanation here.
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. Only the scope recorded by this decision and its linked normative authorities is defined; any remaining normative ambiguity requires a successor decision before entering the protocol definition.
+The definition status is `NOT-SPECIFIED`. This historical record supplies no active normative definition; any successor or replacement owns its complete definition independently.

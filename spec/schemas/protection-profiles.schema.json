@@ -1,74 +1,207 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://licoarc.com/spec/schemas/protection-profiles.schema.json",
-  "title": "LicoArc Protection Profile lifecycle registry",
+  "title": "LicoArc initial V1 Protection Profile catalog",
   "type": "object",
   "additionalProperties": false,
-  "required": ["$schema", "$id", "registryVersion", "lifecycleStates", "activeProfiles", "reservedIdentifiers", "admission"],
+  "required": [
+    "$schema",
+    "$id",
+    "registryVersion",
+    "definitionStates",
+    "lifecycleStates",
+    "profiles",
+    "activeProfileIds",
+    "contentIdentity",
+    "admission"
+  ],
   "properties": {
-    "$schema": {"const": "https://json-schema.org/draft/2020-12/schema"},
-    "$id": {"const": "https://licoarc.com/spec/protection-profiles.json"},
-    "registryVersion": {"const": "licoarc.protection-profiles.v1"},
-    "lifecycleStates": {"const": ["Candidate", "Published", "Deprecated", "Retired"]},
-    "activeProfiles": {
+    "$schema": {
+      "const": "https://json-schema.org/draft/2020-12/schema"
+    },
+    "$id": {
+      "const": "https://licoarc.com/spec/protection-profiles.json"
+    },
+    "registryVersion": {
+      "const": "licoarc.protection-profiles.v1"
+    },
+    "definitionStates": {
+      "const": [
+        "PENDING",
+        "DRAFT",
+        "PARTIAL",
+        "COMPLETE"
+      ]
+    },
+    "lifecycleStates": {
+      "const": [
+        "Candidate"
+      ]
+    },
+    "profiles": {
       "type": "array",
-      "maxItems": 16,
+      "minItems": 1,
+      "maxItems": 1,
       "uniqueItems": true,
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["profileId", "generation", "minimumGeneration", "contentDigest", "lifecycle", "definitionStatus", "sessionEligible", "publicationEligible", "newSessionPolicy", "existingSessionPolicy", "authenticatedEffectiveGeneration", "sourceManifestPath", "requiredClaimIds"],
+        "required": [
+          "profileLocator",
+          "generation",
+          "profileId",
+          "lifecycle",
+          "definitionStatus",
+          "sessionEligible",
+          "publicationEligible",
+          "sourceDescriptorPath",
+          "requiredClaimIds",
+          "stableNonClaimIds",
+          "blockers"
+        ],
         "properties": {
-          "profileId": {"type": "string", "pattern": "^[0-9a-f]{64}$", "maxLength": 64},
-          "generation": {"type": "integer", "minimum": 1, "maximum": 9007199254740991},
-          "minimumGeneration": {"type": "integer", "minimum": 1, "maximum": 9007199254740991},
-          "contentDigest": {"type": "string", "pattern": "^[0-9a-f]{64}$", "maxLength": 64},
-          "lifecycle": {"type": "string", "enum": ["Candidate", "Published", "Deprecated"]},
-          "definitionStatus": {"const": "COMPLETE"},
-          "sessionEligible": {"type": "boolean"},
-          "publicationEligible": {"type": "boolean"},
-          "newSessionPolicy": {"type": "string", "enum": ["allow-authenticated", "forbid-deprecated"]},
-          "existingSessionPolicy": {"type": "string", "enum": ["continue-authenticated", "terminate-on-authenticated-adoption", "terminate-at-authenticated-generation"]},
-          "authenticatedEffectiveGeneration": {"type": ["integer", "null"], "minimum": 1, "maximum": 9007199254740991},
-          "sourceManifestPath": {"type": "string", "pattern": "^spec/[A-Za-z0-9._/-]+$", "maxLength": 256},
-          "requiredClaimIds": {"type": "array", "minItems": 1, "maxItems": 64, "uniqueItems": true, "items": {"type": "string", "pattern": "^SEC-[0-9]{3}$", "maxLength": 7}}
+          "profileLocator": {
+            "const": "stable-core"
+          },
+          "generation": {
+            "$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/generation"
+          },
+          "profileId": {
+            "$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/pendingDigest256"
+          },
+          "lifecycle": {
+            "$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/lifecycle"
+          },
+          "definitionStatus": {
+            "$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/pendingDefinitionStatus"
+          },
+          "sessionEligible": {
+            "type": "boolean"
+          },
+          "publicationEligible": {
+            "type": "boolean"
+          },
+          "sourceDescriptorPath": {
+            "$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/sourcePath"
+          },
+          "requiredClaimIds": {
+            "type": "array",
+            "maxItems": 128,
+            "uniqueItems": true,
+            "items": {
+              "$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/claimId"
+            }
+          },
+          "stableNonClaimIds": {
+            "type": "array",
+            "maxItems": 128,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9-]+$",
+              "maxLength": 128
+            }
+          },
+          "blockers": {
+            "type": "array",
+            "maxItems": 64,
+            "uniqueItems": true,
+            "items": {
+              "$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/blockerId"
+            }
+          }
         }
       }
     },
-    "reservedIdentifiers": {
+    "activeProfileIds": {
       "type": "array",
-      "minItems": 1,
-      "maxItems": 64,
+      "maxItems": 1,
       "uniqueItems": true,
       "items": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": ["id", "generation", "lifecycle", "status", "newSessionPolicy", "existingSessionPolicy", "authenticatedEffectiveGeneration", "reusable"],
-        "properties": {
-          "id": {"type": "string", "pattern": "^[0-9a-f]{64}$", "maxLength": 64},
-          "generation": {"type": "integer", "minimum": 1, "maximum": 9007199254740991},
-          "lifecycle": {"const": "Retired"},
-          "status": {"type": "string", "enum": ["withdrawn-candidate", "retired"]},
-          "newSessionPolicy": {"const": "forbid-retired"},
-          "existingSessionPolicy": {"type": "string", "enum": ["continue-authenticated", "terminate-on-authenticated-adoption", "terminate-at-authenticated-generation"]},
-          "authenticatedEffectiveGeneration": {"type": ["integer", "null"], "minimum": 1, "maximum": 9007199254740991},
-          "reusable": {"const": false}
+        "$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/digest256"
+      },
+      "minItems": 1
+    },
+    "contentIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "algorithm",
+        "include",
+        "exclude"
+      ],
+      "properties": {
+        "name": {
+          "const": "ProtectionProfileSemanticProjectionV1"
+        },
+        "algorithm": {
+          "const": "SHA-256-over-domain-and-deterministic-CBOR"
+        },
+        "include": {
+          "const": [
+            "profile-semantic-version",
+            "indivisible-composition-rules",
+            "canonical-semantic-source-bytes-excluding-authority-vectors",
+            "stable-positive-claim-identifiers",
+            "stable-nonclaim-identifiers"
+          ]
+        },
+        "exclude": {
+          "const": [
+            "profileId-and-contentIdentity",
+            "catalogs-containing-identities",
+            "lifecycle-and-publication",
+            "admission-status",
+            "proof-results-and-tools",
+            "formal-bindings",
+            "source-and-artifact-digests"
+          ]
         }
       }
     },
     "admission": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["requires", "contentIdentity", "reducedSecurityFallback", "componentNegotiation", "unknownProfile", "retiredProfile", "identifierReuse", "stateAdvanceOnFailure"],
+      "required": [
+        "requires",
+        "contentIdentity",
+        "claimClosure",
+        "corpusClosure",
+        "reducedSecurityFallback",
+        "componentNegotiation",
+        "unknownProfile",
+        "identifierReuse",
+        "stateAdvanceOnFailure"
+      ],
       "properties": {
-        "requires": {"const": "decided-specified-complete-profile-with-proof-bound-claims"},
-        "contentIdentity": {"const": "required-before-active-admission"},
-        "reducedSecurityFallback": {"const": "forbidden"},
-        "componentNegotiation": {"const": "forbidden"},
-        "unknownProfile": {"const": "terminal-unknown-profile"},
-        "retiredProfile": {"const": "terminal-retired-profile"},
-        "identifierReuse": {"const": "forbidden"},
-        "stateAdvanceOnFailure": {"const": false}
+        "requires": {
+          "const": "known-complete-content-identical-profile"
+        },
+        "contentIdentity": {
+          "const": "recomputed-before-active-admission"
+        },
+        "claimClosure": {
+          "const": "all-required-positive-claims-known-proved-and-fully-bound"
+        },
+        "corpusClosure": {
+          "const": "complete-declared-profile-corpus"
+        },
+        "reducedSecurityFallback": {
+          "const": "forbidden"
+        },
+        "componentNegotiation": {
+          "const": "forbidden"
+        },
+        "unknownProfile": {
+          "const": "terminal-unknown-profile"
+        },
+        "identifierReuse": {
+          "const": "forbidden"
+        },
+        "stateAdvanceOnFailure": {
+          "const": false
+        }
       }
     }
   }

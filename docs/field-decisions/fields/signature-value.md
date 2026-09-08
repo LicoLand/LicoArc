@@ -10,7 +10,7 @@ specification; normative field semantics come only from the Field Registry.
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-signature-value` |
 | Decision status | `DECIDED` |
-| Definition status | `PARTIAL` |
+| Definition status | `SPECIFIED` |
 | Existing authority | [Canonical Field Registry](../../../spec/FIELD-REGISTRY.md) |
 | Current conclusion | Mandatory `Signature.signatureValue` carries bounded signature bytes verified with the resolved `keyId` and profile over the containing object's canonical covered bytes. |
 
@@ -52,4 +52,4 @@ component signatures, and Provider encodings inside the selected key profile.
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. Only the scope recorded by this decision and its linked normative authorities is defined; any remaining normative ambiguity requires a successor decision before entering the protocol definition.
+The definition status is `SPECIFIED`. The Canonical Field Registry and linked machine-readable authorities close this record’s exact active semantics.

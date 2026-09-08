@@ -2,37 +2,84 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://licoarc.com/spec/protection-profiles.json",
   "registryVersion": "licoarc.protection-profiles.v1",
-  "lifecycleStates": ["Candidate", "Published", "Deprecated", "Retired"],
-  "activeProfiles": [],
-  "reservedIdentifiers": [
+  "definitionStates": [
+    "PENDING",
+    "DRAFT",
+    "PARTIAL",
+    "COMPLETE"
+  ],
+  "lifecycleStates": [
+    "Candidate"
+  ],
+  "profiles": [
     {
-      "id": "cbc5bc838141a34aa0dd1b300022de6212f47540f95f9d7958cb1f2dcf74e42e",
+      "profileLocator": "stable-core",
       "generation": 1,
-      "lifecycle": "Retired",
-      "status": "withdrawn-candidate",
-      "newSessionPolicy": "forbid-retired",
-      "existingSessionPolicy": "terminate-on-authenticated-adoption",
-      "authenticatedEffectiveGeneration": null,
-      "reusable": false
-    },
-    {
-      "id": "d9e09414257925eed013b7add0672277fb9f91dd34c2c4e1ee985d0b5b17a7d6",
-      "generation": 1,
-      "lifecycle": "Retired",
-      "status": "withdrawn-candidate",
-      "newSessionPolicy": "forbid-retired",
-      "existingSessionPolicy": "terminate-on-authenticated-adoption",
-      "authenticatedEffectiveGeneration": null,
-      "reusable": false
+      "profileId": "4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17",
+      "lifecycle": "Candidate",
+      "definitionStatus": "COMPLETE",
+      "sessionEligible": true,
+      "publicationEligible": false,
+      "sourceDescriptorPath": "spec/v1/protection/profile.json",
+      "requiredClaimIds": [
+        "SEC-001",
+        "SEC-002",
+        "SEC-003",
+        "SEC-004",
+        "SEC-005",
+        "SEC-006",
+        "SEC-007",
+        "SEC-008",
+        "SEC-009",
+        "SEC-010",
+        "SEC-011",
+        "SEC-012",
+        "SEC-013",
+        "SEC-020",
+        "SEC-021",
+        "SEC-022",
+        "SEC-023"
+      ],
+      "stableNonClaimIds": [
+        "ongoing-post-quantum-post-compromise-recovery",
+        "physical-zeroization",
+        "ratchet-header-confidentiality",
+        "rollback-detection-under-fully-compromised-store"
+      ],
+      "blockers": []
     }
   ],
+  "activeProfileIds": [
+    "4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17"
+  ],
+  "contentIdentity": {
+    "name": "ProtectionProfileSemanticProjectionV1",
+    "algorithm": "SHA-256-over-domain-and-deterministic-CBOR",
+    "include": [
+      "profile-semantic-version",
+      "indivisible-composition-rules",
+      "canonical-semantic-source-bytes-excluding-authority-vectors",
+      "stable-positive-claim-identifiers",
+      "stable-nonclaim-identifiers"
+    ],
+    "exclude": [
+      "profileId-and-contentIdentity",
+      "catalogs-containing-identities",
+      "lifecycle-and-publication",
+      "admission-status",
+      "proof-results-and-tools",
+      "formal-bindings",
+      "source-and-artifact-digests"
+    ]
+  },
   "admission": {
-    "requires": "decided-specified-complete-profile-with-proof-bound-claims",
-    "contentIdentity": "required-before-active-admission",
+    "requires": "known-complete-content-identical-profile",
+    "contentIdentity": "recomputed-before-active-admission",
+    "claimClosure": "all-required-positive-claims-known-proved-and-fully-bound",
+    "corpusClosure": "complete-declared-profile-corpus",
     "reducedSecurityFallback": "forbidden",
     "componentNegotiation": "forbidden",
     "unknownProfile": "terminal-unknown-profile",
-    "retiredProfile": "terminal-retired-profile",
     "identifierReuse": "forbidden",
     "stateAdvanceOnFailure": false
   }

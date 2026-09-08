@@ -7,12 +7,12 @@
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-protected-packet` |
 | Decision status | `DECIDED` |
-| Definition status | `PARTIAL` |
+| Definition status | `SPECIFIED` |
 | Candidate spellings | `ciphertext`, `packet`, `body`, raw transport body |
 | Candidate layer | Transport Profile raw binary body |
 | Observer set | Endpoint and Station; outside observers depend on carrier protection |
 | Existing authority | [Canonical Field Registry](../../../spec/FIELD-REGISTRY.md); this record explains the decision and is not a second field specification. |
-| Authority targets | Future Transport Profile body contract and Pairwise Protection frame |
+| Authority targets | The HTTPS Transport v1 body contract and stable-core Pairwise Protection frame |
 | Predecessor or successor | None |
 | Current conclusion | One bounded protected octet sequence is carried directly as the Transport Profile raw binary body, not as a text-object `ciphertext` value or binary-to-text wrapper. |
 
@@ -57,11 +57,11 @@ text conversion, plaintext interpretation, or duplicate content authority.
 
 ## Value model
 
-The semantic type is a bounded octet sequence carried without text
-reinterpretation. The minimum and maximum byte lengths, frame grammar, media
-type, profile binding, streaming rule, and empty-packet
-behavior remain to be specified. Character decoding and binary-to-text
-armoring are not packet encodings for this carrier.
+The semantic type is one non-empty octet sequence of at most
+`MAX_PACKET_BYTES = 524,288`, carried without text reinterpretation under
+`application/licoarc-protected-packet`. The stable-core Profile owns the
+complete ratchet-header, ciphertext, and tag frame. Streaming, parameters,
+trailing bytes, text armoring, and empty packets are forbidden.
 
 ## Alternatives
 
@@ -101,11 +101,10 @@ the Transport Profile's raw binary body. A text-object `ciphertext` field and
 its text-armored or character-encoding representation are excluded from the
 target carrier.
 
-Definition remains partial until the Pairwise Protection frame and first
-Transport Profile close exact framing, media type, byte bounds, profile
-binding, streaming, malformed-input, and failure semantics. Only the linked
-normative scope advances this record.
+The stable-core Protection frame and HTTPS Transport v1 close exact framing,
+media type, byte bounds, Profile binding, streaming, malformed-input, and
+failure semantics.
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. Only the scope recorded by this decision and its linked normative authorities is defined; any remaining normative ambiguity requires a successor decision before entering the protocol definition.
+The definition status is `SPECIFIED`. The Canonical Field Registry and linked machine-readable authorities close this record’s exact active semantics.

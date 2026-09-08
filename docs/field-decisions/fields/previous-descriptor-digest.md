@@ -10,7 +10,7 @@ specification; normative field semantics come only from the Field Registry.
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-previous-descriptor-digest` |
 | Decision status | `DECIDED` |
-| Definition status | `PARTIAL` |
+| Definition status | `SPECIFIED` |
 | Existing authority | [`FIELD-REGISTRY.md`](../../../spec/FIELD-REGISTRY.md) |
 | Current conclusion | `StationDescriptor.previousDescriptorDigest` is a conditionally mandatory `DIGEST256`, omitted only for the first descriptor; every successor identifies its immediate predecessor. |
 
@@ -48,4 +48,4 @@ history, not a second specification; normative semantics live only in
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. Only the scope recorded by this decision and its linked normative authorities is defined; any remaining normative ambiguity requires a successor decision before entering the protocol definition.
+The definition status is `SPECIFIED`. The Canonical Field Registry and linked machine-readable authorities close this record’s exact active semantics.

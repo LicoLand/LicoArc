@@ -10,9 +10,8 @@
     "spec/v1/governance"
   ],
   "sources": [
-    "conformance/v1/governance/invalid.json",
+    "conformance/v1/governance/cases.json",
     "conformance/v1/governance/manifest.json",
-    "conformance/v1/governance/valid.json",
     "spec/v1/governance/governance.policy.json",
     "spec/v1/governance/governance.schema.json",
     "spec/v1/governance/registry.json"

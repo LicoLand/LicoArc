@@ -11,12 +11,12 @@ specification. Normative field semantics come only from the
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-station-service-signature` |
 | Decision status | `DECIDED` |
-| Definition status | `PARTIAL` |
+| Definition status | `SPECIFIED` |
 | Candidate spellings | Route service signature, route certificate, handle proof |
 | Candidate layer | Transport Profile and protected Route |
 | Observer set | Reserving Endpoint and Station; peer Endpoints after protected projection |
 | Existing authority | [Canonical Field Registry](../../../spec/FIELD-REGISTRY.md) |
-| Authority targets | Canonical Field Registry; future Transport Profile, Route schema, signature profile, and conformance corpus |
+| Authority targets | Canonical Field Registry, HTTPS Transport v1, the Identity Route schema, signature profiles, and conformance corpora |
 | Predecessor or successor | None |
 | Current conclusion | Every asynchronous Route under a current Endpoint-wide affiliation requires a Station-authenticated, identity-bound, time-bounded route commitment; it never becomes identity, trust, availability, or delivery evidence. |
 
@@ -138,9 +138,10 @@ LicoArc review first admitted a signature over the minimum Route tuple.
 Threat review then separated global affiliation into
 `stationAffiliationSignature` and added `affiliationCommitment` to this Route
 signature. The two signatures now have disjoint authorities: affiliation
-acceptance versus private capability issuance. Exact signature-profile and
-key-purpose selection remain separate decisions.
+acceptance versus private capability issuance. The Identity and Transport
+registries close exact signature-profile, key-purpose, covered-tuple, and
+failure rules.
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. Only the scope recorded by this decision and its linked normative authorities is defined; any remaining normative ambiguity requires a successor decision before entering the protocol definition.
+The definition status is `SPECIFIED`. The Canonical Field Registry and linked machine-readable authorities close this record’s exact active semantics.

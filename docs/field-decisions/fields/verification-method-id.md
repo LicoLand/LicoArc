@@ -6,10 +6,11 @@
 | --- | --- |
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-verification-method-id` |
-| Decision status | `DECIDED` |
-| Definition status | `PARTIAL` |
+| Decision status | `RETIRED` |
+| Definition status | `NOT-SPECIFIED` |
 | Existing authority | [`FIELD-REGISTRY.md`](../../../spec/FIELD-REGISTRY.md) |
-| Current conclusion | Verification evidence requires a protocol-owned method identifier so peers interpret the evidence under one exact method contract. |
+| Predecessor or successor | Retired without successor; Generation 1 keeps peer trust local and defines no verification-evidence method. |
+| Current conclusion | No verification-method field is active. |
 
 ## Question
 
@@ -30,10 +31,10 @@ consistently without letting the evidence set trust by itself.
 
 ## Field model and trade-offs
 
-The value is mandatory `DIGEST256` field `verificationMethodId`, selecting one
-exact verification procedure. Procedure publication, identifier derivation,
-retirement, unknown-value behavior, and canonical representation remain
-specification gaps.
+The approved semantic value is a content identity selecting one exact
+verification procedure. Protocol Line v1 admits no verification-method
+registry or field allocation; procedure identity, retirement, encoding, and
+unknown-value behavior remain successor-definition work.
 
 ## Visibility and trust
 
@@ -52,4 +53,4 @@ explanation here.
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. Only the scope recorded by this decision and its linked normative authorities is defined; any remaining normative ambiguity requires a successor decision before entering the protocol definition.
+The definition is retired and `NOT-SPECIFIED`; this record remains history only.

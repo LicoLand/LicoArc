@@ -10,7 +10,7 @@ specification; normative field semantics come only from the Field Registry.
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-signing-key-profile-id` |
 | Decision status | `DECIDED` |
-| Definition status | `PARTIAL` |
+| Definition status | `SPECIFIED` |
 | Existing authority | [Canonical Field Registry](../../../spec/FIELD-REGISTRY.md) |
 | Current conclusion | Mandatory `SigningKey.keyProfileId` is a `DIGEST256` selecting one exact public-key and signature-verification profile. |
 
@@ -52,4 +52,4 @@ cryptographic meaning.
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. Only the scope recorded by this decision and its linked normative authorities is defined; any remaining normative ambiguity requires a successor decision before entering the protocol definition.
+The definition status is `SPECIFIED`. The Canonical Field Registry and linked machine-readable authorities close this record’s exact active semantics.

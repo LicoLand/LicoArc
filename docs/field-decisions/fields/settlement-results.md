@@ -10,7 +10,7 @@ specification; normative field semantics come only from the Field Registry.
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-settlement-results` |
 | Decision status | `DECIDED` |
-| Definition status | `PARTIAL` |
+| Definition status | `SPECIFIED` |
 | Existing authority | [Canonical Field Registry](../../../spec/FIELD-REGISTRY.md) |
 | Current conclusion | Conditional `settlementResults` returns exactly one ordered `itemId` and `settleOutcome` result for every evaluated settlement entry. |
 
@@ -52,4 +52,4 @@ on positional arrays with no identifiers or a pollable receipt.
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. Only the scope recorded by this decision and its linked normative authorities is defined; any remaining normative ambiguity requires a successor decision before entering the protocol definition.
+The definition status is `SPECIFIED`. The Canonical Field Registry and linked machine-readable authorities close this record’s exact active semantics.

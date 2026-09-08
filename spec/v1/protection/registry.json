@@ -3,15 +3,22 @@
   "$id": "https://licoarc.com/spec/v1/protection/registry.json",
   "registryVersion": "licoarc.pairwise-protection.v1",
   "lifecycle": "Candidate",
-  "definitionStatus": "PARTIAL",
-  "sessionEligible": false,
-  "activeProfiles": [],
+  "definitionStatus": "COMPLETE",
+  "sessionEligible": true,
+  "activeProfiles": [
+    "spec/v1/protection/profile.json"
+  ],
+  "completePendingProfiles": [],
   "profileCatalog": "spec/protection-profiles.json",
-  "openAlgorithmDecisions": ["ALG-core-v1-hybrid-ake", "ALG-core-v1-double-ratchet"],
-  "openFieldDecisions": ["FLD-prekey-bundle-v1", "FLD-handshake-transcript-v1", "FLD-session-accept", "FLD-ratchet-header"],
-  "wireSchemas": [],
-  "runtimeGrammar": null,
-  "conformanceCorpus": null,
+  "decidedPendingDefinitionJoin": [],
+  "wireSchemas": [
+    "spec/v1/protection/prekey-bundle.schema.json",
+    "spec/v1/protection/handshake.schema.json",
+    "spec/v1/protection/session-accept.schema.json",
+    "spec/v1/protection/record.schema.json"
+  ],
+  "runtimeGrammar": "spec/v1/protection/runtime.cddl",
+  "conformanceCorpus": "conformance/v1/protection/manifest.json",
   "unknownProfilePolicy": "terminal-reject",
   "fallbackPolicy": "forbidden",
   "stateAdvanceOnFailure": false

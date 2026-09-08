@@ -5,7 +5,6 @@
   "lifecycle": "Candidate",
   "scope": "foundation-contract-identifiers-only",
   "unknownPolicy": "reject",
-  "retiredPolicy": "reject",
   "identifierSyntax": "licoarc.<scope>.<name>.v<positive-integer>",
   "identifiers": [
     {

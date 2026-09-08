@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/v1/protection/failures.json",
+  "registryVersion": "licoarc.pairwise-protection-failures.v1",
+  "wireDisclosure": "typed-class-only-never-primitive-specific-detail",
+  "stateAdvanceOnFailure": false,
+  "failures": [
+    {
+      "code": 0,
+      "name": "invalid-encoding",
+      "terminal": true
+    },
+    {
+      "code": 1,
+      "name": "resource-bound",
+      "terminal": true
+    },
+    {
+      "code": 2,
+      "name": "unknown-or-ineligible-line",
+      "terminal": true
+    },
+    {
+      "code": 3,
+      "name": "unknown-or-ineligible-profile",
+      "terminal": true
+    },
+    {
+      "code": 4,
+      "name": "identity-authentication",
+      "terminal": true
+    },
+    {
+      "code": 5,
+      "name": "prekey-unavailable",
+      "terminal": true
+    },
+    {
+      "code": 6,
+      "name": "prekey-consumed",
+      "terminal": true
+    },
+    {
+      "code": 7,
+      "name": "handshake-rejected",
+      "terminal": true
+    },
+    {
+      "code": 8,
+      "name": "confirmation-rejected",
+      "terminal": true
+    },
+    {
+      "code": 9,
+      "name": "record-authentication",
+      "terminal": true
+    },
+    {
+      "code": 10,
+      "name": "replay",
+      "terminal": true
+    },
+    {
+      "code": 11,
+      "name": "stale-ratchet",
+      "terminal": true
+    },
+    {
+      "code": 12,
+      "name": "skip-bound",
+      "terminal": true
+    },
+    {
+      "code": 13,
+      "name": "counter-overflow",
+      "terminal": true
+    },
+    {
+      "code": 14,
+      "name": "state-conflict",
+      "terminal": true
+    },
+    {
+      "code": 15,
+      "name": "persistence",
+      "terminal": true
+    },
+    {
+      "code": 16,
+      "name": "state-rollback",
+      "terminal": true
+    },
+    {
+      "code": 17,
+      "name": "deleted",
+      "terminal": true
+    }
+  ],
+  "uniformity": {
+    "signatureFailureDuringEstablishment": "handshake-rejected",
+    "allZeroX25519": "handshake-rejected",
+    "mlKemImplicitRejectionConfirmationFailure": "handshake-rejected",
+    "clientConfirmFailure": "handshake-rejected",
+    "noPrimitiveOracle": true
+  }
+}

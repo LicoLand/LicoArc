@@ -11,12 +11,12 @@ specification. Normative field semantics come only from the
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-service-until` |
 | Decision status | `DECIDED` |
-| Definition status | `PARTIAL` |
+| Definition status | `SPECIFIED` |
 | Candidate spellings | route-service expiry, handle expiry, Route commitment expiry |
 | Candidate layer | Transport Profile and protected Route |
 | Observer set | Reserving Endpoint and Station; peer Endpoints after protected projection |
 | Existing authority | [Canonical Field Registry](../../../spec/FIELD-REGISTRY.md) |
-| Authority targets | Canonical Field Registry; future Transport Profile, Route schema, and conformance corpus |
+| Authority targets | Canonical Field Registry, HTTPS Transport v1, the Identity Route schema, and conformance corpora |
 | Predecessor or successor | None |
 | Current conclusion | A Station-signed route capability needs a Station-selected upper validity bound distinct from the Endpoint-selected route-set expiry. |
 
@@ -54,9 +54,9 @@ membership, Endpoint freshness, or message-delivery evidence.
 | --- | --- |
 | Semantic type | Unsigned Unix seconds |
 | Presence | Mandatory in an accepted asynchronous `RESERVE` result and its projected `Route`; not a first-contact field |
-| Values or range | Fixed-width non-negative integer within the Transport Profile's maximum service-commitment lifetime |
+| Values or range | Safe non-negative Unix seconds no later than the exact descriptor `notAfter` and matched `affiliationNotAfter` |
 | Canonical representation | Deterministic integer representation selected by the containing Transport Profile or Protocol Line |
-| Invalid input | Missing, malformed, expired, beyond profile bound, after descriptor `notAfter`, after matched `affiliationNotAfter`, or changed after signing fails closed rather than being truncated |
+| Invalid input | Missing, malformed, expired, after descriptor `notAfter`, after matched `affiliationNotAfter`, or changed after signing fails closed rather than being truncated |
 
 ## Necessity proof
 
@@ -126,9 +126,10 @@ the existing Endpoint-selected `routeNotAfter` could not represent the
 Station's independent service commitment. A dedicated signed upper bound was
 selected over implicit lifetime, duplicated timestamps, and sender-selected
 TTL. Threat review fixed the conflict rule: a value beyond descriptor or
-affiliation validity is rejected, not silently capped. Exact Transport Profile
-limits remain future specification work.
+affiliation validity is rejected, not silently capped. The Transport and
+Identity schemas close its safe-integer encoding, conditional presence,
+covered signature tuple, and fail-closed bounds.
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. Only the scope recorded by this decision and its linked normative authorities is defined; any remaining normative ambiguity requires a successor decision before entering the protocol definition.
+The definition status is `SPECIFIED`. The Canonical Field Registry and linked machine-readable authorities close this record’s exact active semantics.

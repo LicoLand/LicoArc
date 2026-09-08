@@ -1,8 +1,7 @@
 export {
+  CATALOG_COMMON_SCHEMA_ID,
   CatalogError,
-  assertValidProtocolCatalogs,
-  resolveExistingSessionPolicy,
-  selectProtocolLine
+  assertValidProtocolCatalogs
 } from "./catalogs.mjs";
 export {
   RestrictedJsonError,
@@ -29,6 +28,40 @@ export {
   assertValidSecurityAccounting
 } from "./security.mjs";
 export {
+  PROFILE_IDENTITY_DOMAIN,
+  PROTOCOL_LINE_IDENTITY_DOMAIN,
+  SemanticIdentityError,
+  assertProtectionProfileId,
+  assertProtocolLineId,
+  computeProtectionProfileId,
+  computeProtocolLineId,
+  protectionProfileSemanticProjection,
+  protocolLineSemanticProjection
+} from "./identity.mjs";
+export {
+  ProtocolDefinitionError,
+  assertCompleteProtocolLineAdmission,
+  assertDeclaredSourceClosure,
+  assertValidProtocolDefinition
+} from "./validation.mjs";
+export {
+  DEVICE_POSSESSION_DOMAIN,
+  USER_AUTHORITY_LIMITS,
+  USER_AUTHORITY_SIGNATURE_DOMAIN,
+  USER_AUTHORITY_STATE_DOMAIN,
+  USER_IDENTITY_DOMAIN,
+  UserAuthorityError,
+  admitProtectedAuthorityPayload,
+  applyUserAuthorityCatchUp,
+  authoritySignatureInput,
+  computeUserAuthorityStateDigest,
+  deriveUserIdentityRef,
+  executeUserAuthorityCase,
+  possessionProofInput,
+  validateAuthoritySessionBinding,
+  validateUserAuthorityState
+} from "./user-authority.mjs";
+export {
   FOUNDATION_REGISTRY_PATHS,
   FOUNDATION_ROOTS,
   FOUNDATION_SOURCE_MANIFEST,
@@ -46,3 +79,13 @@ export {
   validateProtocolLineManifest,
   writeFoundationBundle
 } from "./foundation.mjs";
+export {
+  ReliableConfirmationError,
+  applyAttachmentConfirmation,
+  applyGroupMemberConfirmation,
+  applyReliableConfirmation,
+  confirmationBinding,
+  executeGroupMemberConfirmationCase,
+  executeReliableConfirmationCase,
+  validateEndpointConfirmation
+} from "./reliable-confirmations.mjs";

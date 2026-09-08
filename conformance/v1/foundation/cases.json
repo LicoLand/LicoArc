@@ -1,0 +1,962 @@
+{
+  "$schema": "https://licoarc.com/spec/schemas/conformance-envelope.schema.json",
+  "envelopeVersion": "licoarc.conformance-envelope.v1",
+  "corpusId": "licoarc.foundation.conformance.v1",
+  "cases": [
+    {
+      "$schema": "https://licoarc.com/spec/schemas/conformance-case.schema.json",
+      "caseVersion": "licoarc.conformance-case.v1",
+      "id": "foundation-governance-duplicate-key",
+      "target": {
+        "operationId": "licoarc.foundation.canonicalize-governance-json.v1"
+      },
+      "context": {
+        "sourceBindings": [
+          {
+            "sourcePath": "spec/v1/foundation/representation.json",
+            "sha256": "3e8a94576d2e8dacd25c011858cf62cc2b4a70e485ae30fa9705fe6a4380f35b"
+          }
+        ],
+        "catalogs": [
+          {
+            "name": "foundation-registry",
+            "sourcePath": "spec/v1/foundation/representation.json",
+            "value": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "$id": "https://licoarc.com/spec/v1/schemas/foundation-representation.schema.json",
+              "registryVersion": "licoarc.foundation-representation.v1",
+              "lifecycle": "Candidate",
+              "scope": "source-representation-boundary",
+              "governance": {
+                "encoding": "restricted-jcs",
+                "schemaDialect": "https://json-schema.org/draft/2020-12/schema",
+                "documentEncoding": "utf-8",
+                "duplicateMemberPolicy": "reject",
+                "unknownClosedMemberPolicy": "reject",
+                "nonFiniteNumberPolicy": "reject"
+              },
+              "runtime": {
+                "encoding": "deterministic-cbor",
+                "schemaLanguage": "closed-cddl",
+                "mapKeyEncoding": "compact-unsigned-integer",
+                "lengthEncoding": "definite",
+                "rawBytes": "bounded-bstr",
+                "duplicateLabelPolicy": "reject",
+                "unknownLabelPolicy": "reject",
+                "trailingBytePolicy": "reject",
+                "indefiniteLengthPolicy": "reject"
+              },
+              "composition": {
+                "onlyBoundary": "protocol-line-manifest",
+                "translation": "forbidden",
+                "substitution": "forbidden",
+                "governanceAsRuntimeWire": "forbidden",
+                "runtimeAsGovernanceInput": "forbidden"
+              }
+            }
+          }
+        ],
+        "publicMaterial": [],
+        "clock": {},
+        "state": {},
+        "transport": {},
+        "storage": {}
+      },
+      "input": {
+        "source": "{\"a\":1,\"a\":2}"
+      },
+      "expected": {
+        "error": {
+          "code": "duplicate-member"
+        }
+      }
+    },
+    {
+      "$schema": "https://licoarc.com/spec/schemas/conformance-case.schema.json",
+      "caseVersion": "licoarc.conformance-case.v1",
+      "id": "foundation-governance-jcs-order",
+      "target": {
+        "operationId": "licoarc.foundation.canonicalize-governance-json.v1"
+      },
+      "context": {
+        "sourceBindings": [
+          {
+            "sourcePath": "spec/v1/foundation/representation.json",
+            "sha256": "3e8a94576d2e8dacd25c011858cf62cc2b4a70e485ae30fa9705fe6a4380f35b"
+          }
+        ],
+        "catalogs": [
+          {
+            "name": "foundation-registry",
+            "sourcePath": "spec/v1/foundation/representation.json",
+            "value": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "$id": "https://licoarc.com/spec/v1/schemas/foundation-representation.schema.json",
+              "registryVersion": "licoarc.foundation-representation.v1",
+              "lifecycle": "Candidate",
+              "scope": "source-representation-boundary",
+              "governance": {
+                "encoding": "restricted-jcs",
+                "schemaDialect": "https://json-schema.org/draft/2020-12/schema",
+                "documentEncoding": "utf-8",
+                "duplicateMemberPolicy": "reject",
+                "unknownClosedMemberPolicy": "reject",
+                "nonFiniteNumberPolicy": "reject"
+              },
+              "runtime": {
+                "encoding": "deterministic-cbor",
+                "schemaLanguage": "closed-cddl",
+                "mapKeyEncoding": "compact-unsigned-integer",
+                "lengthEncoding": "definite",
+                "rawBytes": "bounded-bstr",
+                "duplicateLabelPolicy": "reject",
+                "unknownLabelPolicy": "reject",
+                "trailingBytePolicy": "reject",
+                "indefiniteLengthPolicy": "reject"
+              },
+              "composition": {
+                "onlyBoundary": "protocol-line-manifest",
+                "translation": "forbidden",
+                "substitution": "forbidden",
+                "governanceAsRuntimeWire": "forbidden",
+                "runtimeAsGovernanceInput": "forbidden"
+              }
+            }
+          }
+        ],
+        "publicMaterial": [],
+        "clock": {},
+        "state": {},
+        "transport": {},
+        "storage": {}
+      },
+      "input": {
+        "source": "{\"z\":0,\"a\":1,\"nested\":{\"b\":true,\"a\":null}}"
+      },
+      "expected": {
+        "result": {
+          "canonical": "{\"a\":1,\"nested\":{\"a\":null,\"b\":true},\"z\":0}"
+        }
+      }
+    },
+    {
+      "$schema": "https://licoarc.com/spec/schemas/conformance-case.schema.json",
+      "caseVersion": "licoarc.conformance-case.v1",
+      "id": "foundation-governance-trailing-bytes",
+      "target": {
+        "operationId": "licoarc.foundation.canonicalize-governance-json.v1"
+      },
+      "context": {
+        "sourceBindings": [
+          {
+            "sourcePath": "spec/v1/foundation/representation.json",
+            "sha256": "3e8a94576d2e8dacd25c011858cf62cc2b4a70e485ae30fa9705fe6a4380f35b"
+          }
+        ],
+        "catalogs": [
+          {
+            "name": "foundation-registry",
+            "sourcePath": "spec/v1/foundation/representation.json",
+            "value": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "$id": "https://licoarc.com/spec/v1/schemas/foundation-representation.schema.json",
+              "registryVersion": "licoarc.foundation-representation.v1",
+              "lifecycle": "Candidate",
+              "scope": "source-representation-boundary",
+              "governance": {
+                "encoding": "restricted-jcs",
+                "schemaDialect": "https://json-schema.org/draft/2020-12/schema",
+                "documentEncoding": "utf-8",
+                "duplicateMemberPolicy": "reject",
+                "unknownClosedMemberPolicy": "reject",
+                "nonFiniteNumberPolicy": "reject"
+              },
+              "runtime": {
+                "encoding": "deterministic-cbor",
+                "schemaLanguage": "closed-cddl",
+                "mapKeyEncoding": "compact-unsigned-integer",
+                "lengthEncoding": "definite",
+                "rawBytes": "bounded-bstr",
+                "duplicateLabelPolicy": "reject",
+                "unknownLabelPolicy": "reject",
+                "trailingBytePolicy": "reject",
+                "indefiniteLengthPolicy": "reject"
+              },
+              "composition": {
+                "onlyBoundary": "protocol-line-manifest",
+                "translation": "forbidden",
+                "substitution": "forbidden",
+                "governanceAsRuntimeWire": "forbidden",
+                "runtimeAsGovernanceInput": "forbidden"
+              }
+            }
+          }
+        ],
+        "publicMaterial": [],
+        "clock": {},
+        "state": {},
+        "transport": {},
+        "storage": {}
+      },
+      "input": {
+        "source": "{\"a\":1} false"
+      },
+      "expected": {
+        "error": {
+          "code": "trailing-bytes"
+        }
+      }
+    },
+    {
+      "$schema": "https://licoarc.com/spec/schemas/conformance-case.schema.json",
+      "caseVersion": "licoarc.conformance-case.v1",
+      "id": "foundation-governance-unicode",
+      "target": {
+        "operationId": "licoarc.foundation.canonicalize-governance-json.v1"
+      },
+      "context": {
+        "sourceBindings": [
+          {
+            "sourcePath": "spec/v1/foundation/representation.json",
+            "sha256": "3e8a94576d2e8dacd25c011858cf62cc2b4a70e485ae30fa9705fe6a4380f35b"
+          }
+        ],
+        "catalogs": [
+          {
+            "name": "foundation-registry",
+            "sourcePath": "spec/v1/foundation/representation.json",
+            "value": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "$id": "https://licoarc.com/spec/v1/schemas/foundation-representation.schema.json",
+              "registryVersion": "licoarc.foundation-representation.v1",
+              "lifecycle": "Candidate",
+              "scope": "source-representation-boundary",
+              "governance": {
+                "encoding": "restricted-jcs",
+                "schemaDialect": "https://json-schema.org/draft/2020-12/schema",
+                "documentEncoding": "utf-8",
+                "duplicateMemberPolicy": "reject",
+                "unknownClosedMemberPolicy": "reject",
+                "nonFiniteNumberPolicy": "reject"
+              },
+              "runtime": {
+                "encoding": "deterministic-cbor",
+                "schemaLanguage": "closed-cddl",
+                "mapKeyEncoding": "compact-unsigned-integer",
+                "lengthEncoding": "definite",
+                "rawBytes": "bounded-bstr",
+                "duplicateLabelPolicy": "reject",
+                "unknownLabelPolicy": "reject",
+                "trailingBytePolicy": "reject",
+                "indefiniteLengthPolicy": "reject"
+              },
+              "composition": {
+                "onlyBoundary": "protocol-line-manifest",
+                "translation": "forbidden",
+                "substitution": "forbidden",
+                "governanceAsRuntimeWire": "forbidden",
+                "runtimeAsGovernanceInput": "forbidden"
+              }
+            }
+          }
+        ],
+        "publicMaterial": [],
+        "clock": {},
+        "state": {},
+        "transport": {},
+        "storage": {}
+      },
+      "input": {
+        "source": "{\"emoji\":\"😀\",\"number\":1e-6}"
+      },
+      "expected": {
+        "result": {
+          "canonical": "{\"emoji\":\"😀\",\"number\":0.000001}"
+        }
+      }
+    },
+    {
+      "$schema": "https://licoarc.com/spec/schemas/conformance-case.schema.json",
+      "caseVersion": "licoarc.conformance-case.v1",
+      "id": "foundation-governance-unknown-member",
+      "target": {
+        "operationId": "licoarc.foundation.canonicalize-governance-json.v1"
+      },
+      "context": {
+        "sourceBindings": [
+          {
+            "sourcePath": "spec/v1/foundation/representation.json",
+            "sha256": "3e8a94576d2e8dacd25c011858cf62cc2b4a70e485ae30fa9705fe6a4380f35b"
+          }
+        ],
+        "catalogs": [
+          {
+            "name": "foundation-registry",
+            "sourcePath": "spec/v1/foundation/representation.json",
+            "value": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "$id": "https://licoarc.com/spec/v1/schemas/foundation-representation.schema.json",
+              "registryVersion": "licoarc.foundation-representation.v1",
+              "lifecycle": "Candidate",
+              "scope": "source-representation-boundary",
+              "governance": {
+                "encoding": "restricted-jcs",
+                "schemaDialect": "https://json-schema.org/draft/2020-12/schema",
+                "documentEncoding": "utf-8",
+                "duplicateMemberPolicy": "reject",
+                "unknownClosedMemberPolicy": "reject",
+                "nonFiniteNumberPolicy": "reject"
+              },
+              "runtime": {
+                "encoding": "deterministic-cbor",
+                "schemaLanguage": "closed-cddl",
+                "mapKeyEncoding": "compact-unsigned-integer",
+                "lengthEncoding": "definite",
+                "rawBytes": "bounded-bstr",
+                "duplicateLabelPolicy": "reject",
+                "unknownLabelPolicy": "reject",
+                "trailingBytePolicy": "reject",
+                "indefiniteLengthPolicy": "reject"
+              },
+              "composition": {
+                "onlyBoundary": "protocol-line-manifest",
+                "translation": "forbidden",
+                "substitution": "forbidden",
+                "governanceAsRuntimeWire": "forbidden",
+                "runtimeAsGovernanceInput": "forbidden"
+              }
+            }
+          }
+        ],
+        "publicMaterial": [],
+        "clock": {},
+        "state": {},
+        "transport": {},
+        "storage": {}
+      },
+      "input": {
+        "source": "{\"kind\":\"schema\",\"value\":{\"manifestVersion\":\"licoarc.foundation-source-manifest.v1\",\"unknown\":true}}"
+      },
+      "expected": {
+        "result": {
+          "canonical": "{\"kind\":\"schema\",\"value\":{\"manifestVersion\":\"licoarc.foundation-source-manifest.v1\",\"unknown\":true}}"
+        }
+      }
+    },
+    {
+      "$schema": "https://licoarc.com/spec/schemas/conformance-case.schema.json",
+      "caseVersion": "licoarc.conformance-case.v1",
+      "id": "foundation-runtime-cbor-duplicate-label",
+      "target": {
+        "operationId": "licoarc.foundation.decode-deterministic-cbor.v1"
+      },
+      "context": {
+        "sourceBindings": [
+          {
+            "sourcePath": "spec/v1/foundation/representation.json",
+            "sha256": "3e8a94576d2e8dacd25c011858cf62cc2b4a70e485ae30fa9705fe6a4380f35b"
+          }
+        ],
+        "catalogs": [
+          {
+            "name": "foundation-registry",
+            "sourcePath": "spec/v1/foundation/representation.json",
+            "value": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "$id": "https://licoarc.com/spec/v1/schemas/foundation-representation.schema.json",
+              "registryVersion": "licoarc.foundation-representation.v1",
+              "lifecycle": "Candidate",
+              "scope": "source-representation-boundary",
+              "governance": {
+                "encoding": "restricted-jcs",
+                "schemaDialect": "https://json-schema.org/draft/2020-12/schema",
+                "documentEncoding": "utf-8",
+                "duplicateMemberPolicy": "reject",
+                "unknownClosedMemberPolicy": "reject",
+                "nonFiniteNumberPolicy": "reject"
+              },
+              "runtime": {
+                "encoding": "deterministic-cbor",
+                "schemaLanguage": "closed-cddl",
+                "mapKeyEncoding": "compact-unsigned-integer",
+                "lengthEncoding": "definite",
+                "rawBytes": "bounded-bstr",
+                "duplicateLabelPolicy": "reject",
+                "unknownLabelPolicy": "reject",
+                "trailingBytePolicy": "reject",
+                "indefiniteLengthPolicy": "reject"
+              },
+              "composition": {
+                "onlyBoundary": "protocol-line-manifest",
+                "translation": "forbidden",
+                "substitution": "forbidden",
+                "governanceAsRuntimeWire": "forbidden",
+                "runtimeAsGovernanceInput": "forbidden"
+              }
+            }
+          }
+        ],
+        "publicMaterial": [],
+        "clock": {},
+        "state": {},
+        "transport": {},
+        "storage": {}
+      },
+      "input": {
+        "hex": "a200010002"
+      },
+      "expected": {
+        "error": {
+          "code": "duplicate-label"
+        }
+      }
+    },
+    {
+      "$schema": "https://licoarc.com/spec/schemas/conformance-case.schema.json",
+      "caseVersion": "licoarc.conformance-case.v1",
+      "id": "foundation-runtime-cbor-empty-packet",
+      "target": {
+        "operationId": "licoarc.foundation.canonicalize-governance-json.v1"
+      },
+      "context": {
+        "sourceBindings": [
+          {
+            "sourcePath": "spec/v1/foundation/representation.json",
+            "sha256": "3e8a94576d2e8dacd25c011858cf62cc2b4a70e485ae30fa9705fe6a4380f35b"
+          }
+        ],
+        "catalogs": [
+          {
+            "name": "foundation-registry",
+            "sourcePath": "spec/v1/foundation/representation.json",
+            "value": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "$id": "https://licoarc.com/spec/v1/schemas/foundation-representation.schema.json",
+              "registryVersion": "licoarc.foundation-representation.v1",
+              "lifecycle": "Candidate",
+              "scope": "source-representation-boundary",
+              "governance": {
+                "encoding": "restricted-jcs",
+                "schemaDialect": "https://json-schema.org/draft/2020-12/schema",
+                "documentEncoding": "utf-8",
+                "duplicateMemberPolicy": "reject",
+                "unknownClosedMemberPolicy": "reject",
+                "nonFiniteNumberPolicy": "reject"
+              },
+              "runtime": {
+                "encoding": "deterministic-cbor",
+                "schemaLanguage": "closed-cddl",
+                "mapKeyEncoding": "compact-unsigned-integer",
+                "lengthEncoding": "definite",
+                "rawBytes": "bounded-bstr",
+                "duplicateLabelPolicy": "reject",
+                "unknownLabelPolicy": "reject",
+                "trailingBytePolicy": "reject",
+                "indefiniteLengthPolicy": "reject"
+              },
+              "composition": {
+                "onlyBoundary": "protocol-line-manifest",
+                "translation": "forbidden",
+                "substitution": "forbidden",
+                "governanceAsRuntimeWire": "forbidden",
+                "runtimeAsGovernanceInput": "forbidden"
+              }
+            }
+          }
+        ],
+        "publicMaterial": [],
+        "clock": {},
+        "state": {},
+        "transport": {},
+        "storage": {}
+      },
+      "input": {
+        "source": "{\"kind\":\"runtime-cbor\",\"value\":{\"0\":0,\"1\":\"base64:\"},\"hex\":\"a200000140\"}"
+      },
+      "expected": {
+        "result": {
+          "canonical": "{\"hex\":\"a200000140\",\"kind\":\"runtime-cbor\",\"value\":{\"0\":0,\"1\":\"base64:\"}}"
+        }
+      }
+    },
+    {
+      "$schema": "https://licoarc.com/spec/schemas/conformance-case.schema.json",
+      "caseVersion": "licoarc.conformance-case.v1",
+      "id": "foundation-runtime-cbor-indefinite-map",
+      "target": {
+        "operationId": "licoarc.foundation.decode-deterministic-cbor.v1"
+      },
+      "context": {
+        "sourceBindings": [
+          {
+            "sourcePath": "spec/v1/foundation/representation.json",
+            "sha256": "3e8a94576d2e8dacd25c011858cf62cc2b4a70e485ae30fa9705fe6a4380f35b"
+          }
+        ],
+        "catalogs": [
+          {
+            "name": "foundation-registry",
+            "sourcePath": "spec/v1/foundation/representation.json",
+            "value": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "$id": "https://licoarc.com/spec/v1/schemas/foundation-representation.schema.json",
+              "registryVersion": "licoarc.foundation-representation.v1",
+              "lifecycle": "Candidate",
+              "scope": "source-representation-boundary",
+              "governance": {
+                "encoding": "restricted-jcs",
+                "schemaDialect": "https://json-schema.org/draft/2020-12/schema",
+                "documentEncoding": "utf-8",
+                "duplicateMemberPolicy": "reject",
+                "unknownClosedMemberPolicy": "reject",
+                "nonFiniteNumberPolicy": "reject"
+              },
+              "runtime": {
+                "encoding": "deterministic-cbor",
+                "schemaLanguage": "closed-cddl",
+                "mapKeyEncoding": "compact-unsigned-integer",
+                "lengthEncoding": "definite",
+                "rawBytes": "bounded-bstr",
+                "duplicateLabelPolicy": "reject",
+                "unknownLabelPolicy": "reject",
+                "trailingBytePolicy": "reject",
+                "indefiniteLengthPolicy": "reject"
+              },
+              "composition": {
+                "onlyBoundary": "protocol-line-manifest",
+                "translation": "forbidden",
+                "substitution": "forbidden",
+                "governanceAsRuntimeWire": "forbidden",
+                "runtimeAsGovernanceInput": "forbidden"
+              }
+            }
+          }
+        ],
+        "publicMaterial": [],
+        "clock": {},
+        "state": {},
+        "transport": {},
+        "storage": {}
+      },
+      "input": {
+        "hex": "bf0001ff"
+      },
+      "expected": {
+        "error": {
+          "code": "indefinite-length"
+        }
+      }
+    },
+    {
+      "$schema": "https://licoarc.com/spec/schemas/conformance-case.schema.json",
+      "caseVersion": "licoarc.conformance-case.v1",
+      "id": "foundation-runtime-cbor-negative-label",
+      "target": {
+        "operationId": "licoarc.foundation.decode-deterministic-cbor.v1"
+      },
+      "context": {
+        "sourceBindings": [
+          {
+            "sourcePath": "spec/v1/foundation/representation.json",
+            "sha256": "3e8a94576d2e8dacd25c011858cf62cc2b4a70e485ae30fa9705fe6a4380f35b"
+          }
+        ],
+        "catalogs": [
+          {
+            "name": "foundation-registry",
+            "sourcePath": "spec/v1/foundation/representation.json",
+            "value": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "$id": "https://licoarc.com/spec/v1/schemas/foundation-representation.schema.json",
+              "registryVersion": "licoarc.foundation-representation.v1",
+              "lifecycle": "Candidate",
+              "scope": "source-representation-boundary",
+              "governance": {
+                "encoding": "restricted-jcs",
+                "schemaDialect": "https://json-schema.org/draft/2020-12/schema",
+                "documentEncoding": "utf-8",
+                "duplicateMemberPolicy": "reject",
+                "unknownClosedMemberPolicy": "reject",
+                "nonFiniteNumberPolicy": "reject"
+              },
+              "runtime": {
+                "encoding": "deterministic-cbor",
+                "schemaLanguage": "closed-cddl",
+                "mapKeyEncoding": "compact-unsigned-integer",
+                "lengthEncoding": "definite",
+                "rawBytes": "bounded-bstr",
+                "duplicateLabelPolicy": "reject",
+                "unknownLabelPolicy": "reject",
+                "trailingBytePolicy": "reject",
+                "indefiniteLengthPolicy": "reject"
+              },
+              "composition": {
+                "onlyBoundary": "protocol-line-manifest",
+                "translation": "forbidden",
+                "substitution": "forbidden",
+                "governanceAsRuntimeWire": "forbidden",
+                "runtimeAsGovernanceInput": "forbidden"
+              }
+            }
+          }
+        ],
+        "publicMaterial": [],
+        "clock": {},
+        "state": {},
+        "transport": {},
+        "storage": {}
+      },
+      "input": {
+        "hex": "a12001"
+      },
+      "expected": {
+        "error": {
+          "code": "negative-label"
+        }
+      }
+    },
+    {
+      "$schema": "https://licoarc.com/spec/schemas/conformance-case.schema.json",
+      "caseVersion": "licoarc.conformance-case.v1",
+      "id": "foundation-runtime-cbor-noncanonical-integer",
+      "target": {
+        "operationId": "licoarc.foundation.decode-deterministic-cbor.v1"
+      },
+      "context": {
+        "sourceBindings": [
+          {
+            "sourcePath": "spec/v1/foundation/representation.json",
+            "sha256": "3e8a94576d2e8dacd25c011858cf62cc2b4a70e485ae30fa9705fe6a4380f35b"
+          }
+        ],
+        "catalogs": [
+          {
+            "name": "foundation-registry",
+            "sourcePath": "spec/v1/foundation/representation.json",
+            "value": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "$id": "https://licoarc.com/spec/v1/schemas/foundation-representation.schema.json",
+              "registryVersion": "licoarc.foundation-representation.v1",
+              "lifecycle": "Candidate",
+              "scope": "source-representation-boundary",
+              "governance": {
+                "encoding": "restricted-jcs",
+                "schemaDialect": "https://json-schema.org/draft/2020-12/schema",
+                "documentEncoding": "utf-8",
+                "duplicateMemberPolicy": "reject",
+                "unknownClosedMemberPolicy": "reject",
+                "nonFiniteNumberPolicy": "reject"
+              },
+              "runtime": {
+                "encoding": "deterministic-cbor",
+                "schemaLanguage": "closed-cddl",
+                "mapKeyEncoding": "compact-unsigned-integer",
+                "lengthEncoding": "definite",
+                "rawBytes": "bounded-bstr",
+                "duplicateLabelPolicy": "reject",
+                "unknownLabelPolicy": "reject",
+                "trailingBytePolicy": "reject",
+                "indefiniteLengthPolicy": "reject"
+              },
+              "composition": {
+                "onlyBoundary": "protocol-line-manifest",
+                "translation": "forbidden",
+                "substitution": "forbidden",
+                "governanceAsRuntimeWire": "forbidden",
+                "runtimeAsGovernanceInput": "forbidden"
+              }
+            }
+          }
+        ],
+        "publicMaterial": [],
+        "clock": {},
+        "state": {},
+        "transport": {},
+        "storage": {}
+      },
+      "input": {
+        "hex": "a1001801"
+      },
+      "expected": {
+        "error": {
+          "code": "noncanonical-encoding"
+        }
+      }
+    },
+    {
+      "$schema": "https://licoarc.com/spec/schemas/conformance-case.schema.json",
+      "caseVersion": "licoarc.conformance-case.v1",
+      "id": "foundation-runtime-cbor-overflow",
+      "target": {
+        "operationId": "licoarc.foundation.decode-deterministic-cbor.v1"
+      },
+      "context": {
+        "sourceBindings": [
+          {
+            "sourcePath": "spec/v1/foundation/representation.json",
+            "sha256": "3e8a94576d2e8dacd25c011858cf62cc2b4a70e485ae30fa9705fe6a4380f35b"
+          }
+        ],
+        "catalogs": [
+          {
+            "name": "foundation-registry",
+            "sourcePath": "spec/v1/foundation/representation.json",
+            "value": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "$id": "https://licoarc.com/spec/v1/schemas/foundation-representation.schema.json",
+              "registryVersion": "licoarc.foundation-representation.v1",
+              "lifecycle": "Candidate",
+              "scope": "source-representation-boundary",
+              "governance": {
+                "encoding": "restricted-jcs",
+                "schemaDialect": "https://json-schema.org/draft/2020-12/schema",
+                "documentEncoding": "utf-8",
+                "duplicateMemberPolicy": "reject",
+                "unknownClosedMemberPolicy": "reject",
+                "nonFiniteNumberPolicy": "reject"
+              },
+              "runtime": {
+                "encoding": "deterministic-cbor",
+                "schemaLanguage": "closed-cddl",
+                "mapKeyEncoding": "compact-unsigned-integer",
+                "lengthEncoding": "definite",
+                "rawBytes": "bounded-bstr",
+                "duplicateLabelPolicy": "reject",
+                "unknownLabelPolicy": "reject",
+                "trailingBytePolicy": "reject",
+                "indefiniteLengthPolicy": "reject"
+              },
+              "composition": {
+                "onlyBoundary": "protocol-line-manifest",
+                "translation": "forbidden",
+                "substitution": "forbidden",
+                "governanceAsRuntimeWire": "forbidden",
+                "runtimeAsGovernanceInput": "forbidden"
+              }
+            }
+          }
+        ],
+        "publicMaterial": [],
+        "clock": {},
+        "state": {},
+        "transport": {},
+        "storage": {}
+      },
+      "input": {
+        "hex": "a1001b0020000000000000"
+      },
+      "expected": {
+        "error": {
+          "code": "invalid-deterministic-cbor"
+        }
+      }
+    },
+    {
+      "$schema": "https://licoarc.com/spec/schemas/conformance-case.schema.json",
+      "caseVersion": "licoarc.conformance-case.v1",
+      "id": "foundation-runtime-cbor-record",
+      "target": {
+        "operationId": "licoarc.foundation.canonicalize-governance-json.v1"
+      },
+      "context": {
+        "sourceBindings": [
+          {
+            "sourcePath": "spec/v1/foundation/representation.json",
+            "sha256": "3e8a94576d2e8dacd25c011858cf62cc2b4a70e485ae30fa9705fe6a4380f35b"
+          }
+        ],
+        "catalogs": [
+          {
+            "name": "foundation-registry",
+            "sourcePath": "spec/v1/foundation/representation.json",
+            "value": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "$id": "https://licoarc.com/spec/v1/schemas/foundation-representation.schema.json",
+              "registryVersion": "licoarc.foundation-representation.v1",
+              "lifecycle": "Candidate",
+              "scope": "source-representation-boundary",
+              "governance": {
+                "encoding": "restricted-jcs",
+                "schemaDialect": "https://json-schema.org/draft/2020-12/schema",
+                "documentEncoding": "utf-8",
+                "duplicateMemberPolicy": "reject",
+                "unknownClosedMemberPolicy": "reject",
+                "nonFiniteNumberPolicy": "reject"
+              },
+              "runtime": {
+                "encoding": "deterministic-cbor",
+                "schemaLanguage": "closed-cddl",
+                "mapKeyEncoding": "compact-unsigned-integer",
+                "lengthEncoding": "definite",
+                "rawBytes": "bounded-bstr",
+                "duplicateLabelPolicy": "reject",
+                "unknownLabelPolicy": "reject",
+                "trailingBytePolicy": "reject",
+                "indefiniteLengthPolicy": "reject"
+              },
+              "composition": {
+                "onlyBoundary": "protocol-line-manifest",
+                "translation": "forbidden",
+                "substitution": "forbidden",
+                "governanceAsRuntimeWire": "forbidden",
+                "runtimeAsGovernanceInput": "forbidden"
+              }
+            }
+          }
+        ],
+        "publicMaterial": [],
+        "clock": {},
+        "state": {},
+        "transport": {},
+        "storage": {}
+      },
+      "input": {
+        "source": "{\"kind\":\"runtime-cbor\",\"value\":{\"0\":1,\"1\":\"base64:AQID\",\"2\":7},\"hex\":\"a3000101430102030207\"}"
+      },
+      "expected": {
+        "result": {
+          "canonical": "{\"hex\":\"a3000101430102030207\",\"kind\":\"runtime-cbor\",\"value\":{\"0\":1,\"1\":\"base64:AQID\",\"2\":7}}"
+        }
+      }
+    },
+    {
+      "$schema": "https://licoarc.com/spec/schemas/conformance-case.schema.json",
+      "caseVersion": "licoarc.conformance-case.v1",
+      "id": "foundation-runtime-cbor-trailing-byte",
+      "target": {
+        "operationId": "licoarc.foundation.decode-deterministic-cbor.v1"
+      },
+      "context": {
+        "sourceBindings": [
+          {
+            "sourcePath": "spec/v1/foundation/representation.json",
+            "sha256": "3e8a94576d2e8dacd25c011858cf62cc2b4a70e485ae30fa9705fe6a4380f35b"
+          }
+        ],
+        "catalogs": [
+          {
+            "name": "foundation-registry",
+            "sourcePath": "spec/v1/foundation/representation.json",
+            "value": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "$id": "https://licoarc.com/spec/v1/schemas/foundation-representation.schema.json",
+              "registryVersion": "licoarc.foundation-representation.v1",
+              "lifecycle": "Candidate",
+              "scope": "source-representation-boundary",
+              "governance": {
+                "encoding": "restricted-jcs",
+                "schemaDialect": "https://json-schema.org/draft/2020-12/schema",
+                "documentEncoding": "utf-8",
+                "duplicateMemberPolicy": "reject",
+                "unknownClosedMemberPolicy": "reject",
+                "nonFiniteNumberPolicy": "reject"
+              },
+              "runtime": {
+                "encoding": "deterministic-cbor",
+                "schemaLanguage": "closed-cddl",
+                "mapKeyEncoding": "compact-unsigned-integer",
+                "lengthEncoding": "definite",
+                "rawBytes": "bounded-bstr",
+                "duplicateLabelPolicy": "reject",
+                "unknownLabelPolicy": "reject",
+                "trailingBytePolicy": "reject",
+                "indefiniteLengthPolicy": "reject"
+              },
+              "composition": {
+                "onlyBoundary": "protocol-line-manifest",
+                "translation": "forbidden",
+                "substitution": "forbidden",
+                "governanceAsRuntimeWire": "forbidden",
+                "runtimeAsGovernanceInput": "forbidden"
+              }
+            }
+          }
+        ],
+        "publicMaterial": [],
+        "clock": {},
+        "state": {},
+        "transport": {},
+        "storage": {}
+      },
+      "input": {
+        "hex": "a1000100"
+      },
+      "expected": {
+        "error": {
+          "code": "trailing-bytes"
+        }
+      }
+    },
+    {
+      "$schema": "https://licoarc.com/spec/schemas/conformance-case.schema.json",
+      "caseVersion": "licoarc.conformance-case.v1",
+      "id": "foundation-runtime-cbor-unknown-label",
+      "target": {
+        "operationId": "licoarc.foundation.decode-deterministic-cbor.v1"
+      },
+      "context": {
+        "sourceBindings": [
+          {
+            "sourcePath": "spec/v1/foundation/representation.json",
+            "sha256": "3e8a94576d2e8dacd25c011858cf62cc2b4a70e485ae30fa9705fe6a4380f35b"
+          }
+        ],
+        "catalogs": [
+          {
+            "name": "foundation-registry",
+            "sourcePath": "spec/v1/foundation/representation.json",
+            "value": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "$id": "https://licoarc.com/spec/v1/schemas/foundation-representation.schema.json",
+              "registryVersion": "licoarc.foundation-representation.v1",
+              "lifecycle": "Candidate",
+              "scope": "source-representation-boundary",
+              "governance": {
+                "encoding": "restricted-jcs",
+                "schemaDialect": "https://json-schema.org/draft/2020-12/schema",
+                "documentEncoding": "utf-8",
+                "duplicateMemberPolicy": "reject",
+                "unknownClosedMemberPolicy": "reject",
+                "nonFiniteNumberPolicy": "reject"
+              },
+              "runtime": {
+                "encoding": "deterministic-cbor",
+                "schemaLanguage": "closed-cddl",
+                "mapKeyEncoding": "compact-unsigned-integer",
+                "lengthEncoding": "definite",
+                "rawBytes": "bounded-bstr",
+                "duplicateLabelPolicy": "reject",
+                "unknownLabelPolicy": "reject",
+                "trailingBytePolicy": "reject",
+                "indefiniteLengthPolicy": "reject"
+              },
+              "composition": {
+                "onlyBoundary": "protocol-line-manifest",
+                "translation": "forbidden",
+                "substitution": "forbidden",
+                "governanceAsRuntimeWire": "forbidden",
+                "runtimeAsGovernanceInput": "forbidden"
+              }
+            }
+          }
+        ],
+        "publicMaterial": [],
+        "clock": {},
+        "state": {},
+        "transport": {},
+        "storage": {}
+      },
+      "input": {
+        "hex": "a200010302"
+      },
+      "expected": {
+        "result": {
+          "value": {
+            "0": 1,
+            "3": 2
+          }
+        }
+      }
+    }
+  ]
+}

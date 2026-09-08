@@ -7,7 +7,7 @@
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-route-not-after` |
 | Decision status | `DECIDED` |
-| Definition status | `PARTIAL` |
+| Definition status | `SPECIFIED` |
 | Existing authority | [`FIELD-REGISTRY.md`](../../../spec/FIELD-REGISTRY.md) |
 | Current conclusion | Authenticated route declarations require an Endpoint-selected upper validity bound distinct from the Station-selected signed `serviceUntil`; effective use ends at the earliest applicable bound. |
 
@@ -35,8 +35,9 @@ Endpoint chooses it to bound use of the complete route set. Each Route also
 carries an independently validated Station-signed `serviceUntil`; effective
 use ends at the earlier of those two values. A `serviceUntil` later than its
 descriptor or affiliation validity is invalid rather than capped.
-Allowed horizon, clock skew, boundary comparison, canonical encoding, and
-invalid-input behavior remain specification gaps.
+The Identity schema and policy fix the safe Unix-seconds range, earliest-bound
+comparison, deterministic encoding, retained high-water independence, and
+fail-closed invalid-input behavior.
 
 ## Visibility and trust
 
@@ -57,4 +58,4 @@ any conflicting explanation here.
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. Only the scope recorded by this decision and its linked normative authorities is defined; any remaining normative ambiguity requires a successor decision before entering the protocol definition.
+The definition status is `SPECIFIED`. The Canonical Field Registry and linked machine-readable authorities close this record’s exact active semantics.

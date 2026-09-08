@@ -7,7 +7,7 @@
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-endpoint-identity` |
 | Decision status | `RETIRED` |
-| Definition status | `PARTIAL` |
+| Definition status | `NOT-SPECIFIED` |
 | Candidate spellings | sender, recipient, credential, identity-key reference |
 | Candidate layer | Identity/Discovery and Pairwise Protection |
 | Observer set | Peer Endpoints; hidden from Stations |
@@ -111,4 +111,4 @@ semantics to `FLD-endpoint-identity-session-binding`.
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. Only the scope recorded by this decision and its linked normative authorities is defined; any remaining normative ambiguity requires a successor decision before entering the protocol definition.
+The definition status is `NOT-SPECIFIED`. This historical record supplies no active normative definition; any successor or replacement owns its complete definition independently.

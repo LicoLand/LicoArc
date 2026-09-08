@@ -3,10 +3,12 @@
   "$id": "https://licoarc.com/spec/v1/security/registry.json",
   "registryVersion": "licoarc.security-accounting.v1",
   "lifecycle": "Candidate",
-  "definitionStatus": "PARTIAL",
+  "definitionStatus": "COMPLETE",
   "claimsPath": "spec/v1/security/claims.json",
   "adversaryModelPath": "spec/v1/security/adversary-model.json",
   "formalBindingsPath": "spec/v1/security/formal-bindings.json",
+  "proofEvidencePath": "formal/evidence.json",
+  "proofEvidenceDigest": "74cf8df346a261164a097732b8fa6e03471d63104ae5001e5ccb6273b34f38e5",
   "proofDoesNotDefineProtocol": true,
   "downstreamEvidenceDoesNotAdvanceDefinition": true,
   "missingMandatoryBindingPolicy": "line-ineligible"

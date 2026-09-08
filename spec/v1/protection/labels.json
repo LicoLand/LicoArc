@@ -1,0 +1,203 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/v1/protection/labels.json",
+  "registryVersion": "licoarc.pairwise-protection-labels.v1",
+  "lifecycle": "Candidate",
+  "wireEncoding": "deterministic-definite-length-cbor-with-shortest-integers",
+  "unknownLabelPolicy": "terminal-invalid-encoding",
+  "duplicateLabelPolicy": "terminal-invalid-encoding",
+  "trailingBytePolicy": "terminal-invalid-encoding",
+  "prekeyBundle": [
+    {
+      "name": "protocolLineId",
+      "label": 0,
+      "type": "DIGEST256"
+    },
+    {
+      "name": "protectionProfileId",
+      "label": 1,
+      "type": "DIGEST256"
+    },
+    {
+      "name": "responderIdentityStateDigest",
+      "label": 2,
+      "type": "DIGEST256"
+    },
+    {
+      "name": "ed25519KeyId",
+      "label": 3,
+      "type": "DIGEST256"
+    },
+    {
+      "name": "mlDsa65KeyId",
+      "label": 4,
+      "type": "DIGEST256"
+    },
+    {
+      "name": "pairSequence",
+      "label": 5,
+      "type": "uint53"
+    },
+    {
+      "name": "x25519PublicKey",
+      "label": 6,
+      "type": "bstr32"
+    },
+    {
+      "name": "mlKem768EncapsulationKey",
+      "label": 7,
+      "type": "bstr1184"
+    },
+    {
+      "name": "validFrom",
+      "label": 8,
+      "type": "uint53"
+    },
+    {
+      "name": "validUntil",
+      "label": 9,
+      "type": "uint53"
+    },
+    {
+      "name": "ed25519Signature",
+      "label": 10,
+      "type": "bstr64"
+    },
+    {
+      "name": "mlDsa65Signature",
+      "label": 11,
+      "type": "bstr3309"
+    }
+  ],
+  "firstPacket": [
+    {
+      "name": "protocolLineId",
+      "label": 0,
+      "type": "DIGEST256"
+    },
+    {
+      "name": "protectionProfileId",
+      "label": 1,
+      "type": "DIGEST256"
+    },
+    {
+      "name": "initiatorIdentityStateDigest",
+      "label": 2,
+      "type": "DIGEST256"
+    },
+    {
+      "name": "initiatorUserAuthorityStateDigest",
+      "label": 3,
+      "type": "DIGEST256"
+    },
+    {
+      "name": "responderIdentityStateDigest",
+      "label": 4,
+      "type": "DIGEST256"
+    },
+    {
+      "name": "responderUserAuthorityStateDigest",
+      "label": 5,
+      "type": "DIGEST256"
+    },
+    {
+      "name": "prekeyBundle",
+      "label": 6,
+      "type": "PrekeyBundle"
+    },
+    {
+      "name": "initiatorX25519PublicKey",
+      "label": 7,
+      "type": "bstr32"
+    },
+    {
+      "name": "mlKem768Ciphertext",
+      "label": 8,
+      "type": "bstr1088"
+    },
+    {
+      "name": "initiatorEd25519KeyId",
+      "label": 9,
+      "type": "DIGEST256"
+    },
+    {
+      "name": "initiatorMlDsa65KeyId",
+      "label": 10,
+      "type": "DIGEST256"
+    },
+    {
+      "name": "initiatorEd25519Signature",
+      "label": 11,
+      "type": "bstr64"
+    },
+    {
+      "name": "initiatorMlDsa65Signature",
+      "label": 12,
+      "type": "bstr3309"
+    },
+    {
+      "name": "clientConfirmCiphertext",
+      "label": 13,
+      "type": "bstr36"
+    },
+    {
+      "name": "clientConfirmTag",
+      "label": 14,
+      "type": "bstr16"
+    }
+  ],
+  "sessionAccept": [
+    {
+      "name": "transcriptDigest",
+      "label": 0,
+      "type": "DIGEST256"
+    },
+    {
+      "name": "sessionContextDigest",
+      "label": 1,
+      "type": "DIGEST256"
+    },
+    {
+      "name": "initiatorUserAuthorityStateDigest",
+      "label": 2,
+      "type": "DIGEST256"
+    },
+    {
+      "name": "responderIdentityStateDigest",
+      "label": 3,
+      "type": "DIGEST256"
+    },
+    {
+      "name": "responderUserAuthorityStateDigest",
+      "label": 4,
+      "type": "DIGEST256"
+    },
+    {
+      "name": "pairSequence",
+      "label": 5,
+      "type": "uint53"
+    },
+    {
+      "name": "mac",
+      "label": 6,
+      "type": "bstr32"
+    }
+  ],
+  "ratchetHeader": [
+    {
+      "name": "dh",
+      "label": 0,
+      "type": "bstr32"
+    },
+    {
+      "name": "pn",
+      "label": 1,
+      "type": "uint32"
+    },
+    {
+      "name": "n",
+      "label": 2,
+      "type": "uint32"
+    }
+  ]
+}

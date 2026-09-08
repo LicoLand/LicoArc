@@ -3,31 +3,464 @@
   "$id": "https://licoarc.com/spec/v1/security/claims.json",
   "registryVersion": "licoarc.security-claims.v1",
   "lifecycle": "Candidate",
-  "claimStatusValues": ["unproved", "proved", "explicit-nonclaim"],
-  "claims": [
-    {"id":"SEC-001","property":"hybrid-ake-key-secrecy","scope":"pairwise-establishment","adversary":["A1","A2"],"assumptions":[],"proofModel":null,"proofLemma":null,"counterexampleStatus":"not-evaluated","residualRisk":"construction-open","status":"unproved"},
-    {"id":"SEC-002","property":"mutual-endpoint-authentication","scope":"pairwise-establishment","adversary":["A0","A1","A6"],"assumptions":[],"proofModel":null,"proofLemma":null,"counterexampleStatus":"not-evaluated","residualRisk":"construction-open","status":"unproved"},
-    {"id":"SEC-003","property":"classical-pq-hybrid-robustness","scope":"pairwise-establishment","adversary":["A2"],"assumptions":[],"proofModel":null,"proofLemma":null,"counterexampleStatus":"not-evaluated","residualRisk":"combiner-open","status":"unproved"},
-    {"id":"SEC-004","property":"unknown-key-share-resistance","scope":"pairwise-establishment","adversary":["A1"],"assumptions":[],"proofModel":null,"proofLemma":null,"counterexampleStatus":"not-evaluated","residualRisk":"transcript-open","status":"unproved"},
-    {"id":"SEC-005","property":"key-compromise-impersonation-boundary","scope":"pairwise-establishment","adversary":["A4","A5"],"assumptions":[],"proofModel":null,"proofLemma":null,"counterexampleStatus":"not-evaluated","residualRisk":"construction-open","status":"unproved"},
-    {"id":"SEC-006","property":"protocol-line-downgrade-resistance","scope":"line-selection-and-handshake","adversary":["A0","A1"],"assumptions":["future-authenticated-support-binding"],"proofModel":null,"proofLemma":null,"counterexampleStatus":"not-evaluated","residualRisk":"handshake-binding-open","status":"unproved"},
-    {"id":"SEC-007","property":"protection-profile-downgrade-resistance","scope":"profile-selection-and-handshake","adversary":["A0","A1"],"assumptions":[],"proofModel":null,"proofLemma":null,"counterexampleStatus":"not-evaluated","residualRisk":"no-active-profile","status":"unproved"},
-    {"id":"SEC-008","property":"session-independence","scope":"pairwise-sessions","adversary":["A1","A3"],"assumptions":[],"proofModel":null,"proofLemma":null,"counterexampleStatus":"not-evaluated","residualRisk":"construction-open","status":"unproved"},
-    {"id":"SEC-009","property":"initial-forward-secrecy","scope":"pairwise-establishment","adversary":["A3","A5"],"assumptions":[],"proofModel":null,"proofLemma":null,"counterexampleStatus":"not-evaluated","residualRisk":"prekey-consumption-open","status":"unproved"},
-    {"id":"SEC-010","property":"double-ratchet-forward-secrecy","scope":"established-session","adversary":["A3"],"assumptions":[],"proofModel":null,"proofLemma":null,"counterexampleStatus":"not-evaluated","residualRisk":"ratchet-open","status":"unproved"},
-    {"id":"SEC-011","property":"double-ratchet-post-compromise-recovery","scope":"established-session","adversary":["A3"],"assumptions":[],"proofModel":null,"proofLemma":null,"counterexampleStatus":"not-evaluated","residualRisk":"ratchet-open","status":"unproved"},
-    {"id":"SEC-012","property":"replay-resistance","scope":"protocol-line","adversary":["A0","A1","A6"],"assumptions":[],"proofModel":null,"proofLemma":null,"counterexampleStatus":"not-evaluated","residualRisk":"pairwise-component-open","status":"unproved"},
-    {"id":"SEC-013","property":"state-rollback-resistance","scope":"identity-and-session-state","adversary":["A0","A3","A6"],"assumptions":[],"proofModel":null,"proofLemma":null,"counterexampleStatus":"not-evaluated","residualRisk":"session-state-open","status":"unproved"},
-    {"id":"SEC-014","property":"identity-continuity","scope":"endpoint-identity","adversary":["A0","A4"],"assumptions":["endpoint-validates-continuity"],"proofModel":null,"proofLemma":null,"counterexampleStatus":"not-evaluated","residualRisk":"formal-binding-absent","status":"unproved"},
-    {"id":"SEC-015","property":"route-migration-safety","scope":"identity-and-transport","adversary":["A0"],"assumptions":["endpoint-authenticated-route-update"],"proofModel":null,"proofLemma":null,"counterexampleStatus":"not-evaluated","residualRisk":"formal-binding-absent","status":"unproved"},
-    {"id":"SEC-016","property":"evidence-unforgeability","scope":"transferable-evidence","adversary":["A1","A4","A6"],"assumptions":["admitted-signature-primitives"],"proofModel":null,"proofLemma":null,"counterexampleStatus":"not-evaluated","residualRisk":"formal-binding-absent","status":"unproved"},
-    {"id":"SEC-017","property":"evidence-identity-attribution","scope":"transferable-evidence","adversary":["A0","A4","A6"],"assumptions":["identity-continuity-valid"],"proofModel":null,"proofLemma":null,"counterexampleStatus":"not-evaluated","residualRisk":"formal-binding-absent","status":"unproved"},
-    {"id":"SEC-018","property":"station-cannot-manufacture-endpoint-accepted","scope":"reliable-exchange","adversary":["A0"],"assumptions":["endpoint-authentication-valid"],"proofModel":null,"proofLemma":null,"counterexampleStatus":"not-evaluated","residualRisk":"pairwise-authentication-open","status":"unproved"},
-    {"id":"SEC-019","property":"station-cannot-manufacture-effect-completed","scope":"reliable-exchange","adversary":["A0"],"assumptions":["endpoint-authentication-valid"],"proofModel":null,"proofLemma":null,"counterexampleStatus":"not-evaluated","residualRisk":"pairwise-authentication-open","status":"unproved"},
-    {"id":"SEC-020","property":"fail-closed-resource-bounds","scope":"protocol-line-parsers-and-state","adversary":["A0","A6"],"assumptions":[],"proofModel":null,"proofLemma":null,"counterexampleStatus":"not-evaluated","residualRisk":"whole-line-model-incomplete","status":"unproved"},
-    {"id":"SEC-021","property":"pairwise-record-confidentiality","scope":"established-session-records","adversary":["A0","A1","A6"],"assumptions":[],"proofModel":null,"proofLemma":null,"counterexampleStatus":"not-evaluated","residualRisk":"record-protection-open","status":"unproved"},
-    {"id":"SEC-022","property":"pairwise-record-authentication-and-integrity","scope":"established-session-records","adversary":["A0","A1","A6"],"assumptions":[],"proofModel":null,"proofLemma":null,"counterexampleStatus":"not-evaluated","residualRisk":"record-protection-open","status":"unproved"},
-    {"id":"SEC-023","property":"sender-metadata-confidentiality","scope":"pairwise-protected-carrier","adversary":["A0","A1"],"assumptions":[],"proofModel":null,"proofLemma":null,"counterexampleStatus":"not-evaluated","residualRisk":"protection-framing-open","status":"unproved"}
+  "claimStatusValues": [
+    "unproved",
+    "proved",
+    "explicit-nonclaim"
   ],
-  "nonClaims": ["anonymity","traffic-analysis-resistance","availability-against-malicious-station","legal-non-repudiation","truth-of-endpoint-statement","natural-person-intent","exactly-once-effects-without-application-idempotency","security-after-full-live-endpoint-compromise-before-recovery"]
+  "claims": [
+    {
+      "id": "SEC-001",
+      "property": "hybrid-ake-key-secrecy",
+      "scope": "pairwise-establishment",
+      "adversary": [
+        "A1",
+        "A2"
+      ],
+      "assumptions": [
+        "ideal-hybrid-constructor",
+        "at-least-one-hybrid-component-uncompromised",
+        "atomic-durable-compare-and-commit"
+      ],
+      "proofModel": "formal/generated/licoarc-core-v1.spthy",
+      "proofLemma": "SEC_001_hybrid_ake_key_secrecy",
+      "counterexampleStatus": "no-counterexample-found",
+      "residualRisk": "computational-hybrid-security-and-live-session-compromise-outside-symbolic-claim",
+      "status": "proved"
+    },
+    {
+      "id": "SEC-002",
+      "property": "mutual-endpoint-authentication",
+      "scope": "pairwise-establishment",
+      "adversary": [
+        "A0",
+        "A1",
+        "A6"
+      ],
+      "assumptions": [
+        "ideal-dual-signature-authentication",
+        "authenticated-peer-key-acceptance",
+        "atomic-durable-compare-and-commit"
+      ],
+      "proofModel": "formal/generated/licoarc-core-v1.spthy",
+      "proofLemma": "SEC_002_mutual_endpoint_authentication",
+      "counterexampleStatus": "no-counterexample-found",
+      "residualRisk": "computational-primitives-and-peer-key-acceptance-outside-symbolic-model",
+      "status": "proved"
+    },
+    {
+      "id": "SEC-003",
+      "property": "classical-pq-hybrid-robustness",
+      "scope": "pairwise-establishment",
+      "adversary": [
+        "A2"
+      ],
+      "assumptions": [
+        "ideal-hybrid-constructor",
+        "at-least-one-hybrid-component-uncompromised",
+        "source-bound-transcript"
+      ],
+      "proofModel": "formal/generated/licoarc-core-v1.spthy",
+      "proofLemma": "SEC_003_classical_pq_hybrid_robustness",
+      "counterexampleStatus": "no-counterexample-found",
+      "residualRisk": "computational-combiner-security-outside-symbolic-model",
+      "status": "proved"
+    },
+    {
+      "id": "SEC-004",
+      "property": "unknown-key-share-resistance",
+      "scope": "pairwise-establishment",
+      "adversary": [
+        "A1"
+      ],
+      "assumptions": [
+        "source-bound-transcript",
+        "ideal-hybrid-constructor",
+        "atomic-durable-compare-and-commit"
+      ],
+      "proofModel": "formal/generated/licoarc-core-v1.spthy",
+      "proofLemma": "SEC_004_unknown_key_share_resistance",
+      "counterexampleStatus": "no-counterexample-found",
+      "residualRisk": "computational-transcript-and-combiner-security-outside-symbolic-model",
+      "status": "proved"
+    },
+    {
+      "id": "SEC-005",
+      "property": "key-compromise-impersonation-boundary",
+      "scope": "pairwise-establishment",
+      "adversary": [
+        "A4",
+        "A5"
+      ],
+      "assumptions": [
+        "strict-dual-signature-authentication",
+        "authenticated-peer-key-acceptance",
+        "responder-identity-and-prekey-not-compromised"
+      ],
+      "proofModel": "formal/generated/licoarc-core-v1.spthy",
+      "proofLemma": "SEC_005_key_compromise_impersonation_boundary",
+      "counterexampleStatus": "no-counterexample-found",
+      "residualRisk": "responder-identity-or-prekey-compromise-is-the-explicit-impersonation-boundary",
+      "status": "proved"
+    },
+    {
+      "id": "SEC-006",
+      "property": "protocol-line-content-binding",
+      "scope": "line-admission-and-handshake",
+      "adversary": [
+        "A0",
+        "A1"
+      ],
+      "assumptions": [
+        "source-bound-protocol-line-content-identity",
+        "authenticated-fixed-context-transcript"
+      ],
+      "proofModel": "formal/generated/licoarc-core-v1.spthy",
+      "proofLemma": "SEC_006_protocol_line_content_binding",
+      "counterexampleStatus": "no-counterexample-found",
+      "residualRisk": "endpoint-signing-key-compromise-or-compromised-local-authority-input-outside-symbolic-claim",
+      "status": "proved"
+    },
+    {
+      "id": "SEC-007",
+      "property": "protection-profile-content-binding",
+      "scope": "profile-admission-and-handshake",
+      "adversary": [
+        "A0",
+        "A1"
+      ],
+      "assumptions": [
+        "source-bound-profile-content-identity",
+        "authenticated-fixed-context-transcript"
+      ],
+      "proofModel": "formal/generated/licoarc-core-v1.spthy",
+      "proofLemma": "SEC_007_protection_profile_content_binding",
+      "counterexampleStatus": "no-counterexample-found",
+      "residualRisk": "endpoint-signing-key-compromise-or-compromised-local-authority-input-outside-symbolic-claim",
+      "status": "proved"
+    },
+    {
+      "id": "SEC-008",
+      "property": "session-independence",
+      "scope": "pairwise-sessions",
+      "adversary": [
+        "A1",
+        "A3"
+      ],
+      "assumptions": [
+        "fresh-independent-hybrid-components",
+        "ideal-hybrid-constructor",
+        "atomic-durable-compare-and-commit"
+      ],
+      "proofModel": "formal/generated/licoarc-core-v1.spthy",
+      "proofLemma": "SEC_008_session_independence",
+      "counterexampleStatus": "no-counterexample-found",
+      "residualRisk": "full-live-compromise-of-the-target-session-outside-claim",
+      "status": "proved"
+    },
+    {
+      "id": "SEC-009",
+      "property": "initial-forward-secrecy",
+      "scope": "pairwise-establishment",
+      "adversary": [
+        "A3",
+        "A5"
+      ],
+      "assumptions": [
+        "one-time-prekey-consumption",
+        "post-accept-ephemeral-erasure",
+        "atomic-durable-compare-and-commit"
+      ],
+      "proofModel": "formal/generated/licoarc-core-v1.spthy",
+      "proofLemma": "SEC_009_initial_forward_secrecy",
+      "counterexampleStatus": "no-counterexample-found",
+      "residualRisk": "pre-accept-and-live-session-compromise-outside-claim",
+      "status": "proved"
+    },
+    {
+      "id": "SEC-010",
+      "property": "double-ratchet-forward-secrecy",
+      "scope": "established-session",
+      "adversary": [
+        "A3"
+      ],
+      "assumptions": [
+        "ideal-one-way-ratchet-step",
+        "fresh-classical-dh-ratchet-input",
+        "prior-ratchet-key-erasure"
+      ],
+      "proofModel": "formal/generated/licoarc-core-v1.spthy",
+      "proofLemma": "SEC_010_double_ratchet_forward_secrecy",
+      "counterexampleStatus": "no-counterexample-found",
+      "residualRisk": "computational-ratchet-security-and-physical-zeroization-outside-symbolic-claim",
+      "status": "proved"
+    },
+    {
+      "id": "SEC-011",
+      "property": "double-ratchet-post-compromise-recovery",
+      "scope": "established-session",
+      "adversary": [
+        "A3"
+      ],
+      "assumptions": [
+        "ideal-one-way-ratchet-step",
+        "fresh-uncompromised-classical-dh-ratchet-input",
+        "atomic-durable-compare-and-commit"
+      ],
+      "proofModel": "formal/generated/licoarc-core-v1.spthy",
+      "proofLemma": "SEC_011_double_ratchet_post_compromise_recovery",
+      "counterexampleStatus": "no-counterexample-found",
+      "residualRisk": "ongoing-post-quantum-post-compromise-recovery-explicit-nonclaim",
+      "status": "proved"
+    },
+    {
+      "id": "SEC-012",
+      "property": "replay-resistance",
+      "scope": "protocol-line",
+      "adversary": [
+        "A0",
+        "A1",
+        "A6"
+      ],
+      "assumptions": [
+        "ideal-record-authentication",
+        "atomic-durable-compare-and-commit",
+        "unique-record-coordinate"
+      ],
+      "proofModel": "formal/generated/licoarc-core-v1.spthy",
+      "proofLemma": "SEC_012_replay_resistance",
+      "counterexampleStatus": "no-counterexample-found",
+      "residualRisk": "application-replay-and-fully-compromised-store-outside-model",
+      "status": "proved"
+    },
+    {
+      "id": "SEC-013",
+      "property": "state-rollback-resistance",
+      "scope": "identity-and-session-state",
+      "adversary": [
+        "A0",
+        "A3",
+        "A6"
+      ],
+      "assumptions": [
+        "atomic-durable-compare-and-commit",
+        "monotonic-committed-state-generation"
+      ],
+      "proofModel": "formal/generated/licoarc-core-v1.spthy",
+      "proofLemma": "SEC_013_state_rollback_resistance",
+      "counterexampleStatus": "no-counterexample-found",
+      "residualRisk": "rollback-detection-under-fully-compromised-store-explicit-nonclaim",
+      "status": "proved"
+    },
+    {
+      "id": "SEC-014",
+      "property": "self-certifying-user-authority",
+      "scope": "user-authority-genesis",
+      "adversary": [
+        "A0",
+        "A4",
+        "A6"
+      ],
+      "assumptions": [
+        "domain-separated-genesis-key-derivation",
+        "ideal-dual-signature-authentication",
+        "canonical-authority-state-digest"
+      ],
+      "proofModel": "formal/generated/licoarc-core-v1.spthy",
+      "proofLemma": "SEC_014_self_certifying_user_authority",
+      "counterexampleStatus": "no-counterexample-found",
+      "residualRisk": "management-and-recovery-key-compromise-remains-the-explicit-authority-boundary",
+      "status": "proved"
+    },
+    {
+      "id": "SEC-015",
+      "property": "route-migration-safety",
+      "scope": "identity-and-transport",
+      "adversary": [
+        "A0"
+      ],
+      "assumptions": [
+        "endpoint-authenticated-route-update",
+        "monotonic-predecessor-bound-route-chain",
+        "affiliation-state-binding"
+      ],
+      "proofModel": "formal/generated/licoarc-core-v1.spthy",
+      "proofLemma": "SEC_015_route_migration_safety",
+      "counterexampleStatus": "no-counterexample-found",
+      "residualRisk": "endpoint-route-signing-key-compromise-and-route-availability-outside-claim",
+      "status": "proved"
+    },
+    {
+      "id": "SEC-016",
+      "property": "management-and-recovery-transition-authorization",
+      "scope": "user-authority-successors",
+      "adversary": [
+        "A0",
+        "A4",
+        "A6"
+      ],
+      "assumptions": [
+        "exact-predecessor-authority-resolution",
+        "ideal-dual-signature-authentication",
+        "atomic-high-water-compare-and-commit"
+      ],
+      "proofModel": "formal/generated/licoarc-core-v1.spthy",
+      "proofLemma": "SEC_016_management_and_recovery_transition_authorization",
+      "counterexampleStatus": "no-counterexample-found",
+      "residualRisk": "compromise-of-the-selected-predecessor-authority-key-composition-remains-the-explicit-boundary",
+      "status": "proved"
+    },
+    {
+      "id": "SEC-017",
+      "property": "endpoint-possession-authorization",
+      "scope": "user-authority-device-admission",
+      "adversary": [
+        "A0",
+        "A4",
+        "A6"
+      ],
+      "assumptions": [
+        "domain-separated-possession-proof",
+        "exact-endpoint-state-digest",
+        "ideal-dual-signature-authentication"
+      ],
+      "proofModel": "formal/generated/licoarc-core-v1.spthy",
+      "proofLemma": "SEC_017_endpoint_possession_authorization",
+      "counterexampleStatus": "no-counterexample-found",
+      "residualRisk": "endpoint-signing-key-compromise-remains-the-explicit-possession-boundary",
+      "status": "proved"
+    },
+    {
+      "id": "SEC-018",
+      "property": "acyclic-sibling-endpoint-authority-session-binding",
+      "scope": "pairwise-establishment",
+      "adversary": [
+        "A0",
+        "A1",
+        "A6"
+      ],
+      "assumptions": [
+        "endpoint-state-excludes-user-authority-digest",
+        "independent-canonical-state-digests",
+        "source-bound-transcript"
+      ],
+      "proofModel": "formal/generated/licoarc-core-v1.spthy",
+      "proofLemma": "SEC_018_acyclic_sibling_endpoint_authority_session_binding",
+      "counterexampleStatus": "no-counterexample-found",
+      "residualRisk": "semantic-cycle-rejection-in-real-decoders-remains-an-implementation-conformance-obligation",
+      "status": "proved"
+    },
+    {
+      "id": "SEC-019",
+      "property": "authenticated-confirmation-finality",
+      "scope": "reliable-exchange",
+      "adversary": [
+        "A0",
+        "A1",
+        "A6"
+      ],
+      "assumptions": [
+        "ideal-record-authentication",
+        "exact-sender-session-and-logical-message-binding",
+        "application-result-digest-binding"
+      ],
+      "proofModel": "formal/generated/licoarc-core-v1.spthy",
+      "proofLemma": "SEC_019_authenticated_confirmation_finality",
+      "counterexampleStatus": "no-counterexample-found",
+      "residualRisk": "exactly-once-effects-without-application-idempotency-remains-an-explicit-nonclaim",
+      "status": "proved"
+    },
+    {
+      "id": "SEC-020",
+      "property": "fail-closed-resource-bounds",
+      "scope": "protocol-line-parsers-and-state",
+      "adversary": [
+        "A0",
+        "A6"
+      ],
+      "assumptions": [
+        "source-derived-finite-bound-classification",
+        "complete-validation-before-mutation",
+        "checked-integer-arithmetic"
+      ],
+      "proofModel": "formal/generated/licoarc-core-v1.spthy",
+      "proofLemma": "SEC_020_fail_closed_resource_bounds",
+      "counterexampleStatus": "no-counterexample-found",
+      "residualRisk": "implementation-resource-accounting-remains-a-conformance-obligation",
+      "status": "proved"
+    },
+    {
+      "id": "SEC-021",
+      "property": "pairwise-record-confidentiality",
+      "scope": "established-session-records",
+      "adversary": [
+        "A0",
+        "A1",
+        "A6"
+      ],
+      "assumptions": [
+        "ideal-record-confidentiality",
+        "secret-uncompromised-chain-key",
+        "source-bound-associated-data"
+      ],
+      "proofModel": "formal/generated/licoarc-core-v1.spthy",
+      "proofLemma": "SEC_021_pairwise_record_confidentiality",
+      "counterexampleStatus": "no-counterexample-found",
+      "residualRisk": "traffic-metadata-and-ratchet-header-confidentiality-outside-claim",
+      "status": "proved"
+    },
+    {
+      "id": "SEC-022",
+      "property": "pairwise-record-authentication-and-integrity",
+      "scope": "established-session-records",
+      "adversary": [
+        "A0",
+        "A1",
+        "A6"
+      ],
+      "assumptions": [
+        "ideal-record-authentication",
+        "source-bound-associated-data",
+        "atomic-durable-compare-and-commit"
+      ],
+      "proofModel": "formal/generated/licoarc-core-v1.spthy",
+      "proofLemma": "SEC_022_pairwise_record_authentication_and_integrity",
+      "counterexampleStatus": "no-counterexample-found",
+      "residualRisk": "computational-aead-security-and-live-session-compromise-outside-symbolic-claim",
+      "status": "proved"
+    },
+    {
+      "id": "SEC-023",
+      "property": "sender-metadata-confidentiality",
+      "scope": "pairwise-protected-carrier",
+      "adversary": [
+        "A0",
+        "A1"
+      ],
+      "assumptions": [
+        "sender-metadata-inside-ideal-record-protection",
+        "secret-uncompromised-chain-key",
+        "station-observes-only-protected-carrier-metadata"
+      ],
+      "proofModel": "formal/generated/licoarc-core-v1.spthy",
+      "proofLemma": "SEC_023_sender_metadata_confidentiality",
+      "counterexampleStatus": "no-counterexample-found",
+      "residualRisk": "traffic-correlation-length-timing-and-anonymity-outside-claim",
+      "status": "proved"
+    }
+  ],
+  "nonClaims": [
+    "anonymity",
+    "traffic-analysis-resistance",
+    "availability-against-malicious-station",
+    "legal-non-repudiation",
+    "truth-of-endpoint-statement",
+    "natural-person-intent",
+    "exactly-once-effects-without-application-idempotency",
+    "security-after-full-live-endpoint-compromise-before-recovery",
+    "ongoing-post-quantum-post-compromise-recovery",
+    "ratchet-header-confidentiality",
+    "rollback-detection-under-fully-compromised-store",
+    "physical-zeroization"
+  ]
 }

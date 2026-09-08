@@ -5,8 +5,13 @@ Profile v1. It is one max-64 per-member projection construction, not the
 permanent or exclusive architecture for future large groups. The
 normative source closure is [`spec/v1/group/`](../../spec/v1/group/) and its
 positive and negative corpus is [`conformance/v1/group/`](../../conformance/v1/group/).
-The profile is a Candidate definition closed by the tracked normative sources
-and definition-level corpus named above.
+The profile is a complete Candidate definition closed by the tracked normative sources
+and definition-level corpus named above. `licoarc.group-collaboration.v1` is
+the stable capability and wire locator; the enclosing Protocol Line is bound
+by a `DIGEST256` content identity selected outside this profile. This is the
+complete mandatory Group capability in the Candidate line composition. The
+enclosing line is `COMPLETE` and session-eligible but not publication-eligible;
+this capability makes no implementation or interoperability claim.
 
 ## Boundary and trust
 
@@ -16,10 +21,10 @@ membership, or fourth entity. Every independently key-holding participant is
 an Endpoint reference. Group state, roles, message context, and results are
 inside Endpoint protection; a Station carries opaque packets and has no
 membership, ordering, group-key, receipt, or state-transition authority.
-Product permissions, command catalogues, identity assertions, and association
-claims remain outside this profile. A dedicated Endpoint Association Claim is rejected
-and never becomes protocol authority; an application assertion may use ordinary namespaced opaque
-`message.payload`, which recipients treat as local-policy input only.
+Product permissions, command catalogues, and application identity assertions
+remain outside this profile. An application assertion may use ordinary
+namespaced opaque `message.payload`, which recipients treat as local-policy
+input only.
 Product permission remains an application decision carried only as opaque Payload.
 
 ## Canonical representation
@@ -29,7 +34,11 @@ deterministic CBOR with unsigned integer map labels, shortest definite lengths,
 raw byte strings, no tags, no floats, no indefinite lengths, no duplicate or
 unknown labels, and no trailing bytes. Member Endpoint references are exactly
 32 opaque bytes and are sorted by raw bytes. Role is the closed enum `member`
-or `state-authority`.
+or `state-authority`. The canonical maxima are 2,551 bytes for a Group state,
+2,512 bytes for a genesis transition, 60 bytes of Group Message control and
+length-prefix overhead (payload octets excluded), and 3,913 bytes for a
+maximum aggregate. The payload itself remains bounded by
+`MAX_GROUP_PAYLOAD_BYTES`.
 
 The Group state digest is:
 
@@ -96,16 +105,16 @@ first16(SHA-256("LICOARC-GROUP-PROJECTION\\0" || groupStateDigest ||
 Per-member delivery remains at-least-once. A retry reuses the same logical
 Message and projection identities; a projection with different protected
 meaning is a conflict. Station acceptance, queue possession, ordering, or
-receipt is never Endpoint evidence.
+receipt is never an Endpoint confirmation.
 
 ## Partial failure and aggregation
 
 Each projection has one bounded result: `pending`, `delivered`, `rejected`, or
 `failed`. Terminal rejection and failure carry one closed failure code. A
-result with `endpoint-evidence` authority is accepted only when it comes from
-the protected Endpoint result path; a Station result is rejected as
-`station-authority`. Duplicate identical results are idempotent and conflicting
-results fail closed.
+result with `endpoint-confirmation` authority is accepted only when the exact
+confirmation comes from the protected authorized Endpoint session; a Station
+result is rejected as `station-authority`. Duplicate identical results are
+idempotent and conflicting results fail closed.
 
 Aggregation emits one deterministic result tuple in recipient byte order.
 Missing results are represented as `pending`. The aggregate outcome is
@@ -117,14 +126,18 @@ authority.
 ## Restart and bounds
 
 The retained protocol state is limited to the current high-water state,
-bounded predecessor evidence, member tombstones, and per-member projection
+bounded predecessor state, member tombstones, and per-member projection
 results. Restart restores that state before new input; it never discovers or
 imports a retired product or legacy Group root. `MAX_PENDING_GROUP_TRANSITIONS`
 is 128, `MAX_PENDING_GROUP_RESULTS` is 256, and
 `MAX_GROUP_EPOCH_TOMBSTONES` is 1024. Retry, reconnect, Route or Station
 change, and restart never reset or extend any bound. A parser rejects
 attacker-selected arrays, maps, raw bytes, and operation records before an
-unbounded allocation.
+unbounded allocation. Group-owned record and per-member bounds are separate
+from Protocol Line cross-capability totals; a rejected or duplicate input
+consumes neither budget nor state. Endpoint-local admission remains outside
+Group state, and no Station, Network, or product permission can extend a
+bound.
 
 ## Conformance
 

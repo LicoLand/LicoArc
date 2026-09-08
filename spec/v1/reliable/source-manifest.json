@@ -9,10 +9,10 @@
     "spec/v1/reliable"
   ],
   "sources": [
-    "conformance/v1/reliable/invalid.json",
+    "conformance/v1/reliable/cases.json",
     "conformance/v1/reliable/manifest.json",
-    "conformance/v1/reliable/valid.json",
     "spec/v1/reliable/bounds.json",
+    "spec/v1/reliable/confirmation.schema.json",
     "spec/v1/reliable/event.schema.json",
     "spec/v1/reliable/intent.schema.json",
     "spec/v1/reliable/labels.json",

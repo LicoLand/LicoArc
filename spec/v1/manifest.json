@@ -1,127 +1,133 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "manifestVersion": "licoarc.protocol-line-manifest.v2",
+  "manifestVersion": "licoarc.protocol-line-manifest.v1",
   "wireId": "licoarc.protocol-line.v1",
+  "protocolLineId": "c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08",
   "generation": 1,
   "lifecycle": "Candidate",
-  "definitionStatus": "PARTIAL",
-  "sessionEligible": false,
+  "definitionStatus": "COMPLETE",
+  "sessionEligible": true,
   "publicationEligible": false,
   "protocolLineCatalog": "spec/protocol-lines.json",
   "protectionProfileCatalog": "spec/protection-profiles.json",
+  "fieldRegistry": {
+    "path": "spec/FIELD-REGISTRY.md",
+    "sourceDigest": "b12222aa376c1d83d885b2d9c29063c7f5a11d14b719b76b9afa3704fddd131d",
+    "authority": "canonical-field-registry"
+  },
   "capabilities": [
     {
       "capabilityId": "licoarc.federation-governance.v1",
       "version": 1,
       "definitionStatus": "COMPLETE",
+      "semanticIdentity": "c98128656377ad872124e5293a02b3c87d2c3c97b20d5ea210c7a5c71d11a8a1",
       "sourceManifestPath": "spec/v1/governance/source-manifest.json",
       "sourceRoots": [],
       "sourcePaths": [],
-      "sourceDigest": "1b16c5508e00d48f226653ca0837d2d3b332626b03306ce90bab9e16a549c396"
+      "sourceDigest": "b8a223ebab40213e4efcfc591973d6367ebe5c1cc68d5a60168c65d90b608eab"
     },
     {
       "capabilityId": "licoarc.generic-messaging.v1",
       "version": 1,
       "definitionStatus": "COMPLETE",
+      "semanticIdentity": "b0bb068b0acd09aa09666a0380c3cae98e4c0e9739e732484e874aa088f1ac24",
       "sourceManifestPath": "spec/v1/messaging/source-manifest.json",
       "sourceRoots": [],
       "sourcePaths": [],
-      "sourceDigest": "eb1c15f47a84b5fd000a6be7cbd5273e1081577143d7e0846c1adb0e256b7b4d"
+      "sourceDigest": "9fc7e1635ef076db2108747aae4f70167412c35bd87945e51d26c7be41402ef4"
     },
     {
       "capabilityId": "licoarc.group-collaboration.v1",
       "version": 1,
       "definitionStatus": "COMPLETE",
+      "semanticIdentity": "a853f9db567d4f4d7204ede9f33b458770632887f6ccd0fc765cf04fbfea61ac",
       "sourceManifestPath": "spec/v1/group/source-manifest.json",
       "sourceRoots": [],
       "sourcePaths": [],
-      "sourceDigest": "6a69bd1c8c90fd8275304cf8f0a014cb1fa665aeb46e066a593ef19849cd98fe"
+      "sourceDigest": "1b65d55ecb15d67ff8a06bf6542fc33a92ef6ecb7ab25dea997c3313b79a346b"
     },
     {
       "capabilityId": "licoarc.https-transport.v1",
       "version": 1,
       "definitionStatus": "COMPLETE",
+      "semanticIdentity": "9acd5f74119612b3479d908a1c72a8a86d47a35d001cad8049e00e7341e449c5",
       "sourceManifestPath": "spec/v1/transport/source-manifest.json",
       "sourceRoots": [],
       "sourcePaths": [],
-      "sourceDigest": "803bad3c71795068502600e3169e1b83686f67af9fa440a203bfdfb1ccea447c"
+      "sourceDigest": "418c4da90461d7c985af8e3c5a66314e19c9c3f178271e2a70118e314c156924"
     },
     {
       "capabilityId": "licoarc.identity.v1",
       "version": 1,
       "definitionStatus": "COMPLETE",
-      "sourceManifestPath": null,
-      "sourceRoots": [
-        "conformance/v1/identity",
-        "spec/v1/identity"
-      ],
-      "sourcePaths": [
-        "conformance/v1/identity/invalid.json",
-        "conformance/v1/identity/manifest.json",
-        "conformance/v1/identity/valid.json",
-        "spec/v1/identity/identity.policy.json",
-        "spec/v1/identity/identity.schema.json",
-        "spec/v1/identity/registry.json",
-        "spec/v1/identity/runtime.cddl"
-      ],
-      "sourceDigest": "f761d649f8e14cd190b82a139371a8118724a22123bcc3d83682b60dc7e282b2"
+      "semanticIdentity": "41e3cd1302565ec7275c2a047f93c38cf2e570e080d103b58dd6a1506a20537b",
+      "sourceManifestPath": "spec/v1/identity/source-manifest.json",
+      "sourceRoots": [],
+      "sourcePaths": [],
+      "sourceDigest": "808409a4f3ddcbe7796b19ca3d2128faa33a3f6c5d1973067ea45f3725435bf8"
+    },
+    {
+      "capabilityId": "licoarc.pairwise-protection.v1",
+      "version": 1,
+      "definitionStatus": "COMPLETE",
+      "semanticIdentity": "4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17",
+      "sourceManifestPath": "spec/v1/protection/source-manifest.json",
+      "sourceRoots": [],
+      "sourcePaths": [],
+      "sourceDigest": "cd07cdc2b5e7c99f2fbe8fe87ef202f6c87389f0e379957913f4e38ca1590f97"
     },
     {
       "capabilityId": "licoarc.protocol-foundation.v1",
       "version": 1,
       "definitionStatus": "COMPLETE",
+      "semanticIdentity": "b1348b600b9f8baae49c9fbe5b5ba66e7540db03dfa957e7545f482c07f2a741",
       "sourceManifestPath": "spec/v1/foundation/source-manifest.json",
       "sourceRoots": [],
       "sourcePaths": [],
-      "sourceDigest": "976fbac8ab121b244d3d56083a23cee33dac89e8cd9e4ff314f193bb509c5f0f"
+      "sourceDigest": "a3863797f71e3827ee4bd2670c042223454ec2fa646d532296a739fcd57d9a73"
     },
     {
       "capabilityId": "licoarc.reliable-exchange.v1",
       "version": 1,
       "definitionStatus": "COMPLETE",
+      "semanticIdentity": "77dea4067691dc394a282af29dae2128926854dfa978a6dd83add9ff02ebea26",
       "sourceManifestPath": "spec/v1/reliable/source-manifest.json",
       "sourceRoots": [],
       "sourcePaths": [],
-      "sourceDigest": "4dbc0b187a0ab2d6b8b933f48ee2036464f6700eb5b4ca31050bb617687dceaa"
-    },
-    {
-      "capabilityId": "licoarc.transferable-evidence.v1",
-      "version": 1,
-      "definitionStatus": "COMPLETE",
-      "sourceManifestPath": "spec/v1/evidence/source-manifest.json",
-      "sourceRoots": [],
-      "sourcePaths": [],
-      "sourceDigest": "393e1ee33591576a31ae5bcb868b859ca5c9b8d43caa67bb891203edd91b8fbf"
+      "sourceDigest": "82fdb131cf0a4aae61d6df1efa60b6865af2c432835b5d43d01adcbc8b1725ac"
     }
   ],
-  "missingMandatoryCapabilities": [
-    "licoarc.pairwise-protection.v1"
+  "protectionProfileIds": [
+    "4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17"
   ],
-  "openDefinitions": [
-    {
-      "definitionId": "pairwise-protection",
-      "definitionStatus": "PARTIAL",
-      "sourceManifestPath": "spec/v1/protection/source-manifest.json",
-      "sourceDigest": "5487852a64be744fba8ff4c79bbf5e0063b33affe15dfa933dc10dbac75e53dc"
-    },
-    {
-      "definitionId": "security-accounting",
-      "definitionStatus": "PARTIAL",
-      "sourceManifestPath": "spec/v1/security/source-manifest.json",
-      "sourceDigest": "89fef1f43ce715deb877815107054f7454db66a116232a6e1a25c640da95f200"
-    }
+  "stableClaimIds": [
+    "SEC-001",
+    "SEC-002",
+    "SEC-003",
+    "SEC-004",
+    "SEC-005",
+    "SEC-006",
+    "SEC-007",
+    "SEC-008",
+    "SEC-009",
+    "SEC-010",
+    "SEC-011",
+    "SEC-012",
+    "SEC-013",
+    "SEC-014",
+    "SEC-015",
+    "SEC-016",
+    "SEC-017",
+    "SEC-018",
+    "SEC-019",
+    "SEC-020",
+    "SEC-021",
+    "SEC-022",
+    "SEC-023"
   ],
-  "blockers": [
-    "ALG-core-v1-double-ratchet",
-    "ALG-core-v1-hybrid-ake",
-    "FLD-handshake-transcript-v1",
-    "FLD-minimum-protocol-generation-v1",
-    "FLD-prekey-bundle-v1",
-    "FLD-protocol-support-statement-v1",
-    "FLD-ratchet-header",
-    "FLD-session-accept",
-    "SEC-formal-security-bindings"
-  ],
+  "missingMandatoryCapabilities": [],
+  "openDefinitions": [],
+  "blockers": [],
   "sourceClosure": {
     "roots": [
       "conformance/v1",
@@ -129,8 +135,13 @@
       "spec/v1"
     ],
     "additionalSources": [
+      "spec/FIELD-REGISTRY.md",
       "spec/protection-profiles.json",
       "spec/protocol-lines.json",
+      "spec/schemas/catalog-common.schema.json",
+      "spec/schemas/conformance-case.schema.json",
+      "spec/schemas/conformance-corpus-manifest.schema.json",
+      "spec/schemas/conformance-envelope.schema.json",
       "spec/schemas/conformance-manifest.schema.json",
       "spec/schemas/protection-profiles.schema.json",
       "spec/schemas/protocol-lines.schema.json",
@@ -138,9 +149,9 @@
     ],
     "undeclaredFiles": "reject",
     "symlinks": "reject",
-    "encoding": "restricted-jcs-json-plus-canonical-utf8-cddl"
+    "encoding": "restricted-jcs-json-plus-canonical-utf8-cddl-and-markdown"
   },
-  "handshakeBinding": "unavailable-until-open-decisions-close",
-  "sessionLock": false,
+  "handshakeBinding": "protocol-line-and-profile-identities-transcript-bound",
+  "sessionLock": true,
   "translationPolicy": "forbidden"
 }

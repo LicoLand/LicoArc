@@ -7,9 +7,9 @@
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-transport-envelope-id` |
 | Decision status | `REJECTED` |
-| Definition status | `PARTIAL` |
+| Definition status | `NOT-SPECIFIED` |
 | Candidate spellings | `envelopeId`, Station message resource ID, submission token |
-| Candidate layer | Transport Profile or Outer Envelope |
+| Candidate layer | Transport Profile or structured transport body |
 | Observer set | Sender Endpoint and Station; possibly receiving Endpoint |
 | Existing authority | [Canonical Field Registry](../../../spec/FIELD-REGISTRY.md); this record explains the rejection decision and is not a second field specification. |
 | Authority targets | Removal from the successor Candidate schema, registry, corpus, and bundle |
@@ -102,4 +102,4 @@ source migration.
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. Only the scope recorded by this decision and its linked normative authorities is defined; any remaining normative ambiguity requires a successor decision before entering the protocol definition.
+The definition status is `NOT-SPECIFIED`. This historical record supplies no active normative definition; any successor or replacement owns its complete definition independently.

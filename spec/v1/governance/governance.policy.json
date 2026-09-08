@@ -14,13 +14,23 @@
     "unknownMemberPolicy": "reject",
     "nonFiniteNumberPolicy": "reject"
   },
+  "protocolLineIdentity": {
+    "field": "compatibilityCertifications.protocolLineId",
+    "representation": "DIGEST256-content-identity",
+    "binding": "exact-enclosing-Protocol-Line-content-identity",
+    "wireAndContractNames": "source-and-catalog-locators-only",
+    "authority": "compatibility-certification-only"
+  },
   "rootPolicy": {
     "independentByRole": true,
     "rootIdRepresentation": "digest128",
     "keyIdRepresentation": "digest128",
     "minimumKeyThreshold": 2,
     "activeState": "active",
-    "nonSigningStates": ["retired", "compromised"],
+    "nonSigningStates": [
+      "retired",
+      "compromised"
+    ],
     "rotation": {
       "requiresRecoveryAuthorization": true,
       "predecessorRootDigestRequired": true,
@@ -132,7 +142,11 @@
   "endpointAdmission": {
     "authority": "endpoint-local",
     "automatic": false,
-    "governanceInputs": ["membershipStatements", "compatibilityCertifications", "revocations"],
+    "governanceInputs": [
+      "membershipStatements",
+      "compatibilityCertifications",
+      "revocations"
+    ],
     "abuseInput": "advisory-only",
     "stationAuthority": "none",
     "networkHostAuthority": "none",
@@ -141,16 +155,16 @@
   "abusePolicy": {
     "authority": "local-operator-policy",
     "scope": "bounded-expiring-advisory",
-    "protectedEvidence": "never-included",
+    "protectedIncidentMaterial": "never-included",
     "membershipEffect": "none",
     "compatibilityEffect": "none",
     "endpointAdmissionEffect": "local-only"
   },
   "privacy": {
     "identityForm": "opaque-digest-reference",
-    "consistencyEvidence": "observer-digest-version-and-statement-digest-only",
-    "recoveryEvidence": "root-and-evidence-digests-only",
-    "plaintextMembershipEvidence": "forbidden",
+    "consistencyObservationMaterial": "observer-digest-version-and-statement-digest-only",
+    "recoveryTransitionMaterial": "root-and-transition-digests-only",
+    "plaintextMembershipMaterial": "forbidden",
     "credentialMaterial": "forbidden",
     "runtimeData": "forbidden"
   },

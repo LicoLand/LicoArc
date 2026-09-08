@@ -7,7 +7,7 @@
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-correlation-id` |
 | Decision status | `RETIRED` |
-| Definition status | `PARTIAL` |
+| Definition status | `NOT-SPECIFIED` |
 | Candidate spellings | `correlationId`, `inReplyTo`, request ID, parent Message ID |
 | Candidate layer | Generic Message or Reliable Exchange inside protection |
 | Observer set | Peer Endpoints |
@@ -102,4 +102,4 @@ correlation namespace.
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. Only the scope recorded by this decision and its linked normative authorities is defined; any remaining normative ambiguity requires a successor decision before entering the protocol definition.
+The definition status is `NOT-SPECIFIED`. This historical record supplies no active normative definition; any successor or replacement owns its complete definition independently.

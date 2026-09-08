@@ -7,12 +7,12 @@
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-first-contact-token` |
 | Decision status | `REJECTED` |
-| Definition status | `PARTIAL` |
+| Definition status | `NOT-SPECIFIED` |
 | Candidate spellings | invitation token, capability token, anonymous route token |
-| Candidate layer | Rejected independent Discovery, Transport Profile, or Outer Header field |
+| Candidate layer | Rejected independent Discovery, Transport Profile, or carrier header field |
 | Observer set | Inviter Endpoint, initiating Endpoint, Station, possibly directory |
 | Existing authority | [Canonical Field Registry](../../../spec/FIELD-REGISTRY.md); this record explains the rejection decision and is not a second field specification. |
-| Authority targets | The future Transport Profile and Pairwise Protection profile must specify the first-contact Delivery Handle scope and protected handshake validation without adding this field. |
+| Authority targets | The HTTPS Transport v1 and stable-core Pairwise Protection authorities specify first-contact Delivery Handle scope and protected invitation validation without adding this field. |
 | Predecessor or successor | The visible routing role is already owned by [`FLD-delivery-handle`](delivery-handle.md); any future independent token proposal requires a new successor record. |
 | Current conclusion | Reject an independent first-contact token field. A short-lived, non-enumerable, purpose-scoped, single-use Delivery Handle supplies the visible routing capability; Endpoint-protected handshake data supplies identity and invitation validation. |
 
@@ -60,12 +60,12 @@ remain sufficient.
 ## Value model
 
 There is no independent value model. First contact specializes the admitted
-Delivery Handle rather than adding an invitation, capability, or anonymous
-route field. The Delivery Handle's exact entropy, encoding, audience, route
-scope, expiry, consumption, replay, and invalid-input behavior remain future
-Transport Profile specification work. Endpoint identity, invitation purpose,
-and handshake authorization remain endpoint-protected and cannot be derived
-from Station routing success.
+32-octet Delivery Handle rather than adding an invitation, capability, or
+anonymous route field. HTTPS Transport v1 fixes its 43-character unpadded
+base64url request-target encoding, Station scope, single accepted submission,
+retry behavior, and fail-closed parsing. Stable-core Pairwise Protection binds
+the protected invitation context and peer authentication. Neither meaning can
+be derived from Station routing success.
 
 ## Alternatives
 
@@ -104,13 +104,13 @@ substitution cases, and expose an additional correlation value without
 enabling a new interoperable action. This duplicate scope is an objective
 admission failure, so the record moves directly from `OPEN` to `REJECTED`.
 
-This rejection does not remove first contact. The future Transport Profile
-must close the specialized Delivery Handle's entropy, scope, expiry,
-single-use and concurrent-redemption behavior. The future Pairwise Protection
-profile must independently authenticate the peer, invitation purpose, and
-handshake transcript. Neither obligation can reintroduce this independent
-Station-visible field.
+This rejection does not remove first contact. HTTPS Transport v1 closes the
+specialized Delivery Handle's representation, Station scope, one accepted
+submission, idempotent retry, and conflict behavior. The stable-core Profile
+independently authenticates the peer, invitation context, and handshake
+transcript. Neither authority reintroduces this independent Station-visible
+field.
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. Only the scope recorded by this decision and its linked normative authorities is defined; any remaining normative ambiguity requires a successor decision before entering the protocol definition.
+The definition status is `NOT-SPECIFIED`. This historical record supplies no active normative definition; any successor or replacement owns its complete definition independently.

@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 import {
   assertClosedJsonSchema,
   assertValidAgainstClosedSchema,
+  assertValidProtocolDefinition,
   assertValidProtocolCatalogs,
   assertValidProtocolLineManifest,
   assertValidSecurityAccounting,
@@ -22,6 +23,7 @@ const catalogPaths = {
   protectionProfiles: "spec/protection-profiles.json"
 };
 const catalogSchemaPaths = {
+  common: "spec/schemas/catalog-common.schema.json",
   protocolLines: "spec/schemas/protocol-lines.schema.json",
   protectionProfiles: "spec/schemas/protection-profiles.schema.json"
 };
@@ -29,7 +31,8 @@ const securityPaths = {
   claims: "spec/v1/security/claims.json",
   adversaries: "spec/v1/security/adversary-model.json",
   bindings: "spec/v1/security/formal-bindings.json",
-  registry: "spec/v1/security/registry.json"
+  registry: "spec/v1/security/registry.json",
+  sourceManifest: "spec/v1/security/source-manifest.json"
 };
 const securitySchemaPaths = {
   claims: "spec/schemas/security-claims.schema.json",
@@ -46,32 +49,51 @@ const checkOnly = args[0] === "--check";
 
 const context = await loadFoundationContext(root);
 const limits = context.limits.governance;
+const securityLimits = Object.freeze({ ...limits, maxArrayItems: 256 });
+const conformanceLimits = Object.freeze({
+  ...securityLimits,
+  maxBytes: 4_194_304,
+  maxArrayItems: 512,
+  maxObjectMembers: 256,
+  maxStringBytes: 1_048_576
+});
 const manifest = await readJson(manifestPath);
 assertValidProtocolLineManifest(manifest, context);
 
 const conformanceSchema = await readJson("spec/schemas/conformance-manifest.schema.json");
+const catalogCommonSchema = await readJson(catalogSchemaPaths.common);
 assertClosedJsonSchema(conformanceSchema);
 const conformance = await readJson(conformanceManifestPath);
-assertValidAgainstClosedSchema(conformance, conformanceSchema);
+assertValidAgainstClosedSchema(conformance, conformanceSchema, { schemas: [catalogCommonSchema] });
 
 const catalogs = await readObjectPaths(catalogPaths);
 const catalogSchemas = await readObjectPaths(catalogSchemaPaths);
 assertValidProtocolCatalogs(catalogs.protocolLines, catalogs.protectionProfiles, catalogSchemas);
 
-const security = await readObjectPaths(securityPaths);
+const security = await readObjectPaths(Object.fromEntries(Object.entries(securityPaths)
+  .filter(([name]) => name !== "sourceManifest")), securityLimits);
 const securitySchemas = await readObjectPaths(securitySchemaPaths);
 assertValidSecurityAccounting({ ...security, schemas: securitySchemas });
-
-const protectionRegistry = await readJson("spec/v1/protection/registry.json");
-assertComposition(manifest, conformance, catalogs, protectionRegistry);
+const proofEvidenceBytes = await readFile(fromRelative(security.registry.proofEvidencePath));
+if (sha256(proofEvidenceBytes) !== security.registry.proofEvidenceDigest) {
+  throw new Error("formal proof evidence digest mismatch");
+}
+assertProofEvidence(parseRestrictedJson(proofEvidenceBytes, securityLimits), security);
 
 const componentClosures = [];
 for (const capability of manifest.capabilities) {
   componentClosures.push({ entry: capability, ...await resolveComponent(capability, capability.capabilityId) });
 }
-for (const definition of manifest.openDefinitions) {
-  componentClosures.push({ entry: definition, ...await resolveComponent(definition, definition.definitionId) });
-}
+const securityCorpus = conformance.definitionCorpora.find(({ definitionId }) =>
+  definitionId === "security-accounting");
+if (!securityCorpus) throw new Error("security-accounting corpus is missing");
+componentClosures.push({
+  entry: securityCorpus,
+  ...await resolveComponent({
+    ...securityCorpus,
+    sourceManifestPath: securityPaths.sourceManifest
+  }, securityCorpus.definitionId)
+});
 
 const expected = new Set([
   manifestPath,
@@ -82,12 +104,11 @@ for (const { paths } of componentClosures) for (const sourcePath of paths) expec
 const expectedPaths = [...expected].sort();
 assertSortedUnique(expectedPaths, "aggregate source paths");
 
-const actualPaths = (await Promise.all(manifest.sourceClosure.roots.map(collectRegularFiles)))
-  .flat()
-  .concat(manifest.sourceClosure.additionalSources.filter((sourcePath) =>
-    !manifest.sourceClosure.roots.some((sourceRoot) => isWithin(sourcePath, sourceRoot))))
-  .sort();
-assertSortedUnique(actualPaths, "discovered aggregate source paths");
+const discoveredPaths = (await Promise.all(manifest.sourceClosure.roots.map(collectRegularFiles)))
+  .flat().sort();
+assertSortedUnique(discoveredPaths, "discovered aggregate source paths");
+const actualPaths = [...new Set([...discoveredPaths, ...manifest.sourceClosure.additionalSources])].sort();
+assertSortedUnique(actualPaths, "complete aggregate source paths");
 assertEqualArrays(actualPaths, expectedPaths, "aggregate manifest does not close over its declared sources");
 
 const sources = {};
@@ -115,8 +136,39 @@ for (const corpus of conformance.definitionCorpora) {
   }
 }
 
+const fieldRegistryBytes = await readFile(fromRelative(manifest.fieldRegistry.path));
+const fieldRegistryDigest = sha256(fieldRegistryBytes);
+const profileIdentityInputs = await loadProfileIdentityInputs(catalogs.protectionProfiles);
+const line = catalogs.protocolLines.lines.find(({ wireId, generation }) =>
+  wireId === manifest.wireId && generation === manifest.generation);
+if (!line) throw new Error("aggregate manifest references an unknown Protocol Line");
+assertValidProtocolDefinition({
+  protocolLines: catalogs.protocolLines,
+  protectionProfiles: catalogs.protectionProfiles,
+  manifest,
+  conformance,
+  security,
+  schemas: {
+    ...catalogSchemas,
+    manifest: context.schemas.protocolLineManifest,
+    conformance: conformanceSchema,
+    security: securitySchemas
+  },
+  fieldRegistryDigest,
+  discoveredSourcePaths: discoveredPaths,
+  declaredSourcePaths: expectedPaths,
+  profileIdentityInputs,
+  lineIdentityInput: {
+    sessionRules: {
+      handshakeBinding: manifest.handshakeBinding,
+      sessionLock: manifest.sessionLock,
+      translationPolicy: manifest.translationPolicy
+    }
+  }
+});
+
 const body = {
-  artifactVersion: "licoarc.bundle.v2",
+  artifactVersion: "licoarc.bundle.v1",
   wireId: manifest.wireId,
   generation: manifest.generation,
   lifecycle: manifest.lifecycle,
@@ -138,70 +190,9 @@ if (checkOnly) {
     if (error?.code === "ENOENT") return "";
     throw error;
   });
-  if (current !== artifact) throw new Error("licoarc.bundle.v2 artifact is missing or stale");
+  if (current !== artifact) throw new Error("licoarc.bundle.v1 artifact is missing or stale");
 } else {
   await writeFile(output, artifact);
-}
-
-function assertComposition(manifestValue, conformanceValue, catalogValues, protectionValue) {
-  const line = catalogValues.protocolLines.lines.find(({ wireId, generation }) =>
-    wireId === manifestValue.wireId && generation === manifestValue.generation);
-  if (!line || line.lifecycle !== manifestValue.lifecycle ||
-      line.definitionStatus !== manifestValue.definitionStatus ||
-      line.sessionEligible !== manifestValue.sessionEligible ||
-      line.publicationEligible !== manifestValue.publicationEligible) {
-    throw new Error("Protocol Line manifest status does not match its catalog record");
-  }
-
-  const capabilityIds = manifestValue.capabilities.map(({ capabilityId }) => capabilityId);
-  assertSortedUnique(capabilityIds, "manifest capability identities");
-  assertEqualArrays(capabilityIds, line.definedCapabilities,
-    "manifest capability membership does not match the Protocol Line catalog");
-  const missing = line.mandatoryCapabilities.filter((capabilityId) =>
-    !line.definedCapabilities.includes(capabilityId));
-  assertEqualArrays(manifestValue.missingMandatoryCapabilities, missing,
-    "missing mandatory capability set does not match the Protocol Line catalog");
-  assertEqualArrays(manifestValue.blockers, line.blockers,
-    "manifest blockers do not match the Protocol Line catalog");
-
-  for (const capability of manifestValue.capabilities) {
-    const expectedVersion = Number(capability.capabilityId.match(/\.v([1-9][0-9]*)$/u)?.[1]);
-    if (capability.version !== expectedVersion) throw new Error("capability version does not match its identifier");
-    const direct = capability.sourceManifestPath === null;
-    if (direct !== (capability.sourceRoots.length > 0 && capability.sourcePaths.length > 0) ||
-        (!direct && (capability.sourceRoots.length > 0 || capability.sourcePaths.length > 0))) {
-      throw new Error("capability source identity must use exactly one closure form");
-    }
-  }
-
-  const definitionIds = manifestValue.openDefinitions.map(({ definitionId }) => definitionId);
-  assertSortedUnique(definitionIds, "open definition identities");
-  assertEqualArrays(definitionIds, ["pairwise-protection", "security-accounting"],
-    "open definition set is not closed");
-  assertSortedUnique(manifestValue.blockers, "manifest blockers");
-  assertSortedUnique(manifestValue.sourceClosure.additionalSources, "additional source paths");
-
-  const conformanceCapabilities = conformanceValue.capabilityCorpora.map(({ capabilityId }) => capabilityId);
-  assertSortedUnique(conformanceCapabilities, "conformance capability identities");
-  assertEqualArrays(conformanceCapabilities, capabilityIds,
-    "conformance capability membership does not match the Protocol Line manifest");
-  assertEqualArrays(conformanceValue.definitionCorpora.map(({ definitionId }) => definitionId),
-    ["security-accounting"], "definition corpus set is not closed");
-  if (conformanceValue.absentCorpora.length !== 1 ||
-      conformanceValue.absentCorpora[0].definitionId !== "pairwise-protection") {
-    throw new Error("open Pairwise Protection must have exactly one absence record");
-  }
-
-  if (protectionValue.definitionStatus !== "PARTIAL" ||
-      protectionValue.sessionEligible !== false ||
-      protectionValue.activeProfiles.length !== 0 ||
-      protectionValue.wireSchemas.length !== 0 ||
-      protectionValue.runtimeGrammar !== null ||
-      protectionValue.conformanceCorpus !== null ||
-      catalogValues.protectionProfiles.activeProfiles.length !== 0 ||
-      line.protectionProfileIds.length !== 0) {
-    throw new Error("open Pairwise Protection was incorrectly made active");
-  }
 }
 
 async function resolveComponent(entry, label) {
@@ -251,21 +242,48 @@ async function resolveComponent(entry, label) {
   return { label, paths };
 }
 
-async function readObjectPaths(paths) {
-  return Object.fromEntries(await Promise.all(Object.entries(paths).map(async ([name, sourcePath]) =>
-    [name, await readJson(sourcePath)])));
+async function loadProfileIdentityInputs(protectionProfiles) {
+  const inputs = new Map();
+  for (const catalogProfile of protectionProfiles.profiles) {
+    if (catalogProfile.profileId === null) continue;
+    const profile = await readJson(catalogProfile.sourceDescriptorPath);
+    const semanticSources = {};
+    for (const [role, sourcePath] of Object.entries(profile.semanticSources)) {
+      if (role === "authorityVectors") continue;
+      const bytes = await readFile(fromRelative(sourcePath));
+      semanticSources[role] = sourcePath.endsWith(".json")
+        ? parseRestrictedJson(bytes, limits)
+        : new Uint8Array(bytes);
+    }
+    inputs.set(catalogProfile.profileLocator, {
+      profile,
+      semanticSources,
+      stableClaimIds: catalogProfile.requiredClaimIds,
+      stableNonClaimIds: catalogProfile.stableNonClaimIds
+    });
+  }
+  return inputs;
 }
 
-async function readJson(relativePath) {
+async function readObjectPaths(paths, parseLimits = limits) {
+  return Object.fromEntries(await Promise.all(Object.entries(paths).map(async ([name, sourcePath]) =>
+    [name, await readJson(sourcePath, parseLimits)])));
+}
+
+async function readJson(relativePath, parseLimits = limits) {
   assertSafeRelativePath(relativePath);
-  return parseRestrictedJson(await readFile(fromRelative(relativePath)), limits);
+  return parseRestrictedJson(await readFile(fromRelative(relativePath)), parseLimits);
 }
 
 async function readNormativeSource(sourcePath) {
   assertSafeRelativePath(sourcePath);
   const bytes = await readFile(fromRelative(sourcePath));
-  if (sourcePath.endsWith(".json")) return sortJson(parseRestrictedJson(bytes, limits));
+  if (sourcePath.endsWith(".json")) return sortJson(parseRestrictedJson(bytes,
+    sourcePath.endsWith("/cases.json")
+      ? conformanceLimits
+      : sourcePath === securityPaths.bindings ? securityLimits : limits));
   if (sourcePath.endsWith(".cddl")) return decodeCddl(bytes, sourcePath);
+  if (sourcePath.endsWith(".md")) return decodeCanonicalText(bytes, sourcePath);
   throw new TypeError(`unsupported normative source type: ${sourcePath}`);
 }
 
@@ -306,6 +324,10 @@ function isWithin(sourcePath, sourceRoot) {
 }
 
 function decodeCddl(bytes, sourcePath) {
+  return decodeCanonicalText(bytes, sourcePath);
+}
+
+function decodeCanonicalText(bytes, sourcePath) {
   let text;
   try {
     text = new TextDecoder("utf-8", { fatal: true }).decode(bytes);
@@ -342,6 +364,54 @@ function canonicalJson(value) {
 
 function sha256(bytes) {
   return createHash("sha256").update(bytes).digest("hex");
+}
+
+function assertProofEvidence(evidence, security) {
+  const expectedKeys = [
+    "baseImageDigest",
+    "evidenceVersion",
+    "execution",
+    "formalBindingsDigest",
+    "generatedTheoryDigest",
+    "imageDigest",
+    "lemmas",
+    "platform",
+    "provedTheoryDigest",
+    "prover",
+    "replay",
+    "runtimeContractDigest",
+    "semanticSourceDigest",
+    "sourceCommit"
+  ];
+  assertEqualArrays(Object.keys(evidence).sort(), expectedKeys, "formal proof evidence shape mismatch");
+  if (evidence.evidenceVersion !== "licoarc.tamarin-proof-evidence.v1" ||
+      evidence.replay !== "verified" || evidence.execution?.network !== "none" ||
+      evidence.execution?.threads !== 1 || !Array.isArray(evidence.execution?.arguments) ||
+      ![evidence.imageDigest, evidence.runtimeContractDigest, evidence.generatedTheoryDigest,
+        evidence.provedTheoryDigest, evidence.formalBindingsDigest,
+        evidence.semanticSourceDigest].every((value) =>
+        typeof value === "string" && /^(?:sha256:)?[0-9a-f]{64}$/u.test(value))) {
+    throw new Error("formal proof evidence is incomplete");
+  }
+  if (evidence.formalBindingsDigest !== sha256(Buffer.from(JSON.stringify(security.bindings, null, 2) + "\n")) ||
+      evidence.semanticSourceDigest !== security.bindings.semanticSourceDigest) {
+    throw new Error("formal proof evidence is outside the security source closure");
+  }
+  const expectedLemmas = new Set([
+    "executable_honest_handshake",
+    "executable_ratchet_evolution",
+    "executable_user_authority_and_route",
+    "executable_authority_transitions_and_possession",
+    "executable_sibling_session_binding",
+    "executable_authenticated_confirmation_and_metadata",
+    "executable_resource_bounds",
+    ...security.claims.claims.filter(({ status }) => status === "proved").map(({ proofLemma }) => proofLemma)
+  ]);
+  if (!Array.isArray(evidence.lemmas) || evidence.lemmas.length !== expectedLemmas.size ||
+      evidence.lemmas.some(({ name, result }) => !expectedLemmas.delete(name) || result !== "verified") ||
+      expectedLemmas.size !== 0) {
+    throw new Error("formal proof evidence lemma closure mismatch");
+  }
 }
 
 function assertSortedUnique(values, label) {

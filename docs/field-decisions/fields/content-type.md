@@ -7,7 +7,7 @@
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-content-type` |
 | Decision status | `RETIRED` |
-| Definition status | `PARTIAL` |
+| Definition status | `NOT-SPECIFIED` |
 | Candidate spellings | media type, schema identifier, application namespace, `contentType` |
 | Candidate layer | Generic Message inside protection |
 | Observer set | Peer Endpoints |
@@ -104,4 +104,4 @@ of `FLD-content-type-user-intent`.
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. Only the scope recorded by this decision and its linked normative authorities is defined; any remaining normative ambiguity requires a successor decision before entering the protocol definition.
+The definition status is `NOT-SPECIFIED`. This historical record supplies no active normative definition; any successor or replacement owns its complete definition independently.
