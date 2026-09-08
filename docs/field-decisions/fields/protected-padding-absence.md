@@ -10,12 +10,12 @@ comes only from the [Canonical Field Registry](../../../spec/FIELD-REGISTRY.md).
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-protected-padding-absence` |
 | Decision status | `DECIDED` |
-| Definition status | `PARTIAL` |
+| Definition status | `SPECIFIED` |
 | Candidate spellings | `paddingLength`, `unpaddedLength`, profile-owned padding grammar, or no field |
 | Candidate layer | Pairwise Protection |
 | Observer set | Endpoint, Station, carrier, and outside observer |
 | Existing authority | [Field Registry](../../../spec/FIELD-REGISTRY.md) |
-| Authority targets | `PRODUCT.md`, `ARCHITECTURE.md`, Canonical Field Registry, future Protection Profiles, and conformance material |
+| Authority targets | `PRODUCT.md`, `ARCHITECTURE.md`, Canonical Field Registry, the stable-core Protection Profile, and conformance material |
 | Predecessor or successor | Succeeds `FLD-padding-length`. |
 | Current conclusion | The mandatory profile contains no discretionary traffic-shaping padding field, grammar, budget, or negotiation surface. |
 
@@ -97,4 +97,6 @@ same bounded migration. This successor does not reinterpret the predecessor.
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. Only the scope recorded by this decision and its linked normative authorities is defined; any remaining normative ambiguity requires a successor decision before entering the protocol definition.
+The definition status is `SPECIFIED`. The stable-core record grammar and
+bounds admit only intrinsic cryptographic framing and no discretionary
+traffic-shaping bytes, selector, negotiation, or compatibility form.

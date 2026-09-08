@@ -1,0 +1,26 @@
+{
+  "contractVersion": "licoarc.tamarin-runtime.v1",
+  "engineDefault": "docker",
+  "engineAlternatives": ["docker", "podman"],
+  "automaticFallback": false,
+  "platform": "linux/amd64",
+  "imageTag": "licoarc-tamarin:1.12.0-source-82780bba",
+  "imageDigest": "sha256:bd9b8170e061a092d06ed20fa61ed53bf7af9e9495fc9672324c259d017fe8d2",
+  "baseImage": "docker.io/library/debian:bookworm-slim@sha256:5ae3c39ebd15e229dcedd5cee596b2497182493d41ff162e824ba13fc1b2b867",
+  "tamarin": {
+    "version": "1.12.0",
+    "sourceRepository": "https://github.com/tamarin-prover/tamarin-prover.git",
+    "sourceCommit": "82780bbaf3328a45f624ddb41e51bf75425f851c",
+    "linuxAmd64Asset": "https://github.com/tamarin-prover/tamarin-prover/releases/download/1.12.0/tamarin-prover-1.12.0-linux64-ubuntu.tar.gz",
+    "linuxAmd64AssetSha256": "201be06f469e47cff554df6ca93db8366fc2c69d70c61fcbd1370a1074b469c6",
+    "maudeSha256": "1eefc2d8f96eb1b99f7c13e0149a3f4b982e8dfb061bd7e78b6a90916dd80968",
+    "preludeSha256": "3e7147ee4a6ff96eb726abf9bbbb998ba340324342e2a7d5cf01c68794608a11"
+  },
+  "execution": {
+    "network": "none",
+    "locale": "C.UTF-8",
+    "heuristic": "s",
+    "threads": 1,
+    "arguments": ["--prove", "--heuristic=s", "+RTS", "-N1", "-RTS"]
+  }
+}

@@ -7,7 +7,7 @@
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-route-epoch` |
 | Decision status | `DECIDED` |
-| Definition status | `PARTIAL` |
+| Definition status | `SPECIFIED` |
 | Existing authority | [`FIELD-REGISTRY.md`](../../../spec/FIELD-REGISTRY.md) |
 | Current conclusion | Authenticated private Route state requires a relationship-scoped epoch that starts at one, advances by exactly one, and never resets across Station migration or continuity-preserving Endpoint key rotation. Global affiliation has its own Endpoint-wide epoch. |
 
@@ -36,7 +36,8 @@ accepted successor equals the previous value plus one. It never resets on
 Station replacement, route expiry, reconnect, or an Endpoint key rotation
 that proves continuity. Lower values are stale; equal values with different
 logical Route Updates conflict; a gap or predecessor mismatch fails closed.
-Rollover handling and canonical integer encoding remain specification gaps.
+The Identity schema and policy fix the safe-integer maximum, shortest
+deterministic encoding, no-wrap overflow, and retained high-water behavior.
 
 ## Visibility and trust
 
@@ -60,4 +61,4 @@ semantics authority and wins over any conflicting explanation here.
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. Only the scope recorded by this decision and its linked normative authorities is defined; any remaining normative ambiguity requires a successor decision before entering the protocol definition.
+The definition status is `SPECIFIED`. The Canonical Field Registry and linked machine-readable authorities close this record’s exact active semantics.

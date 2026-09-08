@@ -4,36 +4,167 @@
   "title": "LicoArc foundation bounds registry",
   "type": "object",
   "additionalProperties": false,
-  "required": ["$schema", "$id", "registryVersion", "lifecycle", "scope", "bounds"],
+  "required": [
+    "$schema",
+    "$id",
+    "registryVersion",
+    "lifecycle",
+    "scope",
+    "authority",
+    "bounds"
+  ],
   "properties": {
-    "$schema": { "type": "string", "const": "https://json-schema.org/draft/2020-12/schema" },
-    "$id": { "type": "string", "const": "https://licoarc.com/spec/v1/schemas/foundation-bounds.schema.json" },
-    "registryVersion": { "type": "string", "const": "licoarc.foundation-bounds.v1" },
-    "lifecycle": { "type": "string", "enum": ["Candidate", "Published", "Retired"] },
-    "scope": { "type": "string", "const": "foundation-source-and-runtime-parser" },
+    "$schema": {
+      "type": "string",
+      "const": "https://json-schema.org/draft/2020-12/schema"
+    },
+    "$id": {
+      "type": "string",
+      "const": "https://licoarc.com/spec/v1/schemas/foundation-bounds.schema.json"
+    },
+    "registryVersion": {
+      "type": "string",
+      "const": "licoarc.foundation-bounds.v1"
+    },
+    "lifecycle": {
+      "type": "string",
+      "enum": [
+        "Candidate",
+        "Published",
+        "Retired"
+      ]
+    },
+    "scope": {
+      "type": "string",
+      "const": "foundation-source-and-foundation-record-parser-only"
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "appliesTo",
+        "capabilityRecords",
+        "protectionProfiles",
+        "crossCapabilityTotals",
+        "inheritance"
+      ],
+      "properties": {
+        "appliesTo": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": [
+              "spec/v1/foundation source parsing",
+              "foundation governance artifact parsing",
+              "foundation runtime encoding fixture parsing"
+            ]
+          }
+        },
+        "capabilityRecords": {
+          "type": "string",
+          "const": "bounded-by-owning-capability"
+        },
+        "protectionProfiles": {
+          "type": "string",
+          "const": "bounded-by-owning-profile"
+        },
+        "crossCapabilityTotals": {
+          "type": "string",
+          "const": "bounded-by-protocol-line"
+        },
+        "inheritance": {
+          "type": "string",
+          "const": "forbidden"
+        }
+      }
+    },
     "bounds": {
       "type": "object",
       "additionalProperties": false,
       "required": [
-        "MAX_SOURCE_FILES", "MAX_SOURCE_BYTES", "MAX_MANIFEST_BYTES",
-        "MAX_GOVERNANCE_BYTES", "MAX_RUNTIME_RECORD_BYTES", "MAX_RAW_BYTES",
-        "MAX_TEXT_BYTES", "MAX_IDENTIFIER_BYTES", "MAX_ARRAY_ITEMS",
-        "MAX_MAP_ENTRIES", "MAX_OBJECT_MEMBERS", "MAX_NESTING_DEPTH", "MAX_INTEGER"
+        "MAX_SOURCE_FILES",
+        "MAX_SOURCE_BYTES",
+        "MAX_MANIFEST_BYTES",
+        "MAX_GOVERNANCE_BYTES",
+        "MAX_RUNTIME_RECORD_BYTES",
+        "MAX_RAW_BYTES",
+        "MAX_TEXT_BYTES",
+        "MAX_IDENTIFIER_BYTES",
+        "MAX_ARRAY_ITEMS",
+        "MAX_MAP_ENTRIES",
+        "MAX_OBJECT_MEMBERS",
+        "MAX_NESTING_DEPTH",
+        "MAX_INTEGER"
       ],
       "properties": {
-        "MAX_SOURCE_FILES": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 },
-        "MAX_SOURCE_BYTES": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 },
-        "MAX_MANIFEST_BYTES": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 },
-        "MAX_GOVERNANCE_BYTES": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 },
-        "MAX_RUNTIME_RECORD_BYTES": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 },
-        "MAX_RAW_BYTES": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 },
-        "MAX_TEXT_BYTES": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 },
-        "MAX_IDENTIFIER_BYTES": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 },
-        "MAX_ARRAY_ITEMS": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 },
-        "MAX_MAP_ENTRIES": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 },
-        "MAX_OBJECT_MEMBERS": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 },
-        "MAX_NESTING_DEPTH": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 },
-        "MAX_INTEGER": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 }
+        "MAX_SOURCE_FILES": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "MAX_SOURCE_BYTES": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "MAX_MANIFEST_BYTES": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "MAX_GOVERNANCE_BYTES": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "MAX_RUNTIME_RECORD_BYTES": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "MAX_RAW_BYTES": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "MAX_TEXT_BYTES": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "MAX_IDENTIFIER_BYTES": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "MAX_ARRAY_ITEMS": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "MAX_MAP_ENTRIES": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "MAX_OBJECT_MEMBERS": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "MAX_NESTING_DEPTH": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "MAX_INTEGER": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        }
       }
     }
   }

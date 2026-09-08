@@ -10,12 +10,12 @@ This record is explanatory decision history, not a second specification. The
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-previous-affiliation-update-digest` |
 | Decision status | `DECIDED` |
-| Definition status | `PARTIAL` |
+| Definition status | `SPECIFIED` |
 | Candidate spellings | previous home, transfer source, affiliation parent |
 | Candidate layer | Identity/Discovery protected control state |
 | Observer set | Peer Endpoints; hidden from Stations |
 | Existing authority | [Canonical Field Registry](../../../spec/FIELD-REGISTRY.md) |
-| Authority targets | Future Affiliation Update schema and corpus |
+| Authority targets | The Identity Affiliation Update schema, grammar, policy, and corpus |
 | Predecessor or successor | None |
 | Current conclusion | Every successor binds the exact immediate Endpoint-wide affiliation state, so A-to-B migration is a chain rather than an unverified label change. |
 
@@ -106,4 +106,4 @@ state chain and does not reuse the relationship Route predecessor.
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. Only the scope recorded by this decision and its linked normative authorities is defined; any remaining normative ambiguity requires a successor decision before entering the protocol definition.
+The definition status is `SPECIFIED`. The Canonical Field Registry and linked machine-readable authorities close this record’s exact active semantics.

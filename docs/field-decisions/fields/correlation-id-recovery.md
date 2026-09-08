@@ -10,7 +10,7 @@ specification; normative field semantics come only from the Field Registry.
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-correlation-id-recovery` |
 | Decision status | `DECIDED` |
-| Definition status | `PARTIAL` |
+| Definition status | `SPECIFIED` |
 | Existing authority | [Field Registry](../../../spec/FIELD-REGISTRY.md) |
 | Predecessor or successor | Succeeds `FLD-correlation-id`; no successor. |
 | Current conclusion | `relatesTo` remains the only protected correlation field and is additionally mandatory on a LicoArc Attachment Receive State `event`, where it names the Message containing the attachment descriptor. |
@@ -89,4 +89,4 @@ to `DECIDED`. `FLD-correlation-id` is retained as retired history.
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. Only the scope recorded by this decision and its linked normative authorities is defined; any remaining normative ambiguity requires a successor decision before entering the protocol definition.
+The definition status is `SPECIFIED`. The Canonical Field Registry and linked machine-readable authorities close this record’s exact active semantics.

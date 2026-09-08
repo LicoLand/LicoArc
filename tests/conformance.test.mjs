@@ -13,29 +13,34 @@ const [manifest, conformance, artifact, protection] = await Promise.all([
   readJson("spec/v1/protection/registry.json")
 ]);
 
-test("partial Candidate artifact binds exact status and source closure", () => {
+test("Candidate artifact binds the exact lifecycle-generic definition and source closure", () => {
   assert.deepEqual(Object.keys(artifact).sort(), [
     "artifactVersion", "definitionStatus", "digest", "digestAlgorithm",
     "generation", "lifecycle", "publicationEligible", "sessionEligible",
     "sources", "wireId"
   ]);
-  assert.equal(artifact.artifactVersion, "licoarc.bundle.v2");
+  assert.equal(artifact.artifactVersion, "licoarc.bundle.v1");
   assert.equal(artifact.wireId, "licoarc.protocol-line.v1");
-  assert.equal(artifact.definitionStatus, "PARTIAL");
-  assert.equal(artifact.sessionEligible, false);
+  assert.ok(["PARTIAL", "COMPLETE"].includes(artifact.definitionStatus));
   assert.equal(artifact.publicationEligible, false);
   assert.equal(manifest.definitionStatus, artifact.definitionStatus);
   assert.equal(conformance.definitionStatus, artifact.definitionStatus);
-  assert.deepEqual(conformance.absentCorpora, [{
-    definitionId: "pairwise-protection",
-    reason: "open-definition-has-no-active-wire"
-  }]);
+  assert.equal(manifest.sessionEligible, artifact.sessionEligible);
+  assert.equal(manifest.publicationEligible, artifact.publicationEligible);
+  if (artifact.definitionStatus === "COMPLETE") {
+    assert.equal(artifact.sessionEligible, true);
+    assert.deepEqual(conformance.absentCorpora, []);
+  } else {
+    assert.equal(artifact.sessionEligible, false);
+    assert.ok(conformance.absentCorpora.length > 0);
+  }
   assert.ok(Object.hasOwn(artifact.sources, "spec/protocol-lines.json"));
   assert.ok(Object.hasOwn(artifact.sources, "spec/v1/security/claims.json"));
-  assert.equal(protection.definitionStatus, "PARTIAL");
-  assert.equal(protection.sessionEligible, false);
-  assert.deepEqual(protection.wireSchemas, []);
-  assert.equal(protection.conformanceCorpus, null);
+  assert.ok(Object.hasOwn(artifact.sources, "spec/v1/protection/algorithms.json"));
+  assert.equal(protection.definitionStatus, artifact.definitionStatus);
+  assert.equal(protection.sessionEligible, artifact.sessionEligible);
+  assert.ok(protection.wireSchemas.length > 0);
+  assert.equal(protection.conformanceCorpus, "conformance/v1/protection/manifest.json");
 
   const body = Object.fromEntries(Object.entries(artifact).filter(([key]) => key !== "digest"));
   assert.equal(artifact.digest, sha256(`${canonical(body)}\n`));

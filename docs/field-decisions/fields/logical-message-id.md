@@ -7,7 +7,7 @@
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-logical-message-id` |
 | Decision status | `DECIDED` |
-| Definition status | `PARTIAL` |
+| Definition status | `SPECIFIED` |
 | Candidate spellings | `messageId`, intent ID |
 | Candidate layer | Reliable Exchange inside Pairwise Protection |
 | Observer set | Peer Endpoints; hidden from Station |
@@ -17,7 +17,7 @@
 ## Question
 
 What exact protected identifier represents one logical intent independently of
-transport attempts, Outer Envelopes, routes, and confirmations?
+transport attempts, carrier containers, routes, and confirmations?
 
 ## Role in communication
 
@@ -96,10 +96,10 @@ or lifecycle; every resulting decision remains wholly LicoArc-owned.
 ## Decision history
 
 The original decision admitted stable protected identity while leaving its
-representation open. The Canonical Field Registry selected unpredictable
-`ID128`, stable across retry, re-protection, and route change. Candidate work
-still fixes generation procedure, state bounds, conflict handling, and
-conformance vectors.
+representation open. The Canonical Field Registry and complete line now select
+unpredictable `ID128`, stable across retry, re-protection, and Route change,
+with closed generation, state bounds, conflict handling, and conformance
+vectors.
 
 LicoArc review on 2026-08-03 closed the persistence role for attachment
 recovery: chunk Message identity survives retry and migration, and a repeated
@@ -109,4 +109,4 @@ an attachment after authenticated completion or another terminal result.
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. Only the scope recorded by this decision and its linked normative authorities is defined; any remaining normative ambiguity requires a successor decision before entering the protocol definition.
+The definition status is `SPECIFIED`. The Canonical Field Registry and linked machine-readable authorities close this record’s exact active semantics.

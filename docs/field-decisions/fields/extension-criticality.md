@@ -7,7 +7,7 @@
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-extension-criticality` |
 | Decision status | `DECIDED` |
-| Definition status | `PARTIAL` |
+| Definition status | `SPECIFIED` |
 | Candidate spellings | `critical`, understood-required list, critical flag |
 | Candidate layer | Protected headers and Generic Message extensions |
 | Observer set | Peer Endpoints |
@@ -90,11 +90,11 @@ or lifecycle; every resulting decision remains wholly LicoArc-owned.
 ## Decision history
 
 The original decision fixed fail-closed behavior but left representation open.
-The Canonical Field Registry selected one protected bounded `uint32[]` whose
-members must exist in `extensions`; this removes per-entry flag and duplicate
-container alternatives. The future Protocol Line still fixes concrete bounds
-and the governed extension registry.
+The Canonical Field Registry and complete Protocol Line now select one
+protected bounded `uint32[]` whose members must exist in `extensions`, with
+exact bounds and registry rules; this removes per-entry flag and duplicate
+container alternatives.
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. Only the scope recorded by this decision and its linked normative authorities is defined; any remaining normative ambiguity requires a successor decision before entering the protocol definition.
+The definition status is `SPECIFIED`. The Canonical Field Registry and linked machine-readable authorities close this record’s exact active semantics.

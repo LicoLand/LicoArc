@@ -1,7 +1,7 @@
 # Lico Arc Protocol Runbook
 
 Operational procedures for maintaining the Lico Arc Protocol contract line and its
-artifacts. All commands run from the repository root and require Node.js 22
+artifacts. All commands run from the repository root and require Node.js 24.15
 or newer.
 
 ## Verify The Repository
@@ -34,17 +34,12 @@ Commit a newly generated Candidate artifact only with the Candidate sources
 that produced it. Candidate bytes may change and receive a new digest through
 review and regeneration. Never mutate or hand-edit a Published artifact.
 
-## Define A New Contract Version
+## Update The Initial Contract
 
-1. Create `spec/v2/manifest.json`, the capability directories below
-   `spec/v2/`, and the matching corpora below `conformance/v2/`; never mutate
-   a published version.
-2. Give the manifest an exact wire ID, lifecycle `Candidate`, a new artifact
-   version, output path, and explicit ordered source list.
-3. Extend the generator to select the new manifest, regenerate, and verify.
-4. Update [COMPATIBILITY.md](COMPATIBILITY.md), the protocol document under
-   `docs/protocols/`, and [../CHANGELOG.md](../CHANGELOG.md) in the same
-   change.
+LicoArc is an unreleased V1 / Generation 1. Update its current decision records,
+canonical sources, public projections, and independent SDKs together. Recompute
+content identities, regenerate the declared corpus and proof bindings, and
+regenerate the Candidate bundle before checking the resulting source closure.
 
 ## Diagnose A Failing Artifact Check
 

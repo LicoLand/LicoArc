@@ -1,0 +1,3604 @@
+{
+  "$schema": "https://licoarc.com/spec/schemas/conformance-envelope.schema.json",
+  "envelopeVersion": "licoarc.conformance-envelope.v1",
+  "corpusId": "licoarc.reliable.conformance.v1",
+  "cases": [
+    {
+      "$schema": "https://licoarc.com/spec/schemas/conformance-case.schema.json",
+      "caseVersion": "licoarc.conformance-case.v1",
+      "id": "attachment-recovery-request",
+      "target": {
+        "operationId": "licoarc.foundation.encode-deterministic-cbor.v1"
+      },
+      "context": {
+        "sourceBindings": [
+          {
+            "sourcePath": "spec/v1/reliable/registry.json",
+            "sha256": "c601617bd02732c6a875a842e3110072a7c00454f6a619720ba0057010fb2b8f"
+          }
+        ],
+        "catalogs": [
+          {
+            "name": "reliable-registry",
+            "sourcePath": "spec/v1/reliable/registry.json",
+            "value": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "$id": "https://licoarc.com/spec/v1/reliable/registry.json",
+              "registryVersion": "licoarc.reliable-exchange.v1",
+              "wireId": "licoarc.reliable.v1",
+              "lifecycle": "Candidate",
+              "scope": "endpoint-protected-at-least-once-exchange-v1",
+              "sourcePaths": {
+                "bounds": "spec/v1/reliable/bounds.json",
+                "labels": "spec/v1/reliable/labels.json",
+                "intentSchema": "spec/v1/reliable/intent.schema.json",
+                "eventSchema": "spec/v1/reliable/event.schema.json",
+                "confirmationSchema": "spec/v1/reliable/confirmation.schema.json",
+                "stateSchema": "spec/v1/reliable/state.schema.json",
+                "runtime": "spec/v1/reliable/runtime.cddl",
+                "sourceManifest": "spec/v1/reliable/source-manifest.json",
+                "conformanceManifest": "conformance/v1/reliable/manifest.json"
+              },
+              "representation": {
+                "governance": "restricted-jcs-json",
+                "runtime": "deterministic-cbor",
+                "mapKeyEncoding": "compact-unsigned-integer",
+                "lengthEncoding": "definite",
+                "rawBytes": "bstr",
+                "tags": "forbidden",
+                "floats": "forbidden",
+                "indefiniteLengths": "forbidden",
+                "duplicateLabels": "reject",
+                "unknownCoreLabels": "reject",
+                "trailingBytes": "reject"
+              },
+              "stateAuthority": {
+                "endpoint": "logical-intent-deduplication-confirmation-and-effect-state",
+                "station": "opaque-carriage-and-untrusted-operation-hints-only",
+                "application": "effect-and-idempotency-result-only",
+                "scheduler": "caller-owned",
+                "storage": "caller-owned"
+              },
+              "delivery": {
+                "semantics": "at-least-once-when-a-conforming-path-is-available",
+                "sameRouteRetry": "same-protected-intent-and-exact-protected-bytes",
+                "routeChange": "may-reprotect-same-intent-without-reauthorizing-effect",
+                "restart": "restore-serializable-snapshot-before-processing-input",
+                "stationReceipt": "non-authoritative-hint",
+                "exactlyOnceEffects": "forbidden-claim",
+                "guaranteedStationDelivery": "forbidden-claim"
+              },
+              "closedStateTags": {
+                "outbox": [
+                  "created",
+                  "in-flight",
+                  "ambiguous",
+                  "accepted",
+                  "completed",
+                  "cancelled",
+                  "failed"
+                ],
+                "inbox": [
+                  "new",
+                  "accepted",
+                  "effect-pending",
+                  "completed",
+                  "cancelled",
+                  "failed"
+                ],
+                "attachment": [
+                  "pending",
+                  "complete",
+                  "cancelled",
+                  "failed"
+                ],
+                "aggregate": [
+                  "pending",
+                  "partial",
+                  "complete",
+                  "failed"
+                ]
+              },
+              "resourceAccounting": {
+                "intent": "MAX_PROTECTED_INTENT_BYTES-counts-the-complete-canonical-intent",
+                "event": "MAX_RELIABLE_EVENT_METADATA_BYTES-counts-event-CBOR-only-and-events-never-embed-packets",
+                "packet": "MAX_PROTECTED_PACKET_BYTES-counts-exact-retained-or-emitted-protected-octets",
+                "snapshotMetadata": "MAX_RELIABLE_SNAPSHOT_METADATA_BYTES-counts-the-complete-snapshot-CBOR-excluding-protected-packet-octets",
+                "snapshotTotal": "MAX_RELIABLE_SNAPSHOT_BYTES-equals-snapshot-metadata-plus-one-retained-protected-packet",
+                "histories": "forbidden-use-bounded-counters-high-water-values-and-tombstones"
+              },
+              "atomicity": {
+                "receive": "validate-and-authenticate-against-one-tentative-complete-snapshot-then-compare-and-commit-once",
+                "send": "commit-advanced-snapshot-and-exact-retry-packet-before-emission",
+                "retry": "reuse-exact-retained-packet-without-state-advance-except-bounded-transmission-accounting",
+                "restart": "restore-complete-monotonic-snapshot-and-retained-packet-before-processing-input",
+                "rollback": "lower-state-generation-is-terminal-state-rollback-with-no-emission-or-effect",
+                "failure": "every-error-returns-the-byte-identical-pre-state-and-no-packet-or-effect"
+              },
+              "confirmation": {
+                "identity": "one-confirmation-id-per-result",
+                "authentication": "exact-protected-authorized-sending-Endpoint-session",
+                "binding": "confirmation-id-message-ids-sender-session-stage-outcome-failure-and-result",
+                "stages": [
+                  "endpointAccepted",
+                  "effectCompleted"
+                ],
+                "outcomes": [
+                  "succeeded",
+                  "rejected",
+                  "failed"
+                ],
+                "pendingAndAmbiguous": "transport-or-local-state-only-never-an-endpoint-confirmation",
+                "grouping": "sorted-unique-message-ids-with-one-stage-outcome-and-failure",
+                "conflict": "same-confirmation-id-with-different-canonical-result-is-terminal",
+                "stationResults": "never-advance-endpoint-stage"
+              },
+              "attachment": {
+                "normalFeedback": "bounded-attachment-receive-state",
+                "routineChunkConfirmation": "forbidden",
+                "finality": "complete-authenticated-chunks-content-digest-and-exact-endpoint-confirmation",
+                "windowReset": "forbidden-on-retry-restart-session-renewal-route-change-station-migration-replay"
+              },
+              "group": {
+                "projectionIdentity": "stable-per-member-logical-message-projection",
+                "partialFailure": "per-member-terminal-or-pending-results",
+                "aggregate": "deterministic-recipient-order-and-absorbing-member-results"
+              },
+              "failurePolicy": {
+                "invalid": "reject-without-state-advance",
+                "ambiguous": "retain-intent-and-retry-without-new-authorization",
+                "terminal": "absorbing-until-tombstone-retention-ends",
+                "bounds": "typed-terminal-failure"
+              },
+              "outOfScope": [
+                "exactly-once-local-effects",
+                "retry-scheduling",
+                "database-or-storage-engine",
+                "trusted-time-source",
+                "legal-nonrepudiation",
+                "guaranteed-station-delivery",
+                "station-to-station-protocol",
+                "plaintext-or-application-command-interpretation"
+              ]
+            }
+          }
+        ],
+        "publicMaterial": [],
+        "clock": {},
+        "state": {},
+        "transport": {},
+        "storage": {}
+      },
+      "input": {
+        "value": {
+          "0": 9,
+          "1": "base64:AQIDBAUGBwgJCgsMDQ4PEA==",
+          "2": "base64:ERERERERERERERERERERERERERERERERERERERERERE=",
+          "3": 0,
+          "11": "base64:ISEhISEhISEhISEhISEhIQ==",
+          "12": 1,
+          "13": [
+            {
+              "0": 2,
+              "1": 4
+            },
+            {
+              "0": 8,
+              "1": 9
+            }
+          ]
+        }
+      },
+      "expected": {
+        "result": {
+          "hex": "a7000901500102030405060708090a0b0c0d0e0f10025820111111111111111111111111111111111111111111111111111111111111111103000b50212121212121212121212121212121210c010d82a200020104a200080109"
+        }
+      }
+    },
+    {
+      "$schema": "https://licoarc.com/spec/schemas/conformance-case.schema.json",
+      "caseVersion": "licoarc.conformance-case.v1",
+      "id": "confirmation-duplicate-id",
+      "target": {
+        "operationId": "licoarc.foundation.canonicalize-governance-json.v1"
+      },
+      "context": {
+        "sourceBindings": [
+          {
+            "sourcePath": "spec/v1/reliable/registry.json",
+            "sha256": "c601617bd02732c6a875a842e3110072a7c00454f6a619720ba0057010fb2b8f"
+          }
+        ],
+        "catalogs": [
+          {
+            "name": "reliable-registry",
+            "sourcePath": "spec/v1/reliable/registry.json",
+            "value": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "$id": "https://licoarc.com/spec/v1/reliable/registry.json",
+              "registryVersion": "licoarc.reliable-exchange.v1",
+              "wireId": "licoarc.reliable.v1",
+              "lifecycle": "Candidate",
+              "scope": "endpoint-protected-at-least-once-exchange-v1",
+              "sourcePaths": {
+                "bounds": "spec/v1/reliable/bounds.json",
+                "labels": "spec/v1/reliable/labels.json",
+                "intentSchema": "spec/v1/reliable/intent.schema.json",
+                "eventSchema": "spec/v1/reliable/event.schema.json",
+                "confirmationSchema": "spec/v1/reliable/confirmation.schema.json",
+                "stateSchema": "spec/v1/reliable/state.schema.json",
+                "runtime": "spec/v1/reliable/runtime.cddl",
+                "sourceManifest": "spec/v1/reliable/source-manifest.json",
+                "conformanceManifest": "conformance/v1/reliable/manifest.json"
+              },
+              "representation": {
+                "governance": "restricted-jcs-json",
+                "runtime": "deterministic-cbor",
+                "mapKeyEncoding": "compact-unsigned-integer",
+                "lengthEncoding": "definite",
+                "rawBytes": "bstr",
+                "tags": "forbidden",
+                "floats": "forbidden",
+                "indefiniteLengths": "forbidden",
+                "duplicateLabels": "reject",
+                "unknownCoreLabels": "reject",
+                "trailingBytes": "reject"
+              },
+              "stateAuthority": {
+                "endpoint": "logical-intent-deduplication-confirmation-and-effect-state",
+                "station": "opaque-carriage-and-untrusted-operation-hints-only",
+                "application": "effect-and-idempotency-result-only",
+                "scheduler": "caller-owned",
+                "storage": "caller-owned"
+              },
+              "delivery": {
+                "semantics": "at-least-once-when-a-conforming-path-is-available",
+                "sameRouteRetry": "same-protected-intent-and-exact-protected-bytes",
+                "routeChange": "may-reprotect-same-intent-without-reauthorizing-effect",
+                "restart": "restore-serializable-snapshot-before-processing-input",
+                "stationReceipt": "non-authoritative-hint",
+                "exactlyOnceEffects": "forbidden-claim",
+                "guaranteedStationDelivery": "forbidden-claim"
+              },
+              "closedStateTags": {
+                "outbox": [
+                  "created",
+                  "in-flight",
+                  "ambiguous",
+                  "accepted",
+                  "completed",
+                  "cancelled",
+                  "failed"
+                ],
+                "inbox": [
+                  "new",
+                  "accepted",
+                  "effect-pending",
+                  "completed",
+                  "cancelled",
+                  "failed"
+                ],
+                "attachment": [
+                  "pending",
+                  "complete",
+                  "cancelled",
+                  "failed"
+                ],
+                "aggregate": [
+                  "pending",
+                  "partial",
+                  "complete",
+                  "failed"
+                ]
+              },
+              "resourceAccounting": {
+                "intent": "MAX_PROTECTED_INTENT_BYTES-counts-the-complete-canonical-intent",
+                "event": "MAX_RELIABLE_EVENT_METADATA_BYTES-counts-event-CBOR-only-and-events-never-embed-packets",
+                "packet": "MAX_PROTECTED_PACKET_BYTES-counts-exact-retained-or-emitted-protected-octets",
+                "snapshotMetadata": "MAX_RELIABLE_SNAPSHOT_METADATA_BYTES-counts-the-complete-snapshot-CBOR-excluding-protected-packet-octets",
+                "snapshotTotal": "MAX_RELIABLE_SNAPSHOT_BYTES-equals-snapshot-metadata-plus-one-retained-protected-packet",
+                "histories": "forbidden-use-bounded-counters-high-water-values-and-tombstones"
+              },
+              "atomicity": {
+                "receive": "validate-and-authenticate-against-one-tentative-complete-snapshot-then-compare-and-commit-once",
+                "send": "commit-advanced-snapshot-and-exact-retry-packet-before-emission",
+                "retry": "reuse-exact-retained-packet-without-state-advance-except-bounded-transmission-accounting",
+                "restart": "restore-complete-monotonic-snapshot-and-retained-packet-before-processing-input",
+                "rollback": "lower-state-generation-is-terminal-state-rollback-with-no-emission-or-effect",
+                "failure": "every-error-returns-the-byte-identical-pre-state-and-no-packet-or-effect"
+              },
+              "confirmation": {
+                "identity": "one-confirmation-id-per-result",
+                "authentication": "exact-protected-authorized-sending-Endpoint-session",
+                "binding": "confirmation-id-message-ids-sender-session-stage-outcome-failure-and-result",
+                "stages": [
+                  "endpointAccepted",
+                  "effectCompleted"
+                ],
+                "outcomes": [
+                  "succeeded",
+                  "rejected",
+                  "failed"
+                ],
+                "pendingAndAmbiguous": "transport-or-local-state-only-never-an-endpoint-confirmation",
+                "grouping": "sorted-unique-message-ids-with-one-stage-outcome-and-failure",
+                "conflict": "same-confirmation-id-with-different-canonical-result-is-terminal",
+                "stationResults": "never-advance-endpoint-stage"
+              },
+              "attachment": {
+                "normalFeedback": "bounded-attachment-receive-state",
+                "routineChunkConfirmation": "forbidden",
+                "finality": "complete-authenticated-chunks-content-digest-and-exact-endpoint-confirmation",
+                "windowReset": "forbidden-on-retry-restart-session-renewal-route-change-station-migration-replay"
+              },
+              "group": {
+                "projectionIdentity": "stable-per-member-logical-message-projection",
+                "partialFailure": "per-member-terminal-or-pending-results",
+                "aggregate": "deterministic-recipient-order-and-absorbing-member-results"
+              },
+              "failurePolicy": {
+                "invalid": "reject-without-state-advance",
+                "ambiguous": "retain-intent-and-retry-without-new-authorization",
+                "terminal": "absorbing-until-tombstone-retention-ends",
+                "bounds": "typed-terminal-failure"
+              },
+              "outOfScope": [
+                "exactly-once-local-effects",
+                "retry-scheduling",
+                "database-or-storage-engine",
+                "trusted-time-source",
+                "legal-nonrepudiation",
+                "guaranteed-station-delivery",
+                "station-to-station-protocol",
+                "plaintext-or-application-command-interpretation"
+              ]
+            }
+          }
+        ],
+        "publicMaterial": [],
+        "clock": {},
+        "state": {},
+        "transport": {},
+        "storage": {}
+      },
+      "input": {
+        "source": "{\"kind\":\"confirmation\",\"value\":{\"0\":\"base64:AQIDBAUGBwgJCgsMDQ4PEA==\",\"1\":1,\"2\":1,\"3\":[\"base64:AQIDBAUGBwgJCgsMDQ4PEA==\",\"base64:AQIDBAUGBwgJCgsMDQ4PEA==\"]}}"
+      },
+      "expected": {
+        "result": {
+          "canonical": "{\"kind\":\"confirmation\",\"value\":{\"0\":\"base64:AQIDBAUGBwgJCgsMDQ4PEA==\",\"1\":1,\"2\":1,\"3\":[\"base64:AQIDBAUGBwgJCgsMDQ4PEA==\",\"base64:AQIDBAUGBwgJCgsMDQ4PEA==\"]}}"
+        }
+      }
+    },
+    {
+      "$schema": "https://licoarc.com/spec/schemas/conformance-case.schema.json",
+      "caseVersion": "licoarc.conformance-case.v1",
+      "id": "confirmation-unsorted",
+      "target": {
+        "operationId": "licoarc.foundation.canonicalize-governance-json.v1"
+      },
+      "context": {
+        "sourceBindings": [
+          {
+            "sourcePath": "spec/v1/reliable/registry.json",
+            "sha256": "c601617bd02732c6a875a842e3110072a7c00454f6a619720ba0057010fb2b8f"
+          }
+        ],
+        "catalogs": [
+          {
+            "name": "reliable-registry",
+            "sourcePath": "spec/v1/reliable/registry.json",
+            "value": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "$id": "https://licoarc.com/spec/v1/reliable/registry.json",
+              "registryVersion": "licoarc.reliable-exchange.v1",
+              "wireId": "licoarc.reliable.v1",
+              "lifecycle": "Candidate",
+              "scope": "endpoint-protected-at-least-once-exchange-v1",
+              "sourcePaths": {
+                "bounds": "spec/v1/reliable/bounds.json",
+                "labels": "spec/v1/reliable/labels.json",
+                "intentSchema": "spec/v1/reliable/intent.schema.json",
+                "eventSchema": "spec/v1/reliable/event.schema.json",
+                "confirmationSchema": "spec/v1/reliable/confirmation.schema.json",
+                "stateSchema": "spec/v1/reliable/state.schema.json",
+                "runtime": "spec/v1/reliable/runtime.cddl",
+                "sourceManifest": "spec/v1/reliable/source-manifest.json",
+                "conformanceManifest": "conformance/v1/reliable/manifest.json"
+              },
+              "representation": {
+                "governance": "restricted-jcs-json",
+                "runtime": "deterministic-cbor",
+                "mapKeyEncoding": "compact-unsigned-integer",
+                "lengthEncoding": "definite",
+                "rawBytes": "bstr",
+                "tags": "forbidden",
+                "floats": "forbidden",
+                "indefiniteLengths": "forbidden",
+                "duplicateLabels": "reject",
+                "unknownCoreLabels": "reject",
+                "trailingBytes": "reject"
+              },
+              "stateAuthority": {
+                "endpoint": "logical-intent-deduplication-confirmation-and-effect-state",
+                "station": "opaque-carriage-and-untrusted-operation-hints-only",
+                "application": "effect-and-idempotency-result-only",
+                "scheduler": "caller-owned",
+                "storage": "caller-owned"
+              },
+              "delivery": {
+                "semantics": "at-least-once-when-a-conforming-path-is-available",
+                "sameRouteRetry": "same-protected-intent-and-exact-protected-bytes",
+                "routeChange": "may-reprotect-same-intent-without-reauthorizing-effect",
+                "restart": "restore-serializable-snapshot-before-processing-input",
+                "stationReceipt": "non-authoritative-hint",
+                "exactlyOnceEffects": "forbidden-claim",
+                "guaranteedStationDelivery": "forbidden-claim"
+              },
+              "closedStateTags": {
+                "outbox": [
+                  "created",
+                  "in-flight",
+                  "ambiguous",
+                  "accepted",
+                  "completed",
+                  "cancelled",
+                  "failed"
+                ],
+                "inbox": [
+                  "new",
+                  "accepted",
+                  "effect-pending",
+                  "completed",
+                  "cancelled",
+                  "failed"
+                ],
+                "attachment": [
+                  "pending",
+                  "complete",
+                  "cancelled",
+                  "failed"
+                ],
+                "aggregate": [
+                  "pending",
+                  "partial",
+                  "complete",
+                  "failed"
+                ]
+              },
+              "resourceAccounting": {
+                "intent": "MAX_PROTECTED_INTENT_BYTES-counts-the-complete-canonical-intent",
+                "event": "MAX_RELIABLE_EVENT_METADATA_BYTES-counts-event-CBOR-only-and-events-never-embed-packets",
+                "packet": "MAX_PROTECTED_PACKET_BYTES-counts-exact-retained-or-emitted-protected-octets",
+                "snapshotMetadata": "MAX_RELIABLE_SNAPSHOT_METADATA_BYTES-counts-the-complete-snapshot-CBOR-excluding-protected-packet-octets",
+                "snapshotTotal": "MAX_RELIABLE_SNAPSHOT_BYTES-equals-snapshot-metadata-plus-one-retained-protected-packet",
+                "histories": "forbidden-use-bounded-counters-high-water-values-and-tombstones"
+              },
+              "atomicity": {
+                "receive": "validate-and-authenticate-against-one-tentative-complete-snapshot-then-compare-and-commit-once",
+                "send": "commit-advanced-snapshot-and-exact-retry-packet-before-emission",
+                "retry": "reuse-exact-retained-packet-without-state-advance-except-bounded-transmission-accounting",
+                "restart": "restore-complete-monotonic-snapshot-and-retained-packet-before-processing-input",
+                "rollback": "lower-state-generation-is-terminal-state-rollback-with-no-emission-or-effect",
+                "failure": "every-error-returns-the-byte-identical-pre-state-and-no-packet-or-effect"
+              },
+              "confirmation": {
+                "identity": "one-confirmation-id-per-result",
+                "authentication": "exact-protected-authorized-sending-Endpoint-session",
+                "binding": "confirmation-id-message-ids-sender-session-stage-outcome-failure-and-result",
+                "stages": [
+                  "endpointAccepted",
+                  "effectCompleted"
+                ],
+                "outcomes": [
+                  "succeeded",
+                  "rejected",
+                  "failed"
+                ],
+                "pendingAndAmbiguous": "transport-or-local-state-only-never-an-endpoint-confirmation",
+                "grouping": "sorted-unique-message-ids-with-one-stage-outcome-and-failure",
+                "conflict": "same-confirmation-id-with-different-canonical-result-is-terminal",
+                "stationResults": "never-advance-endpoint-stage"
+              },
+              "attachment": {
+                "normalFeedback": "bounded-attachment-receive-state",
+                "routineChunkConfirmation": "forbidden",
+                "finality": "complete-authenticated-chunks-content-digest-and-exact-endpoint-confirmation",
+                "windowReset": "forbidden-on-retry-restart-session-renewal-route-change-station-migration-replay"
+              },
+              "group": {
+                "projectionIdentity": "stable-per-member-logical-message-projection",
+                "partialFailure": "per-member-terminal-or-pending-results",
+                "aggregate": "deterministic-recipient-order-and-absorbing-member-results"
+              },
+              "failurePolicy": {
+                "invalid": "reject-without-state-advance",
+                "ambiguous": "retain-intent-and-retry-without-new-authorization",
+                "terminal": "absorbing-until-tombstone-retention-ends",
+                "bounds": "typed-terminal-failure"
+              },
+              "outOfScope": [
+                "exactly-once-local-effects",
+                "retry-scheduling",
+                "database-or-storage-engine",
+                "trusted-time-source",
+                "legal-nonrepudiation",
+                "guaranteed-station-delivery",
+                "station-to-station-protocol",
+                "plaintext-or-application-command-interpretation"
+              ]
+            }
+          }
+        ],
+        "publicMaterial": [],
+        "clock": {},
+        "state": {},
+        "transport": {},
+        "storage": {}
+      },
+      "input": {
+        "source": "{\"kind\":\"confirmation\",\"value\":{\"0\":\"base64:AQIDBAUGBwgJCgsMDQ4PEA==\",\"1\":1,\"2\":1,\"3\":[\"base64:EhMUFQYHCAkKCwwNDg8QEQ==\",\"base64:AQIDBAUGBwgJCgsMDQ4PEA==\"]}}"
+      },
+      "expected": {
+        "result": {
+          "canonical": "{\"kind\":\"confirmation\",\"value\":{\"0\":\"base64:AQIDBAUGBwgJCgsMDQ4PEA==\",\"1\":1,\"2\":1,\"3\":[\"base64:EhMUFQYHCAkKCwwNDg8QEQ==\",\"base64:AQIDBAUGBwgJCgsMDQ4PEA==\"]}}"
+        }
+      }
+    },
+    {
+      "$schema": "https://licoarc.com/spec/schemas/conformance-case.schema.json",
+      "caseVersion": "licoarc.conformance-case.v1",
+      "id": "group-partial-results",
+      "target": {
+        "operationId": "licoarc.foundation.encode-deterministic-cbor.v1"
+      },
+      "context": {
+        "sourceBindings": [
+          {
+            "sourcePath": "spec/v1/reliable/registry.json",
+            "sha256": "c601617bd02732c6a875a842e3110072a7c00454f6a619720ba0057010fb2b8f"
+          }
+        ],
+        "catalogs": [
+          {
+            "name": "reliable-registry",
+            "sourcePath": "spec/v1/reliable/registry.json",
+            "value": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "$id": "https://licoarc.com/spec/v1/reliable/registry.json",
+              "registryVersion": "licoarc.reliable-exchange.v1",
+              "wireId": "licoarc.reliable.v1",
+              "lifecycle": "Candidate",
+              "scope": "endpoint-protected-at-least-once-exchange-v1",
+              "sourcePaths": {
+                "bounds": "spec/v1/reliable/bounds.json",
+                "labels": "spec/v1/reliable/labels.json",
+                "intentSchema": "spec/v1/reliable/intent.schema.json",
+                "eventSchema": "spec/v1/reliable/event.schema.json",
+                "confirmationSchema": "spec/v1/reliable/confirmation.schema.json",
+                "stateSchema": "spec/v1/reliable/state.schema.json",
+                "runtime": "spec/v1/reliable/runtime.cddl",
+                "sourceManifest": "spec/v1/reliable/source-manifest.json",
+                "conformanceManifest": "conformance/v1/reliable/manifest.json"
+              },
+              "representation": {
+                "governance": "restricted-jcs-json",
+                "runtime": "deterministic-cbor",
+                "mapKeyEncoding": "compact-unsigned-integer",
+                "lengthEncoding": "definite",
+                "rawBytes": "bstr",
+                "tags": "forbidden",
+                "floats": "forbidden",
+                "indefiniteLengths": "forbidden",
+                "duplicateLabels": "reject",
+                "unknownCoreLabels": "reject",
+                "trailingBytes": "reject"
+              },
+              "stateAuthority": {
+                "endpoint": "logical-intent-deduplication-confirmation-and-effect-state",
+                "station": "opaque-carriage-and-untrusted-operation-hints-only",
+                "application": "effect-and-idempotency-result-only",
+                "scheduler": "caller-owned",
+                "storage": "caller-owned"
+              },
+              "delivery": {
+                "semantics": "at-least-once-when-a-conforming-path-is-available",
+                "sameRouteRetry": "same-protected-intent-and-exact-protected-bytes",
+                "routeChange": "may-reprotect-same-intent-without-reauthorizing-effect",
+                "restart": "restore-serializable-snapshot-before-processing-input",
+                "stationReceipt": "non-authoritative-hint",
+                "exactlyOnceEffects": "forbidden-claim",
+                "guaranteedStationDelivery": "forbidden-claim"
+              },
+              "closedStateTags": {
+                "outbox": [
+                  "created",
+                  "in-flight",
+                  "ambiguous",
+                  "accepted",
+                  "completed",
+                  "cancelled",
+                  "failed"
+                ],
+                "inbox": [
+                  "new",
+                  "accepted",
+                  "effect-pending",
+                  "completed",
+                  "cancelled",
+                  "failed"
+                ],
+                "attachment": [
+                  "pending",
+                  "complete",
+                  "cancelled",
+                  "failed"
+                ],
+                "aggregate": [
+                  "pending",
+                  "partial",
+                  "complete",
+                  "failed"
+                ]
+              },
+              "resourceAccounting": {
+                "intent": "MAX_PROTECTED_INTENT_BYTES-counts-the-complete-canonical-intent",
+                "event": "MAX_RELIABLE_EVENT_METADATA_BYTES-counts-event-CBOR-only-and-events-never-embed-packets",
+                "packet": "MAX_PROTECTED_PACKET_BYTES-counts-exact-retained-or-emitted-protected-octets",
+                "snapshotMetadata": "MAX_RELIABLE_SNAPSHOT_METADATA_BYTES-counts-the-complete-snapshot-CBOR-excluding-protected-packet-octets",
+                "snapshotTotal": "MAX_RELIABLE_SNAPSHOT_BYTES-equals-snapshot-metadata-plus-one-retained-protected-packet",
+                "histories": "forbidden-use-bounded-counters-high-water-values-and-tombstones"
+              },
+              "atomicity": {
+                "receive": "validate-and-authenticate-against-one-tentative-complete-snapshot-then-compare-and-commit-once",
+                "send": "commit-advanced-snapshot-and-exact-retry-packet-before-emission",
+                "retry": "reuse-exact-retained-packet-without-state-advance-except-bounded-transmission-accounting",
+                "restart": "restore-complete-monotonic-snapshot-and-retained-packet-before-processing-input",
+                "rollback": "lower-state-generation-is-terminal-state-rollback-with-no-emission-or-effect",
+                "failure": "every-error-returns-the-byte-identical-pre-state-and-no-packet-or-effect"
+              },
+              "confirmation": {
+                "identity": "one-confirmation-id-per-result",
+                "authentication": "exact-protected-authorized-sending-Endpoint-session",
+                "binding": "confirmation-id-message-ids-sender-session-stage-outcome-failure-and-result",
+                "stages": [
+                  "endpointAccepted",
+                  "effectCompleted"
+                ],
+                "outcomes": [
+                  "succeeded",
+                  "rejected",
+                  "failed"
+                ],
+                "pendingAndAmbiguous": "transport-or-local-state-only-never-an-endpoint-confirmation",
+                "grouping": "sorted-unique-message-ids-with-one-stage-outcome-and-failure",
+                "conflict": "same-confirmation-id-with-different-canonical-result-is-terminal",
+                "stationResults": "never-advance-endpoint-stage"
+              },
+              "attachment": {
+                "normalFeedback": "bounded-attachment-receive-state",
+                "routineChunkConfirmation": "forbidden",
+                "finality": "complete-authenticated-chunks-content-digest-and-exact-endpoint-confirmation",
+                "windowReset": "forbidden-on-retry-restart-session-renewal-route-change-station-migration-replay"
+              },
+              "group": {
+                "projectionIdentity": "stable-per-member-logical-message-projection",
+                "partialFailure": "per-member-terminal-or-pending-results",
+                "aggregate": "deterministic-recipient-order-and-absorbing-member-results"
+              },
+              "failurePolicy": {
+                "invalid": "reject-without-state-advance",
+                "ambiguous": "retain-intent-and-retry-without-new-authorization",
+                "terminal": "absorbing-until-tombstone-retention-ends",
+                "bounds": "typed-terminal-failure"
+              },
+              "outOfScope": [
+                "exactly-once-local-effects",
+                "retry-scheduling",
+                "database-or-storage-engine",
+                "trusted-time-source",
+                "legal-nonrepudiation",
+                "guaranteed-station-delivery",
+                "station-to-station-protocol",
+                "plaintext-or-application-command-interpretation"
+              ]
+            }
+          }
+        ],
+        "publicMaterial": [],
+        "clock": {},
+        "state": {},
+        "transport": {},
+        "storage": {}
+      },
+      "input": {
+        "value": {
+          "0": 10,
+          "1": "base64:AQIDBAUGBwgJCgsMDQ4PEA==",
+          "2": "base64:ERERERERERERERERERERERERERERERERERERERERERE=",
+          "14": [
+            {
+              "0": "base64:AQIDBAUGBwgJCgsMDQ4PEA==",
+              "1": "base64:ZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmY=",
+              "2": 1,
+              "4": 0
+            },
+            {
+              "0": "base64:EhMUFQYHCAkKCwwNDg8QEQ==",
+              "1": "base64:dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnY=",
+              "2": 0,
+              "4": 1
+            }
+          ]
+        }
+      },
+      "expected": {
+        "result": {
+          "hex": "a4000a01500102030405060708090a0b0c0d0e0f1002582011111111111111111111111111111111111111111111111111111111111111110e82a400500102030405060708090a0b0c0d0e0f10015820666666666666666666666666666666666666666666666666666666666666666602010400a4005012131415060708090a0b0c0d0e0f1011015820767676767676767676767676767676767676767676767676767676767676767602000401"
+        }
+      }
+    },
+    {
+      "$schema": "https://licoarc.com/spec/schemas/conformance-case.schema.json",
+      "caseVersion": "licoarc.conformance-case.v1",
+      "id": "group-projection-conflict",
+      "target": {
+        "operationId": "licoarc.foundation.canonicalize-governance-json.v1"
+      },
+      "context": {
+        "sourceBindings": [
+          {
+            "sourcePath": "spec/v1/reliable/registry.json",
+            "sha256": "c601617bd02732c6a875a842e3110072a7c00454f6a619720ba0057010fb2b8f"
+          }
+        ],
+        "catalogs": [
+          {
+            "name": "reliable-registry",
+            "sourcePath": "spec/v1/reliable/registry.json",
+            "value": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "$id": "https://licoarc.com/spec/v1/reliable/registry.json",
+              "registryVersion": "licoarc.reliable-exchange.v1",
+              "wireId": "licoarc.reliable.v1",
+              "lifecycle": "Candidate",
+              "scope": "endpoint-protected-at-least-once-exchange-v1",
+              "sourcePaths": {
+                "bounds": "spec/v1/reliable/bounds.json",
+                "labels": "spec/v1/reliable/labels.json",
+                "intentSchema": "spec/v1/reliable/intent.schema.json",
+                "eventSchema": "spec/v1/reliable/event.schema.json",
+                "confirmationSchema": "spec/v1/reliable/confirmation.schema.json",
+                "stateSchema": "spec/v1/reliable/state.schema.json",
+                "runtime": "spec/v1/reliable/runtime.cddl",
+                "sourceManifest": "spec/v1/reliable/source-manifest.json",
+                "conformanceManifest": "conformance/v1/reliable/manifest.json"
+              },
+              "representation": {
+                "governance": "restricted-jcs-json",
+                "runtime": "deterministic-cbor",
+                "mapKeyEncoding": "compact-unsigned-integer",
+                "lengthEncoding": "definite",
+                "rawBytes": "bstr",
+                "tags": "forbidden",
+                "floats": "forbidden",
+                "indefiniteLengths": "forbidden",
+                "duplicateLabels": "reject",
+                "unknownCoreLabels": "reject",
+                "trailingBytes": "reject"
+              },
+              "stateAuthority": {
+                "endpoint": "logical-intent-deduplication-confirmation-and-effect-state",
+                "station": "opaque-carriage-and-untrusted-operation-hints-only",
+                "application": "effect-and-idempotency-result-only",
+                "scheduler": "caller-owned",
+                "storage": "caller-owned"
+              },
+              "delivery": {
+                "semantics": "at-least-once-when-a-conforming-path-is-available",
+                "sameRouteRetry": "same-protected-intent-and-exact-protected-bytes",
+                "routeChange": "may-reprotect-same-intent-without-reauthorizing-effect",
+                "restart": "restore-serializable-snapshot-before-processing-input",
+                "stationReceipt": "non-authoritative-hint",
+                "exactlyOnceEffects": "forbidden-claim",
+                "guaranteedStationDelivery": "forbidden-claim"
+              },
+              "closedStateTags": {
+                "outbox": [
+                  "created",
+                  "in-flight",
+                  "ambiguous",
+                  "accepted",
+                  "completed",
+                  "cancelled",
+                  "failed"
+                ],
+                "inbox": [
+                  "new",
+                  "accepted",
+                  "effect-pending",
+                  "completed",
+                  "cancelled",
+                  "failed"
+                ],
+                "attachment": [
+                  "pending",
+                  "complete",
+                  "cancelled",
+                  "failed"
+                ],
+                "aggregate": [
+                  "pending",
+                  "partial",
+                  "complete",
+                  "failed"
+                ]
+              },
+              "resourceAccounting": {
+                "intent": "MAX_PROTECTED_INTENT_BYTES-counts-the-complete-canonical-intent",
+                "event": "MAX_RELIABLE_EVENT_METADATA_BYTES-counts-event-CBOR-only-and-events-never-embed-packets",
+                "packet": "MAX_PROTECTED_PACKET_BYTES-counts-exact-retained-or-emitted-protected-octets",
+                "snapshotMetadata": "MAX_RELIABLE_SNAPSHOT_METADATA_BYTES-counts-the-complete-snapshot-CBOR-excluding-protected-packet-octets",
+                "snapshotTotal": "MAX_RELIABLE_SNAPSHOT_BYTES-equals-snapshot-metadata-plus-one-retained-protected-packet",
+                "histories": "forbidden-use-bounded-counters-high-water-values-and-tombstones"
+              },
+              "atomicity": {
+                "receive": "validate-and-authenticate-against-one-tentative-complete-snapshot-then-compare-and-commit-once",
+                "send": "commit-advanced-snapshot-and-exact-retry-packet-before-emission",
+                "retry": "reuse-exact-retained-packet-without-state-advance-except-bounded-transmission-accounting",
+                "restart": "restore-complete-monotonic-snapshot-and-retained-packet-before-processing-input",
+                "rollback": "lower-state-generation-is-terminal-state-rollback-with-no-emission-or-effect",
+                "failure": "every-error-returns-the-byte-identical-pre-state-and-no-packet-or-effect"
+              },
+              "confirmation": {
+                "identity": "one-confirmation-id-per-result",
+                "authentication": "exact-protected-authorized-sending-Endpoint-session",
+                "binding": "confirmation-id-message-ids-sender-session-stage-outcome-failure-and-result",
+                "stages": [
+                  "endpointAccepted",
+                  "effectCompleted"
+                ],
+                "outcomes": [
+                  "succeeded",
+                  "rejected",
+                  "failed"
+                ],
+                "pendingAndAmbiguous": "transport-or-local-state-only-never-an-endpoint-confirmation",
+                "grouping": "sorted-unique-message-ids-with-one-stage-outcome-and-failure",
+                "conflict": "same-confirmation-id-with-different-canonical-result-is-terminal",
+                "stationResults": "never-advance-endpoint-stage"
+              },
+              "attachment": {
+                "normalFeedback": "bounded-attachment-receive-state",
+                "routineChunkConfirmation": "forbidden",
+                "finality": "complete-authenticated-chunks-content-digest-and-exact-endpoint-confirmation",
+                "windowReset": "forbidden-on-retry-restart-session-renewal-route-change-station-migration-replay"
+              },
+              "group": {
+                "projectionIdentity": "stable-per-member-logical-message-projection",
+                "partialFailure": "per-member-terminal-or-pending-results",
+                "aggregate": "deterministic-recipient-order-and-absorbing-member-results"
+              },
+              "failurePolicy": {
+                "invalid": "reject-without-state-advance",
+                "ambiguous": "retain-intent-and-retry-without-new-authorization",
+                "terminal": "absorbing-until-tombstone-retention-ends",
+                "bounds": "typed-terminal-failure"
+              },
+              "outOfScope": [
+                "exactly-once-local-effects",
+                "retry-scheduling",
+                "database-or-storage-engine",
+                "trusted-time-source",
+                "legal-nonrepudiation",
+                "guaranteed-station-delivery",
+                "station-to-station-protocol",
+                "plaintext-or-application-command-interpretation"
+              ]
+            }
+          }
+        ],
+        "publicMaterial": [],
+        "clock": {},
+        "state": {},
+        "transport": {},
+        "storage": {}
+      },
+      "input": {
+        "source": "{\"kind\":\"transition\",\"value\":{\"projectionId\":\"0102030405060708090a0b0c0d0e0f10\",\"first\":\"delivered\",\"second\":\"failed\"}}"
+      },
+      "expected": {
+        "result": {
+          "canonical": "{\"kind\":\"transition\",\"value\":{\"first\":\"delivered\",\"projectionId\":\"0102030405060708090a0b0c0d0e0f10\",\"second\":\"failed\"}}"
+        }
+      }
+    },
+    {
+      "$schema": "https://licoarc.com/spec/schemas/conformance-case.schema.json",
+      "caseVersion": "licoarc.conformance-case.v1",
+      "id": "intent-create",
+      "target": {
+        "operationId": "licoarc.foundation.encode-deterministic-cbor.v1"
+      },
+      "context": {
+        "sourceBindings": [
+          {
+            "sourcePath": "spec/v1/reliable/registry.json",
+            "sha256": "c601617bd02732c6a875a842e3110072a7c00454f6a619720ba0057010fb2b8f"
+          }
+        ],
+        "catalogs": [
+          {
+            "name": "reliable-registry",
+            "sourcePath": "spec/v1/reliable/registry.json",
+            "value": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "$id": "https://licoarc.com/spec/v1/reliable/registry.json",
+              "registryVersion": "licoarc.reliable-exchange.v1",
+              "wireId": "licoarc.reliable.v1",
+              "lifecycle": "Candidate",
+              "scope": "endpoint-protected-at-least-once-exchange-v1",
+              "sourcePaths": {
+                "bounds": "spec/v1/reliable/bounds.json",
+                "labels": "spec/v1/reliable/labels.json",
+                "intentSchema": "spec/v1/reliable/intent.schema.json",
+                "eventSchema": "spec/v1/reliable/event.schema.json",
+                "confirmationSchema": "spec/v1/reliable/confirmation.schema.json",
+                "stateSchema": "spec/v1/reliable/state.schema.json",
+                "runtime": "spec/v1/reliable/runtime.cddl",
+                "sourceManifest": "spec/v1/reliable/source-manifest.json",
+                "conformanceManifest": "conformance/v1/reliable/manifest.json"
+              },
+              "representation": {
+                "governance": "restricted-jcs-json",
+                "runtime": "deterministic-cbor",
+                "mapKeyEncoding": "compact-unsigned-integer",
+                "lengthEncoding": "definite",
+                "rawBytes": "bstr",
+                "tags": "forbidden",
+                "floats": "forbidden",
+                "indefiniteLengths": "forbidden",
+                "duplicateLabels": "reject",
+                "unknownCoreLabels": "reject",
+                "trailingBytes": "reject"
+              },
+              "stateAuthority": {
+                "endpoint": "logical-intent-deduplication-confirmation-and-effect-state",
+                "station": "opaque-carriage-and-untrusted-operation-hints-only",
+                "application": "effect-and-idempotency-result-only",
+                "scheduler": "caller-owned",
+                "storage": "caller-owned"
+              },
+              "delivery": {
+                "semantics": "at-least-once-when-a-conforming-path-is-available",
+                "sameRouteRetry": "same-protected-intent-and-exact-protected-bytes",
+                "routeChange": "may-reprotect-same-intent-without-reauthorizing-effect",
+                "restart": "restore-serializable-snapshot-before-processing-input",
+                "stationReceipt": "non-authoritative-hint",
+                "exactlyOnceEffects": "forbidden-claim",
+                "guaranteedStationDelivery": "forbidden-claim"
+              },
+              "closedStateTags": {
+                "outbox": [
+                  "created",
+                  "in-flight",
+                  "ambiguous",
+                  "accepted",
+                  "completed",
+                  "cancelled",
+                  "failed"
+                ],
+                "inbox": [
+                  "new",
+                  "accepted",
+                  "effect-pending",
+                  "completed",
+                  "cancelled",
+                  "failed"
+                ],
+                "attachment": [
+                  "pending",
+                  "complete",
+                  "cancelled",
+                  "failed"
+                ],
+                "aggregate": [
+                  "pending",
+                  "partial",
+                  "complete",
+                  "failed"
+                ]
+              },
+              "resourceAccounting": {
+                "intent": "MAX_PROTECTED_INTENT_BYTES-counts-the-complete-canonical-intent",
+                "event": "MAX_RELIABLE_EVENT_METADATA_BYTES-counts-event-CBOR-only-and-events-never-embed-packets",
+                "packet": "MAX_PROTECTED_PACKET_BYTES-counts-exact-retained-or-emitted-protected-octets",
+                "snapshotMetadata": "MAX_RELIABLE_SNAPSHOT_METADATA_BYTES-counts-the-complete-snapshot-CBOR-excluding-protected-packet-octets",
+                "snapshotTotal": "MAX_RELIABLE_SNAPSHOT_BYTES-equals-snapshot-metadata-plus-one-retained-protected-packet",
+                "histories": "forbidden-use-bounded-counters-high-water-values-and-tombstones"
+              },
+              "atomicity": {
+                "receive": "validate-and-authenticate-against-one-tentative-complete-snapshot-then-compare-and-commit-once",
+                "send": "commit-advanced-snapshot-and-exact-retry-packet-before-emission",
+                "retry": "reuse-exact-retained-packet-without-state-advance-except-bounded-transmission-accounting",
+                "restart": "restore-complete-monotonic-snapshot-and-retained-packet-before-processing-input",
+                "rollback": "lower-state-generation-is-terminal-state-rollback-with-no-emission-or-effect",
+                "failure": "every-error-returns-the-byte-identical-pre-state-and-no-packet-or-effect"
+              },
+              "confirmation": {
+                "identity": "one-confirmation-id-per-result",
+                "authentication": "exact-protected-authorized-sending-Endpoint-session",
+                "binding": "confirmation-id-message-ids-sender-session-stage-outcome-failure-and-result",
+                "stages": [
+                  "endpointAccepted",
+                  "effectCompleted"
+                ],
+                "outcomes": [
+                  "succeeded",
+                  "rejected",
+                  "failed"
+                ],
+                "pendingAndAmbiguous": "transport-or-local-state-only-never-an-endpoint-confirmation",
+                "grouping": "sorted-unique-message-ids-with-one-stage-outcome-and-failure",
+                "conflict": "same-confirmation-id-with-different-canonical-result-is-terminal",
+                "stationResults": "never-advance-endpoint-stage"
+              },
+              "attachment": {
+                "normalFeedback": "bounded-attachment-receive-state",
+                "routineChunkConfirmation": "forbidden",
+                "finality": "complete-authenticated-chunks-content-digest-and-exact-endpoint-confirmation",
+                "windowReset": "forbidden-on-retry-restart-session-renewal-route-change-station-migration-replay"
+              },
+              "group": {
+                "projectionIdentity": "stable-per-member-logical-message-projection",
+                "partialFailure": "per-member-terminal-or-pending-results",
+                "aggregate": "deterministic-recipient-order-and-absorbing-member-results"
+              },
+              "failurePolicy": {
+                "invalid": "reject-without-state-advance",
+                "ambiguous": "retain-intent-and-retry-without-new-authorization",
+                "terminal": "absorbing-until-tombstone-retention-ends",
+                "bounds": "typed-terminal-failure"
+              },
+              "outOfScope": [
+                "exactly-once-local-effects",
+                "retry-scheduling",
+                "database-or-storage-engine",
+                "trusted-time-source",
+                "legal-nonrepudiation",
+                "guaranteed-station-delivery",
+                "station-to-station-protocol",
+                "plaintext-or-application-command-interpretation"
+              ]
+            }
+          }
+        ],
+        "publicMaterial": [],
+        "clock": {},
+        "state": {},
+        "transport": {},
+        "storage": {}
+      },
+      "input": {
+        "value": {
+          "0": "base64:AQIDBAUGBwgJCgsMDQ4PEA==",
+          "1": "base64:ERERERERERERERERERERERERERERERERERERERERERE=",
+          "2": "base64:aWRlbS0x",
+          "3": "base64:aGVsbG8=",
+          "4": 42,
+          "5": "base64:IiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiI="
+        }
+      },
+      "expected": {
+        "result": {
+          "hex": "a600500102030405060708090a0b0c0d0e0f10015820111111111111111111111111111111111111111111111111111111111111111102466964656d2d31034568656c6c6f04182a0558202222222222222222222222222222222222222222222222222222222222222222"
+        }
+      }
+    },
+    {
+      "$schema": "https://licoarc.com/spec/schemas/conformance-case.schema.json",
+      "caseVersion": "licoarc.conformance-case.v1",
+      "id": "restart-snapshot",
+      "target": {
+        "operationId": "licoarc.foundation.encode-deterministic-cbor.v1"
+      },
+      "context": {
+        "sourceBindings": [
+          {
+            "sourcePath": "spec/v1/reliable/registry.json",
+            "sha256": "c601617bd02732c6a875a842e3110072a7c00454f6a619720ba0057010fb2b8f"
+          }
+        ],
+        "catalogs": [
+          {
+            "name": "reliable-registry",
+            "sourcePath": "spec/v1/reliable/registry.json",
+            "value": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "$id": "https://licoarc.com/spec/v1/reliable/registry.json",
+              "registryVersion": "licoarc.reliable-exchange.v1",
+              "wireId": "licoarc.reliable.v1",
+              "lifecycle": "Candidate",
+              "scope": "endpoint-protected-at-least-once-exchange-v1",
+              "sourcePaths": {
+                "bounds": "spec/v1/reliable/bounds.json",
+                "labels": "spec/v1/reliable/labels.json",
+                "intentSchema": "spec/v1/reliable/intent.schema.json",
+                "eventSchema": "spec/v1/reliable/event.schema.json",
+                "confirmationSchema": "spec/v1/reliable/confirmation.schema.json",
+                "stateSchema": "spec/v1/reliable/state.schema.json",
+                "runtime": "spec/v1/reliable/runtime.cddl",
+                "sourceManifest": "spec/v1/reliable/source-manifest.json",
+                "conformanceManifest": "conformance/v1/reliable/manifest.json"
+              },
+              "representation": {
+                "governance": "restricted-jcs-json",
+                "runtime": "deterministic-cbor",
+                "mapKeyEncoding": "compact-unsigned-integer",
+                "lengthEncoding": "definite",
+                "rawBytes": "bstr",
+                "tags": "forbidden",
+                "floats": "forbidden",
+                "indefiniteLengths": "forbidden",
+                "duplicateLabels": "reject",
+                "unknownCoreLabels": "reject",
+                "trailingBytes": "reject"
+              },
+              "stateAuthority": {
+                "endpoint": "logical-intent-deduplication-confirmation-and-effect-state",
+                "station": "opaque-carriage-and-untrusted-operation-hints-only",
+                "application": "effect-and-idempotency-result-only",
+                "scheduler": "caller-owned",
+                "storage": "caller-owned"
+              },
+              "delivery": {
+                "semantics": "at-least-once-when-a-conforming-path-is-available",
+                "sameRouteRetry": "same-protected-intent-and-exact-protected-bytes",
+                "routeChange": "may-reprotect-same-intent-without-reauthorizing-effect",
+                "restart": "restore-serializable-snapshot-before-processing-input",
+                "stationReceipt": "non-authoritative-hint",
+                "exactlyOnceEffects": "forbidden-claim",
+                "guaranteedStationDelivery": "forbidden-claim"
+              },
+              "closedStateTags": {
+                "outbox": [
+                  "created",
+                  "in-flight",
+                  "ambiguous",
+                  "accepted",
+                  "completed",
+                  "cancelled",
+                  "failed"
+                ],
+                "inbox": [
+                  "new",
+                  "accepted",
+                  "effect-pending",
+                  "completed",
+                  "cancelled",
+                  "failed"
+                ],
+                "attachment": [
+                  "pending",
+                  "complete",
+                  "cancelled",
+                  "failed"
+                ],
+                "aggregate": [
+                  "pending",
+                  "partial",
+                  "complete",
+                  "failed"
+                ]
+              },
+              "resourceAccounting": {
+                "intent": "MAX_PROTECTED_INTENT_BYTES-counts-the-complete-canonical-intent",
+                "event": "MAX_RELIABLE_EVENT_METADATA_BYTES-counts-event-CBOR-only-and-events-never-embed-packets",
+                "packet": "MAX_PROTECTED_PACKET_BYTES-counts-exact-retained-or-emitted-protected-octets",
+                "snapshotMetadata": "MAX_RELIABLE_SNAPSHOT_METADATA_BYTES-counts-the-complete-snapshot-CBOR-excluding-protected-packet-octets",
+                "snapshotTotal": "MAX_RELIABLE_SNAPSHOT_BYTES-equals-snapshot-metadata-plus-one-retained-protected-packet",
+                "histories": "forbidden-use-bounded-counters-high-water-values-and-tombstones"
+              },
+              "atomicity": {
+                "receive": "validate-and-authenticate-against-one-tentative-complete-snapshot-then-compare-and-commit-once",
+                "send": "commit-advanced-snapshot-and-exact-retry-packet-before-emission",
+                "retry": "reuse-exact-retained-packet-without-state-advance-except-bounded-transmission-accounting",
+                "restart": "restore-complete-monotonic-snapshot-and-retained-packet-before-processing-input",
+                "rollback": "lower-state-generation-is-terminal-state-rollback-with-no-emission-or-effect",
+                "failure": "every-error-returns-the-byte-identical-pre-state-and-no-packet-or-effect"
+              },
+              "confirmation": {
+                "identity": "one-confirmation-id-per-result",
+                "authentication": "exact-protected-authorized-sending-Endpoint-session",
+                "binding": "confirmation-id-message-ids-sender-session-stage-outcome-failure-and-result",
+                "stages": [
+                  "endpointAccepted",
+                  "effectCompleted"
+                ],
+                "outcomes": [
+                  "succeeded",
+                  "rejected",
+                  "failed"
+                ],
+                "pendingAndAmbiguous": "transport-or-local-state-only-never-an-endpoint-confirmation",
+                "grouping": "sorted-unique-message-ids-with-one-stage-outcome-and-failure",
+                "conflict": "same-confirmation-id-with-different-canonical-result-is-terminal",
+                "stationResults": "never-advance-endpoint-stage"
+              },
+              "attachment": {
+                "normalFeedback": "bounded-attachment-receive-state",
+                "routineChunkConfirmation": "forbidden",
+                "finality": "complete-authenticated-chunks-content-digest-and-exact-endpoint-confirmation",
+                "windowReset": "forbidden-on-retry-restart-session-renewal-route-change-station-migration-replay"
+              },
+              "group": {
+                "projectionIdentity": "stable-per-member-logical-message-projection",
+                "partialFailure": "per-member-terminal-or-pending-results",
+                "aggregate": "deterministic-recipient-order-and-absorbing-member-results"
+              },
+              "failurePolicy": {
+                "invalid": "reject-without-state-advance",
+                "ambiguous": "retain-intent-and-retry-without-new-authorization",
+                "terminal": "absorbing-until-tombstone-retention-ends",
+                "bounds": "typed-terminal-failure"
+              },
+              "outOfScope": [
+                "exactly-once-local-effects",
+                "retry-scheduling",
+                "database-or-storage-engine",
+                "trusted-time-source",
+                "legal-nonrepudiation",
+                "guaranteed-station-delivery",
+                "station-to-station-protocol",
+                "plaintext-or-application-command-interpretation"
+              ]
+            }
+          }
+        ],
+        "publicMaterial": [],
+        "clock": {},
+        "state": {},
+        "transport": {},
+        "storage": {}
+      },
+      "input": {
+        "value": {
+          "0": 0,
+          "1": 1,
+          "2": "base64:AQIDBAUGBwgJCgsMDQ4PEA==",
+          "3": "base64:ERERERERERERERERERERERERERERERERERERERERERE=",
+          "4": "base64:aWRlbS0x",
+          "5": 1,
+          "6": "base64:MzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzM=",
+          "7": 2,
+          "8": 1,
+          "9": 7
+        }
+      },
+      "expected": {
+        "result": {
+          "hex": "aa0000010102500102030405060708090a0b0c0d0e0f10035820111111111111111111111111111111111111111111111111111111111111111104466964656d2d3105010658203333333333333333333333333333333333333333333333333333333333333333070208010907"
+        }
+      }
+    },
+    {
+      "$schema": "https://licoarc.com/spec/schemas/conformance-case.schema.json",
+      "caseVersion": "licoarc.conformance-case.v1",
+      "id": "retry-over-bound",
+      "target": {
+        "operationId": "licoarc.foundation.canonicalize-governance-json.v1"
+      },
+      "context": {
+        "sourceBindings": [
+          {
+            "sourcePath": "spec/v1/reliable/registry.json",
+            "sha256": "c601617bd02732c6a875a842e3110072a7c00454f6a619720ba0057010fb2b8f"
+          }
+        ],
+        "catalogs": [
+          {
+            "name": "reliable-registry",
+            "sourcePath": "spec/v1/reliable/registry.json",
+            "value": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "$id": "https://licoarc.com/spec/v1/reliable/registry.json",
+              "registryVersion": "licoarc.reliable-exchange.v1",
+              "wireId": "licoarc.reliable.v1",
+              "lifecycle": "Candidate",
+              "scope": "endpoint-protected-at-least-once-exchange-v1",
+              "sourcePaths": {
+                "bounds": "spec/v1/reliable/bounds.json",
+                "labels": "spec/v1/reliable/labels.json",
+                "intentSchema": "spec/v1/reliable/intent.schema.json",
+                "eventSchema": "spec/v1/reliable/event.schema.json",
+                "confirmationSchema": "spec/v1/reliable/confirmation.schema.json",
+                "stateSchema": "spec/v1/reliable/state.schema.json",
+                "runtime": "spec/v1/reliable/runtime.cddl",
+                "sourceManifest": "spec/v1/reliable/source-manifest.json",
+                "conformanceManifest": "conformance/v1/reliable/manifest.json"
+              },
+              "representation": {
+                "governance": "restricted-jcs-json",
+                "runtime": "deterministic-cbor",
+                "mapKeyEncoding": "compact-unsigned-integer",
+                "lengthEncoding": "definite",
+                "rawBytes": "bstr",
+                "tags": "forbidden",
+                "floats": "forbidden",
+                "indefiniteLengths": "forbidden",
+                "duplicateLabels": "reject",
+                "unknownCoreLabels": "reject",
+                "trailingBytes": "reject"
+              },
+              "stateAuthority": {
+                "endpoint": "logical-intent-deduplication-confirmation-and-effect-state",
+                "station": "opaque-carriage-and-untrusted-operation-hints-only",
+                "application": "effect-and-idempotency-result-only",
+                "scheduler": "caller-owned",
+                "storage": "caller-owned"
+              },
+              "delivery": {
+                "semantics": "at-least-once-when-a-conforming-path-is-available",
+                "sameRouteRetry": "same-protected-intent-and-exact-protected-bytes",
+                "routeChange": "may-reprotect-same-intent-without-reauthorizing-effect",
+                "restart": "restore-serializable-snapshot-before-processing-input",
+                "stationReceipt": "non-authoritative-hint",
+                "exactlyOnceEffects": "forbidden-claim",
+                "guaranteedStationDelivery": "forbidden-claim"
+              },
+              "closedStateTags": {
+                "outbox": [
+                  "created",
+                  "in-flight",
+                  "ambiguous",
+                  "accepted",
+                  "completed",
+                  "cancelled",
+                  "failed"
+                ],
+                "inbox": [
+                  "new",
+                  "accepted",
+                  "effect-pending",
+                  "completed",
+                  "cancelled",
+                  "failed"
+                ],
+                "attachment": [
+                  "pending",
+                  "complete",
+                  "cancelled",
+                  "failed"
+                ],
+                "aggregate": [
+                  "pending",
+                  "partial",
+                  "complete",
+                  "failed"
+                ]
+              },
+              "resourceAccounting": {
+                "intent": "MAX_PROTECTED_INTENT_BYTES-counts-the-complete-canonical-intent",
+                "event": "MAX_RELIABLE_EVENT_METADATA_BYTES-counts-event-CBOR-only-and-events-never-embed-packets",
+                "packet": "MAX_PROTECTED_PACKET_BYTES-counts-exact-retained-or-emitted-protected-octets",
+                "snapshotMetadata": "MAX_RELIABLE_SNAPSHOT_METADATA_BYTES-counts-the-complete-snapshot-CBOR-excluding-protected-packet-octets",
+                "snapshotTotal": "MAX_RELIABLE_SNAPSHOT_BYTES-equals-snapshot-metadata-plus-one-retained-protected-packet",
+                "histories": "forbidden-use-bounded-counters-high-water-values-and-tombstones"
+              },
+              "atomicity": {
+                "receive": "validate-and-authenticate-against-one-tentative-complete-snapshot-then-compare-and-commit-once",
+                "send": "commit-advanced-snapshot-and-exact-retry-packet-before-emission",
+                "retry": "reuse-exact-retained-packet-without-state-advance-except-bounded-transmission-accounting",
+                "restart": "restore-complete-monotonic-snapshot-and-retained-packet-before-processing-input",
+                "rollback": "lower-state-generation-is-terminal-state-rollback-with-no-emission-or-effect",
+                "failure": "every-error-returns-the-byte-identical-pre-state-and-no-packet-or-effect"
+              },
+              "confirmation": {
+                "identity": "one-confirmation-id-per-result",
+                "authentication": "exact-protected-authorized-sending-Endpoint-session",
+                "binding": "confirmation-id-message-ids-sender-session-stage-outcome-failure-and-result",
+                "stages": [
+                  "endpointAccepted",
+                  "effectCompleted"
+                ],
+                "outcomes": [
+                  "succeeded",
+                  "rejected",
+                  "failed"
+                ],
+                "pendingAndAmbiguous": "transport-or-local-state-only-never-an-endpoint-confirmation",
+                "grouping": "sorted-unique-message-ids-with-one-stage-outcome-and-failure",
+                "conflict": "same-confirmation-id-with-different-canonical-result-is-terminal",
+                "stationResults": "never-advance-endpoint-stage"
+              },
+              "attachment": {
+                "normalFeedback": "bounded-attachment-receive-state",
+                "routineChunkConfirmation": "forbidden",
+                "finality": "complete-authenticated-chunks-content-digest-and-exact-endpoint-confirmation",
+                "windowReset": "forbidden-on-retry-restart-session-renewal-route-change-station-migration-replay"
+              },
+              "group": {
+                "projectionIdentity": "stable-per-member-logical-message-projection",
+                "partialFailure": "per-member-terminal-or-pending-results",
+                "aggregate": "deterministic-recipient-order-and-absorbing-member-results"
+              },
+              "failurePolicy": {
+                "invalid": "reject-without-state-advance",
+                "ambiguous": "retain-intent-and-retry-without-new-authorization",
+                "terminal": "absorbing-until-tombstone-retention-ends",
+                "bounds": "typed-terminal-failure"
+              },
+              "outOfScope": [
+                "exactly-once-local-effects",
+                "retry-scheduling",
+                "database-or-storage-engine",
+                "trusted-time-source",
+                "legal-nonrepudiation",
+                "guaranteed-station-delivery",
+                "station-to-station-protocol",
+                "plaintext-or-application-command-interpretation"
+              ]
+            }
+          }
+        ],
+        "publicMaterial": [],
+        "clock": {},
+        "state": {},
+        "transport": {},
+        "storage": {}
+      },
+      "input": {
+        "source": "{\"kind\":\"transition\",\"value\":{\"retryTransmissions\":33}}"
+      },
+      "expected": {
+        "result": {
+          "canonical": "{\"kind\":\"transition\",\"value\":{\"retryTransmissions\":33}}"
+        }
+      }
+    },
+    {
+      "$schema": "https://licoarc.com/spec/schemas/conformance-case.schema.json",
+      "caseVersion": "licoarc.conformance-case.v1",
+      "id": "route-change-reprotect",
+      "target": {
+        "operationId": "licoarc.foundation.encode-deterministic-cbor.v1"
+      },
+      "context": {
+        "sourceBindings": [
+          {
+            "sourcePath": "spec/v1/reliable/registry.json",
+            "sha256": "c601617bd02732c6a875a842e3110072a7c00454f6a619720ba0057010fb2b8f"
+          }
+        ],
+        "catalogs": [
+          {
+            "name": "reliable-registry",
+            "sourcePath": "spec/v1/reliable/registry.json",
+            "value": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "$id": "https://licoarc.com/spec/v1/reliable/registry.json",
+              "registryVersion": "licoarc.reliable-exchange.v1",
+              "wireId": "licoarc.reliable.v1",
+              "lifecycle": "Candidate",
+              "scope": "endpoint-protected-at-least-once-exchange-v1",
+              "sourcePaths": {
+                "bounds": "spec/v1/reliable/bounds.json",
+                "labels": "spec/v1/reliable/labels.json",
+                "intentSchema": "spec/v1/reliable/intent.schema.json",
+                "eventSchema": "spec/v1/reliable/event.schema.json",
+                "confirmationSchema": "spec/v1/reliable/confirmation.schema.json",
+                "stateSchema": "spec/v1/reliable/state.schema.json",
+                "runtime": "spec/v1/reliable/runtime.cddl",
+                "sourceManifest": "spec/v1/reliable/source-manifest.json",
+                "conformanceManifest": "conformance/v1/reliable/manifest.json"
+              },
+              "representation": {
+                "governance": "restricted-jcs-json",
+                "runtime": "deterministic-cbor",
+                "mapKeyEncoding": "compact-unsigned-integer",
+                "lengthEncoding": "definite",
+                "rawBytes": "bstr",
+                "tags": "forbidden",
+                "floats": "forbidden",
+                "indefiniteLengths": "forbidden",
+                "duplicateLabels": "reject",
+                "unknownCoreLabels": "reject",
+                "trailingBytes": "reject"
+              },
+              "stateAuthority": {
+                "endpoint": "logical-intent-deduplication-confirmation-and-effect-state",
+                "station": "opaque-carriage-and-untrusted-operation-hints-only",
+                "application": "effect-and-idempotency-result-only",
+                "scheduler": "caller-owned",
+                "storage": "caller-owned"
+              },
+              "delivery": {
+                "semantics": "at-least-once-when-a-conforming-path-is-available",
+                "sameRouteRetry": "same-protected-intent-and-exact-protected-bytes",
+                "routeChange": "may-reprotect-same-intent-without-reauthorizing-effect",
+                "restart": "restore-serializable-snapshot-before-processing-input",
+                "stationReceipt": "non-authoritative-hint",
+                "exactlyOnceEffects": "forbidden-claim",
+                "guaranteedStationDelivery": "forbidden-claim"
+              },
+              "closedStateTags": {
+                "outbox": [
+                  "created",
+                  "in-flight",
+                  "ambiguous",
+                  "accepted",
+                  "completed",
+                  "cancelled",
+                  "failed"
+                ],
+                "inbox": [
+                  "new",
+                  "accepted",
+                  "effect-pending",
+                  "completed",
+                  "cancelled",
+                  "failed"
+                ],
+                "attachment": [
+                  "pending",
+                  "complete",
+                  "cancelled",
+                  "failed"
+                ],
+                "aggregate": [
+                  "pending",
+                  "partial",
+                  "complete",
+                  "failed"
+                ]
+              },
+              "resourceAccounting": {
+                "intent": "MAX_PROTECTED_INTENT_BYTES-counts-the-complete-canonical-intent",
+                "event": "MAX_RELIABLE_EVENT_METADATA_BYTES-counts-event-CBOR-only-and-events-never-embed-packets",
+                "packet": "MAX_PROTECTED_PACKET_BYTES-counts-exact-retained-or-emitted-protected-octets",
+                "snapshotMetadata": "MAX_RELIABLE_SNAPSHOT_METADATA_BYTES-counts-the-complete-snapshot-CBOR-excluding-protected-packet-octets",
+                "snapshotTotal": "MAX_RELIABLE_SNAPSHOT_BYTES-equals-snapshot-metadata-plus-one-retained-protected-packet",
+                "histories": "forbidden-use-bounded-counters-high-water-values-and-tombstones"
+              },
+              "atomicity": {
+                "receive": "validate-and-authenticate-against-one-tentative-complete-snapshot-then-compare-and-commit-once",
+                "send": "commit-advanced-snapshot-and-exact-retry-packet-before-emission",
+                "retry": "reuse-exact-retained-packet-without-state-advance-except-bounded-transmission-accounting",
+                "restart": "restore-complete-monotonic-snapshot-and-retained-packet-before-processing-input",
+                "rollback": "lower-state-generation-is-terminal-state-rollback-with-no-emission-or-effect",
+                "failure": "every-error-returns-the-byte-identical-pre-state-and-no-packet-or-effect"
+              },
+              "confirmation": {
+                "identity": "one-confirmation-id-per-result",
+                "authentication": "exact-protected-authorized-sending-Endpoint-session",
+                "binding": "confirmation-id-message-ids-sender-session-stage-outcome-failure-and-result",
+                "stages": [
+                  "endpointAccepted",
+                  "effectCompleted"
+                ],
+                "outcomes": [
+                  "succeeded",
+                  "rejected",
+                  "failed"
+                ],
+                "pendingAndAmbiguous": "transport-or-local-state-only-never-an-endpoint-confirmation",
+                "grouping": "sorted-unique-message-ids-with-one-stage-outcome-and-failure",
+                "conflict": "same-confirmation-id-with-different-canonical-result-is-terminal",
+                "stationResults": "never-advance-endpoint-stage"
+              },
+              "attachment": {
+                "normalFeedback": "bounded-attachment-receive-state",
+                "routineChunkConfirmation": "forbidden",
+                "finality": "complete-authenticated-chunks-content-digest-and-exact-endpoint-confirmation",
+                "windowReset": "forbidden-on-retry-restart-session-renewal-route-change-station-migration-replay"
+              },
+              "group": {
+                "projectionIdentity": "stable-per-member-logical-message-projection",
+                "partialFailure": "per-member-terminal-or-pending-results",
+                "aggregate": "deterministic-recipient-order-and-absorbing-member-results"
+              },
+              "failurePolicy": {
+                "invalid": "reject-without-state-advance",
+                "ambiguous": "retain-intent-and-retry-without-new-authorization",
+                "terminal": "absorbing-until-tombstone-retention-ends",
+                "bounds": "typed-terminal-failure"
+              },
+              "outOfScope": [
+                "exactly-once-local-effects",
+                "retry-scheduling",
+                "database-or-storage-engine",
+                "trusted-time-source",
+                "legal-nonrepudiation",
+                "guaranteed-station-delivery",
+                "station-to-station-protocol",
+                "plaintext-or-application-command-interpretation"
+              ]
+            }
+          }
+        ],
+        "publicMaterial": [],
+        "clock": {},
+        "state": {},
+        "transport": {},
+        "storage": {}
+      },
+      "input": {
+        "value": {
+          "0": 8,
+          "1": "base64:AQIDBAUGBwgJCgsMDQ4PEA==",
+          "2": "base64:ERERERERERERERERERERERERERERERERERERERERERE=",
+          "3": 1,
+          "4": "base64:3e4=",
+          "5": "base64:NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ="
+        }
+      },
+      "expected": {
+        "result": {
+          "hex": "a6000801500102030405060708090a0b0c0d0e0f10025820111111111111111111111111111111111111111111111111111111111111111103010442ddee0558203434343434343434343434343434343434343434343434343434343434343434"
+        }
+      }
+    },
+    {
+      "$schema": "https://licoarc.com/spec/schemas/conformance-case.schema.json",
+      "caseVersion": "licoarc.conformance-case.v1",
+      "id": "route-reset",
+      "target": {
+        "operationId": "licoarc.foundation.canonicalize-governance-json.v1"
+      },
+      "context": {
+        "sourceBindings": [
+          {
+            "sourcePath": "spec/v1/reliable/registry.json",
+            "sha256": "c601617bd02732c6a875a842e3110072a7c00454f6a619720ba0057010fb2b8f"
+          }
+        ],
+        "catalogs": [
+          {
+            "name": "reliable-registry",
+            "sourcePath": "spec/v1/reliable/registry.json",
+            "value": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "$id": "https://licoarc.com/spec/v1/reliable/registry.json",
+              "registryVersion": "licoarc.reliable-exchange.v1",
+              "wireId": "licoarc.reliable.v1",
+              "lifecycle": "Candidate",
+              "scope": "endpoint-protected-at-least-once-exchange-v1",
+              "sourcePaths": {
+                "bounds": "spec/v1/reliable/bounds.json",
+                "labels": "spec/v1/reliable/labels.json",
+                "intentSchema": "spec/v1/reliable/intent.schema.json",
+                "eventSchema": "spec/v1/reliable/event.schema.json",
+                "confirmationSchema": "spec/v1/reliable/confirmation.schema.json",
+                "stateSchema": "spec/v1/reliable/state.schema.json",
+                "runtime": "spec/v1/reliable/runtime.cddl",
+                "sourceManifest": "spec/v1/reliable/source-manifest.json",
+                "conformanceManifest": "conformance/v1/reliable/manifest.json"
+              },
+              "representation": {
+                "governance": "restricted-jcs-json",
+                "runtime": "deterministic-cbor",
+                "mapKeyEncoding": "compact-unsigned-integer",
+                "lengthEncoding": "definite",
+                "rawBytes": "bstr",
+                "tags": "forbidden",
+                "floats": "forbidden",
+                "indefiniteLengths": "forbidden",
+                "duplicateLabels": "reject",
+                "unknownCoreLabels": "reject",
+                "trailingBytes": "reject"
+              },
+              "stateAuthority": {
+                "endpoint": "logical-intent-deduplication-confirmation-and-effect-state",
+                "station": "opaque-carriage-and-untrusted-operation-hints-only",
+                "application": "effect-and-idempotency-result-only",
+                "scheduler": "caller-owned",
+                "storage": "caller-owned"
+              },
+              "delivery": {
+                "semantics": "at-least-once-when-a-conforming-path-is-available",
+                "sameRouteRetry": "same-protected-intent-and-exact-protected-bytes",
+                "routeChange": "may-reprotect-same-intent-without-reauthorizing-effect",
+                "restart": "restore-serializable-snapshot-before-processing-input",
+                "stationReceipt": "non-authoritative-hint",
+                "exactlyOnceEffects": "forbidden-claim",
+                "guaranteedStationDelivery": "forbidden-claim"
+              },
+              "closedStateTags": {
+                "outbox": [
+                  "created",
+                  "in-flight",
+                  "ambiguous",
+                  "accepted",
+                  "completed",
+                  "cancelled",
+                  "failed"
+                ],
+                "inbox": [
+                  "new",
+                  "accepted",
+                  "effect-pending",
+                  "completed",
+                  "cancelled",
+                  "failed"
+                ],
+                "attachment": [
+                  "pending",
+                  "complete",
+                  "cancelled",
+                  "failed"
+                ],
+                "aggregate": [
+                  "pending",
+                  "partial",
+                  "complete",
+                  "failed"
+                ]
+              },
+              "resourceAccounting": {
+                "intent": "MAX_PROTECTED_INTENT_BYTES-counts-the-complete-canonical-intent",
+                "event": "MAX_RELIABLE_EVENT_METADATA_BYTES-counts-event-CBOR-only-and-events-never-embed-packets",
+                "packet": "MAX_PROTECTED_PACKET_BYTES-counts-exact-retained-or-emitted-protected-octets",
+                "snapshotMetadata": "MAX_RELIABLE_SNAPSHOT_METADATA_BYTES-counts-the-complete-snapshot-CBOR-excluding-protected-packet-octets",
+                "snapshotTotal": "MAX_RELIABLE_SNAPSHOT_BYTES-equals-snapshot-metadata-plus-one-retained-protected-packet",
+                "histories": "forbidden-use-bounded-counters-high-water-values-and-tombstones"
+              },
+              "atomicity": {
+                "receive": "validate-and-authenticate-against-one-tentative-complete-snapshot-then-compare-and-commit-once",
+                "send": "commit-advanced-snapshot-and-exact-retry-packet-before-emission",
+                "retry": "reuse-exact-retained-packet-without-state-advance-except-bounded-transmission-accounting",
+                "restart": "restore-complete-monotonic-snapshot-and-retained-packet-before-processing-input",
+                "rollback": "lower-state-generation-is-terminal-state-rollback-with-no-emission-or-effect",
+                "failure": "every-error-returns-the-byte-identical-pre-state-and-no-packet-or-effect"
+              },
+              "confirmation": {
+                "identity": "one-confirmation-id-per-result",
+                "authentication": "exact-protected-authorized-sending-Endpoint-session",
+                "binding": "confirmation-id-message-ids-sender-session-stage-outcome-failure-and-result",
+                "stages": [
+                  "endpointAccepted",
+                  "effectCompleted"
+                ],
+                "outcomes": [
+                  "succeeded",
+                  "rejected",
+                  "failed"
+                ],
+                "pendingAndAmbiguous": "transport-or-local-state-only-never-an-endpoint-confirmation",
+                "grouping": "sorted-unique-message-ids-with-one-stage-outcome-and-failure",
+                "conflict": "same-confirmation-id-with-different-canonical-result-is-terminal",
+                "stationResults": "never-advance-endpoint-stage"
+              },
+              "attachment": {
+                "normalFeedback": "bounded-attachment-receive-state",
+                "routineChunkConfirmation": "forbidden",
+                "finality": "complete-authenticated-chunks-content-digest-and-exact-endpoint-confirmation",
+                "windowReset": "forbidden-on-retry-restart-session-renewal-route-change-station-migration-replay"
+              },
+              "group": {
+                "projectionIdentity": "stable-per-member-logical-message-projection",
+                "partialFailure": "per-member-terminal-or-pending-results",
+                "aggregate": "deterministic-recipient-order-and-absorbing-member-results"
+              },
+              "failurePolicy": {
+                "invalid": "reject-without-state-advance",
+                "ambiguous": "retain-intent-and-retry-without-new-authorization",
+                "terminal": "absorbing-until-tombstone-retention-ends",
+                "bounds": "typed-terminal-failure"
+              },
+              "outOfScope": [
+                "exactly-once-local-effects",
+                "retry-scheduling",
+                "database-or-storage-engine",
+                "trusted-time-source",
+                "legal-nonrepudiation",
+                "guaranteed-station-delivery",
+                "station-to-station-protocol",
+                "plaintext-or-application-command-interpretation"
+              ]
+            }
+          }
+        ],
+        "publicMaterial": [],
+        "clock": {},
+        "state": {},
+        "transport": {},
+        "storage": {}
+      },
+      "input": {
+        "source": "{\"kind\":\"transition\",\"value\":{\"routeEpoch\":0,\"previousRouteEpoch\":2,\"event\":\"route-change\"}}"
+      },
+      "expected": {
+        "result": {
+          "canonical": "{\"kind\":\"transition\",\"value\":{\"event\":\"route-change\",\"previousRouteEpoch\":2,\"routeEpoch\":0}}"
+        }
+      }
+    },
+    {
+      "$schema": "https://licoarc.com/spec/schemas/conformance-case.schema.json",
+      "caseVersion": "licoarc.conformance-case.v1",
+      "id": "same-id-different-intent",
+      "target": {
+        "operationId": "licoarc.foundation.canonicalize-governance-json.v1"
+      },
+      "context": {
+        "sourceBindings": [
+          {
+            "sourcePath": "spec/v1/reliable/registry.json",
+            "sha256": "c601617bd02732c6a875a842e3110072a7c00454f6a619720ba0057010fb2b8f"
+          }
+        ],
+        "catalogs": [
+          {
+            "name": "reliable-registry",
+            "sourcePath": "spec/v1/reliable/registry.json",
+            "value": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "$id": "https://licoarc.com/spec/v1/reliable/registry.json",
+              "registryVersion": "licoarc.reliable-exchange.v1",
+              "wireId": "licoarc.reliable.v1",
+              "lifecycle": "Candidate",
+              "scope": "endpoint-protected-at-least-once-exchange-v1",
+              "sourcePaths": {
+                "bounds": "spec/v1/reliable/bounds.json",
+                "labels": "spec/v1/reliable/labels.json",
+                "intentSchema": "spec/v1/reliable/intent.schema.json",
+                "eventSchema": "spec/v1/reliable/event.schema.json",
+                "confirmationSchema": "spec/v1/reliable/confirmation.schema.json",
+                "stateSchema": "spec/v1/reliable/state.schema.json",
+                "runtime": "spec/v1/reliable/runtime.cddl",
+                "sourceManifest": "spec/v1/reliable/source-manifest.json",
+                "conformanceManifest": "conformance/v1/reliable/manifest.json"
+              },
+              "representation": {
+                "governance": "restricted-jcs-json",
+                "runtime": "deterministic-cbor",
+                "mapKeyEncoding": "compact-unsigned-integer",
+                "lengthEncoding": "definite",
+                "rawBytes": "bstr",
+                "tags": "forbidden",
+                "floats": "forbidden",
+                "indefiniteLengths": "forbidden",
+                "duplicateLabels": "reject",
+                "unknownCoreLabels": "reject",
+                "trailingBytes": "reject"
+              },
+              "stateAuthority": {
+                "endpoint": "logical-intent-deduplication-confirmation-and-effect-state",
+                "station": "opaque-carriage-and-untrusted-operation-hints-only",
+                "application": "effect-and-idempotency-result-only",
+                "scheduler": "caller-owned",
+                "storage": "caller-owned"
+              },
+              "delivery": {
+                "semantics": "at-least-once-when-a-conforming-path-is-available",
+                "sameRouteRetry": "same-protected-intent-and-exact-protected-bytes",
+                "routeChange": "may-reprotect-same-intent-without-reauthorizing-effect",
+                "restart": "restore-serializable-snapshot-before-processing-input",
+                "stationReceipt": "non-authoritative-hint",
+                "exactlyOnceEffects": "forbidden-claim",
+                "guaranteedStationDelivery": "forbidden-claim"
+              },
+              "closedStateTags": {
+                "outbox": [
+                  "created",
+                  "in-flight",
+                  "ambiguous",
+                  "accepted",
+                  "completed",
+                  "cancelled",
+                  "failed"
+                ],
+                "inbox": [
+                  "new",
+                  "accepted",
+                  "effect-pending",
+                  "completed",
+                  "cancelled",
+                  "failed"
+                ],
+                "attachment": [
+                  "pending",
+                  "complete",
+                  "cancelled",
+                  "failed"
+                ],
+                "aggregate": [
+                  "pending",
+                  "partial",
+                  "complete",
+                  "failed"
+                ]
+              },
+              "resourceAccounting": {
+                "intent": "MAX_PROTECTED_INTENT_BYTES-counts-the-complete-canonical-intent",
+                "event": "MAX_RELIABLE_EVENT_METADATA_BYTES-counts-event-CBOR-only-and-events-never-embed-packets",
+                "packet": "MAX_PROTECTED_PACKET_BYTES-counts-exact-retained-or-emitted-protected-octets",
+                "snapshotMetadata": "MAX_RELIABLE_SNAPSHOT_METADATA_BYTES-counts-the-complete-snapshot-CBOR-excluding-protected-packet-octets",
+                "snapshotTotal": "MAX_RELIABLE_SNAPSHOT_BYTES-equals-snapshot-metadata-plus-one-retained-protected-packet",
+                "histories": "forbidden-use-bounded-counters-high-water-values-and-tombstones"
+              },
+              "atomicity": {
+                "receive": "validate-and-authenticate-against-one-tentative-complete-snapshot-then-compare-and-commit-once",
+                "send": "commit-advanced-snapshot-and-exact-retry-packet-before-emission",
+                "retry": "reuse-exact-retained-packet-without-state-advance-except-bounded-transmission-accounting",
+                "restart": "restore-complete-monotonic-snapshot-and-retained-packet-before-processing-input",
+                "rollback": "lower-state-generation-is-terminal-state-rollback-with-no-emission-or-effect",
+                "failure": "every-error-returns-the-byte-identical-pre-state-and-no-packet-or-effect"
+              },
+              "confirmation": {
+                "identity": "one-confirmation-id-per-result",
+                "authentication": "exact-protected-authorized-sending-Endpoint-session",
+                "binding": "confirmation-id-message-ids-sender-session-stage-outcome-failure-and-result",
+                "stages": [
+                  "endpointAccepted",
+                  "effectCompleted"
+                ],
+                "outcomes": [
+                  "succeeded",
+                  "rejected",
+                  "failed"
+                ],
+                "pendingAndAmbiguous": "transport-or-local-state-only-never-an-endpoint-confirmation",
+                "grouping": "sorted-unique-message-ids-with-one-stage-outcome-and-failure",
+                "conflict": "same-confirmation-id-with-different-canonical-result-is-terminal",
+                "stationResults": "never-advance-endpoint-stage"
+              },
+              "attachment": {
+                "normalFeedback": "bounded-attachment-receive-state",
+                "routineChunkConfirmation": "forbidden",
+                "finality": "complete-authenticated-chunks-content-digest-and-exact-endpoint-confirmation",
+                "windowReset": "forbidden-on-retry-restart-session-renewal-route-change-station-migration-replay"
+              },
+              "group": {
+                "projectionIdentity": "stable-per-member-logical-message-projection",
+                "partialFailure": "per-member-terminal-or-pending-results",
+                "aggregate": "deterministic-recipient-order-and-absorbing-member-results"
+              },
+              "failurePolicy": {
+                "invalid": "reject-without-state-advance",
+                "ambiguous": "retain-intent-and-retry-without-new-authorization",
+                "terminal": "absorbing-until-tombstone-retention-ends",
+                "bounds": "typed-terminal-failure"
+              },
+              "outOfScope": [
+                "exactly-once-local-effects",
+                "retry-scheduling",
+                "database-or-storage-engine",
+                "trusted-time-source",
+                "legal-nonrepudiation",
+                "guaranteed-station-delivery",
+                "station-to-station-protocol",
+                "plaintext-or-application-command-interpretation"
+              ]
+            }
+          }
+        ],
+        "publicMaterial": [],
+        "clock": {},
+        "state": {},
+        "transport": {},
+        "storage": {}
+      },
+      "input": {
+        "source": "{\"kind\":\"transition\",\"value\":{\"logicalMessageId\":\"0102030405060708090a0b0c0d0e0f10\",\"intentDigest\":\"2222222222222222222222222222222222222222222222222222222222222222\"}}"
+      },
+      "expected": {
+        "result": {
+          "canonical": "{\"kind\":\"transition\",\"value\":{\"intentDigest\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"logicalMessageId\":\"0102030405060708090a0b0c0d0e0f10\"}}"
+        }
+      }
+    },
+    {
+      "$schema": "https://licoarc.com/spec/schemas/conformance-case.schema.json",
+      "caseVersion": "licoarc.conformance-case.v1",
+      "id": "same-route-retry",
+      "target": {
+        "operationId": "licoarc.foundation.encode-deterministic-cbor.v1"
+      },
+      "context": {
+        "sourceBindings": [
+          {
+            "sourcePath": "spec/v1/reliable/registry.json",
+            "sha256": "c601617bd02732c6a875a842e3110072a7c00454f6a619720ba0057010fb2b8f"
+          }
+        ],
+        "catalogs": [
+          {
+            "name": "reliable-registry",
+            "sourcePath": "spec/v1/reliable/registry.json",
+            "value": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "$id": "https://licoarc.com/spec/v1/reliable/registry.json",
+              "registryVersion": "licoarc.reliable-exchange.v1",
+              "wireId": "licoarc.reliable.v1",
+              "lifecycle": "Candidate",
+              "scope": "endpoint-protected-at-least-once-exchange-v1",
+              "sourcePaths": {
+                "bounds": "spec/v1/reliable/bounds.json",
+                "labels": "spec/v1/reliable/labels.json",
+                "intentSchema": "spec/v1/reliable/intent.schema.json",
+                "eventSchema": "spec/v1/reliable/event.schema.json",
+                "confirmationSchema": "spec/v1/reliable/confirmation.schema.json",
+                "stateSchema": "spec/v1/reliable/state.schema.json",
+                "runtime": "spec/v1/reliable/runtime.cddl",
+                "sourceManifest": "spec/v1/reliable/source-manifest.json",
+                "conformanceManifest": "conformance/v1/reliable/manifest.json"
+              },
+              "representation": {
+                "governance": "restricted-jcs-json",
+                "runtime": "deterministic-cbor",
+                "mapKeyEncoding": "compact-unsigned-integer",
+                "lengthEncoding": "definite",
+                "rawBytes": "bstr",
+                "tags": "forbidden",
+                "floats": "forbidden",
+                "indefiniteLengths": "forbidden",
+                "duplicateLabels": "reject",
+                "unknownCoreLabels": "reject",
+                "trailingBytes": "reject"
+              },
+              "stateAuthority": {
+                "endpoint": "logical-intent-deduplication-confirmation-and-effect-state",
+                "station": "opaque-carriage-and-untrusted-operation-hints-only",
+                "application": "effect-and-idempotency-result-only",
+                "scheduler": "caller-owned",
+                "storage": "caller-owned"
+              },
+              "delivery": {
+                "semantics": "at-least-once-when-a-conforming-path-is-available",
+                "sameRouteRetry": "same-protected-intent-and-exact-protected-bytes",
+                "routeChange": "may-reprotect-same-intent-without-reauthorizing-effect",
+                "restart": "restore-serializable-snapshot-before-processing-input",
+                "stationReceipt": "non-authoritative-hint",
+                "exactlyOnceEffects": "forbidden-claim",
+                "guaranteedStationDelivery": "forbidden-claim"
+              },
+              "closedStateTags": {
+                "outbox": [
+                  "created",
+                  "in-flight",
+                  "ambiguous",
+                  "accepted",
+                  "completed",
+                  "cancelled",
+                  "failed"
+                ],
+                "inbox": [
+                  "new",
+                  "accepted",
+                  "effect-pending",
+                  "completed",
+                  "cancelled",
+                  "failed"
+                ],
+                "attachment": [
+                  "pending",
+                  "complete",
+                  "cancelled",
+                  "failed"
+                ],
+                "aggregate": [
+                  "pending",
+                  "partial",
+                  "complete",
+                  "failed"
+                ]
+              },
+              "resourceAccounting": {
+                "intent": "MAX_PROTECTED_INTENT_BYTES-counts-the-complete-canonical-intent",
+                "event": "MAX_RELIABLE_EVENT_METADATA_BYTES-counts-event-CBOR-only-and-events-never-embed-packets",
+                "packet": "MAX_PROTECTED_PACKET_BYTES-counts-exact-retained-or-emitted-protected-octets",
+                "snapshotMetadata": "MAX_RELIABLE_SNAPSHOT_METADATA_BYTES-counts-the-complete-snapshot-CBOR-excluding-protected-packet-octets",
+                "snapshotTotal": "MAX_RELIABLE_SNAPSHOT_BYTES-equals-snapshot-metadata-plus-one-retained-protected-packet",
+                "histories": "forbidden-use-bounded-counters-high-water-values-and-tombstones"
+              },
+              "atomicity": {
+                "receive": "validate-and-authenticate-against-one-tentative-complete-snapshot-then-compare-and-commit-once",
+                "send": "commit-advanced-snapshot-and-exact-retry-packet-before-emission",
+                "retry": "reuse-exact-retained-packet-without-state-advance-except-bounded-transmission-accounting",
+                "restart": "restore-complete-monotonic-snapshot-and-retained-packet-before-processing-input",
+                "rollback": "lower-state-generation-is-terminal-state-rollback-with-no-emission-or-effect",
+                "failure": "every-error-returns-the-byte-identical-pre-state-and-no-packet-or-effect"
+              },
+              "confirmation": {
+                "identity": "one-confirmation-id-per-result",
+                "authentication": "exact-protected-authorized-sending-Endpoint-session",
+                "binding": "confirmation-id-message-ids-sender-session-stage-outcome-failure-and-result",
+                "stages": [
+                  "endpointAccepted",
+                  "effectCompleted"
+                ],
+                "outcomes": [
+                  "succeeded",
+                  "rejected",
+                  "failed"
+                ],
+                "pendingAndAmbiguous": "transport-or-local-state-only-never-an-endpoint-confirmation",
+                "grouping": "sorted-unique-message-ids-with-one-stage-outcome-and-failure",
+                "conflict": "same-confirmation-id-with-different-canonical-result-is-terminal",
+                "stationResults": "never-advance-endpoint-stage"
+              },
+              "attachment": {
+                "normalFeedback": "bounded-attachment-receive-state",
+                "routineChunkConfirmation": "forbidden",
+                "finality": "complete-authenticated-chunks-content-digest-and-exact-endpoint-confirmation",
+                "windowReset": "forbidden-on-retry-restart-session-renewal-route-change-station-migration-replay"
+              },
+              "group": {
+                "projectionIdentity": "stable-per-member-logical-message-projection",
+                "partialFailure": "per-member-terminal-or-pending-results",
+                "aggregate": "deterministic-recipient-order-and-absorbing-member-results"
+              },
+              "failurePolicy": {
+                "invalid": "reject-without-state-advance",
+                "ambiguous": "retain-intent-and-retry-without-new-authorization",
+                "terminal": "absorbing-until-tombstone-retention-ends",
+                "bounds": "typed-terminal-failure"
+              },
+              "outOfScope": [
+                "exactly-once-local-effects",
+                "retry-scheduling",
+                "database-or-storage-engine",
+                "trusted-time-source",
+                "legal-nonrepudiation",
+                "guaranteed-station-delivery",
+                "station-to-station-protocol",
+                "plaintext-or-application-command-interpretation"
+              ]
+            }
+          }
+        ],
+        "publicMaterial": [],
+        "clock": {},
+        "state": {},
+        "transport": {},
+        "storage": {}
+      },
+      "input": {
+        "value": {
+          "0": 2,
+          "1": "base64:AQIDBAUGBwgJCgsMDQ4PEA==",
+          "2": "base64:ERERERERERERERERERERERERERERERERERERERERERE=",
+          "3": 0,
+          "4": "base64:qrs=",
+          "5": "base64:MzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzM="
+        }
+      },
+      "expected": {
+        "result": {
+          "hex": "a6000201500102030405060708090a0b0c0d0e0f10025820111111111111111111111111111111111111111111111111111111111111111103000442aabb0558203333333333333333333333333333333333333333333333333333333333333333"
+        }
+      }
+    },
+    {
+      "$schema": "https://licoarc.com/spec/schemas/conformance-case.schema.json",
+      "caseVersion": "licoarc.conformance-case.v1",
+      "id": "snapshot-over-bound",
+      "target": {
+        "operationId": "licoarc.foundation.canonicalize-governance-json.v1"
+      },
+      "context": {
+        "sourceBindings": [
+          {
+            "sourcePath": "spec/v1/reliable/registry.json",
+            "sha256": "c601617bd02732c6a875a842e3110072a7c00454f6a619720ba0057010fb2b8f"
+          }
+        ],
+        "catalogs": [
+          {
+            "name": "reliable-registry",
+            "sourcePath": "spec/v1/reliable/registry.json",
+            "value": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "$id": "https://licoarc.com/spec/v1/reliable/registry.json",
+              "registryVersion": "licoarc.reliable-exchange.v1",
+              "wireId": "licoarc.reliable.v1",
+              "lifecycle": "Candidate",
+              "scope": "endpoint-protected-at-least-once-exchange-v1",
+              "sourcePaths": {
+                "bounds": "spec/v1/reliable/bounds.json",
+                "labels": "spec/v1/reliable/labels.json",
+                "intentSchema": "spec/v1/reliable/intent.schema.json",
+                "eventSchema": "spec/v1/reliable/event.schema.json",
+                "confirmationSchema": "spec/v1/reliable/confirmation.schema.json",
+                "stateSchema": "spec/v1/reliable/state.schema.json",
+                "runtime": "spec/v1/reliable/runtime.cddl",
+                "sourceManifest": "spec/v1/reliable/source-manifest.json",
+                "conformanceManifest": "conformance/v1/reliable/manifest.json"
+              },
+              "representation": {
+                "governance": "restricted-jcs-json",
+                "runtime": "deterministic-cbor",
+                "mapKeyEncoding": "compact-unsigned-integer",
+                "lengthEncoding": "definite",
+                "rawBytes": "bstr",
+                "tags": "forbidden",
+                "floats": "forbidden",
+                "indefiniteLengths": "forbidden",
+                "duplicateLabels": "reject",
+                "unknownCoreLabels": "reject",
+                "trailingBytes": "reject"
+              },
+              "stateAuthority": {
+                "endpoint": "logical-intent-deduplication-confirmation-and-effect-state",
+                "station": "opaque-carriage-and-untrusted-operation-hints-only",
+                "application": "effect-and-idempotency-result-only",
+                "scheduler": "caller-owned",
+                "storage": "caller-owned"
+              },
+              "delivery": {
+                "semantics": "at-least-once-when-a-conforming-path-is-available",
+                "sameRouteRetry": "same-protected-intent-and-exact-protected-bytes",
+                "routeChange": "may-reprotect-same-intent-without-reauthorizing-effect",
+                "restart": "restore-serializable-snapshot-before-processing-input",
+                "stationReceipt": "non-authoritative-hint",
+                "exactlyOnceEffects": "forbidden-claim",
+                "guaranteedStationDelivery": "forbidden-claim"
+              },
+              "closedStateTags": {
+                "outbox": [
+                  "created",
+                  "in-flight",
+                  "ambiguous",
+                  "accepted",
+                  "completed",
+                  "cancelled",
+                  "failed"
+                ],
+                "inbox": [
+                  "new",
+                  "accepted",
+                  "effect-pending",
+                  "completed",
+                  "cancelled",
+                  "failed"
+                ],
+                "attachment": [
+                  "pending",
+                  "complete",
+                  "cancelled",
+                  "failed"
+                ],
+                "aggregate": [
+                  "pending",
+                  "partial",
+                  "complete",
+                  "failed"
+                ]
+              },
+              "resourceAccounting": {
+                "intent": "MAX_PROTECTED_INTENT_BYTES-counts-the-complete-canonical-intent",
+                "event": "MAX_RELIABLE_EVENT_METADATA_BYTES-counts-event-CBOR-only-and-events-never-embed-packets",
+                "packet": "MAX_PROTECTED_PACKET_BYTES-counts-exact-retained-or-emitted-protected-octets",
+                "snapshotMetadata": "MAX_RELIABLE_SNAPSHOT_METADATA_BYTES-counts-the-complete-snapshot-CBOR-excluding-protected-packet-octets",
+                "snapshotTotal": "MAX_RELIABLE_SNAPSHOT_BYTES-equals-snapshot-metadata-plus-one-retained-protected-packet",
+                "histories": "forbidden-use-bounded-counters-high-water-values-and-tombstones"
+              },
+              "atomicity": {
+                "receive": "validate-and-authenticate-against-one-tentative-complete-snapshot-then-compare-and-commit-once",
+                "send": "commit-advanced-snapshot-and-exact-retry-packet-before-emission",
+                "retry": "reuse-exact-retained-packet-without-state-advance-except-bounded-transmission-accounting",
+                "restart": "restore-complete-monotonic-snapshot-and-retained-packet-before-processing-input",
+                "rollback": "lower-state-generation-is-terminal-state-rollback-with-no-emission-or-effect",
+                "failure": "every-error-returns-the-byte-identical-pre-state-and-no-packet-or-effect"
+              },
+              "confirmation": {
+                "identity": "one-confirmation-id-per-result",
+                "authentication": "exact-protected-authorized-sending-Endpoint-session",
+                "binding": "confirmation-id-message-ids-sender-session-stage-outcome-failure-and-result",
+                "stages": [
+                  "endpointAccepted",
+                  "effectCompleted"
+                ],
+                "outcomes": [
+                  "succeeded",
+                  "rejected",
+                  "failed"
+                ],
+                "pendingAndAmbiguous": "transport-or-local-state-only-never-an-endpoint-confirmation",
+                "grouping": "sorted-unique-message-ids-with-one-stage-outcome-and-failure",
+                "conflict": "same-confirmation-id-with-different-canonical-result-is-terminal",
+                "stationResults": "never-advance-endpoint-stage"
+              },
+              "attachment": {
+                "normalFeedback": "bounded-attachment-receive-state",
+                "routineChunkConfirmation": "forbidden",
+                "finality": "complete-authenticated-chunks-content-digest-and-exact-endpoint-confirmation",
+                "windowReset": "forbidden-on-retry-restart-session-renewal-route-change-station-migration-replay"
+              },
+              "group": {
+                "projectionIdentity": "stable-per-member-logical-message-projection",
+                "partialFailure": "per-member-terminal-or-pending-results",
+                "aggregate": "deterministic-recipient-order-and-absorbing-member-results"
+              },
+              "failurePolicy": {
+                "invalid": "reject-without-state-advance",
+                "ambiguous": "retain-intent-and-retry-without-new-authorization",
+                "terminal": "absorbing-until-tombstone-retention-ends",
+                "bounds": "typed-terminal-failure"
+              },
+              "outOfScope": [
+                "exactly-once-local-effects",
+                "retry-scheduling",
+                "database-or-storage-engine",
+                "trusted-time-source",
+                "legal-nonrepudiation",
+                "guaranteed-station-delivery",
+                "station-to-station-protocol",
+                "plaintext-or-application-command-interpretation"
+              ]
+            }
+          }
+        ],
+        "publicMaterial": [],
+        "clock": {},
+        "state": {},
+        "transport": {},
+        "storage": {}
+      },
+      "input": {
+        "source": "{\"kind\":\"transition\",\"value\":{\"transitionCount\":257}}"
+      },
+      "expected": {
+        "result": {
+          "canonical": "{\"kind\":\"transition\",\"value\":{\"transitionCount\":257}}"
+        }
+      }
+    },
+    {
+      "$schema": "https://licoarc.com/spec/schemas/conformance-case.schema.json",
+      "caseVersion": "licoarc.conformance-case.v1",
+      "id": "sorted-confirmation",
+      "target": {
+        "operationId": "licoarc.foundation.encode-deterministic-cbor.v1"
+      },
+      "context": {
+        "sourceBindings": [
+          {
+            "sourcePath": "spec/v1/reliable/registry.json",
+            "sha256": "c601617bd02732c6a875a842e3110072a7c00454f6a619720ba0057010fb2b8f"
+          }
+        ],
+        "catalogs": [
+          {
+            "name": "reliable-registry",
+            "sourcePath": "spec/v1/reliable/registry.json",
+            "value": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "$id": "https://licoarc.com/spec/v1/reliable/registry.json",
+              "registryVersion": "licoarc.reliable-exchange.v1",
+              "wireId": "licoarc.reliable.v1",
+              "lifecycle": "Candidate",
+              "scope": "endpoint-protected-at-least-once-exchange-v1",
+              "sourcePaths": {
+                "bounds": "spec/v1/reliable/bounds.json",
+                "labels": "spec/v1/reliable/labels.json",
+                "intentSchema": "spec/v1/reliable/intent.schema.json",
+                "eventSchema": "spec/v1/reliable/event.schema.json",
+                "confirmationSchema": "spec/v1/reliable/confirmation.schema.json",
+                "stateSchema": "spec/v1/reliable/state.schema.json",
+                "runtime": "spec/v1/reliable/runtime.cddl",
+                "sourceManifest": "spec/v1/reliable/source-manifest.json",
+                "conformanceManifest": "conformance/v1/reliable/manifest.json"
+              },
+              "representation": {
+                "governance": "restricted-jcs-json",
+                "runtime": "deterministic-cbor",
+                "mapKeyEncoding": "compact-unsigned-integer",
+                "lengthEncoding": "definite",
+                "rawBytes": "bstr",
+                "tags": "forbidden",
+                "floats": "forbidden",
+                "indefiniteLengths": "forbidden",
+                "duplicateLabels": "reject",
+                "unknownCoreLabels": "reject",
+                "trailingBytes": "reject"
+              },
+              "stateAuthority": {
+                "endpoint": "logical-intent-deduplication-confirmation-and-effect-state",
+                "station": "opaque-carriage-and-untrusted-operation-hints-only",
+                "application": "effect-and-idempotency-result-only",
+                "scheduler": "caller-owned",
+                "storage": "caller-owned"
+              },
+              "delivery": {
+                "semantics": "at-least-once-when-a-conforming-path-is-available",
+                "sameRouteRetry": "same-protected-intent-and-exact-protected-bytes",
+                "routeChange": "may-reprotect-same-intent-without-reauthorizing-effect",
+                "restart": "restore-serializable-snapshot-before-processing-input",
+                "stationReceipt": "non-authoritative-hint",
+                "exactlyOnceEffects": "forbidden-claim",
+                "guaranteedStationDelivery": "forbidden-claim"
+              },
+              "closedStateTags": {
+                "outbox": [
+                  "created",
+                  "in-flight",
+                  "ambiguous",
+                  "accepted",
+                  "completed",
+                  "cancelled",
+                  "failed"
+                ],
+                "inbox": [
+                  "new",
+                  "accepted",
+                  "effect-pending",
+                  "completed",
+                  "cancelled",
+                  "failed"
+                ],
+                "attachment": [
+                  "pending",
+                  "complete",
+                  "cancelled",
+                  "failed"
+                ],
+                "aggregate": [
+                  "pending",
+                  "partial",
+                  "complete",
+                  "failed"
+                ]
+              },
+              "resourceAccounting": {
+                "intent": "MAX_PROTECTED_INTENT_BYTES-counts-the-complete-canonical-intent",
+                "event": "MAX_RELIABLE_EVENT_METADATA_BYTES-counts-event-CBOR-only-and-events-never-embed-packets",
+                "packet": "MAX_PROTECTED_PACKET_BYTES-counts-exact-retained-or-emitted-protected-octets",
+                "snapshotMetadata": "MAX_RELIABLE_SNAPSHOT_METADATA_BYTES-counts-the-complete-snapshot-CBOR-excluding-protected-packet-octets",
+                "snapshotTotal": "MAX_RELIABLE_SNAPSHOT_BYTES-equals-snapshot-metadata-plus-one-retained-protected-packet",
+                "histories": "forbidden-use-bounded-counters-high-water-values-and-tombstones"
+              },
+              "atomicity": {
+                "receive": "validate-and-authenticate-against-one-tentative-complete-snapshot-then-compare-and-commit-once",
+                "send": "commit-advanced-snapshot-and-exact-retry-packet-before-emission",
+                "retry": "reuse-exact-retained-packet-without-state-advance-except-bounded-transmission-accounting",
+                "restart": "restore-complete-monotonic-snapshot-and-retained-packet-before-processing-input",
+                "rollback": "lower-state-generation-is-terminal-state-rollback-with-no-emission-or-effect",
+                "failure": "every-error-returns-the-byte-identical-pre-state-and-no-packet-or-effect"
+              },
+              "confirmation": {
+                "identity": "one-confirmation-id-per-result",
+                "authentication": "exact-protected-authorized-sending-Endpoint-session",
+                "binding": "confirmation-id-message-ids-sender-session-stage-outcome-failure-and-result",
+                "stages": [
+                  "endpointAccepted",
+                  "effectCompleted"
+                ],
+                "outcomes": [
+                  "succeeded",
+                  "rejected",
+                  "failed"
+                ],
+                "pendingAndAmbiguous": "transport-or-local-state-only-never-an-endpoint-confirmation",
+                "grouping": "sorted-unique-message-ids-with-one-stage-outcome-and-failure",
+                "conflict": "same-confirmation-id-with-different-canonical-result-is-terminal",
+                "stationResults": "never-advance-endpoint-stage"
+              },
+              "attachment": {
+                "normalFeedback": "bounded-attachment-receive-state",
+                "routineChunkConfirmation": "forbidden",
+                "finality": "complete-authenticated-chunks-content-digest-and-exact-endpoint-confirmation",
+                "windowReset": "forbidden-on-retry-restart-session-renewal-route-change-station-migration-replay"
+              },
+              "group": {
+                "projectionIdentity": "stable-per-member-logical-message-projection",
+                "partialFailure": "per-member-terminal-or-pending-results",
+                "aggregate": "deterministic-recipient-order-and-absorbing-member-results"
+              },
+              "failurePolicy": {
+                "invalid": "reject-without-state-advance",
+                "ambiguous": "retain-intent-and-retry-without-new-authorization",
+                "terminal": "absorbing-until-tombstone-retention-ends",
+                "bounds": "typed-terminal-failure"
+              },
+              "outOfScope": [
+                "exactly-once-local-effects",
+                "retry-scheduling",
+                "database-or-storage-engine",
+                "trusted-time-source",
+                "legal-nonrepudiation",
+                "guaranteed-station-delivery",
+                "station-to-station-protocol",
+                "plaintext-or-application-command-interpretation"
+              ]
+            }
+          }
+        ],
+        "publicMaterial": [],
+        "clock": {},
+        "state": {},
+        "transport": {},
+        "storage": {}
+      },
+      "input": {
+        "value": {
+          "0": "base64:AQIDBAUGBwgJCgsMDQ4PEA==",
+          "1": 1,
+          "2": 1,
+          "3": [
+            "base64:AQIDBAUGBwgJCgsMDQ4PEA==",
+            "base64:EhMUFQYHCAkKCwwNDg8QEQ=="
+          ],
+          "5": "base64:VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVU="
+        }
+      },
+      "expected": {
+        "result": {
+          "hex": "a500500102030405060708090a0b0c0d0e0f10010102010382500102030405060708090a0b0c0d0e0f105012131415060708090a0b0c0d0e0f10110558205555555555555555555555555555555555555555555555555555555555555555"
+        }
+      }
+    },
+    {
+      "$schema": "https://licoarc.com/spec/schemas/conformance-case.schema.json",
+      "caseVersion": "licoarc.conformance-case.v1",
+      "id": "station-receipt-authority",
+      "target": {
+        "operationId": "licoarc.foundation.canonicalize-governance-json.v1"
+      },
+      "context": {
+        "sourceBindings": [
+          {
+            "sourcePath": "spec/v1/reliable/registry.json",
+            "sha256": "c601617bd02732c6a875a842e3110072a7c00454f6a619720ba0057010fb2b8f"
+          }
+        ],
+        "catalogs": [
+          {
+            "name": "reliable-registry",
+            "sourcePath": "spec/v1/reliable/registry.json",
+            "value": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "$id": "https://licoarc.com/spec/v1/reliable/registry.json",
+              "registryVersion": "licoarc.reliable-exchange.v1",
+              "wireId": "licoarc.reliable.v1",
+              "lifecycle": "Candidate",
+              "scope": "endpoint-protected-at-least-once-exchange-v1",
+              "sourcePaths": {
+                "bounds": "spec/v1/reliable/bounds.json",
+                "labels": "spec/v1/reliable/labels.json",
+                "intentSchema": "spec/v1/reliable/intent.schema.json",
+                "eventSchema": "spec/v1/reliable/event.schema.json",
+                "confirmationSchema": "spec/v1/reliable/confirmation.schema.json",
+                "stateSchema": "spec/v1/reliable/state.schema.json",
+                "runtime": "spec/v1/reliable/runtime.cddl",
+                "sourceManifest": "spec/v1/reliable/source-manifest.json",
+                "conformanceManifest": "conformance/v1/reliable/manifest.json"
+              },
+              "representation": {
+                "governance": "restricted-jcs-json",
+                "runtime": "deterministic-cbor",
+                "mapKeyEncoding": "compact-unsigned-integer",
+                "lengthEncoding": "definite",
+                "rawBytes": "bstr",
+                "tags": "forbidden",
+                "floats": "forbidden",
+                "indefiniteLengths": "forbidden",
+                "duplicateLabels": "reject",
+                "unknownCoreLabels": "reject",
+                "trailingBytes": "reject"
+              },
+              "stateAuthority": {
+                "endpoint": "logical-intent-deduplication-confirmation-and-effect-state",
+                "station": "opaque-carriage-and-untrusted-operation-hints-only",
+                "application": "effect-and-idempotency-result-only",
+                "scheduler": "caller-owned",
+                "storage": "caller-owned"
+              },
+              "delivery": {
+                "semantics": "at-least-once-when-a-conforming-path-is-available",
+                "sameRouteRetry": "same-protected-intent-and-exact-protected-bytes",
+                "routeChange": "may-reprotect-same-intent-without-reauthorizing-effect",
+                "restart": "restore-serializable-snapshot-before-processing-input",
+                "stationReceipt": "non-authoritative-hint",
+                "exactlyOnceEffects": "forbidden-claim",
+                "guaranteedStationDelivery": "forbidden-claim"
+              },
+              "closedStateTags": {
+                "outbox": [
+                  "created",
+                  "in-flight",
+                  "ambiguous",
+                  "accepted",
+                  "completed",
+                  "cancelled",
+                  "failed"
+                ],
+                "inbox": [
+                  "new",
+                  "accepted",
+                  "effect-pending",
+                  "completed",
+                  "cancelled",
+                  "failed"
+                ],
+                "attachment": [
+                  "pending",
+                  "complete",
+                  "cancelled",
+                  "failed"
+                ],
+                "aggregate": [
+                  "pending",
+                  "partial",
+                  "complete",
+                  "failed"
+                ]
+              },
+              "resourceAccounting": {
+                "intent": "MAX_PROTECTED_INTENT_BYTES-counts-the-complete-canonical-intent",
+                "event": "MAX_RELIABLE_EVENT_METADATA_BYTES-counts-event-CBOR-only-and-events-never-embed-packets",
+                "packet": "MAX_PROTECTED_PACKET_BYTES-counts-exact-retained-or-emitted-protected-octets",
+                "snapshotMetadata": "MAX_RELIABLE_SNAPSHOT_METADATA_BYTES-counts-the-complete-snapshot-CBOR-excluding-protected-packet-octets",
+                "snapshotTotal": "MAX_RELIABLE_SNAPSHOT_BYTES-equals-snapshot-metadata-plus-one-retained-protected-packet",
+                "histories": "forbidden-use-bounded-counters-high-water-values-and-tombstones"
+              },
+              "atomicity": {
+                "receive": "validate-and-authenticate-against-one-tentative-complete-snapshot-then-compare-and-commit-once",
+                "send": "commit-advanced-snapshot-and-exact-retry-packet-before-emission",
+                "retry": "reuse-exact-retained-packet-without-state-advance-except-bounded-transmission-accounting",
+                "restart": "restore-complete-monotonic-snapshot-and-retained-packet-before-processing-input",
+                "rollback": "lower-state-generation-is-terminal-state-rollback-with-no-emission-or-effect",
+                "failure": "every-error-returns-the-byte-identical-pre-state-and-no-packet-or-effect"
+              },
+              "confirmation": {
+                "identity": "one-confirmation-id-per-result",
+                "authentication": "exact-protected-authorized-sending-Endpoint-session",
+                "binding": "confirmation-id-message-ids-sender-session-stage-outcome-failure-and-result",
+                "stages": [
+                  "endpointAccepted",
+                  "effectCompleted"
+                ],
+                "outcomes": [
+                  "succeeded",
+                  "rejected",
+                  "failed"
+                ],
+                "pendingAndAmbiguous": "transport-or-local-state-only-never-an-endpoint-confirmation",
+                "grouping": "sorted-unique-message-ids-with-one-stage-outcome-and-failure",
+                "conflict": "same-confirmation-id-with-different-canonical-result-is-terminal",
+                "stationResults": "never-advance-endpoint-stage"
+              },
+              "attachment": {
+                "normalFeedback": "bounded-attachment-receive-state",
+                "routineChunkConfirmation": "forbidden",
+                "finality": "complete-authenticated-chunks-content-digest-and-exact-endpoint-confirmation",
+                "windowReset": "forbidden-on-retry-restart-session-renewal-route-change-station-migration-replay"
+              },
+              "group": {
+                "projectionIdentity": "stable-per-member-logical-message-projection",
+                "partialFailure": "per-member-terminal-or-pending-results",
+                "aggregate": "deterministic-recipient-order-and-absorbing-member-results"
+              },
+              "failurePolicy": {
+                "invalid": "reject-without-state-advance",
+                "ambiguous": "retain-intent-and-retry-without-new-authorization",
+                "terminal": "absorbing-until-tombstone-retention-ends",
+                "bounds": "typed-terminal-failure"
+              },
+              "outOfScope": [
+                "exactly-once-local-effects",
+                "retry-scheduling",
+                "database-or-storage-engine",
+                "trusted-time-source",
+                "legal-nonrepudiation",
+                "guaranteed-station-delivery",
+                "station-to-station-protocol",
+                "plaintext-or-application-command-interpretation"
+              ]
+            }
+          }
+        ],
+        "publicMaterial": [],
+        "clock": {},
+        "state": {},
+        "transport": {},
+        "storage": {}
+      },
+      "input": {
+        "source": "{\"kind\":\"transition\",\"value\":{\"eventKind\":\"stationHint\",\"stageAdvance\":\"accepted\"}}"
+      },
+      "expected": {
+        "result": {
+          "canonical": "{\"kind\":\"transition\",\"value\":{\"eventKind\":\"stationHint\",\"stageAdvance\":\"accepted\"}}"
+        }
+      }
+    },
+    {
+      "$schema": "https://licoarc.com/spec/schemas/conformance-case.schema.json",
+      "caseVersion": "licoarc.conformance-case.v1",
+      "id": "terminal-reopen",
+      "target": {
+        "operationId": "licoarc.foundation.canonicalize-governance-json.v1"
+      },
+      "context": {
+        "sourceBindings": [
+          {
+            "sourcePath": "spec/v1/reliable/registry.json",
+            "sha256": "c601617bd02732c6a875a842e3110072a7c00454f6a619720ba0057010fb2b8f"
+          }
+        ],
+        "catalogs": [
+          {
+            "name": "reliable-registry",
+            "sourcePath": "spec/v1/reliable/registry.json",
+            "value": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "$id": "https://licoarc.com/spec/v1/reliable/registry.json",
+              "registryVersion": "licoarc.reliable-exchange.v1",
+              "wireId": "licoarc.reliable.v1",
+              "lifecycle": "Candidate",
+              "scope": "endpoint-protected-at-least-once-exchange-v1",
+              "sourcePaths": {
+                "bounds": "spec/v1/reliable/bounds.json",
+                "labels": "spec/v1/reliable/labels.json",
+                "intentSchema": "spec/v1/reliable/intent.schema.json",
+                "eventSchema": "spec/v1/reliable/event.schema.json",
+                "confirmationSchema": "spec/v1/reliable/confirmation.schema.json",
+                "stateSchema": "spec/v1/reliable/state.schema.json",
+                "runtime": "spec/v1/reliable/runtime.cddl",
+                "sourceManifest": "spec/v1/reliable/source-manifest.json",
+                "conformanceManifest": "conformance/v1/reliable/manifest.json"
+              },
+              "representation": {
+                "governance": "restricted-jcs-json",
+                "runtime": "deterministic-cbor",
+                "mapKeyEncoding": "compact-unsigned-integer",
+                "lengthEncoding": "definite",
+                "rawBytes": "bstr",
+                "tags": "forbidden",
+                "floats": "forbidden",
+                "indefiniteLengths": "forbidden",
+                "duplicateLabels": "reject",
+                "unknownCoreLabels": "reject",
+                "trailingBytes": "reject"
+              },
+              "stateAuthority": {
+                "endpoint": "logical-intent-deduplication-confirmation-and-effect-state",
+                "station": "opaque-carriage-and-untrusted-operation-hints-only",
+                "application": "effect-and-idempotency-result-only",
+                "scheduler": "caller-owned",
+                "storage": "caller-owned"
+              },
+              "delivery": {
+                "semantics": "at-least-once-when-a-conforming-path-is-available",
+                "sameRouteRetry": "same-protected-intent-and-exact-protected-bytes",
+                "routeChange": "may-reprotect-same-intent-without-reauthorizing-effect",
+                "restart": "restore-serializable-snapshot-before-processing-input",
+                "stationReceipt": "non-authoritative-hint",
+                "exactlyOnceEffects": "forbidden-claim",
+                "guaranteedStationDelivery": "forbidden-claim"
+              },
+              "closedStateTags": {
+                "outbox": [
+                  "created",
+                  "in-flight",
+                  "ambiguous",
+                  "accepted",
+                  "completed",
+                  "cancelled",
+                  "failed"
+                ],
+                "inbox": [
+                  "new",
+                  "accepted",
+                  "effect-pending",
+                  "completed",
+                  "cancelled",
+                  "failed"
+                ],
+                "attachment": [
+                  "pending",
+                  "complete",
+                  "cancelled",
+                  "failed"
+                ],
+                "aggregate": [
+                  "pending",
+                  "partial",
+                  "complete",
+                  "failed"
+                ]
+              },
+              "resourceAccounting": {
+                "intent": "MAX_PROTECTED_INTENT_BYTES-counts-the-complete-canonical-intent",
+                "event": "MAX_RELIABLE_EVENT_METADATA_BYTES-counts-event-CBOR-only-and-events-never-embed-packets",
+                "packet": "MAX_PROTECTED_PACKET_BYTES-counts-exact-retained-or-emitted-protected-octets",
+                "snapshotMetadata": "MAX_RELIABLE_SNAPSHOT_METADATA_BYTES-counts-the-complete-snapshot-CBOR-excluding-protected-packet-octets",
+                "snapshotTotal": "MAX_RELIABLE_SNAPSHOT_BYTES-equals-snapshot-metadata-plus-one-retained-protected-packet",
+                "histories": "forbidden-use-bounded-counters-high-water-values-and-tombstones"
+              },
+              "atomicity": {
+                "receive": "validate-and-authenticate-against-one-tentative-complete-snapshot-then-compare-and-commit-once",
+                "send": "commit-advanced-snapshot-and-exact-retry-packet-before-emission",
+                "retry": "reuse-exact-retained-packet-without-state-advance-except-bounded-transmission-accounting",
+                "restart": "restore-complete-monotonic-snapshot-and-retained-packet-before-processing-input",
+                "rollback": "lower-state-generation-is-terminal-state-rollback-with-no-emission-or-effect",
+                "failure": "every-error-returns-the-byte-identical-pre-state-and-no-packet-or-effect"
+              },
+              "confirmation": {
+                "identity": "one-confirmation-id-per-result",
+                "authentication": "exact-protected-authorized-sending-Endpoint-session",
+                "binding": "confirmation-id-message-ids-sender-session-stage-outcome-failure-and-result",
+                "stages": [
+                  "endpointAccepted",
+                  "effectCompleted"
+                ],
+                "outcomes": [
+                  "succeeded",
+                  "rejected",
+                  "failed"
+                ],
+                "pendingAndAmbiguous": "transport-or-local-state-only-never-an-endpoint-confirmation",
+                "grouping": "sorted-unique-message-ids-with-one-stage-outcome-and-failure",
+                "conflict": "same-confirmation-id-with-different-canonical-result-is-terminal",
+                "stationResults": "never-advance-endpoint-stage"
+              },
+              "attachment": {
+                "normalFeedback": "bounded-attachment-receive-state",
+                "routineChunkConfirmation": "forbidden",
+                "finality": "complete-authenticated-chunks-content-digest-and-exact-endpoint-confirmation",
+                "windowReset": "forbidden-on-retry-restart-session-renewal-route-change-station-migration-replay"
+              },
+              "group": {
+                "projectionIdentity": "stable-per-member-logical-message-projection",
+                "partialFailure": "per-member-terminal-or-pending-results",
+                "aggregate": "deterministic-recipient-order-and-absorbing-member-results"
+              },
+              "failurePolicy": {
+                "invalid": "reject-without-state-advance",
+                "ambiguous": "retain-intent-and-retry-without-new-authorization",
+                "terminal": "absorbing-until-tombstone-retention-ends",
+                "bounds": "typed-terminal-failure"
+              },
+              "outOfScope": [
+                "exactly-once-local-effects",
+                "retry-scheduling",
+                "database-or-storage-engine",
+                "trusted-time-source",
+                "legal-nonrepudiation",
+                "guaranteed-station-delivery",
+                "station-to-station-protocol",
+                "plaintext-or-application-command-interpretation"
+              ]
+            }
+          }
+        ],
+        "publicMaterial": [],
+        "clock": {},
+        "state": {},
+        "transport": {},
+        "storage": {}
+      },
+      "input": {
+        "source": "{\"kind\":\"transition\",\"value\":{\"stateTag\":\"failed\",\"eventKind\":\"endpointAccepted\"}}"
+      },
+      "expected": {
+        "result": {
+          "canonical": "{\"kind\":\"transition\",\"value\":{\"eventKind\":\"endpointAccepted\",\"stateTag\":\"failed\"}}"
+        }
+      }
+    },
+    {
+      "$schema": "https://licoarc.com/spec/schemas/conformance-case.schema.json",
+      "caseVersion": "licoarc.conformance-case.v1",
+      "id": "reliable.wire-noncanonical-integer",
+      "target": {
+        "operationId": "licoarc.foundation.decode-deterministic-cbor.v1"
+      },
+      "context": {
+        "sourceBindings": [
+          {
+            "sourcePath": "spec/v1/reliable/registry.json",
+            "sha256": "c601617bd02732c6a875a842e3110072a7c00454f6a619720ba0057010fb2b8f"
+          }
+        ],
+        "catalogs": [
+          {
+            "name": "reliable-registry",
+            "sourcePath": "spec/v1/reliable/registry.json",
+            "value": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "$id": "https://licoarc.com/spec/v1/reliable/registry.json",
+              "registryVersion": "licoarc.reliable-exchange.v1",
+              "wireId": "licoarc.reliable.v1",
+              "lifecycle": "Candidate",
+              "scope": "endpoint-protected-at-least-once-exchange-v1",
+              "sourcePaths": {
+                "bounds": "spec/v1/reliable/bounds.json",
+                "labels": "spec/v1/reliable/labels.json",
+                "intentSchema": "spec/v1/reliable/intent.schema.json",
+                "eventSchema": "spec/v1/reliable/event.schema.json",
+                "confirmationSchema": "spec/v1/reliable/confirmation.schema.json",
+                "stateSchema": "spec/v1/reliable/state.schema.json",
+                "runtime": "spec/v1/reliable/runtime.cddl",
+                "sourceManifest": "spec/v1/reliable/source-manifest.json",
+                "conformanceManifest": "conformance/v1/reliable/manifest.json"
+              },
+              "representation": {
+                "governance": "restricted-jcs-json",
+                "runtime": "deterministic-cbor",
+                "mapKeyEncoding": "compact-unsigned-integer",
+                "lengthEncoding": "definite",
+                "rawBytes": "bstr",
+                "tags": "forbidden",
+                "floats": "forbidden",
+                "indefiniteLengths": "forbidden",
+                "duplicateLabels": "reject",
+                "unknownCoreLabels": "reject",
+                "trailingBytes": "reject"
+              },
+              "stateAuthority": {
+                "endpoint": "logical-intent-deduplication-confirmation-and-effect-state",
+                "station": "opaque-carriage-and-untrusted-operation-hints-only",
+                "application": "effect-and-idempotency-result-only",
+                "scheduler": "caller-owned",
+                "storage": "caller-owned"
+              },
+              "delivery": {
+                "semantics": "at-least-once-when-a-conforming-path-is-available",
+                "sameRouteRetry": "same-protected-intent-and-exact-protected-bytes",
+                "routeChange": "may-reprotect-same-intent-without-reauthorizing-effect",
+                "restart": "restore-serializable-snapshot-before-processing-input",
+                "stationReceipt": "non-authoritative-hint",
+                "exactlyOnceEffects": "forbidden-claim",
+                "guaranteedStationDelivery": "forbidden-claim"
+              },
+              "closedStateTags": {
+                "outbox": [
+                  "created",
+                  "in-flight",
+                  "ambiguous",
+                  "accepted",
+                  "completed",
+                  "cancelled",
+                  "failed"
+                ],
+                "inbox": [
+                  "new",
+                  "accepted",
+                  "effect-pending",
+                  "completed",
+                  "cancelled",
+                  "failed"
+                ],
+                "attachment": [
+                  "pending",
+                  "complete",
+                  "cancelled",
+                  "failed"
+                ],
+                "aggregate": [
+                  "pending",
+                  "partial",
+                  "complete",
+                  "failed"
+                ]
+              },
+              "resourceAccounting": {
+                "intent": "MAX_PROTECTED_INTENT_BYTES-counts-the-complete-canonical-intent",
+                "event": "MAX_RELIABLE_EVENT_METADATA_BYTES-counts-event-CBOR-only-and-events-never-embed-packets",
+                "packet": "MAX_PROTECTED_PACKET_BYTES-counts-exact-retained-or-emitted-protected-octets",
+                "snapshotMetadata": "MAX_RELIABLE_SNAPSHOT_METADATA_BYTES-counts-the-complete-snapshot-CBOR-excluding-protected-packet-octets",
+                "snapshotTotal": "MAX_RELIABLE_SNAPSHOT_BYTES-equals-snapshot-metadata-plus-one-retained-protected-packet",
+                "histories": "forbidden-use-bounded-counters-high-water-values-and-tombstones"
+              },
+              "atomicity": {
+                "receive": "validate-and-authenticate-against-one-tentative-complete-snapshot-then-compare-and-commit-once",
+                "send": "commit-advanced-snapshot-and-exact-retry-packet-before-emission",
+                "retry": "reuse-exact-retained-packet-without-state-advance-except-bounded-transmission-accounting",
+                "restart": "restore-complete-monotonic-snapshot-and-retained-packet-before-processing-input",
+                "rollback": "lower-state-generation-is-terminal-state-rollback-with-no-emission-or-effect",
+                "failure": "every-error-returns-the-byte-identical-pre-state-and-no-packet-or-effect"
+              },
+              "confirmation": {
+                "identity": "one-confirmation-id-per-result",
+                "authentication": "exact-protected-authorized-sending-Endpoint-session",
+                "binding": "confirmation-id-message-ids-sender-session-stage-outcome-failure-and-result",
+                "stages": [
+                  "endpointAccepted",
+                  "effectCompleted"
+                ],
+                "outcomes": [
+                  "succeeded",
+                  "rejected",
+                  "failed"
+                ],
+                "pendingAndAmbiguous": "transport-or-local-state-only-never-an-endpoint-confirmation",
+                "grouping": "sorted-unique-message-ids-with-one-stage-outcome-and-failure",
+                "conflict": "same-confirmation-id-with-different-canonical-result-is-terminal",
+                "stationResults": "never-advance-endpoint-stage"
+              },
+              "attachment": {
+                "normalFeedback": "bounded-attachment-receive-state",
+                "routineChunkConfirmation": "forbidden",
+                "finality": "complete-authenticated-chunks-content-digest-and-exact-endpoint-confirmation",
+                "windowReset": "forbidden-on-retry-restart-session-renewal-route-change-station-migration-replay"
+              },
+              "group": {
+                "projectionIdentity": "stable-per-member-logical-message-projection",
+                "partialFailure": "per-member-terminal-or-pending-results",
+                "aggregate": "deterministic-recipient-order-and-absorbing-member-results"
+              },
+              "failurePolicy": {
+                "invalid": "reject-without-state-advance",
+                "ambiguous": "retain-intent-and-retry-without-new-authorization",
+                "terminal": "absorbing-until-tombstone-retention-ends",
+                "bounds": "typed-terminal-failure"
+              },
+              "outOfScope": [
+                "exactly-once-local-effects",
+                "retry-scheduling",
+                "database-or-storage-engine",
+                "trusted-time-source",
+                "legal-nonrepudiation",
+                "guaranteed-station-delivery",
+                "station-to-station-protocol",
+                "plaintext-or-application-command-interpretation"
+              ]
+            }
+          }
+        ],
+        "publicMaterial": [],
+        "clock": {},
+        "state": {
+          "diagnosticId": "wire-noncanonical-integer"
+        },
+        "transport": {},
+        "storage": {}
+      },
+      "input": {
+        "hex": "a400500102030405060708090a0b0c0d0e0f1001180203416964656d"
+      },
+      "expected": {
+        "error": {
+          "code": "noncanonical-encoding"
+        }
+      }
+    },
+    {
+      "$schema": "https://licoarc.com/spec/schemas/conformance-case.schema.json",
+      "caseVersion": "licoarc.conformance-case.v1",
+      "id": "reliable.wire-trailing-byte",
+      "target": {
+        "operationId": "licoarc.foundation.decode-deterministic-cbor.v1"
+      },
+      "context": {
+        "sourceBindings": [
+          {
+            "sourcePath": "spec/v1/reliable/registry.json",
+            "sha256": "c601617bd02732c6a875a842e3110072a7c00454f6a619720ba0057010fb2b8f"
+          }
+        ],
+        "catalogs": [
+          {
+            "name": "reliable-registry",
+            "sourcePath": "spec/v1/reliable/registry.json",
+            "value": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "$id": "https://licoarc.com/spec/v1/reliable/registry.json",
+              "registryVersion": "licoarc.reliable-exchange.v1",
+              "wireId": "licoarc.reliable.v1",
+              "lifecycle": "Candidate",
+              "scope": "endpoint-protected-at-least-once-exchange-v1",
+              "sourcePaths": {
+                "bounds": "spec/v1/reliable/bounds.json",
+                "labels": "spec/v1/reliable/labels.json",
+                "intentSchema": "spec/v1/reliable/intent.schema.json",
+                "eventSchema": "spec/v1/reliable/event.schema.json",
+                "confirmationSchema": "spec/v1/reliable/confirmation.schema.json",
+                "stateSchema": "spec/v1/reliable/state.schema.json",
+                "runtime": "spec/v1/reliable/runtime.cddl",
+                "sourceManifest": "spec/v1/reliable/source-manifest.json",
+                "conformanceManifest": "conformance/v1/reliable/manifest.json"
+              },
+              "representation": {
+                "governance": "restricted-jcs-json",
+                "runtime": "deterministic-cbor",
+                "mapKeyEncoding": "compact-unsigned-integer",
+                "lengthEncoding": "definite",
+                "rawBytes": "bstr",
+                "tags": "forbidden",
+                "floats": "forbidden",
+                "indefiniteLengths": "forbidden",
+                "duplicateLabels": "reject",
+                "unknownCoreLabels": "reject",
+                "trailingBytes": "reject"
+              },
+              "stateAuthority": {
+                "endpoint": "logical-intent-deduplication-confirmation-and-effect-state",
+                "station": "opaque-carriage-and-untrusted-operation-hints-only",
+                "application": "effect-and-idempotency-result-only",
+                "scheduler": "caller-owned",
+                "storage": "caller-owned"
+              },
+              "delivery": {
+                "semantics": "at-least-once-when-a-conforming-path-is-available",
+                "sameRouteRetry": "same-protected-intent-and-exact-protected-bytes",
+                "routeChange": "may-reprotect-same-intent-without-reauthorizing-effect",
+                "restart": "restore-serializable-snapshot-before-processing-input",
+                "stationReceipt": "non-authoritative-hint",
+                "exactlyOnceEffects": "forbidden-claim",
+                "guaranteedStationDelivery": "forbidden-claim"
+              },
+              "closedStateTags": {
+                "outbox": [
+                  "created",
+                  "in-flight",
+                  "ambiguous",
+                  "accepted",
+                  "completed",
+                  "cancelled",
+                  "failed"
+                ],
+                "inbox": [
+                  "new",
+                  "accepted",
+                  "effect-pending",
+                  "completed",
+                  "cancelled",
+                  "failed"
+                ],
+                "attachment": [
+                  "pending",
+                  "complete",
+                  "cancelled",
+                  "failed"
+                ],
+                "aggregate": [
+                  "pending",
+                  "partial",
+                  "complete",
+                  "failed"
+                ]
+              },
+              "resourceAccounting": {
+                "intent": "MAX_PROTECTED_INTENT_BYTES-counts-the-complete-canonical-intent",
+                "event": "MAX_RELIABLE_EVENT_METADATA_BYTES-counts-event-CBOR-only-and-events-never-embed-packets",
+                "packet": "MAX_PROTECTED_PACKET_BYTES-counts-exact-retained-or-emitted-protected-octets",
+                "snapshotMetadata": "MAX_RELIABLE_SNAPSHOT_METADATA_BYTES-counts-the-complete-snapshot-CBOR-excluding-protected-packet-octets",
+                "snapshotTotal": "MAX_RELIABLE_SNAPSHOT_BYTES-equals-snapshot-metadata-plus-one-retained-protected-packet",
+                "histories": "forbidden-use-bounded-counters-high-water-values-and-tombstones"
+              },
+              "atomicity": {
+                "receive": "validate-and-authenticate-against-one-tentative-complete-snapshot-then-compare-and-commit-once",
+                "send": "commit-advanced-snapshot-and-exact-retry-packet-before-emission",
+                "retry": "reuse-exact-retained-packet-without-state-advance-except-bounded-transmission-accounting",
+                "restart": "restore-complete-monotonic-snapshot-and-retained-packet-before-processing-input",
+                "rollback": "lower-state-generation-is-terminal-state-rollback-with-no-emission-or-effect",
+                "failure": "every-error-returns-the-byte-identical-pre-state-and-no-packet-or-effect"
+              },
+              "confirmation": {
+                "identity": "one-confirmation-id-per-result",
+                "authentication": "exact-protected-authorized-sending-Endpoint-session",
+                "binding": "confirmation-id-message-ids-sender-session-stage-outcome-failure-and-result",
+                "stages": [
+                  "endpointAccepted",
+                  "effectCompleted"
+                ],
+                "outcomes": [
+                  "succeeded",
+                  "rejected",
+                  "failed"
+                ],
+                "pendingAndAmbiguous": "transport-or-local-state-only-never-an-endpoint-confirmation",
+                "grouping": "sorted-unique-message-ids-with-one-stage-outcome-and-failure",
+                "conflict": "same-confirmation-id-with-different-canonical-result-is-terminal",
+                "stationResults": "never-advance-endpoint-stage"
+              },
+              "attachment": {
+                "normalFeedback": "bounded-attachment-receive-state",
+                "routineChunkConfirmation": "forbidden",
+                "finality": "complete-authenticated-chunks-content-digest-and-exact-endpoint-confirmation",
+                "windowReset": "forbidden-on-retry-restart-session-renewal-route-change-station-migration-replay"
+              },
+              "group": {
+                "projectionIdentity": "stable-per-member-logical-message-projection",
+                "partialFailure": "per-member-terminal-or-pending-results",
+                "aggregate": "deterministic-recipient-order-and-absorbing-member-results"
+              },
+              "failurePolicy": {
+                "invalid": "reject-without-state-advance",
+                "ambiguous": "retain-intent-and-retry-without-new-authorization",
+                "terminal": "absorbing-until-tombstone-retention-ends",
+                "bounds": "typed-terminal-failure"
+              },
+              "outOfScope": [
+                "exactly-once-local-effects",
+                "retry-scheduling",
+                "database-or-storage-engine",
+                "trusted-time-source",
+                "legal-nonrepudiation",
+                "guaranteed-station-delivery",
+                "station-to-station-protocol",
+                "plaintext-or-application-command-interpretation"
+              ]
+            }
+          }
+        ],
+        "publicMaterial": [],
+        "clock": {},
+        "state": {
+          "diagnosticId": "wire-trailing-byte"
+        },
+        "transport": {},
+        "storage": {}
+      },
+      "input": {
+        "hex": "a400500102030405060708090a0b0c0d0e0f1001000300044000"
+      },
+      "expected": {
+        "error": {
+          "code": "trailing-bytes"
+        }
+      }
+    },
+    {
+      "$schema": "https://licoarc.com/spec/schemas/conformance-case.schema.json",
+      "caseVersion": "licoarc.conformance-case.v1",
+      "id": "reliable-confirmation-valid",
+      "target": {
+        "operationId": "licoarc.reliable.apply-endpoint-confirmation.v1"
+      },
+      "context": {
+        "sourceBindings": [
+          {
+            "sourcePath": "spec/v1/reliable/registry.json",
+            "sha256": "c601617bd02732c6a875a842e3110072a7c00454f6a619720ba0057010fb2b8f"
+          }
+        ],
+        "catalogs": [],
+        "publicMaterial": [],
+        "clock": {},
+        "state": {},
+        "transport": {},
+        "storage": {}
+      },
+      "input": {
+        "kind": "message",
+        "state": {
+          "logicalMessageId": "01010101010101010101010101010101",
+          "finalityState": "pending",
+          "transitionCount": 0,
+          "confirmations": {},
+          "localEffectAudit": []
+        },
+        "confirmation": {
+          "confirmationId": "05050505050505050505050505050505",
+          "confirmedMessageIds": [
+            "01010101010101010101010101010101"
+          ],
+          "confirmationStage": "endpointAccepted",
+          "confirmationOutcome": "succeeded"
+        },
+        "session": {
+          "sessionId": "03030303030303030303030303030303",
+          "senderEndpointRef": "0202020202020202020202020202020202020202020202020202020202020202",
+          "expectedSenderEndpointRef": "0202020202020202020202020202020202020202020202020202020202020202",
+          "authenticated": true,
+          "senderAuthorized": true
+        }
+      },
+      "expected": {
+        "result": {
+          "status": "advanced",
+          "finalityState": "accepted",
+          "stateMutation": true
+        }
+      }
+    },
+    {
+      "$schema": "https://licoarc.com/spec/schemas/conformance-case.schema.json",
+      "caseVersion": "licoarc.conformance-case.v1",
+      "id": "reliable-confirmation-missing",
+      "target": {
+        "operationId": "licoarc.reliable.apply-endpoint-confirmation.v1"
+      },
+      "context": {
+        "sourceBindings": [
+          {
+            "sourcePath": "spec/v1/reliable/registry.json",
+            "sha256": "c601617bd02732c6a875a842e3110072a7c00454f6a619720ba0057010fb2b8f"
+          }
+        ],
+        "catalogs": [],
+        "publicMaterial": [],
+        "clock": {},
+        "state": {},
+        "transport": {},
+        "storage": {}
+      },
+      "input": {
+        "kind": "message",
+        "state": {
+          "logicalMessageId": "01010101010101010101010101010101",
+          "finalityState": "pending",
+          "transitionCount": 0,
+          "confirmations": {},
+          "localEffectAudit": []
+        },
+        "session": {
+          "sessionId": "03030303030303030303030303030303",
+          "senderEndpointRef": "0202020202020202020202020202020202020202020202020202020202020202",
+          "expectedSenderEndpointRef": "0202020202020202020202020202020202020202020202020202020202020202",
+          "authenticated": true,
+          "senderAuthorized": true
+        }
+      },
+      "expected": {
+        "error": {
+          "code": "invalid-confirmation"
+        }
+      }
+    },
+    {
+      "$schema": "https://licoarc.com/spec/schemas/conformance-case.schema.json",
+      "caseVersion": "licoarc.conformance-case.v1",
+      "id": "reliable-confirmation-forged-sender",
+      "target": {
+        "operationId": "licoarc.reliable.apply-endpoint-confirmation.v1"
+      },
+      "context": {
+        "sourceBindings": [
+          {
+            "sourcePath": "spec/v1/reliable/registry.json",
+            "sha256": "c601617bd02732c6a875a842e3110072a7c00454f6a619720ba0057010fb2b8f"
+          }
+        ],
+        "catalogs": [],
+        "publicMaterial": [],
+        "clock": {},
+        "state": {},
+        "transport": {},
+        "storage": {}
+      },
+      "input": {
+        "kind": "message",
+        "state": {
+          "logicalMessageId": "01010101010101010101010101010101",
+          "finalityState": "pending",
+          "transitionCount": 0,
+          "confirmations": {},
+          "localEffectAudit": []
+        },
+        "confirmation": {
+          "confirmationId": "05050505050505050505050505050505",
+          "confirmedMessageIds": [
+            "01010101010101010101010101010101"
+          ],
+          "confirmationStage": "endpointAccepted",
+          "confirmationOutcome": "succeeded"
+        },
+        "session": {
+          "sessionId": "03030303030303030303030303030303",
+          "senderEndpointRef": "0202020202020202020202020202020202020202020202020202020202020202",
+          "expectedSenderEndpointRef": "0202020202020202020202020202020202020202020202020202020202020202",
+          "authenticated": true,
+          "senderAuthorized": false
+        }
+      },
+      "expected": {
+        "error": {
+          "code": "sender-unauthorized"
+        }
+      }
+    },
+    {
+      "$schema": "https://licoarc.com/spec/schemas/conformance-case.schema.json",
+      "caseVersion": "licoarc.conformance-case.v1",
+      "id": "reliable-confirmation-exact-replay",
+      "target": {
+        "operationId": "licoarc.reliable.apply-endpoint-confirmation.v1"
+      },
+      "context": {
+        "sourceBindings": [
+          {
+            "sourcePath": "spec/v1/reliable/registry.json",
+            "sha256": "c601617bd02732c6a875a842e3110072a7c00454f6a619720ba0057010fb2b8f"
+          }
+        ],
+        "catalogs": [],
+        "publicMaterial": [],
+        "clock": {},
+        "state": {},
+        "transport": {},
+        "storage": {}
+      },
+      "input": {
+        "kind": "message",
+        "state": {
+          "logicalMessageId": "01010101010101010101010101010101",
+          "finalityState": "accepted",
+          "transitionCount": 0,
+          "confirmations": {
+            "05050505050505050505050505050505": "99c073d03589f5c777a44fb128cf499641fd17e0f42787a35a32804a1a7f8bbe"
+          },
+          "localEffectAudit": []
+        },
+        "confirmation": {
+          "confirmationId": "05050505050505050505050505050505",
+          "confirmedMessageIds": [
+            "01010101010101010101010101010101"
+          ],
+          "confirmationStage": "endpointAccepted",
+          "confirmationOutcome": "succeeded"
+        },
+        "session": {
+          "sessionId": "03030303030303030303030303030303",
+          "senderEndpointRef": "0202020202020202020202020202020202020202020202020202020202020202",
+          "expectedSenderEndpointRef": "0202020202020202020202020202020202020202020202020202020202020202",
+          "authenticated": true,
+          "senderAuthorized": true
+        }
+      },
+      "expected": {
+        "result": {
+          "status": "duplicate",
+          "finalityState": "accepted",
+          "stateMutation": false
+        }
+      }
+    },
+    {
+      "$schema": "https://licoarc.com/spec/schemas/conformance-case.schema.json",
+      "caseVersion": "licoarc.conformance-case.v1",
+      "id": "reliable-confirmation-wrong-result",
+      "target": {
+        "operationId": "licoarc.reliable.apply-endpoint-confirmation.v1"
+      },
+      "context": {
+        "sourceBindings": [
+          {
+            "sourcePath": "spec/v1/reliable/registry.json",
+            "sha256": "c601617bd02732c6a875a842e3110072a7c00454f6a619720ba0057010fb2b8f"
+          }
+        ],
+        "catalogs": [],
+        "publicMaterial": [],
+        "clock": {},
+        "state": {},
+        "transport": {},
+        "storage": {}
+      },
+      "input": {
+        "kind": "message",
+        "state": {
+          "logicalMessageId": "01010101010101010101010101010101",
+          "finalityState": "accepted",
+          "transitionCount": 0,
+          "confirmations": {},
+          "localEffectAudit": []
+        },
+        "confirmation": {
+          "confirmationId": "06060606060606060606060606060606",
+          "confirmedMessageIds": [
+            "01010101010101010101010101010101"
+          ],
+          "confirmationStage": "effectCompleted",
+          "confirmationOutcome": "succeeded",
+          "resultDigest": "0404040404040404040404040404040404040404040404040404040404040404"
+        },
+        "session": {
+          "sessionId": "03030303030303030303030303030303",
+          "senderEndpointRef": "0202020202020202020202020202020202020202020202020202020202020202",
+          "expectedSenderEndpointRef": "0202020202020202020202020202020202020202020202020202020202020202",
+          "authenticated": true,
+          "senderAuthorized": true
+        },
+        "expectedResultDigest": "0909090909090909090909090909090909090909090909090909090909090909"
+      },
+      "expected": {
+        "error": {
+          "code": "wrong-result-digest"
+        }
+      }
+    },
+    {
+      "$schema": "https://licoarc.com/spec/schemas/conformance-case.schema.json",
+      "caseVersion": "licoarc.conformance-case.v1",
+      "id": "reliable-confirmation-station-only",
+      "target": {
+        "operationId": "licoarc.reliable.apply-endpoint-confirmation.v1"
+      },
+      "context": {
+        "sourceBindings": [
+          {
+            "sourcePath": "spec/v1/reliable/registry.json",
+            "sha256": "c601617bd02732c6a875a842e3110072a7c00454f6a619720ba0057010fb2b8f"
+          }
+        ],
+        "catalogs": [],
+        "publicMaterial": [],
+        "clock": {},
+        "state": {},
+        "transport": {},
+        "storage": {}
+      },
+      "input": {
+        "kind": "message",
+        "state": {
+          "logicalMessageId": "01010101010101010101010101010101",
+          "finalityState": "pending",
+          "transitionCount": 0,
+          "confirmations": {},
+          "localEffectAudit": []
+        },
+        "confirmation": {
+          "confirmationId": "05050505050505050505050505050505",
+          "confirmedMessageIds": [
+            "01010101010101010101010101010101"
+          ],
+          "confirmationStage": "endpointAccepted",
+          "confirmationOutcome": "succeeded"
+        },
+        "session": {
+          "sessionId": "03030303030303030303030303030303",
+          "senderEndpointRef": "0202020202020202020202020202020202020202020202020202020202020202",
+          "expectedSenderEndpointRef": "0202020202020202020202020202020202020202020202020202020202020202",
+          "authenticated": false,
+          "senderAuthorized": true
+        }
+      },
+      "expected": {
+        "error": {
+          "code": "confirmation-unauthenticated"
+        }
+      }
+    },
+    {
+      "$schema": "https://licoarc.com/spec/schemas/conformance-case.schema.json",
+      "caseVersion": "licoarc.conformance-case.v1",
+      "id": "reliable-attachment-incomplete-before-confirmation",
+      "target": {
+        "operationId": "licoarc.reliable.apply-endpoint-confirmation.v1"
+      },
+      "context": {
+        "sourceBindings": [
+          {
+            "sourcePath": "spec/v1/reliable/registry.json",
+            "sha256": "c601617bd02732c6a875a842e3110072a7c00454f6a619720ba0057010fb2b8f"
+          }
+        ],
+        "catalogs": [],
+        "publicMaterial": [],
+        "clock": {},
+        "state": {},
+        "transport": {},
+        "storage": {}
+      },
+      "input": {
+        "kind": "attachment",
+        "state": {
+          "logicalMessageId": "01010101010101010101010101010101",
+          "finalityState": "pending",
+          "transitionCount": 0,
+          "confirmations": {},
+          "localEffectAudit": [],
+          "completeAuthenticatedChunks": false,
+          "declaredContentDigest": "0707070707070707070707070707070707070707070707070707070707070707",
+          "authenticatedContentDigest": "0707070707070707070707070707070707070707070707070707070707070707"
+        },
+        "confirmation": {
+          "confirmationId": "05050505050505050505050505050505",
+          "confirmedMessageIds": [
+            "01010101010101010101010101010101"
+          ],
+          "confirmationStage": "endpointAccepted",
+          "confirmationOutcome": "succeeded"
+        },
+        "session": {
+          "sessionId": "03030303030303030303030303030303",
+          "senderEndpointRef": "0202020202020202020202020202020202020202020202020202020202020202",
+          "expectedSenderEndpointRef": "0202020202020202020202020202020202020202020202020202020202020202",
+          "authenticated": true,
+          "senderAuthorized": true
+        }
+      },
+      "expected": {
+        "error": {
+          "code": "attachment-chunks-incomplete"
+        }
+      }
+    }
+  ]
+}

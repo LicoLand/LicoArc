@@ -1,24 +1,88 @@
 {
   "$schema": "https://licoarc.com/spec/schemas/conformance-manifest.schema.json",
-  "manifestVersion": "licoarc.conformance-manifest.v2",
+  "manifestVersion": "licoarc.conformance-manifest.v1",
   "wireId": "licoarc.protocol-line.v1",
+  "generation": 1,
   "lifecycle": "Candidate",
-  "definitionStatus": "PARTIAL",
+  "definitionStatus": "COMPLETE",
   "capabilityCorpora": [
-    {"capabilityId": "licoarc.federation-governance.v1", "manifestPath": "conformance/v1/governance/manifest.json"},
-    {"capabilityId": "licoarc.generic-messaging.v1", "manifestPath": "conformance/v1/messaging/manifest.json"},
-    {"capabilityId": "licoarc.group-collaboration.v1", "manifestPath": "conformance/v1/group/manifest.json"},
-    {"capabilityId": "licoarc.https-transport.v1", "manifestPath": "conformance/v1/transport/manifest.json"},
-    {"capabilityId": "licoarc.identity.v1", "manifestPath": "conformance/v1/identity/manifest.json"},
-    {"capabilityId": "licoarc.protocol-foundation.v1", "manifestPath": "conformance/v1/foundation/manifest.json"},
-    {"capabilityId": "licoarc.reliable-exchange.v1", "manifestPath": "conformance/v1/reliable/manifest.json"},
-    {"capabilityId": "licoarc.transferable-evidence.v1", "manifestPath": "conformance/v1/evidence/manifest.json"}
+    {
+      "capabilityId": "licoarc.federation-governance.v1",
+      "definitionStatus": "COMPLETE",
+      "manifestPath": "conformance/v1/governance/manifest.json",
+      "sourceDigest": "b8a223ebab40213e4efcfc591973d6367ebe5c1cc68d5a60168c65d90b608eab",
+      "protectionProfileIds": [],
+      "complete": true
+    },
+    {
+      "capabilityId": "licoarc.generic-messaging.v1",
+      "definitionStatus": "COMPLETE",
+      "manifestPath": "conformance/v1/messaging/manifest.json",
+      "sourceDigest": "9fc7e1635ef076db2108747aae4f70167412c35bd87945e51d26c7be41402ef4",
+      "protectionProfileIds": [],
+      "complete": true
+    },
+    {
+      "capabilityId": "licoarc.group-collaboration.v1",
+      "definitionStatus": "COMPLETE",
+      "manifestPath": "conformance/v1/group/manifest.json",
+      "sourceDigest": "1b65d55ecb15d67ff8a06bf6542fc33a92ef6ecb7ab25dea997c3313b79a346b",
+      "protectionProfileIds": [],
+      "complete": true
+    },
+    {
+      "capabilityId": "licoarc.https-transport.v1",
+      "definitionStatus": "COMPLETE",
+      "manifestPath": "conformance/v1/transport/manifest.json",
+      "sourceDigest": "418c4da90461d7c985af8e3c5a66314e19c9c3f178271e2a70118e314c156924",
+      "protectionProfileIds": [],
+      "complete": true
+    },
+    {
+      "capabilityId": "licoarc.identity.v1",
+      "definitionStatus": "COMPLETE",
+      "manifestPath": "conformance/v1/identity/manifest.json",
+      "sourceDigest": "808409a4f3ddcbe7796b19ca3d2128faa33a3f6c5d1973067ea45f3725435bf8",
+      "protectionProfileIds": [],
+      "complete": true
+    },
+    {
+      "capabilityId": "licoarc.pairwise-protection.v1",
+      "definitionStatus": "COMPLETE",
+      "manifestPath": "conformance/v1/protection/manifest.json",
+      "sourceDigest": "cd07cdc2b5e7c99f2fbe8fe87ef202f6c87389f0e379957913f4e38ca1590f97",
+      "protectionProfileIds": [
+        "4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17"
+      ],
+      "complete": true
+    },
+    {
+      "capabilityId": "licoarc.protocol-foundation.v1",
+      "definitionStatus": "COMPLETE",
+      "manifestPath": "conformance/v1/foundation/manifest.json",
+      "sourceDigest": "a3863797f71e3827ee4bd2670c042223454ec2fa646d532296a739fcd57d9a73",
+      "protectionProfileIds": [],
+      "complete": true
+    },
+    {
+      "capabilityId": "licoarc.reliable-exchange.v1",
+      "definitionStatus": "COMPLETE",
+      "manifestPath": "conformance/v1/reliable/manifest.json",
+      "sourceDigest": "82fdb131cf0a4aae61d6df1efa60b6865af2c432835b5d43d01adcbc8b1725ac",
+      "protectionProfileIds": [],
+      "complete": true
+    }
   ],
   "definitionCorpora": [
-    {"definitionId": "security-accounting", "manifestPath": "conformance/v1/security/manifest.json"}
+    {
+      "definitionId": "security-accounting",
+      "definitionStatus": "COMPLETE",
+      "manifestPath": "conformance/v1/security/manifest.json",
+      "sourceDigest": "6c72a9363186649e8a1b67febaf2275f0116c13e3ae36f04aecfdf23092d440f",
+      "complete": true
+    }
   ],
-  "absentCorpora": [
-    {"definitionId": "pairwise-protection", "reason": "open-definition-has-no-active-wire"}
-  ],
-  "sourceClosure": "declared-component-source-closures"
+  "absentCorpora": [],
+  "sourceClosure": "declared-component-source-closures",
+  "protocolLineId": "c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08"
 }

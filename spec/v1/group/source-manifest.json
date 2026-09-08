@@ -6,11 +6,13 @@
   "lifecycle": "Candidate",
   "representation": "restricted-jcs-json-plus-deterministic-cbor-runtime",
   "digestAlgorithm": "sha256",
-  "sourceRoots": ["conformance/v1/group", "spec/v1/group"],
+  "sourceRoots": [
+    "conformance/v1/group",
+    "spec/v1/group"
+  ],
   "sources": [
-    "conformance/v1/group/invalid.json",
+    "conformance/v1/group/cases.json",
     "conformance/v1/group/manifest.json",
-    "conformance/v1/group/valid.json",
     "spec/v1/group/bounds.json",
     "spec/v1/group/field-registry.json",
     "spec/v1/group/group.schema.json",
@@ -21,5 +23,8 @@
     "spec/v1/group/runtime.cddl",
     "spec/v1/group/state.schema.json",
     "spec/v1/group/transition.schema.json"
-  ]
+  ],
+  "sorted": true,
+  "undeclaredFiles": "reject",
+  "symlinks": "reject"
 }

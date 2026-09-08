@@ -7,12 +7,12 @@
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-transport-retention` |
 | Decision status | `REJECTED` |
-| Definition status | `PARTIAL` |
+| Definition status | `NOT-SPECIFIED` |
 | Candidate spellings | relative TTL, `retentionSeconds`, coarse retention class, no request |
 | Candidate layer | Transport Profile parameter |
 | Observer set | Sending Endpoint and Station |
 | Existing authority | [Canonical Field Registry](../../../spec/FIELD-REGISTRY.md); this record explains the exclusion decision and is not a second field specification. |
-| Authority targets | Future Transport Profile constant, pre-acceptance rejection semantics, corpus, and Protocol Line manifest |
+| Authority targets | HTTPS Transport v1 constants, pre-acceptance rejection semantics, corpus, and complete Protocol Line manifest |
 | Predecessor or successor | Split from [`FLD-retention`](retention.md), which excludes absolute `expiresAt` |
 | Current conclusion | Sender-supplied per-submission TTL, retention duration, and retention class are rejected; one fixed Transport Profile window applies to every accepted submission. |
 
@@ -63,11 +63,11 @@ metadata and keeps bounded offline carriage deterministic.
 
 ## Value model
 
-No per-submission value model is admitted. The future Transport Profile will
-specify one exact storage-window constant and a typed pre-acceptance rejection
-when a Station cannot honor it. Absolute time is independently excluded by
-`FLD-retention`. The constant's exact duration remains Transport Profile
-specification work rather than a message field.
+No per-submission value model is admitted. HTTPS Transport v1 fixes
+`STORAGE_WINDOW_SECONDS = 3,600` and requires pre-acceptance rejection when a
+Station cannot honor it. Absolute time is independently excluded by
+`FLD-retention`; the constant is Profile authority rather than a message
+field.
 
 ## Visibility and trust
 
@@ -111,4 +111,4 @@ semantics without enabling a required interoperable action.
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. Only the scope recorded by this decision and its linked normative authorities is defined; any remaining normative ambiguity requires a successor decision before entering the protocol definition.
+The definition status is `NOT-SPECIFIED`. This historical record supplies no active normative definition; any successor or replacement owns its complete definition independently.

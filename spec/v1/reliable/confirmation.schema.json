@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/v1/reliable/confirmation.schema.json",
+  "title": "Lico Arc Reliable Exchange endpoint confirmation",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "confirmationId",
+    "confirmedMessageIds",
+    "confirmationStage",
+    "confirmationOutcome"
+  ],
+  "properties": {
+    "confirmationId": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{32}$"
+    },
+    "confirmationStage": {
+      "type": "string",
+      "enum": [
+        "endpointAccepted",
+        "effectCompleted"
+      ]
+    },
+    "confirmationOutcome": {
+      "type": "string",
+      "enum": [
+        "succeeded",
+        "rejected",
+        "failed"
+      ]
+    },
+    "confirmedMessageIds": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{32}$"
+      }
+    },
+    "failureCode": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 13
+    },
+    "resultDigest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "confirmationOutcome": {
+            "const": "succeeded"
+          }
+        },
+        "required": [
+          "confirmationOutcome"
+        ]
+      },
+      "then": {
+        "not": {
+          "required": [
+            "failureCode"
+          ]
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "confirmationStage": {
+            "const": "effectCompleted"
+          },
+          "confirmationOutcome": {
+            "const": "succeeded"
+          }
+        },
+        "required": [
+          "confirmationStage",
+          "confirmationOutcome"
+        ]
+      },
+      "then": {
+        "required": [
+          "resultDigest"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "confirmationStage": {
+            "const": "endpointAccepted"
+          }
+        },
+        "required": [
+          "confirmationStage"
+        ]
+      },
+      "then": {
+        "not": {
+          "required": [
+            "resultDigest"
+          ]
+        }
+      }
+    }
+  ]
+}

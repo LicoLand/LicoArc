@@ -10,7 +10,7 @@ import test from "node:test";
 const execFileAsync = promisify(execFile);
 const repositoryRoot = fileURLToPath(new URL("../", import.meta.url));
 
-test("replacement artifact generation is byte-identical and checkable", async () => {
+test("artifact generation is byte-identical across independent runs and check mode", async () => {
   const fixture = await createFixture();
   try {
     await runGenerator(fixture);
@@ -21,24 +21,29 @@ test("replacement artifact generation is byte-identical and checkable", async ()
   } finally { await rm(fixture, { recursive: true, force: true }); }
 });
 
-test("partial Candidate status rejects completion, mixed line, fallback and source drift", async () => {
+test("generator rejects cross-authority admission mismatches, fallback, and source drift", async () => {
   const mutations = [
-    async (fixture) => mutateJson(fixture, "spec/v1/manifest.json", (value) => { value.definitionStatus = "COMPLETE"; }),
-    async (fixture) => mutateJson(fixture, "spec/v1/manifest.json", (value) => { value.sessionEligible = true; }),
+    async (fixture) => mutateJson(fixture, "spec/v1/manifest.json", (value) => {
+      value.definitionStatus = value.definitionStatus === "COMPLETE" ? "PARTIAL" : "COMPLETE";
+    }),
+    async (fixture) => mutateJson(fixture, "spec/v1/manifest.json", (value) => {
+      value.sessionEligible = !value.sessionEligible;
+    }),
     async (fixture) => mutateJson(fixture, "spec/v1/manifest.json", (value) => { value.wireId = "licoarc.mixed-line.v1"; }),
     async (fixture) => mutateJson(fixture, "spec/v1/manifest.json", (value) => { value.translationPolicy = "fallback"; }),
-    async (fixture) => mutateJson(fixture, "spec/v1/manifest.json", (value) => { value.missingMandatoryCapabilities = []; }),
-    async (fixture) => mutateJson(fixture, "conformance/v1/manifest.json", (value) => {
-      value.definitionCorpora.push({
-        definitionId: "pairwise-protection",
-        manifestPath: "conformance/v1/protection/manifest.json"
-      });
+    async (fixture) => mutateJson(fixture, "spec/v1/manifest.json", (value) => {
+      value.missingMandatoryCapabilities = value.missingMandatoryCapabilities.length === 0
+        ? ["synthetic.missing-capability"]
+        : [];
     }),
-    async (fixture) => mutateJson(fixture, "spec/protocol-lines.json", (value) => {
-      value.selection.implementationFallback = true;
+    async (fixture) => mutateJson(fixture, "spec/protection-profiles.json", (value) => {
+      value.admission.reducedSecurityFallback = "permitted";
     }),
     async (fixture) => mutateJson(fixture, "spec/v1/security/source-manifest.json", (value) => {
       value.sourceRoots = ["spec/v1/security"];
+    }),
+    async (fixture) => mutateJson(fixture, "formal/evidence.json", (value) => {
+      value.replay = "unverified";
     }),
     async (fixture) => writeFile(path.join(fixture, "spec/v1/undeclared.json"), "{}\n")
   ];
@@ -79,7 +84,7 @@ test("generator rejects ambiguous JSON and non-canonical CDDL source bytes", asy
 
 async function createFixture() {
   const fixture = await mkdtemp(path.join(tmpdir(), "licoarc-candidate-"));
-  for (const directory of ["spec", "conformance", "artifacts", "tools"]) {
+  for (const directory of ["spec", "conformance", "artifacts", "tools", "formal"]) {
     await cp(path.join(repositoryRoot, directory), path.join(fixture, directory), { recursive: true });
   }
   return fixture;

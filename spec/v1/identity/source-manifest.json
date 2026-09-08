@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/v1/identity/source-manifest.json",
+  "manifestVersion": "licoarc.identity-source-manifest.v1",
+  "contractVersion": "licoarc.identity.v1",
+  "lifecycle": "Candidate",
+  "sourceRoots": [
+    "conformance/v1/identity",
+    "spec/v1/identity"
+  ],
+  "sources": [
+    "conformance/v1/identity/cases.json",
+    "conformance/v1/identity/manifest.json",
+    "spec/v1/identity/identity.policy.json",
+    "spec/v1/identity/identity.schema.json",
+    "spec/v1/identity/labels.json",
+    "spec/v1/identity/registry.json",
+    "spec/v1/identity/runtime.cddl",
+    "spec/v1/identity/signature-profiles.json"
+  ],
+  "sorted": true,
+  "undeclaredFiles": "reject",
+  "symlinks": "reject"
+}

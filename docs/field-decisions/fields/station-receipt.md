@@ -7,7 +7,7 @@
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-station-receipt` |
 | Decision status | `DECIDED` |
-| Definition status | `PARTIAL` |
+| Definition status | `SPECIFIED` |
 | Candidate spellings | Transport Profile native response outcome; rejected alternatives: receipt field, receipt token, accepted resource |
 | Candidate layer | Transport Profile |
 | Observer set | Submitting Endpoint and Station |
@@ -54,9 +54,10 @@ distinction between carriage, Endpoint acceptance, and completed effect.
 
 ## Value model
 
-The baseline semantic classes are accepted, rejected, transient failure, and
-ambiguous. Their exact carrier codes, malformed-response behavior, and retry
-consequences remain part of the future Transport Profile specification.
+The semantic classes are `accepted`, `rejected`, `transient`, and `ambiguous`.
+HTTPS Transport v1 fixes their operation-specific HTTP consistency map,
+canonical response-body authority, malformed-response behavior, idempotency,
+conflict handling, and retry consequences.
 
 There is no independent receipt value, token, or accepted-resource identifier
 in the baseline. A request/response profile can use its native response status; another
@@ -103,12 +104,12 @@ control, so the baseline contains no standalone receipt field, token, body, or
 pollable receipt resource. This preserves one response authority and avoids
 unnecessary Station state and correlation metadata.
 
-The non-authority rule and four semantic outcome classes are decided. Exact
-carrier codes, response grammar, invalid-input behavior, and retry table remain
-blocked on the first Transport Profile, so specification remains `PARTIAL`.
+The non-authority rule, four semantic outcome classes, exact carrier codes,
+response grammar, invalid-input behavior, and retry table are specified by the
+closed Transport Profile.
 Polling or cancellation cannot silently add a receipt handle; either requires
 a new Message Field Decision.
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. Only the scope recorded by this decision and its linked normative authorities is defined; any remaining normative ambiguity requires a successor decision before entering the protocol definition.
+The definition status is `SPECIFIED`. The Canonical Field Registry and linked machine-readable authorities close this record’s exact active semantics.

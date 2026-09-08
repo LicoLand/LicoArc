@@ -3,12 +3,14 @@
   "$id": "https://licoarc.com/spec/v1/security/source-manifest.json",
   "manifestVersion": "licoarc.security-source-manifest.v1",
   "lifecycle": "Candidate",
-  "definitionStatus": "PARTIAL",
-  "sourceRoots": ["conformance/v1/security", "spec/v1/security"],
+  "definitionStatus": "COMPLETE",
+  "sourceRoots": [
+    "conformance/v1/security",
+    "spec/v1/security"
+  ],
   "sources": [
-    "conformance/v1/security/invalid.json",
+    "conformance/v1/security/cases.json",
     "conformance/v1/security/manifest.json",
-    "conformance/v1/security/valid.json",
     "spec/v1/security/adversary-model.json",
     "spec/v1/security/claims.json",
     "spec/v1/security/formal-bindings.json",

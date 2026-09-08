@@ -10,12 +10,12 @@ This record is explanatory. The
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-affiliation-not-after` |
 | Decision status | `DECIDED` |
-| Definition status | `PARTIAL` |
+| Definition status | `SPECIFIED` |
 | Candidate spellings | affiliation expiry, guarantor expiry, binding lifetime |
 | Candidate layer | AFFILIATE result and protected StationAffiliation |
 | Observer set | Affiliating Endpoint and Station; peer Endpoints under protection |
 | Existing authority | [Canonical Field Registry](../../../spec/FIELD-REGISTRY.md) |
-| Authority targets | Future affiliation schemas and corpus |
+| Authority targets | The HTTPS Transport AFFILIATE and Identity affiliation schemas, grammar, policy, and corpora |
 | Predecessor or successor | None |
 | Current conclusion | Every Station-accepted affiliation commitment has one finite Station-selected upper bound no later than the signing descriptor's expiry. |
 
@@ -103,4 +103,4 @@ validity.
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. Only the scope recorded by this decision and its linked normative authorities is defined; any remaining normative ambiguity requires a successor decision before entering the protocol definition.
+The definition status is `SPECIFIED`. The Canonical Field Registry and linked machine-readable authorities close this record’s exact active semantics.

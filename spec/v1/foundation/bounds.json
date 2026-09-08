@@ -3,7 +3,18 @@
   "$id": "https://licoarc.com/spec/v1/schemas/foundation-bounds.schema.json",
   "registryVersion": "licoarc.foundation-bounds.v1",
   "lifecycle": "Candidate",
-  "scope": "foundation-source-and-runtime-parser",
+  "scope": "foundation-source-and-foundation-record-parser-only",
+  "authority": {
+    "appliesTo": [
+      "spec/v1/foundation source parsing",
+      "foundation governance artifact parsing",
+      "foundation runtime encoding fixture parsing"
+    ],
+    "capabilityRecords": "bounded-by-owning-capability",
+    "protectionProfiles": "bounded-by-owning-profile",
+    "crossCapabilityTotals": "bounded-by-protocol-line",
+    "inheritance": "forbidden"
+  },
   "bounds": {
     "MAX_SOURCE_FILES": 256,
     "MAX_SOURCE_BYTES": 1048576,

@@ -6,10 +6,11 @@
 | --- | --- |
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-endpoint-failure-code` |
-| Decision status | `DECIDED` |
-| Definition status | `PARTIAL` |
+| Decision status | `RETIRED` |
+| Definition status | `NOT-SPECIFIED` |
 | Existing authority | [`FIELD-REGISTRY.md`](../../../spec/FIELD-REGISTRY.md) |
-| Current conclusion | A protected, bounded failure class is required when peer interoperability depends on distinguishing endpoint terminal and retryable outcomes. |
+| Predecessor or successor | Succeeded by `FLD-endpoint-failure-code-v1`. |
+| Current conclusion | Retired: Generation 1 preserves bounded failure meaning inside exact authenticated confirmation and removes checkpoint coverage. |
 
 ## Question
 
@@ -31,9 +32,10 @@ sensitive free-form diagnostics or borrowing Station error authority.
 ## Field model and trade-offs
 
 The value is registered `uint32` field `failureCode`, conditionally mandatory
-when `confirmationOutcome` is `rejected` or `failed`. The exact registry,
-behavioral mapping, encoding, and invalid-input handling remain specification
-gaps. Attachment coverage must distinguish at least invalid index or range,
+when confirmation `outcome` is `rejected` or `failed`. The Messaging and
+Reliable label registries, schemas, and grammars fix its numeric values,
+behavioral mapping, encoding, conditional presence, and invalid-input
+handling. Attachment coverage distinguishes invalid index or range,
 conflicting chunk bytes, invalid chunk length, final digest mismatch,
 cancelled transfer, and source unavailable without carrying sensitive
 free-form diagnostics.
@@ -57,10 +59,10 @@ semantics authority and wins over any conflicting explanation here.
 
 LicoArc review on 2026-08-03 required attachment recovery failures to remain
 typed, stage-specific, bounded, and terminal where retry cannot repair the
-same immutable attachment identity. Exact numeric assignments remain future
-registry work. The transferable-evidence review retained the code and required
+same immutable attachment identity. The current label registries close the
+numeric assignments. The transferable-evidence review retained the code and required
 the containing confirmation statement to be checkpoint-covered.
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. Only the scope recorded by this decision and its linked normative authorities is defined; any remaining normative ambiguity requires a successor decision before entering the protocol definition.
+The retired definition is `NOT-SPECIFIED`; its successor owns initial V1 semantics.

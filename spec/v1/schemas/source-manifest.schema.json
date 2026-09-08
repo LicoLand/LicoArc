@@ -4,21 +4,59 @@
   "title": "LicoArc foundation source manifest",
   "type": "object",
   "additionalProperties": false,
-  "required": ["$schema", "$id", "manifestVersion", "artifactVersion", "lifecycle", "representation", "digestAlgorithm", "sourceRoots", "sources"],
+  "required": [
+    "$schema",
+    "$id",
+    "manifestVersion",
+    "artifactVersion",
+    "lifecycle",
+    "representation",
+    "digestAlgorithm",
+    "sourceRoots",
+    "sources"
+  ],
   "properties": {
-    "$schema": { "type": "string", "const": "https://json-schema.org/draft/2020-12/schema" },
-    "$id": { "type": "string", "const": "https://licoarc.com/spec/v1/schemas/source-manifest.schema.json" },
-    "manifestVersion": { "type": "string", "const": "licoarc.foundation-source-manifest.v1" },
-    "artifactVersion": { "type": "string", "const": "licoarc.foundation-bundle.v1" },
-    "lifecycle": { "type": "string", "const": "Candidate" },
-    "representation": { "type": "string", "const": "jcs-governance-plus-deterministic-cbor-runtime" },
-    "digestAlgorithm": { "type": "string", "const": "sha256" },
+    "$schema": {
+      "type": "string",
+      "const": "https://json-schema.org/draft/2020-12/schema"
+    },
+    "$id": {
+      "type": "string",
+      "const": "https://licoarc.com/spec/v1/schemas/source-manifest.schema.json"
+    },
+    "manifestVersion": {
+      "type": "string",
+      "const": "licoarc.foundation-source-manifest.v1"
+    },
+    "artifactVersion": {
+      "type": "string",
+      "const": "licoarc.foundation-bundle.v1"
+    },
+    "lifecycle": {
+      "type": "string",
+      "const": "Candidate"
+    },
+    "representation": {
+      "type": "string",
+      "const": "jcs-governance-plus-deterministic-cbor-runtime"
+    },
+    "digestAlgorithm": {
+      "type": "string",
+      "const": "sha256"
+    },
     "sourceRoots": {
       "type": "array",
       "minItems": 3,
       "maxItems": 3,
       "uniqueItems": true,
-      "items": { "type": "string", "enum": ["spec/v1/foundation", "spec/v1/schemas", "conformance/v1/foundation"] }
+      "items": {
+        "type": "string",
+        "enum": [
+          "spec/v1/foundation",
+          "spec/v1/schemas",
+          "conformance/v1/foundation"
+        ]
+      }
     },
     "sources": {
       "type": "array",

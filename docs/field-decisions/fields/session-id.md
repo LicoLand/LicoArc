@@ -9,7 +9,7 @@
 | Decision status | `RETIRED` |
 | Definition status | `NOT-SPECIFIED` |
 | Existing authority | [Canonical Field Registry](../../../spec/FIELD-REGISTRY.md) |
-| Predecessor or successor | Candidate field withdrawn; future state selection is coupled to the open AKE, transcript, SessionAccept, and Double Ratchet. |
+| Predecessor or successor | Candidate field withdrawn; future state selection is coupled to the decided AKE, transcript, SessionAccept, and Double Ratchet definitions. |
 | Current conclusion | No `sessionId`, `ID128`, derivation, label, or lookup placement is active. |
 
 ## Preserved requirement

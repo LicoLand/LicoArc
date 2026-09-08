@@ -10,7 +10,7 @@ specification; normative field semantics come only from the Field Registry.
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-failure-class` |
 | Decision status | `DECIDED` |
-| Definition status | `PARTIAL` |
+| Definition status | `SPECIFIED` |
 | Existing authority | [`FIELD-REGISTRY.md`](../../../spec/FIELD-REGISTRY.md) |
 | Current conclusion | A non-accepted Station result conditionally requires `failureClass`, a closed enum of `invalidRequest`, `unsupportedProfile`, `targetUnavailable`, `packetTooLarge`, `capacityUnavailable`, `rateLimited`, `conflict`, or `internalUnavailable`. |
 
@@ -48,4 +48,4 @@ specification; normative semantics come only from `FIELD-REGISTRY.md`.
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. Only the scope recorded by this decision and its linked normative authorities is defined; any remaining normative ambiguity requires a successor decision before entering the protocol definition.
+The definition status is `SPECIFIED`. The Canonical Field Registry and linked machine-readable authorities close this record’s exact active semantics.

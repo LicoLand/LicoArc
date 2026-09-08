@@ -2,7 +2,6 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://licoarc.com/spec/v1/messaging/registry.json",
   "registryVersion": "licoarc.generic-messaging.v1",
-  "protocolLineId": "licoarc.v1",
   "capabilityId": "licoarc.generic-messaging.v1",
   "lifecycle": "Candidate",
   "normativeLanguage": "en",
@@ -28,6 +27,14 @@
     "duplicateLabels": "reject",
     "unknownCoreLabels": "reject",
     "trailingBytes": "reject"
+  },
+  "resourceAccounting": {
+    "messageRecordMaximum": "MAX_MESSAGE_RECORD_BYTES-is-the-canonical-CBOR-record-maximum",
+    "controlRecordMaximum": "MAX_CONTROL_RECORD_BYTES-is-the-canonical-attachment-receive-state-maximum",
+    "controlLifetimeMaximum": "MAX_ATTACHMENT_CONTROL_BYTES-counts-every-canonical-receive-state-octet-once",
+    "protectedPacketOctets": "charged-to-Pairwise-Protection-and-retransmission-budgets-never-carrier-overhead",
+    "rejectedOrDuplicateInput": "no-budget-consumption-and-no-state-mutation",
+    "retryReset": "forbidden"
   },
   "protectedPlacement": {
     "visibility": "peer-endpoints-only",
@@ -88,7 +95,13 @@
       "MAX_ATTACHMENT_CONTROL_BYTES",
       "ATTACHMENT_RECOVERY_WINDOW"
     ],
-    "resetEvents": ["retry", "reconnect", "session-renewal", "route-change", "station-migration"]
+    "resetEvents": [
+      "retry",
+      "reconnect",
+      "session-renewal",
+      "route-change",
+      "station-migration"
+    ]
   },
   "failurePolicy": {
     "unknownCritical": "terminal-unknown-critical-extension",
@@ -107,6 +120,6 @@
     "storage-engines",
     "retry-scheduling",
     "station-to-station-protocol",
-    "station-receipts-as-endpoint-evidence"
+    "station-receipts-as-endpoint-confirmations"
   ]
 }

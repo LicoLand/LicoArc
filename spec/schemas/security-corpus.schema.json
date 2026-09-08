@@ -4,10 +4,22 @@
   "title": "LicoArc security accounting conformance corpus",
   "type": "object",
   "additionalProperties": false,
-  "required": ["$schema", "corpusVersion", "cases"],
+  "required": [
+    "$schema",
+    "corpusVersion",
+    "cases"
+  ],
   "properties": {
-    "$schema": {"const": "https://licoarc.com/spec/schemas/security-corpus.schema.json"},
-    "corpusVersion": {"type": "string", "enum": ["licoarc.security-valid.v1", "licoarc.security-invalid.v1"]},
+    "$schema": {
+      "const": "https://licoarc.com/spec/schemas/security-corpus.schema.json"
+    },
+    "corpusVersion": {
+      "type": "string",
+      "enum": [
+        "licoarc.security-valid.v1",
+        "licoarc.security-invalid.v1"
+      ]
+    },
     "cases": {
       "type": "array",
       "minItems": 1,
@@ -16,19 +28,45 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["id", "expected"],
+        "required": [
+          "id",
+          "expected"
+        ],
         "properties": {
-          "id": {"type": "string", "pattern": "^[a-z][a-z0-9-]+$", "maxLength": 128},
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]+$",
+            "maxLength": 128
+          },
           "mutation": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["operation"],
+            "required": [
+              "operation"
+            ],
             "properties": {
-              "operation": {"type": "string", "enum": ["prove-without-binding", "unknown-adversary", "unknown-claim-member", "remove-required-claim", "add-downstream-binding"]},
-              "claimId": {"type": "string", "pattern": "^SEC-[0-9]{3}$", "maxLength": 7}
+              "operation": {
+                "type": "string",
+                "enum": [
+                  "prove-without-binding",
+                  "unknown-adversary",
+                  "unknown-claim-member",
+                  "remove-required-claim",
+                  "add-downstream-binding"
+                ]
+              },
+              "claimId": {
+                "type": "string",
+                "pattern": "^SEC-[0-9]{3}$",
+                "maxLength": 7
+              }
             }
           },
-          "expected": {"type": "string", "pattern": "^(?:accept|reject)-[a-z0-9-]+$", "maxLength": 128}
+          "expected": {
+            "type": "string",
+            "pattern": "^(?:accept|reject)-[a-z0-9-]+$",
+            "maxLength": 128
+          }
         }
       }
     }

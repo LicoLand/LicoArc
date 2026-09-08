@@ -7,12 +7,12 @@
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-explicit-packet-length` |
 | Decision status | `REJECTED` |
-| Definition status | `PARTIAL` |
+| Definition status | `NOT-SPECIFIED` |
 | Candidate spellings | `length`, `packetLength`, carrier `Content-Length`, binary frame prefix |
 | Candidate layer | Transport Profile framing |
 | Observer set | Endpoint, Station, carrier |
 | Existing authority | [Canonical Field Registry](../../../spec/FIELD-REGISTRY.md); this record explains the rejection decision and is not a second field specification. |
-| Authority targets | A future Transport Profile must specify native framing, bounded packet processing, and size capabilities without redefining Generic Messaging attachment chunks. |
+| Authority targets | HTTPS Transport v1 specifies native framing and bounded packet processing without redefining Generic Messaging attachment chunks. |
 | Current conclusion | Reject a generic or duplicate LicoArc `packetLength` field. The selected Transport Profile supplies the actual encoded-body boundary; this decision does not fix one universal packet maximum or alter Protocol-Line-owned attachment chunking. |
 
 ## Question
@@ -57,13 +57,12 @@ Profile.
 
 ## Value model
 
-There is no independent field value model. Each Transport Profile's native
-framing defines the actual encoded-body boundary. If a future byte-stream
-profile needs a bounded length prefix, that prefix is part of the profile's
-framing grammar, not a generic LicoArc message field.
+There is no independent field value model. HTTPS Transport v1 uses canonical
+`Content-Length` equal to the exact body octets and rejects transfer encoding,
+streaming, mismatch, empty packets, and bodies over `MAX_PACKET_BYTES`. Any
+successor byte-stream profile that needs a bounded length prefix must make it
+part of that Profile's framing grammar, not a generic LicoArc message field.
 
-Minimum packet capacity, optional larger-capacity declarations, and any native
-byte-stream framing are separate Transport Profile questions.
 Endpoint-protected attachment chunking and selective recovery are
 owned by Generic Messaging and Reliable Exchange; a Transport Profile may
 bound their opaque packets but cannot regrid or reinterpret them.
@@ -99,12 +98,11 @@ and request-smuggling-like failure modes without enabling additional protocol
 behavior. This objective admission failure permits direct transition from
 `OPEN` to `REJECTED`.
 
-The rejection does not select a permanent packet maximum or a low-flexibility
-size policy. A future Transport Profile must still define bounded resource
-behavior and may separately propose a common packet capacity baseline, larger
-packet capabilities, or native byte-stream framing. Those choices cannot
-change the attachment chunk grid owned by the exact Protocol Line.
+The rejection does not make one maximum universal across successor Profiles.
+HTTPS Transport v1 fixes its own exact body and allocation bounds; any
+successor capacity or byte-stream framing decision cannot change the
+attachment chunk grid owned by the exact Protocol Line.
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. Only the scope recorded by this decision and its linked normative authorities is defined; any remaining normative ambiguity requires a successor decision before entering the protocol definition.
+The definition status is `NOT-SPECIFIED`. This historical record supplies no active normative definition; any successor or replacement owns its complete definition independently.

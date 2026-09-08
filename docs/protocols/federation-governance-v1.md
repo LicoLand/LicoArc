@@ -4,7 +4,12 @@ This document is the normative projection of the machine-readable federation
 governance contract. The current lifecycle is **Candidate**. It is reviewable
 and conformance-testable, but it is not a Published Protocol Line and it does
 not authorize publication, deployment, hosted operation, or an Endpoint trust
-decision.
+decision. `licoarc.federation-governance.v1` is the stable capability and wire
+locator, while compatibility certification carries the exact enclosing line's
+lowercase 64-hex `DIGEST256` content identity. Federation Governance is a
+complete mandatory capability in the `COMPLETE`, session-eligible Candidate
+line composition. Neither the capability nor the line is publication-eligible,
+and this profile makes no implementation or operation claim.
 
 The closed sources are:
 
@@ -25,7 +30,7 @@ Federation Governance v1 defines deterministic offline evaluation of one
 governance bundle. It covers:
 
 1. membership statements;
-2. compatibility certification for a named Protocol Line;
+2. compatibility certification for one exact Protocol Line content identity;
 3. revocation statements;
 4. role-scoped independent roots and thresholds;
 5. content-addressed distribution metadata;
@@ -49,6 +54,14 @@ The canonical representation is the restricted JCS projection: object member
 names are ordered by their UTF-16/JCS order, arrays retain their declared
 order, and the result has no trailing line break. SHA-256 of this projection
 is a lowercase 64-character `bundleDigest`.
+
+All governance collections and digest-bearing values are fixed by the closed
+schema: roots and keys are bounded, membership/certification/revocation and
+advisory records are bounded to 64 entries, observations and recovery
+evidence are bounded to 16 entries, and each epoch/version is a safe integer.
+These capability-owned limits cannot be raised by a sender, inherited from a
+Foundation parser ceiling, or reset by retry, recovery, or a new distribution
+route.
 
 The signed metadata projection is the complete `governanceBundle` with only
 `bundleDigest` and `authorizations` removed. It therefore binds the network,
@@ -103,9 +116,10 @@ a participant in a federation context; they do not identify a human, account,
 device, Station, or Endpoint trust relationship.
 
 `compatibilityCertifications` bind an opaque participant digest to one exact
-Protocol Line identifier and one or more capability digests. Certification is
-compatibility evidence only; it is not membership and never admits an
-Endpoint.
+64-hex `DIGEST256` Protocol Line content identity and one or more capability
+digests. Textual wire and contract names remain source/catalog locators and
+never populate this field. Certification is compatibility evidence only; it
+is not membership and never admits an Endpoint.
 
 `revocations` name an opaque target digest, a closed privacy-minimal reason
 class, an effective time, and a revocation epoch. A revocation is not a

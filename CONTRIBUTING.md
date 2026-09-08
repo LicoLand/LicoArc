@@ -26,11 +26,10 @@ reviewable, and privacy-safe standards.
   encrypted.
 - Treat all stations as globally coordinated, adaptive, and continuously
   hostile. Protection-related changes must strengthen the boundary, preserve
-  cryptographic agility and downgrade resistance, use reviewed open standards
+  the fixed cryptographic composition and authenticated context, use reviewed open standards
   instead of custom cryptography, and fail closed.
-- Protocol and policy changes are versioned. Do not mutate a published
-  version directory in place; add a new version instead. See
-  [docs/COMPATIBILITY.md](docs/COMPATIBILITY.md).
+- LicoArc is the unreleased initial V1 / Generation 1. Replace current sources,
+  SDKs, and documentation together under the [runbook](docs/RUNBOOK.md).
 - Apply the canonical [LicoArc Decision Lifecycle](docs/DECISION-LIFECYCLE.md)
   before every algorithm or message-field update. Algorithm Decisions and
   Message Field Decisions are independent; a change affecting both requires
@@ -65,7 +64,18 @@ reviewable, and privacy-safe standards.
 7. Update each decision record's definition evidence and the formal
    documentation that owns the changed fact in the same change, and add a
    [CHANGELOG.md](CHANGELOG.md) entry.
-8. Open a pull request against `main`.
+8. Open a pull request into `nightly`, then use the protected branch flow below.
+
+## Protected Branch Flow
+
+The admitted promotion topology is:
+
+- `temporary-to-nightly`: merge a reviewed feature or fix branch into `nightly`.
+- `nightly-to-stable`: promote the `nightly` tip into `stable`.
+- `stable-to-release`: promote the `stable` tip into `release`.
+
+Protected branch changes use merge commits from the admitted upstream. Direct
+pushes to protected branches and history rewrites are not part of this flow.
 
 ## Verification Commands
 
@@ -79,4 +89,4 @@ reviewable, and privacy-safe standards.
 
 ## License
 
-Contributions are licensed under GPL-3.0-or-later, the repository license.
+Contributions are licensed under Apache-2.0, the repository license.

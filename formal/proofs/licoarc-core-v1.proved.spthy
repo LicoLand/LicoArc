@@ -1,0 +1,3712 @@
+theory LicoArc_Core_V1
+
+begin
+
+// Function signature and definition of the equational theory E
+
+functions: fst/1, h/1, ideal_hybrid/5, pair/2, pk/1, ratchet_step/2,
+           sdec/2, senc/2, sign/2, snd/1, true/0, verify/3
+equations:
+    fst(<x.1, x.2>) = x.1,
+    sdec(senc(x.1, x.2), x.2) = x.1,
+    snd(<x.1, x.2>) = x.2,
+    verify(sign(x.1, x.2), x.1, pk(x.2)) = true
+
+rule (modulo E) ProvisionPair:
+   [
+   Fr( ~pair ), Fr( ~prekey ), Fr( ~identity_secret_i ),
+   Fr( ~identity_secret_r )
+   ]
+  --[
+  PeerAcceptedLocally( $I, $R ), PrekeyPublished( $R, ~pair, h(~prekey) ),
+  EndpointIdentityProvisioned( $I, pk(~identity_secret_i) ),
+  EndpointIdentityProvisioned( $R, pk(~identity_secret_r) )
+  ]->
+   [
+   InitiatorReady( $I, $R, ~pair, h(~prekey) ),
+   ResponderReady( $R, $I, ~pair, h(~prekey) ),
+   !IdentityMaterial( $I, ~identity_secret_i ),
+   !IdentityMaterial( $R, ~identity_secret_r ),
+   !IdentityPublic( $I, pk(~identity_secret_i) ),
+   !IdentityPublic( $R, pk(~identity_secret_r) ),
+   !IdentityVerification( $I, ~identity_secret_i ),
+   !IdentityVerification( $R, ~identity_secret_r ),
+   !PrekeyMaterial( $R, ~pair, ~prekey )
+   ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) InitiatorFirstPacket:
+   [
+   InitiatorReady( $I, R, pair, prekey_pub ), Fr( ~classical_component ),
+   Fr( ~pq_component ), Fr( ~coordinate )
+   ]
+  --[
+  InitiatorStarted( $I, R, pair,
+                    h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                       'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                       '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $I,
+                       R, pair, prekey_pub, h(~classical_component), h(~pq_component)>),
+                    ideal_hybrid(~classical_component, ~pq_component, $I, R,
+                                 h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                    'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                    '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $I,
+                                    R, pair, prekey_pub, h(~classical_component), h(~pq_component)>))
+  ),
+  HybridEstablished( $I, R,
+                     h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                        'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                        '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $I,
+                        R, pair, prekey_pub, h(~classical_component), h(~pq_component)>),
+                     ideal_hybrid(~classical_component, ~pq_component, $I, R,
+                                  h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                     'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                     '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $I,
+                                     R, pair, prekey_pub, h(~classical_component), h(~pq_component)>))
+  ),
+  SessionSecret( ideal_hybrid(~classical_component, ~pq_component, $I, R,
+                              h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                 'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                 '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $I,
+                                 R, pair, prekey_pub, h(~classical_component), h(~pq_component)>))
+  )
+  ]->
+   [
+   HandshakeOffer( $I, R, pair,
+                   h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                      'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                      '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $I,
+                      R, pair, prekey_pub, h(~classical_component), h(~pq_component)>),
+                   ideal_hybrid(~classical_component, ~pq_component, $I, R,
+                                h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                   'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                   '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $I,
+                                   R, pair, prekey_pub, h(~classical_component), h(~pq_component)>)),
+                   ~coordinate
+   ),
+   InitiatorPending( $I, R, pair,
+                     h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                        'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                        '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $I,
+                        R, pair, prekey_pub, h(~classical_component), h(~pq_component)>),
+                     ideal_hybrid(~classical_component, ~pq_component, $I, R,
+                                  h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                     'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                     '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $I,
+                                     R, pair, prekey_pub, h(~classical_component), h(~pq_component)>)),
+                     ~coordinate
+   ),
+   !HybridComponents( $I, R,
+                      h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                         'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                         '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $I,
+                         R, pair, prekey_pub, h(~classical_component), h(~pq_component)>),
+                      ideal_hybrid(~classical_component, ~pq_component, $I, R,
+                                   h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                      'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                      '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $I,
+                                      R, pair, prekey_pub, h(~classical_component), h(~pq_component)>)),
+                      ~classical_component, ~pq_component
+   )
+   ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) ResponderAccept:
+   [
+   ResponderReady( $R, I, pair, prekey_pub ),
+   HandshakeOffer( I, $R, pair, transcript, root, coordinate )
+   ]
+  --[
+  ResponderAccepted( $R, I, pair, transcript, root ),
+  LineAuthenticated( 'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08'
+  ),
+  ProfileAuthenticated( '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17'
+  ),
+  AtomicHandshakeCommit( $R, pair, transcript )
+  ]->
+   [
+   !Established( $R, I, transcript, root ),
+   !ReplayBinding( $R, pair, transcript ),
+   ChainState( $R, I, transcript, 'i2r', coordinate, root ),
+   RatchetInitial( $R, I, transcript, root ),
+   SessionBindingReady( $R, I, transcript ),
+   SessionAccept( I, $R, pair, transcript, root, coordinate )
+   ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) ReplayExactFirstPacket:
+   [ !ReplayBinding( $R, pair, transcript ) ]
+  --[ ExactHandshakeReplay( $R, pair, transcript ) ]->
+   [ ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) InitiatorAccept:
+   [
+   InitiatorPending( $I, R, pair, transcript, root, coordinate ),
+   SessionAccept( $I, R, pair, transcript, root, coordinate )
+   ]
+  --[
+  InitiatorEstablished( $I, R, pair, transcript, root ),
+  AtomicHandshakeCommit( $I, pair, transcript )
+  ]->
+   [
+   !Established( $I, R, transcript, root ),
+   ChainState( $I, R, transcript, 'i2r', coordinate, root ),
+   RatchetInitial( $I, R, transcript, root ),
+   SessionBindingReady( $I, R, transcript )
+   ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) BindSiblingAuthorityState:
+   [ SessionBindingReady( $E, P, transcript ) ]
+  --[
+  SessionSiblingBound( $E, P, transcript,
+                       h(<'endpoint-state', $E, transcript>),
+                       h(<'user-authority-state', $E, transcript>),
+                       h(<'endpoint-state', P, transcript>),
+                       h(<'user-authority-state', P, transcript>)
+  )
+  ]->
+   [ ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) SendRecord:
+   [
+   ChainState( $S, R, transcript, direction, n, chain ), Fr( ~message ),
+   Fr( ~sender_metadata )
+   ]
+  --[
+  RecordSent( $S, R, transcript, direction, n, ~message,
+              senc(<~message, ~sender_metadata, transcript, direction, n>, chain),
+              chain
+  ),
+  SenderMetadataProtected( $S, R, transcript, ~sender_metadata,
+                           senc(<~message, ~sender_metadata, transcript, direction, n>, chain),
+                           chain
+  ),
+  AtomicSendCommit( $S, transcript, direction, n )
+  ]->
+   [
+   Out( senc(<~message, ~sender_metadata, transcript, direction, n>, chain)
+   )
+   ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) ReceiveRecord:
+   [
+   ChainState( $R, S, transcript, direction, n, chain ),
+   In( senc(<message, sender_metadata, transcript, direction, n>, chain) )
+   ]
+  --[
+  RecordReceived( $R, S, transcript, direction, n, message,
+                  senc(<message, sender_metadata, transcript, direction, n>, chain), chain
+  ),
+  EndpointAccepted( $R, S, transcript, direction, n, message,
+                    senc(<message, sender_metadata, transcript, direction, n>, chain), chain
+  ),
+  AtomicReceiveCommit( $R, transcript, direction, n )
+  ]->
+   [ DurableInbox( $R, S, transcript, direction, n, h(message) ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) CompromiseSession:
+   [ !Established( $E, P, transcript, root ) ]
+  --[ SessionCompromise( $E, P, transcript, root ) ]->
+   [ Out( root ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) CompromiseClassicalComponent:
+   [ !HybridComponents( I, R, transcript, root, classical, pq ) ]
+  --[ ClassicalComponentCompromise( I, R, transcript, root ) ]->
+   [ Out( classical ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) CompromisePostQuantumComponent:
+   [ !HybridComponents( I, R, transcript, root, classical, pq ) ]
+  --[ PostQuantumComponentCompromise( I, R, transcript, root ) ]->
+   [ Out( pq ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) CompromiseIdentityMaterial:
+   [ !IdentityMaterial( $E, secret ) ]
+  --[ IdentityMaterialCompromise( $E, pk(secret) ) ]->
+   [ Out( secret ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) CompromisePrekeyMaterial:
+   [ !PrekeyMaterial( $R, pair, prekey ) ]
+  --[ PrekeyMaterialCompromise( $R, pair ) ]->
+   [ Out( prekey ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) RatchetAdvanceUncompromised:
+   [ RatchetInitial( $E, P, transcript, old ), Fr( ~fresh_dh ) ]
+  --[
+  RatchetAdvanced( $E, P, transcript, old, ratchet_step(old, ~fresh_dh) ),
+  RatchetSecret( ratchet_step(old, ~fresh_dh) )
+  ]->
+   [
+   RatchetAdvancedState( $E, P, transcript, old,
+                         ratchet_step(old, ~fresh_dh)
+   )
+   ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) RatchetCompromiseBeforeRecovery:
+   [ RatchetInitial( $E, P, transcript, old ) ]
+  --[ RatchetKeyCompromise( $E, P, transcript, old ) ]->
+   [ RatchetExposed( $E, P, transcript, old ), Out( old ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) RatchetRecoverAfterCompromise:
+   [ RatchetExposed( $E, P, transcript, old ), Fr( ~fresh_dh ) ]
+  --[
+  RatchetRecovered( $E, P, transcript, old, ratchet_step(old, ~fresh_dh) ),
+  RatchetSecret( ratchet_step(old, ~fresh_dh) )
+  ]->
+   [
+   RatchetAdvancedState( $E, P, transcript, old,
+                         ratchet_step(old, ~fresh_dh)
+   )
+   ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) RatchetCompromiseAdvanced:
+   [ RatchetAdvancedState( $E, P, transcript, old, next ) ]
+  --[ RatchetKeyCompromise( $E, P, transcript, next ) ]->
+   [ Out( next ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) ProvisionUserAuthority:
+   [
+   Fr( ~management_secret ), Fr( ~recovery_secret ), Fr( ~endpoint_secret )
+   ]
+  --[
+  UserAuthorityGenesisCreated( h(<'user-authority-genesis',
+                                  'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                  pk(~management_secret), pk(~recovery_secret)>),
+                               h(<'user-authority-state',
+                                  'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                  h(<'user-authority-genesis',
+                                     'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                     pk(~management_secret), pk(~recovery_secret)>),
+                                  '0', pk(~management_secret), pk(~recovery_secret), $E,
+                                  h(<'endpoint-state',
+                                     'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc', $E,
+                                     pk(~endpoint_secret)>)
+                                 >),
+                               pk(~management_secret), pk(~recovery_secret)
+  ),
+  EndpointPossessionAuthorized( h(<'user-authority-genesis',
+                                   'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                   pk(~management_secret), pk(~recovery_secret)>),
+                                '0', $E,
+                                h(<'endpoint-state',
+                                   'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc', $E,
+                                   pk(~endpoint_secret)>),
+                                pk(~endpoint_secret),
+                                sign(<'endpoint-possession',
+                                      'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                      h(<'user-authority-genesis',
+                                         'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                         pk(~management_secret), pk(~recovery_secret)>),
+                                      '0', $E,
+                                      h(<'endpoint-state',
+                                         'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                         $E, pk(~endpoint_secret)>)
+                                     >,
+                                     ~endpoint_secret)
+  )
+  ]->
+   [
+   !ManagementAuthority( h(<'user-authority-genesis',
+                            'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                            pk(~management_secret), pk(~recovery_secret)>),
+                         h(<'user-authority-state',
+                            'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                            h(<'user-authority-genesis',
+                               'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                               pk(~management_secret), pk(~recovery_secret)>),
+                            '0', pk(~management_secret), pk(~recovery_secret), $E,
+                            h(<'endpoint-state',
+                               'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc', $E,
+                               pk(~endpoint_secret)>)
+                           >),
+                         ~management_secret
+   ),
+   !RecoveryAuthority( h(<'user-authority-genesis',
+                          'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                          pk(~management_secret), pk(~recovery_secret)>),
+                       h(<'user-authority-state',
+                          'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                          h(<'user-authority-genesis',
+                             'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                             pk(~management_secret), pk(~recovery_secret)>),
+                          '0', pk(~management_secret), pk(~recovery_secret), $E,
+                          h(<'endpoint-state',
+                             'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc', $E,
+                             pk(~endpoint_secret)>)
+                         >),
+                       ~recovery_secret
+   ),
+   !AuthorityGenesisVerification( h(<'user-authority-genesis',
+                                     'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                     pk(~management_secret), pk(~recovery_secret)>),
+                                  h(<'user-authority-state',
+                                     'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                     h(<'user-authority-genesis',
+                                        'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                        pk(~management_secret), pk(~recovery_secret)>),
+                                     '0', pk(~management_secret), pk(~recovery_secret), $E,
+                                     h(<'endpoint-state',
+                                        'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                        $E, pk(~endpoint_secret)>)
+                                    >),
+                                  ~management_secret, ~recovery_secret
+   ),
+   !EndpointVerification( $E, ~endpoint_secret ),
+   AuthorityGenesisEnvelope( h(<'user-authority-genesis',
+                                'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                pk(~management_secret), pk(~recovery_secret)>),
+                             h(<'user-authority-state',
+                                'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                h(<'user-authority-genesis',
+                                   'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                   pk(~management_secret), pk(~recovery_secret)>),
+                                '0', pk(~management_secret), pk(~recovery_secret), $E,
+                                h(<'endpoint-state',
+                                   'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc', $E,
+                                   pk(~endpoint_secret)>)
+                               >),
+                             pk(~management_secret), pk(~recovery_secret), $E,
+                             h(<'endpoint-state',
+                                'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc', $E,
+                                pk(~endpoint_secret)>),
+                             pk(~endpoint_secret),
+                             sign(<'endpoint-possession',
+                                   'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                   h(<'user-authority-genesis',
+                                      'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                      pk(~management_secret), pk(~recovery_secret)>),
+                                   '0', $E,
+                                   h(<'endpoint-state',
+                                      'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc', $E,
+                                      pk(~endpoint_secret)>)
+                                  >,
+                                  ~endpoint_secret),
+                             sign(<'user-authority-genesis-management',
+                                   'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                   h(<'user-authority-genesis',
+                                      'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                      pk(~management_secret), pk(~recovery_secret)>),
+                                   h(<'user-authority-state',
+                                      'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                      h(<'user-authority-genesis',
+                                         'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                         pk(~management_secret), pk(~recovery_secret)>),
+                                      '0', pk(~management_secret), pk(~recovery_secret), $E,
+                                      h(<'endpoint-state',
+                                         'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                         $E, pk(~endpoint_secret)>)
+                                     >)
+                                  >,
+                                  ~management_secret),
+                             sign(<'user-authority-genesis-recovery',
+                                   'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                   h(<'user-authority-genesis',
+                                      'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                      pk(~management_secret), pk(~recovery_secret)>),
+                                   h(<'user-authority-state',
+                                      'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                      h(<'user-authority-genesis',
+                                         'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                         pk(~management_secret), pk(~recovery_secret)>),
+                                      '0', pk(~management_secret), pk(~recovery_secret), $E,
+                                      h(<'endpoint-state',
+                                         'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                         $E, pk(~endpoint_secret)>)
+                                     >)
+                                  >,
+                                  ~recovery_secret)
+   )
+   ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) AcceptUserAuthorityGenesis:
+   [
+   !AuthorityGenesisVerification( user_ref, authority_state,
+                                  management_secret, recovery_secret
+   ),
+   !EndpointVerification( $E, endpoint_secret ),
+   AuthorityGenesisEnvelope( user_ref, authority_state,
+                             pk(management_secret), pk(recovery_secret), $E, endpoint_state,
+                             pk(endpoint_secret),
+                             sign(<'endpoint-possession',
+                                   'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                   user_ref, '0', $E, endpoint_state>,
+                                  endpoint_secret),
+                             sign(<'user-authority-genesis-management',
+                                   'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                   user_ref, authority_state>,
+                                  management_secret),
+                             sign(<'user-authority-genesis-recovery',
+                                   'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                   user_ref, authority_state>,
+                                  recovery_secret)
+   )
+   ]
+  --[
+  UserAuthorityGenesisAccepted( user_ref, authority_state,
+                                pk(management_secret), pk(recovery_secret)
+  ),
+  EndpointPossessionAccepted( user_ref, '0', $E, endpoint_state,
+                              pk(endpoint_secret)
+  )
+  ]->
+   [ ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) AuthorizeManagementTransition:
+   [
+   !ManagementAuthority( user_ref, predecessor, management_secret ),
+   Fr( ~successor )
+   ]
+  --[
+  ManagementTransitionAuthorized( user_ref, predecessor, ~successor,
+                                  pk(management_secret)
+  )
+  ]->
+   [
+   ManagementTransitionEnvelope( user_ref, predecessor, ~successor,
+                                 pk(management_secret),
+                                 sign(<'user-authority-management-transition',
+                                       'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                       user_ref, predecessor, ~successor>,
+                                      management_secret)
+   )
+   ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) AcceptManagementTransition:
+   [
+   !ManagementAuthority( user_ref, predecessor, management_secret ),
+   ManagementTransitionEnvelope( user_ref, predecessor, successor,
+                                 pk(management_secret),
+                                 sign(<'user-authority-management-transition',
+                                       'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                       user_ref, predecessor, successor>,
+                                      management_secret)
+   )
+   ]
+  --[
+  AuthorityTransitionAccepted( user_ref, predecessor, successor,
+                               'management', pk(management_secret)
+  )
+  ]->
+   [ ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) AuthorizeRecoveryTransition:
+   [
+   !RecoveryAuthority( user_ref, predecessor, recovery_secret ),
+   Fr( ~successor )
+   ]
+  --[
+  RecoveryTransitionAuthorized( user_ref, predecessor, ~successor,
+                                pk(recovery_secret)
+  )
+  ]->
+   [
+   RecoveryTransitionEnvelope( user_ref, predecessor, ~successor,
+                               pk(recovery_secret),
+                               sign(<'user-authority-recovery-transition',
+                                     'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                     user_ref, predecessor, ~successor>,
+                                    recovery_secret)
+   )
+   ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) AcceptRecoveryTransition:
+   [
+   !RecoveryAuthority( user_ref, predecessor, recovery_secret ),
+   RecoveryTransitionEnvelope( user_ref, predecessor, successor,
+                               pk(recovery_secret),
+                               sign(<'user-authority-recovery-transition',
+                                     'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                     user_ref, predecessor, successor>,
+                                    recovery_secret)
+   )
+   ]
+  --[
+  AuthorityTransitionAccepted( user_ref, predecessor, successor,
+                               'recovery', pk(recovery_secret)
+  )
+  ]->
+   [ ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) CompromiseManagementAuthority:
+   [ !ManagementAuthority( user_ref, state, management_secret ) ]
+  --[
+  ManagementAuthorityCompromise( user_ref, state, pk(management_secret) )
+  ]->
+   [ Out( management_secret ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) CompromiseRecoveryAuthority:
+   [ !RecoveryAuthority( user_ref, state, recovery_secret ) ]
+  --[ RecoveryAuthorityCompromise( user_ref, state, pk(recovery_secret) )
+  ]->
+   [ Out( recovery_secret ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) CompromiseEndpointAuthority:
+   [ !EndpointVerification( $E, endpoint_secret ) ]
+  --[ EndpointAuthorityCompromise( $E, pk(endpoint_secret) ) ]->
+   [ Out( endpoint_secret ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) AuthorizeRouteMigration:
+   [ !IdentityMaterial( $E, secret ), Fr( ~old_route ), Fr( ~new_route ) ]
+  --[
+  RouteMigrationAuthorized( $E, $P, pk(secret), ~old_route, ~new_route,
+                            h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                               $E, $P, ~old_route, ~new_route>)
+  )
+  ]->
+   [
+   Out( <$E, $P, pk(secret), ~old_route, ~new_route,
+         h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+            $E, $P, ~old_route, ~new_route>),
+         sign(<'route-migration',
+               'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc', $E,
+               $P, ~old_route, ~new_route,
+               h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                  $E, $P, ~old_route, ~new_route>)
+              >,
+              secret)
+        >
+   )
+   ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) AcceptRouteMigration:
+   [
+   !IdentityVerification( $E, secret ),
+   In( <$E, P, pk(secret), old_route, new_route, route_digest,
+        sign(<'route-migration',
+              'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc', $E,
+              P, old_route, new_route, route_digest>,
+             secret)
+       >
+   )
+   ]
+  --[
+  RouteMigrationAccepted( $E, P, pk(secret), old_route, new_route,
+                          route_digest
+  )
+  ]->
+   [ ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) IssueAuthenticatedConfirmation:
+   [
+   !IdentityMaterial( $E, secret ),
+   DurableInbox( $E, S, transcript, direction, n, message_digest ),
+   Fr( ~confirmation_id ), Fr( ~logical_message_ids ), Fr( ~stage ),
+   Fr( ~result_digest )
+   ]
+  --[
+  AuthenticatedConfirmationIssued( $E, S, transcript, ~confirmation_id,
+                                   ~logical_message_ids, ~stage, message_digest, ~result_digest,
+                                   sign(<'authenticated-confirmation',
+                                         'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                         $E, S, transcript, ~confirmation_id, ~logical_message_ids, ~stage,
+                                         message_digest, ~result_digest>,
+                                        secret),
+                                   pk(secret)
+  )
+  ]->
+   [
+   ConfirmationEnvelope( $E, S, transcript, ~confirmation_id,
+                         ~logical_message_ids, ~stage, message_digest, ~result_digest,
+                         sign(<'authenticated-confirmation',
+                               'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc', $E,
+                               S, transcript, ~confirmation_id, ~logical_message_ids, ~stage,
+                               message_digest, ~result_digest>,
+                              secret)
+   )
+   ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) AcceptAuthenticatedConfirmation:
+   [
+   !IdentityVerification( E, secret ),
+   ConfirmationEnvelope( E, $S, transcript, confirmation_id,
+                         logical_message_ids, stage, message_digest, result_digest,
+                         sign(<'authenticated-confirmation',
+                               'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc', E,
+                               $S, transcript, confirmation_id, logical_message_ids, stage,
+                               message_digest, result_digest>,
+                              secret)
+   )
+   ]
+  --[
+  AuthenticatedConfirmationFinalized( $S, E, transcript, confirmation_id,
+                                      logical_message_ids, stage, message_digest, result_digest,
+                                      sign(<'authenticated-confirmation',
+                                            'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                            E, $S, transcript, confirmation_id, logical_message_ids, stage,
+                                            message_digest, result_digest>,
+                                           secret),
+                                      pk(secret)
+  )
+  ]->
+   [ ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) ClassifyWithinResourceBounds:
+   [ Fr( ~input ) ]
+  --[
+  InputClassifiedWithinBounds( ~input,
+                               'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc'
+  )
+  ]->
+   [ WithinResourceBounds( ~input ), Out( ~input ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) AcceptWithinResourceBounds:
+   [ WithinResourceBounds( input ), In( input ) ]
+  --[
+  ResourceBoundsValidated( input,
+                           'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc'
+  ),
+  ParserAccepted( input ), ParserStateCommitted( input )
+  ]->
+   [ ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) ClassifyOverResourceBounds:
+   [ Fr( ~input ) ]
+  --[
+  InputClassifiedOverBounds( ~input,
+                             'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc'
+  )
+  ]->
+   [ OverResourceBounds( ~input ), Out( ~input ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) RejectOverResourceBounds:
+   [ OverResourceBounds( input ), In( input ) ]
+  --[
+  ResourceLimitRejected( input,
+                         'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc'
+  )
+  ]->
+   [ ]
+
+  /* has exactly the trivial AC variant */
+
+lemma executable_honest_handshake:
+  exists-trace
+  "∃ I R pair td root #i #r.
+    (InitiatorStarted( I, R, pair, td, root ) @ #i) ∧
+    (ResponderAccepted( R, I, pair, td, root ) @ #r)"
+/*
+guarded formula characterizing all satisfying traces:
+"∃ I R pair td root #i #r.
+  (InitiatorStarted( I, R, pair, td, root ) @ #i) ∧
+  (ResponderAccepted( R, I, pair, td, root ) @ #r)"
+*/
+simplify
+solve( InitiatorReady( $I, $R, pair, prekey_pub ) ▶₀ #i )
+  case ProvisionPair
+  solve( ResponderReady( $R, $I, ~pair, prekey_pub ) ▶₀ #r )
+    case ProvisionPair
+    solve( HandshakeOffer( $I, $R, ~pair,
+                           h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                              'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                              '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $I,
+                              $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>),
+                           ideal_hybrid(~classical_component, ~pq_component, $I, $R,
+                                        h(<
+                                           'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                           'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                           '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17',
+                                           $I, $R, ~pair, h(~prekey), h(~classical_component),
+                                           h(~pq_component)>)),
+                           coordinate.1
+           ) ▶₁ #r )
+      case InitiatorFirstPacket
+      SOLVED // trace found
+    qed
+  qed
+qed
+
+lemma executable_ratchet_evolution:
+  exists-trace
+  "∃ E1 P1 td1 old1 next1 E2 P2 td2 old2 next2 #advance #recover.
+    (RatchetAdvanced( E1, P1, td1, old1, next1 ) @ #advance) ∧
+    (RatchetRecovered( E2, P2, td2, old2, next2 ) @ #recover)"
+/*
+guarded formula characterizing all satisfying traces:
+"∃ E1 P1 td1 old1 next1 E2 P2 td2 old2 next2 #advance #recover.
+  (RatchetAdvanced( E1, P1, td1, old1, next1 ) @ #advance) ∧
+  (RatchetRecovered( E2, P2, td2, old2, next2 ) @ #recover)"
+*/
+simplify
+solve( RatchetInitial( $E, P1, td1, old1 ) ▶₀ #advance )
+  case InitiatorAccept
+  solve( RatchetExposed( $E.1, P2, td2, old2 ) ▶₀ #recover )
+    case RatchetCompromiseBeforeRecovery_case_1
+    SOLVED // trace found
+  qed
+qed
+
+lemma executable_user_authority_and_route:
+  exists-trace
+  "∃ user_ref authority_state management_public recovery_public E P public
+     old_route new_route route_digest #authority #route.
+    (UserAuthorityGenesisAccepted( user_ref, authority_state,
+                                   management_public, recovery_public
+     ) @ #authority) ∧
+    (RouteMigrationAccepted( E, P, public, old_route, new_route, route_digest
+     ) @ #route)"
+/*
+guarded formula characterizing all satisfying traces:
+"∃ user_ref authority_state management_public recovery_public E P public
+   old_route new_route route_digest #authority #route.
+  (UserAuthorityGenesisAccepted( user_ref, authority_state,
+                                 management_public, recovery_public
+   ) @ #authority) ∧
+  (RouteMigrationAccepted( E, P, public, old_route, new_route, route_digest
+   ) @ #route)"
+*/
+simplify
+solve( !AuthorityGenesisVerification( user_ref, authority_state,
+                                      management_secret, recovery_secret
+       ) ▶₀ #authority )
+  case ProvisionUserAuthority
+  solve( !EndpointVerification( $E.1, endpoint_secret.1 ) ▶₁ #authority )
+    case ProvisionUserAuthority
+    solve( AuthorityGenesisEnvelope( h(<'user-authority-genesis',
+                                        'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                        pk(~management_secret), pk(~recovery_secret)>),
+                                     h(<'user-authority-state',
+                                        'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                        h(<'user-authority-genesis',
+                                           'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                           pk(~management_secret), pk(~recovery_secret)>),
+                                        '0', pk(~management_secret), pk(~recovery_secret), $E,
+                                        h(<'endpoint-state',
+                                           'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                           $E, pk(~endpoint_secret)>)
+                                       >),
+                                     pk(~management_secret), pk(~recovery_secret), $E.1, endpoint_state,
+                                     pk(~endpoint_secret.1),
+                                     sign(<'endpoint-possession',
+                                           'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                           h(<'user-authority-genesis',
+                                              'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                              pk(~management_secret), pk(~recovery_secret)>),
+                                           '0', $E.1, endpoint_state>,
+                                          ~endpoint_secret.1),
+                                     sign(<'user-authority-genesis-management',
+                                           'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                           h(<'user-authority-genesis',
+                                              'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                              pk(~management_secret), pk(~recovery_secret)>),
+                                           h(<'user-authority-state',
+                                              'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                              h(<'user-authority-genesis',
+                                                 'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                 pk(~management_secret), pk(~recovery_secret)>),
+                                              '0', pk(~management_secret), pk(~recovery_secret), $E,
+                                              h(<'endpoint-state',
+                                                 'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                 $E, pk(~endpoint_secret)>)
+                                             >)
+                                          >,
+                                          ~management_secret),
+                                     sign(<'user-authority-genesis-recovery',
+                                           'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                           h(<'user-authority-genesis',
+                                              'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                              pk(~management_secret), pk(~recovery_secret)>),
+                                           h(<'user-authority-state',
+                                              'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                              h(<'user-authority-genesis',
+                                                 'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                 pk(~management_secret), pk(~recovery_secret)>),
+                                              '0', pk(~management_secret), pk(~recovery_secret), $E,
+                                              h(<'endpoint-state',
+                                                 'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                 $E, pk(~endpoint_secret)>)
+                                             >)
+                                          >,
+                                          ~recovery_secret)
+           ) ▶₂ #authority )
+      case ProvisionUserAuthority
+      solve( !IdentityVerification( $E.1, secret ) ▶₀ #route )
+        case ProvisionPair_case_1
+        solve( !KU( sign(<'route-migration',
+                          'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                          $E.1, P, old_route, new_route, route_digest>,
+                         ~identity_secret_i)
+               ) @ #vk.12 )
+          case AuthorizeRouteMigration
+          solve( !KU( ~old_route ) @ #vk.8 )
+            case AuthorizeRouteMigration
+            solve( !KU( ~new_route ) @ #vk.11 )
+              case AuthorizeRouteMigration
+              solve( !KU( pk(~identity_secret_i) ) @ #vk.11 )
+                case AuthorizeRouteMigration
+                solve( !KU( h(<
+                               'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                               $E.1, $P, ~old_route, ~new_route>)
+                       ) @ #vk.12 )
+                  case AuthorizeRouteMigration
+                  SOLVED // trace found
+                qed
+              qed
+            qed
+          qed
+        qed
+      qed
+    qed
+  qed
+qed
+
+lemma executable_authority_transitions_and_possession:
+  exists-trace
+  "∃ user_ref predecessor management_successor recovery_successor
+     management_public recovery_public E endpoint_state endpoint_public
+     #management #recovery #possession.
+    ((AuthorityTransitionAccepted( user_ref, predecessor,
+                                   management_successor, 'management', management_public
+      ) @ #management) ∧
+     (AuthorityTransitionAccepted( user_ref, predecessor, recovery_successor,
+                                   'recovery', recovery_public
+      ) @ #recovery)) ∧
+    (EndpointPossessionAccepted( user_ref, '0', E, endpoint_state,
+                                 endpoint_public
+     ) @ #possession)"
+/*
+guarded formula characterizing all satisfying traces:
+"∃ user_ref predecessor management_successor recovery_successor
+   management_public recovery_public E endpoint_state endpoint_public
+   #management #recovery #possession.
+  (AuthorityTransitionAccepted( user_ref, predecessor,
+                                management_successor, 'management', management_public
+   ) @ #management) ∧
+  (AuthorityTransitionAccepted( user_ref, predecessor, recovery_successor,
+                                'recovery', recovery_public
+   ) @ #recovery) ∧
+  (EndpointPossessionAccepted( user_ref, '0', E, endpoint_state,
+                               endpoint_public
+   ) @ #possession)"
+*/
+simplify
+solve( !AuthorityGenesisVerification( user_ref, authority_state,
+                                      management_secret, recovery_secret
+       ) ▶₀ #possession )
+  case ProvisionUserAuthority
+  solve( !EndpointVerification( $E.1, endpoint_secret.1 ) ▶₁ #possession )
+    case ProvisionUserAuthority
+    solve( AuthorityGenesisEnvelope( h(<'user-authority-genesis',
+                                        'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                        pk(~management_secret), pk(~recovery_secret)>),
+                                     h(<'user-authority-state',
+                                        'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                        h(<'user-authority-genesis',
+                                           'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                           pk(~management_secret), pk(~recovery_secret)>),
+                                        '0', pk(~management_secret), pk(~recovery_secret), $E,
+                                        h(<'endpoint-state',
+                                           'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                           $E, pk(~endpoint_secret)>)
+                                       >),
+                                     pk(~management_secret), pk(~recovery_secret), $E.1, endpoint_state,
+                                     pk(~endpoint_secret.1),
+                                     sign(<'endpoint-possession',
+                                           'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                           h(<'user-authority-genesis',
+                                              'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                              pk(~management_secret), pk(~recovery_secret)>),
+                                           '0', $E.1, endpoint_state>,
+                                          ~endpoint_secret.1),
+                                     sign(<'user-authority-genesis-management',
+                                           'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                           h(<'user-authority-genesis',
+                                              'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                              pk(~management_secret), pk(~recovery_secret)>),
+                                           h(<'user-authority-state',
+                                              'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                              h(<'user-authority-genesis',
+                                                 'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                 pk(~management_secret), pk(~recovery_secret)>),
+                                              '0', pk(~management_secret), pk(~recovery_secret), $E,
+                                              h(<'endpoint-state',
+                                                 'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                 $E, pk(~endpoint_secret)>)
+                                             >)
+                                          >,
+                                          ~management_secret),
+                                     sign(<'user-authority-genesis-recovery',
+                                           'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                           h(<'user-authority-genesis',
+                                              'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                              pk(~management_secret), pk(~recovery_secret)>),
+                                           h(<'user-authority-state',
+                                              'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                              h(<'user-authority-genesis',
+                                                 'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                 pk(~management_secret), pk(~recovery_secret)>),
+                                              '0', pk(~management_secret), pk(~recovery_secret), $E,
+                                              h(<'endpoint-state',
+                                                 'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                 $E, pk(~endpoint_secret)>)
+                                             >)
+                                          >,
+                                          ~recovery_secret)
+           ) ▶₂ #possession )
+      case ProvisionUserAuthority
+      solve( AuthorityTransitionAccepted( h(<'user-authority-genesis',
+                                             'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                             pk(~management_secret), pk(~recovery_secret)>),
+                                          predecessor, management_successor, 'management', management_public
+             ) @ #management )
+        case AcceptManagementTransition
+        solve( !ManagementAuthority( h(<'user-authority-genesis',
+                                        'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                        pk(~management_secret), pk(~recovery_secret)>),
+                                     predecessor, management_secret.1
+               ) ▶₀ #management )
+          case ProvisionUserAuthority
+          solve( ManagementTransitionEnvelope( h(<'user-authority-genesis',
+                                                  'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                  pk(~management_secret), pk(~recovery_secret)>),
+                                               h(<'user-authority-state',
+                                                  'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                  h(<'user-authority-genesis',
+                                                     'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                     pk(~management_secret), pk(~recovery_secret)>),
+                                                  '0', pk(~management_secret), pk(~recovery_secret), $E,
+                                                  h(<'endpoint-state',
+                                                     'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                     $E, pk(~endpoint_secret)>)
+                                                 >),
+                                               management_successor, pk(~management_secret),
+                                               sign(<'user-authority-management-transition',
+                                                     'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                     h(<'user-authority-genesis',
+                                                        'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                        pk(~management_secret), pk(~recovery_secret)>),
+                                                     h(<'user-authority-state',
+                                                        'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                        h(<'user-authority-genesis',
+                                                           'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                           pk(~management_secret), pk(~recovery_secret)>),
+                                                        '0', pk(~management_secret), pk(~recovery_secret),
+                                                        $E,
+                                                        h(<'endpoint-state',
+                                                           'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                           $E, pk(~endpoint_secret)>)
+                                                       >),
+                                                     management_successor>,
+                                                    ~management_secret)
+                 ) ▶₁ #management )
+            case AuthorizeManagementTransition
+            solve( AuthorityTransitionAccepted( h(<'user-authority-genesis',
+                                                   'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                   pk(~management_secret), pk(~recovery_secret)>),
+                                                h(<'user-authority-state',
+                                                   'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                   h(<'user-authority-genesis',
+                                                      'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                      pk(~management_secret), pk(~recovery_secret)>),
+                                                   '0', pk(~management_secret), pk(~recovery_secret), $E,
+                                                   h(<'endpoint-state',
+                                                      'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                      $E, pk(~endpoint_secret)>)
+                                                  >),
+                                                recovery_successor, 'recovery', recovery_public
+                   ) @ #recovery )
+              case AcceptRecoveryTransition
+              solve( !RecoveryAuthority( h(<'user-authority-genesis',
+                                            'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                            pk(~management_secret), pk(~recovery_secret)>),
+                                         h(<'user-authority-state',
+                                            'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                            h(<'user-authority-genesis',
+                                               'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                               pk(~management_secret), pk(~recovery_secret)>),
+                                            '0', pk(~management_secret), pk(~recovery_secret), $E,
+                                            h(<'endpoint-state',
+                                               'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                               $E, pk(~endpoint_secret)>)
+                                           >),
+                                         recovery_secret.1
+                     ) ▶₀ #recovery )
+                case ProvisionUserAuthority
+                solve( RecoveryTransitionEnvelope( h(<'user-authority-genesis',
+                                                      'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                      pk(~management_secret), pk(~recovery_secret)>),
+                                                   h(<'user-authority-state',
+                                                      'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                      h(<'user-authority-genesis',
+                                                         'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                         pk(~management_secret), pk(~recovery_secret)>),
+                                                      '0', pk(~management_secret), pk(~recovery_secret), $E,
+                                                      h(<'endpoint-state',
+                                                         'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                         $E, pk(~endpoint_secret)>)
+                                                     >),
+                                                   recovery_successor, pk(~recovery_secret),
+                                                   sign(<'user-authority-recovery-transition',
+                                                         'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                         h(<'user-authority-genesis',
+                                                            'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                            pk(~management_secret), pk(~recovery_secret)>),
+                                                         h(<'user-authority-state',
+                                                            'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                            h(<'user-authority-genesis',
+                                                               'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                               pk(~management_secret), pk(~recovery_secret)
+                                                              >),
+                                                            '0', pk(~management_secret),
+                                                            pk(~recovery_secret), $E,
+                                                            h(<'endpoint-state',
+                                                               'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                               $E, pk(~endpoint_secret)>)
+                                                           >),
+                                                         recovery_successor>,
+                                                        ~recovery_secret)
+                       ) ▶₁ #recovery )
+                  case AuthorizeRecoveryTransition
+                  SOLVED // trace found
+                qed
+              qed
+            qed
+          qed
+        qed
+      qed
+    qed
+  qed
+qed
+
+lemma executable_sibling_session_binding:
+  exists-trace
+  "∃ E P td endpoint_state authority_state peer_endpoint_state
+     peer_authority_state #bound.
+    SessionSiblingBound( E, P, td, endpoint_state, authority_state,
+                         peer_endpoint_state, peer_authority_state
+    ) @ #bound"
+/*
+guarded formula characterizing all satisfying traces:
+"∃ E P td endpoint_state authority_state peer_endpoint_state
+   peer_authority_state #bound.
+  (SessionSiblingBound( E, P, td, endpoint_state, authority_state,
+                        peer_endpoint_state, peer_authority_state
+   ) @ #bound)"
+*/
+simplify
+solve( SessionBindingReady( $E, P, td ) ▶₀ #bound )
+  case InitiatorAccept
+  SOLVED // trace found
+qed
+
+lemma executable_authenticated_confirmation_and_metadata:
+  exists-trace
+  "∃ S R td direction n message packet chain metadata confirmation_id
+     logical_message_ids stage message_digest result_digest confirmation
+     public #send #accept #finality.
+    ((SenderMetadataProtected( S, R, td, metadata, packet, chain ) @ #send) ∧
+     (EndpointAccepted( R, S, td, direction, n, message, packet, chain
+      ) @ #accept)) ∧
+    (AuthenticatedConfirmationFinalized( S, R, td, confirmation_id,
+                                         logical_message_ids, stage, message_digest, result_digest,
+                                         confirmation, public
+     ) @ #finality)"
+/*
+guarded formula characterizing all satisfying traces:
+"∃ S R td direction n message packet chain metadata confirmation_id
+   logical_message_ids stage message_digest result_digest confirmation
+   public #send #accept #finality.
+  (SenderMetadataProtected( S, R, td, metadata, packet, chain ) @ #send) ∧
+  (EndpointAccepted( R, S, td, direction, n, message, packet, chain
+   ) @ #accept) ∧
+  (AuthenticatedConfirmationFinalized( S, R, td, confirmation_id,
+                                       logical_message_ids, stage, message_digest, result_digest,
+                                       confirmation, public
+   ) @ #finality)"
+*/
+simplify
+solve( ChainState( $S, $R, td, direction, n, chain ) ▶₀ #send )
+  case InitiatorAccept
+  solve( ChainState( $R, $S,
+                     h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                        'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                        '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $S,
+                        $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>),
+                     'i2r', ~coordinate,
+                     ideal_hybrid(~classical_component, ~pq_component, $S, $R,
+                                  h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                     'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                     '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $S,
+                                     $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>))
+         ) ▶₀ #accept )
+    case ResponderAccept
+    solve( !IdentityVerification( $R, secret ) ▶₀ #finality )
+      case ProvisionPair_case_1
+      solve( ConfirmationEnvelope( $R, $S,
+                                   h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                      'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                      '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $S,
+                                      $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>),
+                                   confirmation_id, logical_message_ids, stage, message_digest,
+                                   result_digest,
+                                   sign(<'authenticated-confirmation',
+                                         'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                         $R, $S,
+                                         h(<
+                                            'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                            'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                            '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17',
+                                            $S, $R, ~pair, h(~prekey), h(~classical_component),
+                                            h(~pq_component)>),
+                                         confirmation_id, logical_message_ids, stage, message_digest,
+                                         result_digest>,
+                                        ~identity_secret_i)
+             ) ▶₁ #finality )
+        case IssueAuthenticatedConfirmation
+        solve( !KU( senc(<~message, ~sender_metadata,
+                          h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                             'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                             '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $S,
+                             $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>),
+                          'i2r', ~coordinate>,
+                         ideal_hybrid(~classical_component, ~pq_component, $S, $R,
+                                      h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                         'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                         '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17',
+                                         $S, $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)
+                                        >)))
+               ) @ #vk )
+          case SendRecord
+          SOLVED // trace found
+        qed
+      qed
+    qed
+  qed
+qed
+
+lemma executable_resource_bounds:
+  exists-trace
+  "∃ accepted rejected #accept #reject.
+    (ParserAccepted( accepted ) @ #accept) ∧
+    (ResourceLimitRejected( rejected,
+                            'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc'
+     ) @ #reject)"
+/*
+guarded formula characterizing all satisfying traces:
+"∃ accepted rejected #accept #reject.
+  (ParserAccepted( accepted ) @ #accept) ∧
+  (ResourceLimitRejected( rejected,
+                          'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc'
+   ) @ #reject)"
+*/
+simplify
+solve( WithinResourceBounds( accepted ) ▶₀ #accept )
+  case ClassifyWithinResourceBounds
+  solve( OverResourceBounds( rejected ) ▶₀ #reject )
+    case ClassifyOverResourceBounds
+    solve( !KU( ~input ) @ #vk )
+      case ClassifyWithinResourceBounds
+      solve( !KU( ~input.1 ) @ #vk.1 )
+        case ClassifyOverResourceBounds
+        SOLVED // trace found
+      qed
+    qed
+  qed
+qed
+
+lemma SEC_001_hybrid_ake_key_secrecy:
+  all-traces
+  "∀ I R td root #established #know.
+    ((HybridEstablished( I, R, td, root ) @ #established) ∧
+     (K( root ) @ #know)) ⇒
+    (((∃ E P #c. (SessionCompromise( E, P, td, root ) @ #c) ∧ (#c < #know)) ∨
+      (∃ E P #c.
+        (RatchetKeyCompromise( E, P, td, root ) @ #c) ∧ (#c < #know))) ∨
+     ((∃ #c.
+        (ClassicalComponentCompromise( I, R, td, root ) @ #c) ∧ (#c < #know)) ∧
+      (∃ #q.
+        (PostQuantumComponentCompromise( I, R, td, root ) @ #q) ∧
+        (#q < #know))))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ I R td root #established #know.
+  (HybridEstablished( I, R, td, root ) @ #established) ∧
+  (K( root ) @ #know)
+ ∧
+  (∀ E P #c. (SessionCompromise( E, P, td, root ) @ #c) ⇒ ¬(#c < #know)) ∧
+  (∀ E P #c.
+    (RatchetKeyCompromise( E, P, td, root ) @ #c) ⇒ ¬(#c < #know)) ∧
+  (((∀ #c.
+      (ClassicalComponentCompromise( I, R, td, root ) @ #c) ⇒ ¬(#c < #know)) ∨
+    (∀ #q.
+      (PostQuantumComponentCompromise( I, R, td, root ) @ #q)
+     ⇒
+      ¬(#q < #know))))"
+*/
+simplify
+solve( (∀ #c.
+         (ClassicalComponentCompromise( $I, R,
+                                        h(<
+                                           'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                           'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                           '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17',
+                                           $I, R, pair, prekey_pub, h(~classical_component), h(~pq_component)
+                                          >),
+                                        ideal_hybrid(~classical_component, ~pq_component, $I, R,
+                                                     h(<
+                                                        'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                        'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                                        '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17',
+                                                        $I, R, pair, prekey_pub, h(~classical_component),
+                                                        h(~pq_component)>))
+          ) @ #c)
+        ⇒
+         ¬(#c < #know))  ∥
+       (∀ #q.
+         (PostQuantumComponentCompromise( $I, R,
+                                          h(<
+                                             'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                             'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                             '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17',
+                                             $I, R, pair, prekey_pub, h(~classical_component),
+                                             h(~pq_component)>),
+                                          ideal_hybrid(~classical_component, ~pq_component, $I, R,
+                                                       h(<
+                                                          'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                          'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                                          '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17',
+                                                          $I, R, pair, prekey_pub, h(~classical_component),
+                                                          h(~pq_component)>))
+          ) @ #q)
+        ⇒
+         ¬(#q < #know)) )
+  case case_1
+  solve( InitiatorReady( $I, R, pair, prekey_pub ) ▶₀ #established )
+    case ProvisionPair
+    solve( !KU( ideal_hybrid(~classical_component, ~pq_component, $I, $R,
+                             h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $I,
+                                $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>))
+           ) @ #vk )
+      case CompromiseSession_case_1
+      by contradiction /* from formulas */
+    next
+      case CompromiseSession_case_2
+      by contradiction /* from formulas */
+    next
+      case RatchetCompromiseBeforeRecovery_case_1
+      by contradiction /* from formulas */
+    next
+      case RatchetCompromiseBeforeRecovery_case_2
+      by contradiction /* from formulas */
+    next
+      case c_ideal_hybrid
+      solve( !KU( ~classical_component ) @ #vk.1 )
+        case CompromiseClassicalComponent
+        by contradiction /* from formulas */
+      qed
+    qed
+  qed
+next
+  case case_2
+  solve( InitiatorReady( $I, R, pair, prekey_pub ) ▶₀ #established )
+    case ProvisionPair
+    solve( !KU( ideal_hybrid(~classical_component, ~pq_component, $I, $R,
+                             h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $I,
+                                $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>))
+           ) @ #vk )
+      case CompromiseSession_case_1
+      by contradiction /* from formulas */
+    next
+      case CompromiseSession_case_2
+      by contradiction /* from formulas */
+    next
+      case RatchetCompromiseBeforeRecovery_case_1
+      by contradiction /* from formulas */
+    next
+      case RatchetCompromiseBeforeRecovery_case_2
+      by contradiction /* from formulas */
+    next
+      case c_ideal_hybrid
+      solve( !KU( ~classical_component ) @ #vk.1 )
+        case CompromiseClassicalComponent
+        solve( !KU( ~pq_component ) @ #vk.2 )
+          case CompromisePostQuantumComponent
+          by contradiction /* from formulas */
+        qed
+      qed
+    qed
+  qed
+qed
+
+lemma SEC_002_mutual_endpoint_authentication:
+  all-traces
+  "∀ R I pair td root #accept.
+    (ResponderAccepted( R, I, pair, td, root ) @ #accept) ⇒
+    (∃ #start.
+      (InitiatorStarted( I, R, pair, td, root ) @ #start) ∧
+      (#start < #accept))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ R I pair td root #accept.
+  (ResponderAccepted( R, I, pair, td, root ) @ #accept)
+ ∧
+  ∀ #start.
+   (InitiatorStarted( I, R, pair, td, root ) @ #start)
+  ⇒
+   ¬(#start < #accept)"
+*/
+simplify
+solve( ResponderReady( $R, I, pair, prekey_pub ) ▶₀ #accept )
+  case ProvisionPair
+  solve( HandshakeOffer( $I, $R, ~pair, td, root, coordinate ) ▶₁ #accept )
+    case InitiatorFirstPacket
+    by contradiction /* from formulas */
+  qed
+qed
+
+lemma SEC_004_unknown_key_share_resistance:
+  all-traces
+  "∀ R I pair td root R2 I2 #a #b.
+    ((ResponderAccepted( R, I, pair, td, root ) @ #a) ∧
+     (ResponderAccepted( R2, I2, pair, td, root ) @ #b)) ⇒
+    ((R = R2) ∧ (I = I2))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ R I pair td root R2 I2 #a #b.
+  (ResponderAccepted( R, I, pair, td, root ) @ #a) ∧
+  (ResponderAccepted( R2, I2, pair, td, root ) @ #b)
+ ∧
+  ((¬(R = R2)) ∨ (¬(I = I2)))"
+*/
+simplify
+solve( (¬($R = $R.1))  ∥ (¬(I = I2)) )
+  case case_1
+  solve( ResponderReady( $R, I, pair, prekey_pub ) ▶₀ #a )
+    case ProvisionPair
+    solve( HandshakeOffer( $I, $R, ~pair, td, root, coordinate ) ▶₁ #a )
+      case InitiatorFirstPacket
+      solve( ResponderReady( $R.1, I2, ~pair, prekey_pub ) ▶₀ #b )
+        case ProvisionPair
+        by contradiction /* from formulas */
+      qed
+    qed
+  qed
+next
+  case case_2
+  solve( ResponderReady( $R, I, pair, prekey_pub ) ▶₀ #a )
+    case ProvisionPair
+    solve( HandshakeOffer( $I, $R, ~pair, td, root, coordinate ) ▶₁ #a )
+      case InitiatorFirstPacket
+      solve( ResponderReady( $R.1, I2, ~pair, prekey_pub ) ▶₀ #b )
+        case ProvisionPair
+        by contradiction /* from formulas */
+      qed
+    qed
+  qed
+qed
+
+lemma SEC_005_key_compromise_impersonation_boundary:
+  all-traces
+  "∀ I R pair td root #accept.
+    (InitiatorEstablished( I, R, pair, td, root ) @ #accept) ⇒
+    (((∃ #respond.
+        (ResponderAccepted( R, I, pair, td, root ) @ #respond) ∧
+        (#respond < #accept)) ∨
+      (∃ public #c.
+        (IdentityMaterialCompromise( R, public ) @ #c) ∧ (#c < #accept))) ∨
+     (∃ #c. (PrekeyMaterialCompromise( R, pair ) @ #c) ∧ (#c < #accept)))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ I R pair td root #accept.
+  (InitiatorEstablished( I, R, pair, td, root ) @ #accept)
+ ∧
+  (∀ #respond.
+    (ResponderAccepted( R, I, pair, td, root ) @ #respond)
+   ⇒
+    ¬(#respond < #accept)) ∧
+  (∀ public #c.
+    (IdentityMaterialCompromise( R, public ) @ #c) ⇒ ¬(#c < #accept)) ∧
+  (∀ #c. (PrekeyMaterialCompromise( R, pair ) @ #c) ⇒ ¬(#c < #accept))"
+*/
+simplify
+solve( InitiatorPending( $I, R, pair, td, root, coordinate ) ▶₀ #accept )
+  case InitiatorFirstPacket
+  solve( SessionAccept( $I, $R, ~pair,
+                        h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                           'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                           '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $I,
+                           $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>),
+                        ideal_hybrid(~classical_component, ~pq_component, $I, $R,
+                                     h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                        'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                        '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17',
+                                        $I, $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)
+                                       >)),
+                        ~coordinate
+         ) ▶₁ #accept )
+    case ResponderAccept
+    by contradiction /* from formulas */
+  qed
+qed
+
+lemma SEC_003_classical_pq_hybrid_robustness:
+  all-traces
+  "∀ I R td root #established #know.
+    ((HybridEstablished( I, R, td, root ) @ #established) ∧
+     (K( root ) @ #know)) ⇒
+    (((∃ E P #c. (SessionCompromise( E, P, td, root ) @ #c) ∧ (#c < #know)) ∨
+      (∃ E P #c.
+        (RatchetKeyCompromise( E, P, td, root ) @ #c) ∧ (#c < #know))) ∨
+     ((∃ #c.
+        (ClassicalComponentCompromise( I, R, td, root ) @ #c) ∧ (#c < #know)) ∧
+      (∃ #q.
+        (PostQuantumComponentCompromise( I, R, td, root ) @ #q) ∧
+        (#q < #know))))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ I R td root #established #know.
+  (HybridEstablished( I, R, td, root ) @ #established) ∧
+  (K( root ) @ #know)
+ ∧
+  (∀ E P #c. (SessionCompromise( E, P, td, root ) @ #c) ⇒ ¬(#c < #know)) ∧
+  (∀ E P #c.
+    (RatchetKeyCompromise( E, P, td, root ) @ #c) ⇒ ¬(#c < #know)) ∧
+  (((∀ #c.
+      (ClassicalComponentCompromise( I, R, td, root ) @ #c) ⇒ ¬(#c < #know)) ∨
+    (∀ #q.
+      (PostQuantumComponentCompromise( I, R, td, root ) @ #q)
+     ⇒
+      ¬(#q < #know))))"
+*/
+simplify
+solve( (∀ #c.
+         (ClassicalComponentCompromise( $I, R,
+                                        h(<
+                                           'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                           'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                           '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17',
+                                           $I, R, pair, prekey_pub, h(~classical_component), h(~pq_component)
+                                          >),
+                                        ideal_hybrid(~classical_component, ~pq_component, $I, R,
+                                                     h(<
+                                                        'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                        'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                                        '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17',
+                                                        $I, R, pair, prekey_pub, h(~classical_component),
+                                                        h(~pq_component)>))
+          ) @ #c)
+        ⇒
+         ¬(#c < #know))  ∥
+       (∀ #q.
+         (PostQuantumComponentCompromise( $I, R,
+                                          h(<
+                                             'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                             'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                             '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17',
+                                             $I, R, pair, prekey_pub, h(~classical_component),
+                                             h(~pq_component)>),
+                                          ideal_hybrid(~classical_component, ~pq_component, $I, R,
+                                                       h(<
+                                                          'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                          'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                                          '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17',
+                                                          $I, R, pair, prekey_pub, h(~classical_component),
+                                                          h(~pq_component)>))
+          ) @ #q)
+        ⇒
+         ¬(#q < #know)) )
+  case case_1
+  solve( InitiatorReady( $I, R, pair, prekey_pub ) ▶₀ #established )
+    case ProvisionPair
+    solve( !KU( ideal_hybrid(~classical_component, ~pq_component, $I, $R,
+                             h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $I,
+                                $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>))
+           ) @ #vk )
+      case CompromiseSession_case_1
+      by contradiction /* from formulas */
+    next
+      case CompromiseSession_case_2
+      by contradiction /* from formulas */
+    next
+      case RatchetCompromiseBeforeRecovery_case_1
+      by contradiction /* from formulas */
+    next
+      case RatchetCompromiseBeforeRecovery_case_2
+      by contradiction /* from formulas */
+    next
+      case c_ideal_hybrid
+      solve( !KU( ~classical_component ) @ #vk.1 )
+        case CompromiseClassicalComponent
+        by contradiction /* from formulas */
+      qed
+    qed
+  qed
+next
+  case case_2
+  solve( InitiatorReady( $I, R, pair, prekey_pub ) ▶₀ #established )
+    case ProvisionPair
+    solve( !KU( ideal_hybrid(~classical_component, ~pq_component, $I, $R,
+                             h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $I,
+                                $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>))
+           ) @ #vk )
+      case CompromiseSession_case_1
+      by contradiction /* from formulas */
+    next
+      case CompromiseSession_case_2
+      by contradiction /* from formulas */
+    next
+      case RatchetCompromiseBeforeRecovery_case_1
+      by contradiction /* from formulas */
+    next
+      case RatchetCompromiseBeforeRecovery_case_2
+      by contradiction /* from formulas */
+    next
+      case c_ideal_hybrid
+      solve( !KU( ~classical_component ) @ #vk.1 )
+        case CompromiseClassicalComponent
+        solve( !KU( ~pq_component ) @ #vk.2 )
+          case CompromisePostQuantumComponent
+          by contradiction /* from formulas */
+        qed
+      qed
+    qed
+  qed
+qed
+
+lemma SEC_006_protocol_line_content_binding:
+  all-traces
+  "∀ line #i.
+    (LineAuthenticated( line ) @ #i) ⇒
+    (line =
+     'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08')"
+/*
+guarded formula characterizing all counter-examples:
+"∃ line #i.
+  (LineAuthenticated( line ) @ #i)
+ ∧
+  ¬(line =
+    'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08')"
+*/
+simplify
+by contradiction /* from formulas */
+
+lemma SEC_007_protection_profile_content_binding:
+  all-traces
+  "∀ profile #i.
+    (ProfileAuthenticated( profile ) @ #i) ⇒
+    (profile =
+     '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17')"
+/*
+guarded formula characterizing all counter-examples:
+"∃ profile #i.
+  (ProfileAuthenticated( profile ) @ #i)
+ ∧
+  ¬(profile =
+    '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17')"
+*/
+simplify
+by contradiction /* from formulas */
+
+lemma SEC_008_session_independence:
+  all-traces
+  "∀ I1 R1 td1 root1 I2 R2 td2 root2 #e1 #e2 #compromise #know.
+    (((((HybridEstablished( I1, R1, td1, root1 ) @ #e1) ∧
+        (HybridEstablished( I2, R2, td2, root2 ) @ #e2)) ∧
+       (SessionCompromise( I1, R1, td1, root1 ) @ #compromise)) ∧
+      (K( root2 ) @ #know)) ∧
+     (¬(root1 = root2))) ⇒
+    (((∃ E P #c.
+        (SessionCompromise( E, P, td2, root2 ) @ #c) ∧ (#c < #know)) ∨
+      (∃ E P #c.
+        (RatchetKeyCompromise( E, P, td2, root2 ) @ #c) ∧ (#c < #know))) ∨
+     ((∃ #c.
+        (ClassicalComponentCompromise( I2, R2, td2, root2 ) @ #c) ∧
+        (#c < #know)) ∧
+      (∃ #q.
+        (PostQuantumComponentCompromise( I2, R2, td2, root2 ) @ #q) ∧
+        (#q < #know))))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ I1 R1 td1 root1 I2 R2 td2 root2 #e1 #e2 #compromise #know.
+  (HybridEstablished( I1, R1, td1, root1 ) @ #e1) ∧
+  (HybridEstablished( I2, R2, td2, root2 ) @ #e2) ∧
+  (SessionCompromise( I1, R1, td1, root1 ) @ #compromise) ∧
+  (K( root2 ) @ #know)
+ ∧
+  (¬(root1 = root2)) ∧
+  (∀ E P #c.
+    (SessionCompromise( E, P, td2, root2 ) @ #c) ⇒ ¬(#c < #know)) ∧
+  (∀ E P #c.
+    (RatchetKeyCompromise( E, P, td2, root2 ) @ #c) ⇒ ¬(#c < #know)) ∧
+  (((∀ #c.
+      (ClassicalComponentCompromise( I2, R2, td2, root2 ) @ #c)
+     ⇒
+      ¬(#c < #know)) ∨
+    (∀ #q.
+      (PostQuantumComponentCompromise( I2, R2, td2, root2 ) @ #q)
+     ⇒
+      ¬(#q < #know))))"
+*/
+simplify
+solve( (∀ #c.
+         (ClassicalComponentCompromise( $I.1, R2,
+                                        h(<
+                                           'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                           'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                           '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17',
+                                           $I.1, R2, pair.1, prekey_pub.1, h(~classical_component.1),
+                                           h(~pq_component.1)>),
+                                        ideal_hybrid(~classical_component.1, ~pq_component.1, $I.1, R2,
+                                                     h(<
+                                                        'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                        'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                                        '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17',
+                                                        $I.1, R2, pair.1, prekey_pub.1,
+                                                        h(~classical_component.1), h(~pq_component.1)>))
+          ) @ #c)
+        ⇒
+         ¬(#c < #know))  ∥
+       (∀ #q.
+         (PostQuantumComponentCompromise( $I.1, R2,
+                                          h(<
+                                             'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                             'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                             '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17',
+                                             $I.1, R2, pair.1, prekey_pub.1, h(~classical_component.1),
+                                             h(~pq_component.1)>),
+                                          ideal_hybrid(~classical_component.1, ~pq_component.1, $I.1, R2,
+                                                       h(<
+                                                          'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                          'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                                          '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17',
+                                                          $I.1, R2, pair.1, prekey_pub.1,
+                                                          h(~classical_component.1), h(~pq_component.1)>))
+          ) @ #q)
+        ⇒
+         ¬(#q < #know)) )
+  case case_1
+  solve( InitiatorReady( $I, R1, pair, prekey_pub ) ▶₀ #e1 )
+    case ProvisionPair
+    solve( InitiatorReady( $I.1, R2, pair.1, prekey_pub ) ▶₀ #e2 )
+      case ProvisionPair
+      solve( !Established( $I, $R,
+                           h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                              'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                              '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $I,
+                              $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>),
+                           ideal_hybrid(~classical_component, ~pq_component, $I, $R,
+                                        h(<
+                                           'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                           'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                           '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17',
+                                           $I, $R, ~pair, h(~prekey), h(~classical_component),
+                                           h(~pq_component)>))
+             ) ▶₀ #compromise )
+        case InitiatorAccept
+        solve( !KU( ideal_hybrid(~classical_component.1, ~pq_component.1, $I.1,
+                                 $R.1,
+                                 h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                    'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                    '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17',
+                                    $I.1, $R.1, ~pair.1, h(~prekey.1), h(~classical_component.1),
+                                    h(~pq_component.1)>))
+               ) @ #vk )
+          case CompromiseSession_case_1
+          by contradiction /* from formulas */
+        next
+          case CompromiseSession_case_2
+          by contradiction /* from formulas */
+        next
+          case RatchetCompromiseBeforeRecovery_case_1
+          by contradiction /* from formulas */
+        next
+          case RatchetCompromiseBeforeRecovery_case_2
+          by contradiction /* from formulas */
+        next
+          case c_ideal_hybrid
+          solve( !KU( ~classical_component.1 ) @ #vk.1 )
+            case CompromiseClassicalComponent
+            by contradiction /* from formulas */
+          qed
+        qed
+      next
+        case ResponderAccept
+        solve( !KU( ideal_hybrid(~classical_component.1, ~pq_component.1, $I.1,
+                                 $R,
+                                 h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                    'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                    '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17',
+                                    $I.1, $R, ~pair.1, h(~prekey.1), h(~classical_component.1),
+                                    h(~pq_component.1)>))
+               ) @ #vk )
+          case CompromiseSession_case_1
+          by contradiction /* from formulas */
+        next
+          case CompromiseSession_case_2
+          by contradiction /* from formulas */
+        next
+          case RatchetCompromiseBeforeRecovery_case_1
+          by contradiction /* from formulas */
+        next
+          case RatchetCompromiseBeforeRecovery_case_2
+          by contradiction /* from formulas */
+        next
+          case c_ideal_hybrid
+          solve( !KU( ~classical_component.1 ) @ #vk.1 )
+            case CompromiseClassicalComponent
+            by contradiction /* from formulas */
+          qed
+        qed
+      qed
+    qed
+  qed
+next
+  case case_2
+  solve( InitiatorReady( $I, R1, pair, prekey_pub ) ▶₀ #e1 )
+    case ProvisionPair
+    solve( InitiatorReady( $I.1, R2, pair.1, prekey_pub ) ▶₀ #e2 )
+      case ProvisionPair
+      solve( !Established( $I, $R,
+                           h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                              'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                              '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $I,
+                              $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>),
+                           ideal_hybrid(~classical_component, ~pq_component, $I, $R,
+                                        h(<
+                                           'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                           'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                           '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17',
+                                           $I, $R, ~pair, h(~prekey), h(~classical_component),
+                                           h(~pq_component)>))
+             ) ▶₀ #compromise )
+        case InitiatorAccept
+        solve( !KU( ideal_hybrid(~classical_component.1, ~pq_component.1, $I.1,
+                                 $R.1,
+                                 h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                    'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                    '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17',
+                                    $I.1, $R.1, ~pair.1, h(~prekey.1), h(~classical_component.1),
+                                    h(~pq_component.1)>))
+               ) @ #vk )
+          case CompromiseSession_case_1
+          by contradiction /* from formulas */
+        next
+          case CompromiseSession_case_2
+          by contradiction /* from formulas */
+        next
+          case RatchetCompromiseBeforeRecovery_case_1
+          by contradiction /* from formulas */
+        next
+          case RatchetCompromiseBeforeRecovery_case_2
+          by contradiction /* from formulas */
+        next
+          case c_ideal_hybrid
+          solve( !KU( ~classical_component.1 ) @ #vk.1 )
+            case CompromiseClassicalComponent
+            solve( !KU( ~pq_component.1 ) @ #vk.2 )
+              case CompromisePostQuantumComponent
+              by contradiction /* from formulas */
+            qed
+          qed
+        qed
+      next
+        case ResponderAccept
+        solve( !KU( ideal_hybrid(~classical_component.1, ~pq_component.1, $I.1,
+                                 $R,
+                                 h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                    'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                    '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17',
+                                    $I.1, $R, ~pair.1, h(~prekey.1), h(~classical_component.1),
+                                    h(~pq_component.1)>))
+               ) @ #vk )
+          case CompromiseSession_case_1
+          by contradiction /* from formulas */
+        next
+          case CompromiseSession_case_2
+          by contradiction /* from formulas */
+        next
+          case RatchetCompromiseBeforeRecovery_case_1
+          by contradiction /* from formulas */
+        next
+          case RatchetCompromiseBeforeRecovery_case_2
+          by contradiction /* from formulas */
+        next
+          case c_ideal_hybrid
+          solve( !KU( ~classical_component.1 ) @ #vk.1 )
+            case CompromiseClassicalComponent
+            solve( !KU( ~pq_component.1 ) @ #vk.2 )
+              case CompromisePostQuantumComponent
+              by contradiction /* from formulas */
+            qed
+          qed
+        qed
+      qed
+    qed
+  qed
+qed
+
+lemma SEC_009_initial_forward_secrecy:
+  all-traces
+  "∀ R I pair td root #accept #know.
+    (((ResponderAccepted( R, I, pair, td, root ) @ #accept) ∧
+      (K( root ) @ #know)) ∧
+     (#accept < #know)) ⇒
+    (((∃ E P #c. (SessionCompromise( E, P, td, root ) @ #c) ∧ (#c < #know)) ∨
+      (∃ E P #c.
+        (RatchetKeyCompromise( E, P, td, root ) @ #c) ∧ (#c < #know))) ∨
+     ((∃ #c.
+        (ClassicalComponentCompromise( I, R, td, root ) @ #c) ∧ (#c < #know)) ∧
+      (∃ #q.
+        (PostQuantumComponentCompromise( I, R, td, root ) @ #q) ∧
+        (#q < #know))))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ R I pair td root #accept #know.
+  (ResponderAccepted( R, I, pair, td, root ) @ #accept) ∧
+  (K( root ) @ #know)
+ ∧
+  (#accept < #know) ∧
+  (∀ E P #c. (SessionCompromise( E, P, td, root ) @ #c) ⇒ ¬(#c < #know)) ∧
+  (∀ E P #c.
+    (RatchetKeyCompromise( E, P, td, root ) @ #c) ⇒ ¬(#c < #know)) ∧
+  (((∀ #c.
+      (ClassicalComponentCompromise( I, R, td, root ) @ #c) ⇒ ¬(#c < #know)) ∨
+    (∀ #q.
+      (PostQuantumComponentCompromise( I, R, td, root ) @ #q)
+     ⇒
+      ¬(#q < #know))))"
+*/
+simplify
+solve( (∀ #c.
+         (ClassicalComponentCompromise( I, $R, td, root ) @ #c)
+        ⇒
+         ¬(#c < #know))  ∥
+       (∀ #q.
+         (PostQuantumComponentCompromise( I, $R, td, root ) @ #q)
+        ⇒
+         ¬(#q < #know)) )
+  case case_1
+  solve( ResponderReady( $R, I, pair, prekey_pub ) ▶₀ #accept )
+    case ProvisionPair
+    solve( HandshakeOffer( $I, $R, ~pair, td, root, coordinate ) ▶₁ #accept )
+      case InitiatorFirstPacket
+      solve( !KU( ideal_hybrid(~classical_component, ~pq_component, $I, $R,
+                               h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                  'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                  '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $I,
+                                  $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>))
+             ) @ #vk )
+        case CompromiseSession_case_1
+        by contradiction /* from formulas */
+      next
+        case CompromiseSession_case_2
+        by contradiction /* from formulas */
+      next
+        case RatchetCompromiseBeforeRecovery_case_1
+        by contradiction /* from formulas */
+      next
+        case RatchetCompromiseBeforeRecovery_case_2
+        by contradiction /* from formulas */
+      next
+        case c_ideal_hybrid
+        solve( !KU( ~classical_component ) @ #vk.1 )
+          case CompromiseClassicalComponent
+          by contradiction /* from formulas */
+        qed
+      qed
+    qed
+  qed
+next
+  case case_2
+  solve( ResponderReady( $R, I, pair, prekey_pub ) ▶₀ #accept )
+    case ProvisionPair
+    solve( HandshakeOffer( $I, $R, ~pair, td, root, coordinate ) ▶₁ #accept )
+      case InitiatorFirstPacket
+      solve( !KU( ideal_hybrid(~classical_component, ~pq_component, $I, $R,
+                               h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                  'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                  '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $I,
+                                  $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>))
+             ) @ #vk )
+        case CompromiseSession_case_1
+        by contradiction /* from formulas */
+      next
+        case CompromiseSession_case_2
+        by contradiction /* from formulas */
+      next
+        case RatchetCompromiseBeforeRecovery_case_1
+        by contradiction /* from formulas */
+      next
+        case RatchetCompromiseBeforeRecovery_case_2
+        by contradiction /* from formulas */
+      next
+        case c_ideal_hybrid
+        solve( !KU( ~classical_component ) @ #vk.1 )
+          case CompromiseClassicalComponent
+          solve( !KU( ~pq_component ) @ #vk.2 )
+            case CompromisePostQuantumComponent
+            by contradiction /* from formulas */
+          qed
+        qed
+      qed
+    qed
+  qed
+qed
+
+lemma SEC_010_double_ratchet_forward_secrecy:
+  all-traces
+  "∀ E P td old next #advance #know.
+    ((RatchetAdvanced( E, P, td, old, next ) @ #advance) ∧
+     (K( old ) @ #know)) ⇒
+    (((∃ E2 P2 #c.
+        (SessionCompromise( E2, P2, td, old ) @ #c) ∧ (#c < #know)) ∨
+      (∃ E2 P2 #c.
+        (RatchetKeyCompromise( E2, P2, td, old ) @ #c) ∧ (#c < #know))) ∨
+     ((∃ I R #c.
+        (ClassicalComponentCompromise( I, R, td, old ) @ #c) ∧ (#c < #know)) ∧
+      (∃ I R #q.
+        (PostQuantumComponentCompromise( I, R, td, old ) @ #q) ∧ (#q < #know))))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ E P td old next #advance #know.
+  (RatchetAdvanced( E, P, td, old, next ) @ #advance) ∧ (K( old ) @ #know)
+ ∧
+  (∀ E2 P2 #c.
+    (SessionCompromise( E2, P2, td, old ) @ #c) ⇒ ¬(#c < #know)) ∧
+  (∀ E2 P2 #c.
+    (RatchetKeyCompromise( E2, P2, td, old ) @ #c) ⇒ ¬(#c < #know)) ∧
+  (((∀ I R #c.
+      (ClassicalComponentCompromise( I, R, td, old ) @ #c) ⇒ ¬(#c < #know)) ∨
+    (∀ I R #q.
+      (PostQuantumComponentCompromise( I, R, td, old ) @ #q)
+     ⇒
+      ¬(#q < #know))))"
+*/
+simplify
+solve( (∀ I R #c.
+         (ClassicalComponentCompromise( I, R, td, old ) @ #c) ⇒ ¬(#c < #know))  ∥
+       (∀ I R #q.
+         (PostQuantumComponentCompromise( I, R, td, old ) @ #q) ⇒ ¬(#q < #know)) )
+  case case_1
+  solve( RatchetInitial( $E, P, td, old ) ▶₀ #advance )
+    case InitiatorAccept
+    solve( !KU( ideal_hybrid(~classical_component, ~pq_component, $E, $R,
+                             h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $E,
+                                $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>))
+           ) @ #vk )
+      case CompromiseSession_case_1
+      by contradiction /* from formulas */
+    next
+      case CompromiseSession_case_2
+      by contradiction /* from formulas */
+    next
+      case RatchetCompromiseBeforeRecovery
+      by contradiction /* from formulas */
+    next
+      case c_ideal_hybrid
+      solve( !KU( ~classical_component ) @ #vk.1 )
+        case CompromiseClassicalComponent
+        by contradiction /* from formulas */
+      qed
+    qed
+  next
+    case ResponderAccept
+    solve( !KU( ideal_hybrid(~classical_component, ~pq_component, $I, $E,
+                             h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $I,
+                                $E, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>))
+           ) @ #vk )
+      case CompromiseSession_case_1
+      by contradiction /* from formulas */
+    next
+      case CompromiseSession_case_2
+      by contradiction /* from formulas */
+    next
+      case RatchetCompromiseBeforeRecovery
+      by contradiction /* from formulas */
+    next
+      case c_ideal_hybrid
+      solve( !KU( ~classical_component ) @ #vk.1 )
+        case CompromiseClassicalComponent
+        by contradiction /* from formulas */
+      qed
+    qed
+  qed
+next
+  case case_2
+  solve( RatchetInitial( $E, P, td, old ) ▶₀ #advance )
+    case InitiatorAccept
+    solve( !KU( ideal_hybrid(~classical_component, ~pq_component, $E, $R,
+                             h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $E,
+                                $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>))
+           ) @ #vk )
+      case CompromiseSession_case_1
+      by contradiction /* from formulas */
+    next
+      case CompromiseSession_case_2
+      by contradiction /* from formulas */
+    next
+      case RatchetCompromiseBeforeRecovery
+      by contradiction /* from formulas */
+    next
+      case c_ideal_hybrid
+      solve( !KU( ~classical_component ) @ #vk.1 )
+        case CompromiseClassicalComponent
+        solve( !KU( ~pq_component ) @ #vk.2 )
+          case CompromisePostQuantumComponent
+          by contradiction /* from formulas */
+        qed
+      qed
+    qed
+  next
+    case ResponderAccept
+    solve( !KU( ideal_hybrid(~classical_component, ~pq_component, $I, $E,
+                             h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $I,
+                                $E, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>))
+           ) @ #vk )
+      case CompromiseSession_case_1
+      by contradiction /* from formulas */
+    next
+      case CompromiseSession_case_2
+      by contradiction /* from formulas */
+    next
+      case RatchetCompromiseBeforeRecovery
+      by contradiction /* from formulas */
+    next
+      case c_ideal_hybrid
+      solve( !KU( ~classical_component ) @ #vk.1 )
+        case CompromiseClassicalComponent
+        solve( !KU( ~pq_component ) @ #vk.2 )
+          case CompromisePostQuantumComponent
+          by contradiction /* from formulas */
+        qed
+      qed
+    qed
+  qed
+qed
+
+lemma SEC_011_double_ratchet_post_compromise_recovery:
+  all-traces
+  "∀ E P td old next #recover #know.
+    ((RatchetRecovered( E, P, td, old, next ) @ #recover) ∧
+     (K( next ) @ #know)) ⇒
+    (∃ #c. (RatchetKeyCompromise( E, P, td, next ) @ #c) ∧ (#c < #know))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ E P td old next #recover #know.
+  (RatchetRecovered( E, P, td, old, next ) @ #recover) ∧
+  (K( next ) @ #know)
+ ∧
+  ∀ #c. (RatchetKeyCompromise( E, P, td, next ) @ #c) ⇒ ¬(#c < #know)"
+*/
+simplify
+solve( RatchetExposed( $E, P, td, old ) ▶₀ #recover )
+  case RatchetCompromiseBeforeRecovery_case_1
+  solve( !KU( ratchet_step(ideal_hybrid(~classical_component,
+                                        ~pq_component, $I, $E,
+                                        h(<
+                                           'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                           'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                           '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17',
+                                           $I, $E, ~pair, h(~prekey), h(~classical_component),
+                                           h(~pq_component)>)),
+                           ~fresh_dh)
+         ) @ #vk )
+    case RatchetCompromiseAdvanced
+    by contradiction /* from formulas */
+  next
+    case c_ratchet_step
+    by solve( !KU( ~fresh_dh ) @ #vk.2 )
+  qed
+next
+  case RatchetCompromiseBeforeRecovery_case_2
+  solve( !KU( ratchet_step(ideal_hybrid(~classical_component,
+                                        ~pq_component, $E, $R,
+                                        h(<
+                                           'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                           'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                           '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17',
+                                           $E, $R, ~pair, h(~prekey), h(~classical_component),
+                                           h(~pq_component)>)),
+                           ~fresh_dh)
+         ) @ #vk )
+    case RatchetCompromiseAdvanced
+    by contradiction /* from formulas */
+  next
+    case c_ratchet_step
+    by solve( !KU( ~fresh_dh ) @ #vk.2 )
+  qed
+qed
+
+lemma SEC_012_replay_resistance:
+  all-traces
+  "∀ R S td direction n m1 p1 c1 m2 p2 c2 #i #j.
+    ((RecordReceived( R, S, td, direction, n, m1, p1, c1 ) @ #i) ∧
+     (RecordReceived( R, S, td, direction, n, m2, p2, c2 ) @ #j)) ⇒
+    (#i = #j)"
+/*
+guarded formula characterizing all counter-examples:
+"∃ R S td direction n m1 p1 c1 m2 p2 c2 #i #j.
+  (RecordReceived( R, S, td, direction, n, m1, p1, c1 ) @ #i) ∧
+  (RecordReceived( R, S, td, direction, n, m2, p2, c2 ) @ #j)
+ ∧
+  ¬(#i = #j)"
+*/
+simplify
+solve( (#i < #j)  ∥ (#j < #i) )
+  case case_1
+  solve( ChainState( $R, S, td, direction, n, c1 ) ▶₀ #i )
+    case InitiatorAccept
+    solve( ChainState( $R, $R.1,
+                       h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                          'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                          '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $R,
+                          $R.1, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>),
+                       'i2r', ~coordinate, c2
+           ) ▶₀ #j )
+      case InitiatorAccept
+      by contradiction /* cyclic */
+    next
+      case ResponderAccept
+      solve( !KU( senc(<m1, sender_metadata,
+                        h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                           'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                           '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $R,
+                           $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>),
+                        'i2r', ~coordinate>,
+                       ideal_hybrid(~classical_component, ~pq_component, $R, $R,
+                                    h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                       'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                       '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17',
+                                       $R, $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)
+                                      >)))
+             ) @ #vk )
+        case c_senc
+        by solve( !KU( ~coordinate ) @ #vk.11 )
+      qed
+    qed
+  next
+    case ResponderAccept
+    solve( ChainState( $R, $I,
+                       h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                          'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                          '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $I,
+                          $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>),
+                       'i2r', ~coordinate, c2
+           ) ▶₀ #j )
+      case InitiatorAccept
+      solve( !KU( senc(<m1, sender_metadata,
+                        h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                           'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                           '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $I,
+                           $I, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>),
+                        'i2r', ~coordinate>,
+                       ideal_hybrid(~classical_component, ~pq_component, $I, $I,
+                                    h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                       'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                       '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17',
+                                       $I, $I, ~pair, h(~prekey), h(~classical_component), h(~pq_component)
+                                      >)))
+             ) @ #vk )
+        case c_senc
+        by solve( !KU( ~coordinate ) @ #vk.11 )
+      qed
+    next
+      case ResponderAccept
+      by contradiction /* cyclic */
+    qed
+  qed
+next
+  case case_2
+  solve( ChainState( $R, S, td, direction, n, c1 ) ▶₀ #i )
+    case InitiatorAccept
+    solve( ChainState( $R, $R.1,
+                       h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                          'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                          '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $R,
+                          $R.1, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>),
+                       'i2r', ~coordinate, c2
+           ) ▶₀ #j )
+      case InitiatorAccept
+      by contradiction /* cyclic */
+    next
+      case ResponderAccept
+      solve( !KU( senc(<m1, sender_metadata,
+                        h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                           'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                           '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $R,
+                           $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>),
+                        'i2r', ~coordinate>,
+                       ideal_hybrid(~classical_component, ~pq_component, $R, $R,
+                                    h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                       'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                       '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17',
+                                       $R, $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)
+                                      >)))
+             ) @ #vk )
+        case c_senc
+        by solve( !KU( ~coordinate ) @ #vk.11 )
+      qed
+    qed
+  next
+    case ResponderAccept
+    solve( ChainState( $R, $I,
+                       h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                          'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                          '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $I,
+                          $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>),
+                       'i2r', ~coordinate, c2
+           ) ▶₀ #j )
+      case InitiatorAccept
+      solve( !KU( senc(<m1, sender_metadata,
+                        h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                           'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                           '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $I,
+                           $I, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>),
+                        'i2r', ~coordinate>,
+                       ideal_hybrid(~classical_component, ~pq_component, $I, $I,
+                                    h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                       'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                       '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17',
+                                       $I, $I, ~pair, h(~prekey), h(~classical_component), h(~pq_component)
+                                      >)))
+             ) @ #vk )
+        case c_senc
+        by solve( !KU( ~coordinate ) @ #vk.11 )
+      qed
+    next
+      case ResponderAccept
+      by contradiction /* cyclic */
+    qed
+  qed
+qed
+
+lemma SEC_013_state_rollback_resistance:
+  all-traces
+  "∀ E td direction n #i #j.
+    ((AtomicReceiveCommit( E, td, direction, n ) @ #i) ∧
+     (AtomicReceiveCommit( E, td, direction, n ) @ #j)) ⇒
+    (#i = #j)"
+/*
+guarded formula characterizing all counter-examples:
+"∃ E td direction n #i #j.
+  (AtomicReceiveCommit( E, td, direction, n ) @ #i) ∧
+  (AtomicReceiveCommit( E, td, direction, n ) @ #j)
+ ∧
+  ¬(#i = #j)"
+*/
+simplify
+solve( (#i < #j)  ∥ (#j < #i) )
+  case case_1
+  solve( ChainState( $R, S, td, direction, n, chain ) ▶₀ #i )
+    case InitiatorAccept
+    solve( ChainState( $R, S,
+                       h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                          'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                          '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $R,
+                          $R.1, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>),
+                       'i2r', ~coordinate, chain
+           ) ▶₀ #j )
+      case InitiatorAccept
+      by contradiction /* cyclic */
+    next
+      case ResponderAccept
+      solve( !KU( senc(<message, sender_metadata,
+                        h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                           'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                           '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $R,
+                           $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>),
+                        'i2r', ~coordinate>,
+                       ideal_hybrid(~classical_component, ~pq_component, $R, $R,
+                                    h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                       'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                       '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17',
+                                       $R, $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)
+                                      >)))
+             ) @ #vk )
+        case c_senc
+        by solve( !KU( ~coordinate ) @ #vk.11 )
+      qed
+    qed
+  next
+    case ResponderAccept
+    solve( ChainState( $R, S,
+                       h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                          'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                          '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $I,
+                          $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>),
+                       'i2r', ~coordinate, chain
+           ) ▶₀ #j )
+      case InitiatorAccept
+      solve( !KU( senc(<message, sender_metadata,
+                        h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                           'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                           '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $I,
+                           $I, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>),
+                        'i2r', ~coordinate>,
+                       ideal_hybrid(~classical_component, ~pq_component, $I, $I,
+                                    h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                       'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                       '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17',
+                                       $I, $I, ~pair, h(~prekey), h(~classical_component), h(~pq_component)
+                                      >)))
+             ) @ #vk )
+        case c_senc
+        by solve( !KU( ~coordinate ) @ #vk.11 )
+      qed
+    next
+      case ResponderAccept
+      by contradiction /* cyclic */
+    qed
+  qed
+next
+  case case_2
+  solve( ChainState( $R, S, td, direction, n, chain ) ▶₀ #i )
+    case InitiatorAccept
+    solve( ChainState( $R, S,
+                       h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                          'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                          '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $R,
+                          $R.1, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>),
+                       'i2r', ~coordinate, chain
+           ) ▶₀ #j )
+      case InitiatorAccept
+      by contradiction /* cyclic */
+    next
+      case ResponderAccept
+      solve( !KU( senc(<message, sender_metadata,
+                        h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                           'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                           '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $R,
+                           $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>),
+                        'i2r', ~coordinate>,
+                       ideal_hybrid(~classical_component, ~pq_component, $R, $R,
+                                    h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                       'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                       '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17',
+                                       $R, $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)
+                                      >)))
+             ) @ #vk )
+        case c_senc
+        by solve( !KU( ~coordinate ) @ #vk.11 )
+      qed
+    qed
+  next
+    case ResponderAccept
+    solve( ChainState( $R, S,
+                       h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                          'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                          '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $I,
+                          $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>),
+                       'i2r', ~coordinate, chain
+           ) ▶₀ #j )
+      case InitiatorAccept
+      solve( !KU( senc(<message, sender_metadata,
+                        h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                           'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                           '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $I,
+                           $I, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>),
+                        'i2r', ~coordinate>,
+                       ideal_hybrid(~classical_component, ~pq_component, $I, $I,
+                                    h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                       'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                       '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17',
+                                       $I, $I, ~pair, h(~prekey), h(~classical_component), h(~pq_component)
+                                      >)))
+             ) @ #vk )
+        case c_senc
+        by solve( !KU( ~coordinate ) @ #vk.11 )
+      qed
+    next
+      case ResponderAccept
+      by contradiction /* cyclic */
+    qed
+  qed
+qed
+
+lemma SEC_014_self_certifying_user_authority:
+  all-traces
+  "∀ user_ref authority_state management_public recovery_public #accept.
+    (UserAuthorityGenesisAccepted( user_ref, authority_state,
+                                   management_public, recovery_public
+     ) @ #accept) ⇒
+    (∃ #create.
+      (UserAuthorityGenesisCreated( user_ref, authority_state,
+                                    management_public, recovery_public
+       ) @ #create) ∧
+      (#create < #accept))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ user_ref authority_state management_public recovery_public #accept.
+  (UserAuthorityGenesisAccepted( user_ref, authority_state,
+                                 management_public, recovery_public
+   ) @ #accept)
+ ∧
+  ∀ #create.
+   (UserAuthorityGenesisCreated( user_ref, authority_state,
+                                 management_public, recovery_public
+    ) @ #create)
+  ⇒
+   ¬(#create < #accept)"
+*/
+simplify
+solve( !AuthorityGenesisVerification( user_ref, authority_state,
+                                      management_secret, recovery_secret
+       ) ▶₀ #accept )
+  case ProvisionUserAuthority
+  by contradiction /* from formulas */
+qed
+
+lemma SEC_015_route_migration_safety:
+  all-traces
+  "∀ E P public old_route new_route route_digest #accept.
+    (RouteMigrationAccepted( E, P, public, old_route, new_route, route_digest
+     ) @ #accept) ⇒
+    ((∃ #authorize.
+       (RouteMigrationAuthorized( E, P, public, old_route, new_route,
+                                  route_digest
+        ) @ #authorize) ∧
+       (#authorize < #accept)) ∨
+     (∃ #c. (IdentityMaterialCompromise( E, public ) @ #c) ∧ (#c < #accept)))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ E P public old_route new_route route_digest #accept.
+  (RouteMigrationAccepted( E, P, public, old_route, new_route, route_digest
+   ) @ #accept)
+ ∧
+  (∀ #authorize.
+    (RouteMigrationAuthorized( E, P, public, old_route, new_route,
+                               route_digest
+     ) @ #authorize)
+   ⇒
+    ¬(#authorize < #accept)) ∧
+  (∀ #c. (IdentityMaterialCompromise( E, public ) @ #c) ⇒ ¬(#c < #accept))"
+*/
+simplify
+solve( !IdentityVerification( $E, secret ) ▶₀ #accept )
+  case ProvisionPair_case_1
+  solve( !KU( sign(<'route-migration',
+                    'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc', $E,
+                    P, old_route, new_route, route_digest>,
+                   ~identity_secret_i)
+         ) @ #vk.12 )
+    case AuthorizeRouteMigration
+    by contradiction /* from formulas */
+  next
+    case c_sign
+    solve( !KU( ~identity_secret_i ) @ #vk.18 )
+      case CompromiseIdentityMaterial
+      by contradiction /* from formulas */
+    qed
+  qed
+next
+  case ProvisionPair_case_2
+  solve( !KU( sign(<'route-migration',
+                    'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc', $E,
+                    P, old_route, new_route, route_digest>,
+                   ~identity_secret_r)
+         ) @ #vk.12 )
+    case AuthorizeRouteMigration
+    by contradiction /* from formulas */
+  next
+    case c_sign
+    solve( !KU( ~identity_secret_r ) @ #vk.18 )
+      case CompromiseIdentityMaterial
+      by contradiction /* from formulas */
+    qed
+  qed
+qed
+
+lemma SEC_016_management_and_recovery_transition_authorization:
+  all-traces
+  "∀ user_ref predecessor successor kind public #accept.
+    (AuthorityTransitionAccepted( user_ref, predecessor, successor, kind,
+                                  public
+     ) @ #accept) ⇒
+    (((kind = 'management') ∧
+      ((∃ #authorize.
+         (ManagementTransitionAuthorized( user_ref, predecessor, successor, public
+          ) @ #authorize) ∧
+         (#authorize < #accept)) ∨
+       (∃ #c.
+         (ManagementAuthorityCompromise( user_ref, predecessor, public ) @ #c) ∧
+         (#c < #accept)))) ∨
+     ((kind = 'recovery') ∧
+      ((∃ #authorize.
+         (RecoveryTransitionAuthorized( user_ref, predecessor, successor, public
+          ) @ #authorize) ∧
+         (#authorize < #accept)) ∨
+       (∃ #c.
+         (RecoveryAuthorityCompromise( user_ref, predecessor, public ) @ #c) ∧
+         (#c < #accept)))))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ user_ref predecessor successor kind public #accept.
+  (AuthorityTransitionAccepted( user_ref, predecessor, successor, kind,
+                                public
+   ) @ #accept)
+ ∧
+  (((¬(kind = 'management')) ∨
+    ((∀ #authorize.
+       (ManagementTransitionAuthorized( user_ref, predecessor, successor, public
+        ) @ #authorize)
+      ⇒
+       ¬(#authorize < #accept)) ∧
+     (∀ #c.
+       (ManagementAuthorityCompromise( user_ref, predecessor, public ) @ #c)
+      ⇒
+       ¬(#c < #accept))))) ∧
+  (((¬(kind = 'recovery')) ∨
+    ((∀ #authorize.
+       (RecoveryTransitionAuthorized( user_ref, predecessor, successor, public
+        ) @ #authorize)
+      ⇒
+       ¬(#authorize < #accept)) ∧
+     (∀ #c.
+       (RecoveryAuthorityCompromise( user_ref, predecessor, public ) @ #c)
+      ⇒
+       ¬(#c < #accept)))))"
+*/
+simplify
+solve( (¬(kind = 'management'))  ∥
+       ((∀ #authorize.
+          (ManagementTransitionAuthorized( user_ref, predecessor, successor, public
+           ) @ #authorize)
+         ⇒
+          ¬(#authorize < #accept)) ∧
+        (∀ #c.
+          (ManagementAuthorityCompromise( user_ref, predecessor, public ) @ #c)
+         ⇒
+          ¬(#c < #accept))) )
+  case case_1
+  solve( (¬(kind = 'recovery'))  ∥
+         ((∀ #authorize.
+            (RecoveryTransitionAuthorized( user_ref, predecessor, successor, public
+             ) @ #authorize)
+           ⇒
+            ¬(#authorize < #accept)) ∧
+          (∀ #c.
+            (RecoveryAuthorityCompromise( user_ref, predecessor, public ) @ #c)
+           ⇒
+            ¬(#c < #accept))) )
+    case case_1
+    solve( AuthorityTransitionAccepted( user_ref, predecessor, successor,
+                                        kind, public
+           ) @ #accept )
+      case AcceptManagementTransition
+      by contradiction /* from formulas */
+    next
+      case AcceptRecoveryTransition
+      by contradiction /* from formulas */
+    qed
+  next
+    case case_2
+    solve( AuthorityTransitionAccepted( user_ref, predecessor, successor,
+                                        kind, public
+           ) @ #accept )
+      case AcceptManagementTransition
+      by contradiction /* from formulas */
+    next
+      case AcceptRecoveryTransition
+      solve( !RecoveryAuthority( user_ref, predecessor, recovery_secret
+             ) ▶₀ #accept )
+        case ProvisionUserAuthority
+        solve( RecoveryTransitionEnvelope( h(<'user-authority-genesis',
+                                              'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                              pk(~management_secret), pk(~recovery_secret)>),
+                                           h(<'user-authority-state',
+                                              'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                              h(<'user-authority-genesis',
+                                                 'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                 pk(~management_secret), pk(~recovery_secret)>),
+                                              '0', pk(~management_secret), pk(~recovery_secret), $E,
+                                              h(<'endpoint-state',
+                                                 'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                 $E, pk(~endpoint_secret)>)
+                                             >),
+                                           successor, pk(~recovery_secret),
+                                           sign(<'user-authority-recovery-transition',
+                                                 'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                 h(<'user-authority-genesis',
+                                                    'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                    pk(~management_secret), pk(~recovery_secret)>),
+                                                 h(<'user-authority-state',
+                                                    'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                    h(<'user-authority-genesis',
+                                                       'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                       pk(~management_secret), pk(~recovery_secret)>),
+                                                    '0', pk(~management_secret), pk(~recovery_secret), $E,
+                                                    h(<'endpoint-state',
+                                                       'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                       $E, pk(~endpoint_secret)>)
+                                                   >),
+                                                 successor>,
+                                                ~recovery_secret)
+               ) ▶₁ #accept )
+          case AuthorizeRecoveryTransition
+          by contradiction /* from formulas */
+        qed
+      qed
+    qed
+  qed
+next
+  case case_2
+  solve( (¬(kind = 'recovery'))  ∥
+         ((∀ #authorize.
+            (RecoveryTransitionAuthorized( user_ref, predecessor, successor, public
+             ) @ #authorize)
+           ⇒
+            ¬(#authorize < #accept)) ∧
+          (∀ #c.
+            (RecoveryAuthorityCompromise( user_ref, predecessor, public ) @ #c)
+           ⇒
+            ¬(#c < #accept))) )
+    case case_1
+    solve( AuthorityTransitionAccepted( user_ref, predecessor, successor,
+                                        kind, public
+           ) @ #accept )
+      case AcceptManagementTransition
+      solve( !ManagementAuthority( user_ref, predecessor, management_secret
+             ) ▶₀ #accept )
+        case ProvisionUserAuthority
+        solve( ManagementTransitionEnvelope( h(<'user-authority-genesis',
+                                                'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                pk(~management_secret), pk(~recovery_secret)>),
+                                             h(<'user-authority-state',
+                                                'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                h(<'user-authority-genesis',
+                                                   'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                   pk(~management_secret), pk(~recovery_secret)>),
+                                                '0', pk(~management_secret), pk(~recovery_secret), $E,
+                                                h(<'endpoint-state',
+                                                   'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                   $E, pk(~endpoint_secret)>)
+                                               >),
+                                             successor, pk(~management_secret),
+                                             sign(<'user-authority-management-transition',
+                                                   'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                   h(<'user-authority-genesis',
+                                                      'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                      pk(~management_secret), pk(~recovery_secret)>),
+                                                   h(<'user-authority-state',
+                                                      'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                      h(<'user-authority-genesis',
+                                                         'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                         pk(~management_secret), pk(~recovery_secret)>),
+                                                      '0', pk(~management_secret), pk(~recovery_secret), $E,
+                                                      h(<'endpoint-state',
+                                                         'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                         $E, pk(~endpoint_secret)>)
+                                                     >),
+                                                   successor>,
+                                                  ~management_secret)
+               ) ▶₁ #accept )
+          case AuthorizeManagementTransition
+          by contradiction /* from formulas */
+        qed
+      qed
+    next
+      case AcceptRecoveryTransition
+      by contradiction /* from formulas */
+    qed
+  next
+    case case_2
+    solve( AuthorityTransitionAccepted( user_ref, predecessor, successor,
+                                        kind, public
+           ) @ #accept )
+      case AcceptManagementTransition
+      solve( !ManagementAuthority( user_ref, predecessor, management_secret
+             ) ▶₀ #accept )
+        case ProvisionUserAuthority
+        solve( ManagementTransitionEnvelope( h(<'user-authority-genesis',
+                                                'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                pk(~management_secret), pk(~recovery_secret)>),
+                                             h(<'user-authority-state',
+                                                'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                h(<'user-authority-genesis',
+                                                   'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                   pk(~management_secret), pk(~recovery_secret)>),
+                                                '0', pk(~management_secret), pk(~recovery_secret), $E,
+                                                h(<'endpoint-state',
+                                                   'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                   $E, pk(~endpoint_secret)>)
+                                               >),
+                                             successor, pk(~management_secret),
+                                             sign(<'user-authority-management-transition',
+                                                   'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                   h(<'user-authority-genesis',
+                                                      'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                      pk(~management_secret), pk(~recovery_secret)>),
+                                                   h(<'user-authority-state',
+                                                      'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                      h(<'user-authority-genesis',
+                                                         'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                         pk(~management_secret), pk(~recovery_secret)>),
+                                                      '0', pk(~management_secret), pk(~recovery_secret), $E,
+                                                      h(<'endpoint-state',
+                                                         'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                         $E, pk(~endpoint_secret)>)
+                                                     >),
+                                                   successor>,
+                                                  ~management_secret)
+               ) ▶₁ #accept )
+          case AuthorizeManagementTransition
+          by contradiction /* from formulas */
+        qed
+      qed
+    next
+      case AcceptRecoveryTransition
+      solve( !RecoveryAuthority( user_ref, predecessor, recovery_secret
+             ) ▶₀ #accept )
+        case ProvisionUserAuthority
+        solve( RecoveryTransitionEnvelope( h(<'user-authority-genesis',
+                                              'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                              pk(~management_secret), pk(~recovery_secret)>),
+                                           h(<'user-authority-state',
+                                              'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                              h(<'user-authority-genesis',
+                                                 'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                 pk(~management_secret), pk(~recovery_secret)>),
+                                              '0', pk(~management_secret), pk(~recovery_secret), $E,
+                                              h(<'endpoint-state',
+                                                 'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                 $E, pk(~endpoint_secret)>)
+                                             >),
+                                           successor, pk(~recovery_secret),
+                                           sign(<'user-authority-recovery-transition',
+                                                 'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                 h(<'user-authority-genesis',
+                                                    'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                    pk(~management_secret), pk(~recovery_secret)>),
+                                                 h(<'user-authority-state',
+                                                    'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                    h(<'user-authority-genesis',
+                                                       'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                       pk(~management_secret), pk(~recovery_secret)>),
+                                                    '0', pk(~management_secret), pk(~recovery_secret), $E,
+                                                    h(<'endpoint-state',
+                                                       'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                       $E, pk(~endpoint_secret)>)
+                                                   >),
+                                                 successor>,
+                                                ~recovery_secret)
+               ) ▶₁ #accept )
+          case AuthorizeRecoveryTransition
+          by contradiction /* from formulas */
+        qed
+      qed
+    qed
+  qed
+qed
+
+lemma SEC_017_endpoint_possession_authorization:
+  all-traces
+  "∀ user_ref epoch E endpoint_state endpoint_public #accept.
+    (EndpointPossessionAccepted( user_ref, epoch, E, endpoint_state,
+                                 endpoint_public
+     ) @ #accept) ⇒
+    ((∃ proof #authorize.
+       (EndpointPossessionAuthorized( user_ref, epoch, E, endpoint_state,
+                                      endpoint_public, proof
+        ) @ #authorize) ∧
+       (#authorize < #accept)) ∨
+     (∃ #c.
+       (EndpointAuthorityCompromise( E, endpoint_public ) @ #c) ∧
+       (#c < #accept)))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ user_ref epoch E endpoint_state endpoint_public #accept.
+  (EndpointPossessionAccepted( user_ref, epoch, E, endpoint_state,
+                               endpoint_public
+   ) @ #accept)
+ ∧
+  (∀ proof #authorize.
+    (EndpointPossessionAuthorized( user_ref, epoch, E, endpoint_state,
+                                   endpoint_public, proof
+     ) @ #authorize)
+   ⇒
+    ¬(#authorize < #accept)) ∧
+  (∀ #c.
+    (EndpointAuthorityCompromise( E, endpoint_public ) @ #c)
+   ⇒
+    ¬(#c < #accept))"
+*/
+simplify
+solve( !AuthorityGenesisVerification( user_ref, authority_state,
+                                      management_secret, recovery_secret
+       ) ▶₀ #accept )
+  case ProvisionUserAuthority
+  solve( !EndpointVerification( $E.1, endpoint_secret.1 ) ▶₁ #accept )
+    case ProvisionUserAuthority
+    solve( AuthorityGenesisEnvelope( h(<'user-authority-genesis',
+                                        'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                        pk(~management_secret), pk(~recovery_secret)>),
+                                     h(<'user-authority-state',
+                                        'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                        h(<'user-authority-genesis',
+                                           'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                           pk(~management_secret), pk(~recovery_secret)>),
+                                        '0', pk(~management_secret), pk(~recovery_secret), $E,
+                                        h(<'endpoint-state',
+                                           'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                           $E, pk(~endpoint_secret)>)
+                                       >),
+                                     pk(~management_secret), pk(~recovery_secret), $E.1, endpoint_state,
+                                     pk(~endpoint_secret.1),
+                                     sign(<'endpoint-possession',
+                                           'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                           h(<'user-authority-genesis',
+                                              'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                              pk(~management_secret), pk(~recovery_secret)>),
+                                           '0', $E.1, endpoint_state>,
+                                          ~endpoint_secret.1),
+                                     sign(<'user-authority-genesis-management',
+                                           'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                           h(<'user-authority-genesis',
+                                              'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                              pk(~management_secret), pk(~recovery_secret)>),
+                                           h(<'user-authority-state',
+                                              'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                              h(<'user-authority-genesis',
+                                                 'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                 pk(~management_secret), pk(~recovery_secret)>),
+                                              '0', pk(~management_secret), pk(~recovery_secret), $E,
+                                              h(<'endpoint-state',
+                                                 'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                 $E, pk(~endpoint_secret)>)
+                                             >)
+                                          >,
+                                          ~management_secret),
+                                     sign(<'user-authority-genesis-recovery',
+                                           'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                           h(<'user-authority-genesis',
+                                              'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                              pk(~management_secret), pk(~recovery_secret)>),
+                                           h(<'user-authority-state',
+                                              'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                              h(<'user-authority-genesis',
+                                                 'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                 pk(~management_secret), pk(~recovery_secret)>),
+                                              '0', pk(~management_secret), pk(~recovery_secret), $E,
+                                              h(<'endpoint-state',
+                                                 'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                                 $E, pk(~endpoint_secret)>)
+                                             >)
+                                          >,
+                                          ~recovery_secret)
+           ) ▶₂ #accept )
+      case ProvisionUserAuthority
+      by contradiction /* from formulas */
+    qed
+  qed
+qed
+
+lemma SEC_018_acyclic_sibling_endpoint_authority_session_binding:
+  all-traces
+  "∀ E P td endpoint_state authority_state peer_endpoint_state
+     peer_authority_state #bound.
+    (SessionSiblingBound( E, P, td, endpoint_state, authority_state,
+                          peer_endpoint_state, peer_authority_state
+     ) @ #bound) ⇒
+    ((¬(endpoint_state = authority_state)) ∧
+     (¬(peer_endpoint_state = peer_authority_state)))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ E P td endpoint_state authority_state peer_endpoint_state
+   peer_authority_state #bound.
+  (SessionSiblingBound( E, P, td, endpoint_state, authority_state,
+                        peer_endpoint_state, peer_authority_state
+   ) @ #bound)
+ ∧
+  ((endpoint_state = authority_state) ∨
+   (peer_endpoint_state = peer_authority_state))"
+*/
+simplify
+by contradiction /* from formulas */
+
+lemma SEC_019_authenticated_confirmation_finality:
+  all-traces
+  "∀ S E td confirmation_id logical_message_ids stage message_digest
+     result_digest confirmation public #finality.
+    (AuthenticatedConfirmationFinalized( S, E, td, confirmation_id,
+                                         logical_message_ids, stage, message_digest, result_digest,
+                                         confirmation, public
+     ) @ #finality) ⇒
+    ((∃ #issue.
+       (AuthenticatedConfirmationIssued( E, S, td, confirmation_id,
+                                         logical_message_ids, stage, message_digest, result_digest,
+                                         confirmation, public
+        ) @ #issue) ∧
+       (#issue < #finality)) ∨
+     (∃ #c.
+       (IdentityMaterialCompromise( E, public ) @ #c) ∧ (#c < #finality)))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ S E td confirmation_id logical_message_ids stage message_digest
+   result_digest confirmation public #finality.
+  (AuthenticatedConfirmationFinalized( S, E, td, confirmation_id,
+                                       logical_message_ids, stage, message_digest, result_digest,
+                                       confirmation, public
+   ) @ #finality)
+ ∧
+  (∀ #issue.
+    (AuthenticatedConfirmationIssued( E, S, td, confirmation_id,
+                                      logical_message_ids, stage, message_digest, result_digest, confirmation,
+                                      public
+     ) @ #issue)
+   ⇒
+    ¬(#issue < #finality)) ∧
+  (∀ #c.
+    (IdentityMaterialCompromise( E, public ) @ #c) ⇒ ¬(#c < #finality))"
+*/
+simplify
+solve( !IdentityVerification( E, secret ) ▶₀ #finality )
+  case ProvisionPair_case_1
+  solve( ConfirmationEnvelope( $I, $S, td, confirmation_id,
+                               logical_message_ids, stage, message_digest, result_digest,
+                               sign(<'authenticated-confirmation',
+                                     'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc', $I,
+                                     $S, td, confirmation_id, logical_message_ids, stage, message_digest,
+                                     result_digest>,
+                                    ~identity_secret_i)
+         ) ▶₁ #finality )
+    case IssueAuthenticatedConfirmation_case_1
+    by contradiction /* from formulas */
+  next
+    case IssueAuthenticatedConfirmation_case_2
+    by contradiction /* from formulas */
+  qed
+next
+  case ProvisionPair_case_2
+  solve( ConfirmationEnvelope( $R, $S, td, confirmation_id,
+                               logical_message_ids, stage, message_digest, result_digest,
+                               sign(<'authenticated-confirmation',
+                                     'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc', $R,
+                                     $S, td, confirmation_id, logical_message_ids, stage, message_digest,
+                                     result_digest>,
+                                    ~identity_secret_r)
+         ) ▶₁ #finality )
+    case IssueAuthenticatedConfirmation_case_1
+    by contradiction /* from formulas */
+  next
+    case IssueAuthenticatedConfirmation_case_2
+    by contradiction /* from formulas */
+  qed
+qed
+
+lemma SEC_020_fail_closed_resource_bounds:
+  all-traces
+  "(∀ input #accept.
+     (ParserAccepted( input ) @ #accept) ⇒
+     (ResourceBoundsValidated( input,
+                               'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc'
+      ) @ #accept)) ∧
+   (∀ input #reject.
+     (ResourceLimitRejected( input,
+                             'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc'
+      ) @ #reject) ⇒
+     (¬(∃ #commit. ParserStateCommitted( input ) @ #commit)))"
+/*
+guarded formula characterizing all counter-examples:
+"((∃ input #accept.
+    (ParserAccepted( input ) @ #accept)
+   ∧
+    ¬(ResourceBoundsValidated( input,
+                               'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc'
+      ) @ #accept)) ∨
+  (∃ input #reject.
+    (ResourceLimitRejected( input,
+                            'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc'
+     ) @ #reject)
+   ∧
+    ∃ #commit. (ParserStateCommitted( input ) @ #commit)))"
+*/
+induction
+  case empty_trace
+  by contradiction /* from formulas */
+next
+  case non_empty_trace
+  solve( (∃ input #accept.
+           (ParserAccepted( input ) @ #accept)
+          ∧
+           ¬(ResourceBoundsValidated( input,
+                                      'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc'
+             ) @ #accept))  ∥
+         (∃ input #reject.
+           (ResourceLimitRejected( input,
+                                   'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc'
+            ) @ #reject)
+          ∧
+           ∃ #commit. (ParserStateCommitted( input ) @ #commit)) )
+    case case_1
+    by contradiction /* from formulas */
+  next
+    case case_2
+    solve( (last(#reject))  ∥
+           (∀ #commit. (ParserStateCommitted( input ) @ #commit) ⇒ last(#commit)) )
+      case case_1
+      solve( OverResourceBounds( input ) ▶₀ #reject )
+        case ClassifyOverResourceBounds
+        by solve( WithinResourceBounds( ~input ) ▶₀ #commit )
+      qed
+    next
+      case case_2
+      solve( OverResourceBounds( input ) ▶₀ #reject )
+        case ClassifyOverResourceBounds
+        by solve( WithinResourceBounds( ~input ) ▶₀ #commit )
+      qed
+    qed
+  qed
+qed
+
+lemma SEC_022_pairwise_record_authentication_and_integrity:
+  all-traces
+  "∀ R S td direction n message packet chain #receive.
+    (RecordReceived( R, S, td, direction, n, message, packet, chain
+     ) @ #receive) ⇒
+    ((((∃ #send.
+         (RecordSent( S, R, td, direction, n, message, packet, chain ) @ #send) ∧
+         (#send < #receive)) ∨
+       (∃ E P #c.
+         (SessionCompromise( E, P, td, chain ) @ #c) ∧ (#c < #receive))) ∨
+      (∃ E P #c.
+        (RatchetKeyCompromise( E, P, td, chain ) @ #c) ∧ (#c < #receive))) ∨
+     ((∃ I P #c.
+        (ClassicalComponentCompromise( I, P, td, chain ) @ #c) ∧
+        (#c < #receive)) ∧
+      (∃ I P #q.
+        (PostQuantumComponentCompromise( I, P, td, chain ) @ #q) ∧
+        (#q < #receive))))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ R S td direction n message packet chain #receive.
+  (RecordReceived( R, S, td, direction, n, message, packet, chain
+   ) @ #receive)
+ ∧
+  (∀ #send.
+    (RecordSent( S, R, td, direction, n, message, packet, chain ) @ #send)
+   ⇒
+    ¬(#send < #receive)) ∧
+  (∀ E P #c.
+    (SessionCompromise( E, P, td, chain ) @ #c) ⇒ ¬(#c < #receive)) ∧
+  (∀ E P #c.
+    (RatchetKeyCompromise( E, P, td, chain ) @ #c) ⇒ ¬(#c < #receive)) ∧
+  (((∀ I P #c.
+      (ClassicalComponentCompromise( I, P, td, chain ) @ #c)
+     ⇒
+      ¬(#c < #receive)) ∨
+    (∀ I P #q.
+      (PostQuantumComponentCompromise( I, P, td, chain ) @ #q)
+     ⇒
+      ¬(#q < #receive))))"
+*/
+simplify
+solve( (∀ I P #c.
+         (ClassicalComponentCompromise( I, P, td, chain ) @ #c)
+        ⇒
+         ¬(#c < #receive))  ∥
+       (∀ I P #q.
+         (PostQuantumComponentCompromise( I, P, td, chain ) @ #q)
+        ⇒
+         ¬(#q < #receive)) )
+  case case_1
+  solve( ChainState( $R, S, td, direction, n, chain ) ▶₀ #receive )
+    case InitiatorAccept
+    solve( !KU( senc(<message, sender_metadata,
+                      h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                         'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                         '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $R,
+                         $R.1, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>),
+                      'i2r', ~coordinate>,
+                     ideal_hybrid(~classical_component, ~pq_component, $R, $R.1,
+                                  h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                     'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                     '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $R,
+                                     $R.1, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>)))
+           ) @ #vk )
+      case SendRecord
+      by contradiction /* from formulas */
+    next
+      case c_senc
+      solve( !KU( ~coordinate ) @ #vk.10 )
+        case SendRecord
+        solve( !KU( ideal_hybrid(~classical_component, ~pq_component, $R, $R.1,
+                                 h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                    'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                    '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $R,
+                                    $R.1, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>))
+               ) @ #vk.3 )
+          case CompromiseSession_case_1
+          by contradiction /* from formulas */
+        next
+          case CompromiseSession_case_2
+          by contradiction /* from formulas */
+        next
+          case RatchetCompromiseBeforeRecovery_case_1
+          by contradiction /* from formulas */
+        next
+          case RatchetCompromiseBeforeRecovery_case_2
+          by contradiction /* from formulas */
+        next
+          case c_ideal_hybrid
+          solve( !KU( ~classical_component ) @ #vk.11 )
+            case CompromiseClassicalComponent
+            by contradiction /* from formulas */
+          qed
+        qed
+      qed
+    qed
+  next
+    case ResponderAccept
+    solve( !KU( senc(<message, sender_metadata,
+                      h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                         'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                         '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $I,
+                         $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>),
+                      'i2r', ~coordinate>,
+                     ideal_hybrid(~classical_component, ~pq_component, $I, $R,
+                                  h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                     'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                     '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $I,
+                                     $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>)))
+           ) @ #vk )
+      case SendRecord
+      by contradiction /* from formulas */
+    next
+      case c_senc
+      solve( !KU( ~coordinate ) @ #vk.10 )
+        case SendRecord
+        solve( !KU( ideal_hybrid(~classical_component, ~pq_component, $I, $R,
+                                 h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                    'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                    '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $I,
+                                    $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>))
+               ) @ #vk.3 )
+          case CompromiseSession_case_1
+          by contradiction /* from formulas */
+        next
+          case CompromiseSession_case_2
+          by contradiction /* from formulas */
+        next
+          case RatchetCompromiseBeforeRecovery_case_1
+          by contradiction /* from formulas */
+        next
+          case RatchetCompromiseBeforeRecovery_case_2
+          by contradiction /* from formulas */
+        next
+          case c_ideal_hybrid
+          solve( !KU( ~classical_component ) @ #vk.11 )
+            case CompromiseClassicalComponent
+            by contradiction /* from formulas */
+          qed
+        qed
+      qed
+    qed
+  qed
+next
+  case case_2
+  solve( ChainState( $R, S, td, direction, n, chain ) ▶₀ #receive )
+    case InitiatorAccept
+    solve( !KU( senc(<message, sender_metadata,
+                      h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                         'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                         '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $R,
+                         $R.1, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>),
+                      'i2r', ~coordinate>,
+                     ideal_hybrid(~classical_component, ~pq_component, $R, $R.1,
+                                  h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                     'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                     '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $R,
+                                     $R.1, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>)))
+           ) @ #vk )
+      case SendRecord
+      by contradiction /* from formulas */
+    next
+      case c_senc
+      solve( !KU( ~coordinate ) @ #vk.10 )
+        case SendRecord
+        solve( !KU( ideal_hybrid(~classical_component, ~pq_component, $R, $R.1,
+                                 h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                    'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                    '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $R,
+                                    $R.1, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>))
+               ) @ #vk.3 )
+          case CompromiseSession_case_1
+          by contradiction /* from formulas */
+        next
+          case CompromiseSession_case_2
+          by contradiction /* from formulas */
+        next
+          case RatchetCompromiseBeforeRecovery_case_1
+          by contradiction /* from formulas */
+        next
+          case RatchetCompromiseBeforeRecovery_case_2
+          by contradiction /* from formulas */
+        next
+          case c_ideal_hybrid
+          solve( !KU( ~classical_component ) @ #vk.11 )
+            case CompromiseClassicalComponent
+            solve( !KU( ~pq_component ) @ #vk.12 )
+              case CompromisePostQuantumComponent
+              by contradiction /* from formulas */
+            qed
+          qed
+        qed
+      qed
+    qed
+  next
+    case ResponderAccept
+    solve( !KU( senc(<message, sender_metadata,
+                      h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                         'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                         '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $I,
+                         $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>),
+                      'i2r', ~coordinate>,
+                     ideal_hybrid(~classical_component, ~pq_component, $I, $R,
+                                  h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                     'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                     '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $I,
+                                     $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>)))
+           ) @ #vk )
+      case SendRecord
+      by contradiction /* from formulas */
+    next
+      case c_senc
+      solve( !KU( ~coordinate ) @ #vk.10 )
+        case SendRecord
+        solve( !KU( ideal_hybrid(~classical_component, ~pq_component, $I, $R,
+                                 h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                    'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                    '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $I,
+                                    $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>))
+               ) @ #vk.3 )
+          case CompromiseSession_case_1
+          by contradiction /* from formulas */
+        next
+          case CompromiseSession_case_2
+          by contradiction /* from formulas */
+        next
+          case RatchetCompromiseBeforeRecovery_case_1
+          by contradiction /* from formulas */
+        next
+          case RatchetCompromiseBeforeRecovery_case_2
+          by contradiction /* from formulas */
+        next
+          case c_ideal_hybrid
+          solve( !KU( ~classical_component ) @ #vk.11 )
+            case CompromiseClassicalComponent
+            solve( !KU( ~pq_component ) @ #vk.12 )
+              case CompromisePostQuantumComponent
+              by contradiction /* from formulas */
+            qed
+          qed
+        qed
+      qed
+    qed
+  qed
+qed
+
+lemma SEC_021_pairwise_record_confidentiality:
+  all-traces
+  "∀ S R td direction n message packet chain #send #know.
+    ((RecordSent( S, R, td, direction, n, message, packet, chain ) @ #send) ∧
+     (K( message ) @ #know)) ⇒
+    (((∃ E P #c.
+        (SessionCompromise( E, P, td, chain ) @ #c) ∧ (#c < #know)) ∨
+      (∃ E P #c.
+        (RatchetKeyCompromise( E, P, td, chain ) @ #c) ∧ (#c < #know))) ∨
+     ((∃ I P #c.
+        (ClassicalComponentCompromise( I, P, td, chain ) @ #c) ∧ (#c < #know)) ∧
+      (∃ I P #q.
+        (PostQuantumComponentCompromise( I, P, td, chain ) @ #q) ∧
+        (#q < #know))))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ S R td direction n message packet chain #send #know.
+  (RecordSent( S, R, td, direction, n, message, packet, chain ) @ #send) ∧
+  (K( message ) @ #know)
+ ∧
+  (∀ E P #c. (SessionCompromise( E, P, td, chain ) @ #c) ⇒ ¬(#c < #know)) ∧
+  (∀ E P #c.
+    (RatchetKeyCompromise( E, P, td, chain ) @ #c) ⇒ ¬(#c < #know)) ∧
+  (((∀ I P #c.
+      (ClassicalComponentCompromise( I, P, td, chain ) @ #c) ⇒ ¬(#c < #know)) ∨
+    (∀ I P #q.
+      (PostQuantumComponentCompromise( I, P, td, chain ) @ #q)
+     ⇒
+      ¬(#q < #know))))"
+*/
+simplify
+solve( (∀ I P #c.
+         (ClassicalComponentCompromise( I, P, td, chain ) @ #c)
+        ⇒
+         ¬(#c < #know))  ∥
+       (∀ I P #q.
+         (PostQuantumComponentCompromise( I, P, td, chain ) @ #q)
+        ⇒
+         ¬(#q < #know)) )
+  case case_1
+  solve( ChainState( $S, R, td, direction, n, chain ) ▶₀ #send )
+    case InitiatorAccept
+    solve( !KU( ~message ) @ #vk )
+      case SendRecord
+      solve( !KU( ideal_hybrid(~classical_component, ~pq_component, $S, $R,
+                               h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                  'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                  '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $S,
+                                  $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>))
+             ) @ #vk.1 )
+        case CompromiseSession_case_1
+        by contradiction /* from formulas */
+      next
+        case CompromiseSession_case_2
+        by contradiction /* from formulas */
+      next
+        case RatchetCompromiseBeforeRecovery_case_1
+        by contradiction /* from formulas */
+      next
+        case RatchetCompromiseBeforeRecovery_case_2
+        by contradiction /* from formulas */
+      next
+        case c_ideal_hybrid
+        solve( !KU( ~classical_component ) @ #vk.2 )
+          case CompromiseClassicalComponent
+          by contradiction /* from formulas */
+        qed
+      qed
+    qed
+  next
+    case ResponderAccept
+    solve( !KU( ~message ) @ #vk )
+      case SendRecord
+      solve( !KU( ideal_hybrid(~classical_component, ~pq_component, $I, $S,
+                               h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                  'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                  '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $I,
+                                  $S, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>))
+             ) @ #vk.1 )
+        case CompromiseSession_case_1
+        by contradiction /* from formulas */
+      next
+        case CompromiseSession_case_2
+        by contradiction /* from formulas */
+      next
+        case RatchetCompromiseBeforeRecovery_case_1
+        by contradiction /* from formulas */
+      next
+        case RatchetCompromiseBeforeRecovery_case_2
+        by contradiction /* from formulas */
+      next
+        case c_ideal_hybrid
+        solve( !KU( ~classical_component ) @ #vk.2 )
+          case CompromiseClassicalComponent
+          by contradiction /* from formulas */
+        qed
+      qed
+    qed
+  qed
+next
+  case case_2
+  solve( ChainState( $S, R, td, direction, n, chain ) ▶₀ #send )
+    case InitiatorAccept
+    solve( !KU( ~message ) @ #vk )
+      case SendRecord
+      solve( !KU( ideal_hybrid(~classical_component, ~pq_component, $S, $R,
+                               h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                  'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                  '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $S,
+                                  $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>))
+             ) @ #vk.1 )
+        case CompromiseSession_case_1
+        by contradiction /* from formulas */
+      next
+        case CompromiseSession_case_2
+        by contradiction /* from formulas */
+      next
+        case RatchetCompromiseBeforeRecovery_case_1
+        by contradiction /* from formulas */
+      next
+        case RatchetCompromiseBeforeRecovery_case_2
+        by contradiction /* from formulas */
+      next
+        case c_ideal_hybrid
+        solve( !KU( ~classical_component ) @ #vk.2 )
+          case CompromiseClassicalComponent
+          solve( !KU( ~pq_component ) @ #vk.3 )
+            case CompromisePostQuantumComponent
+            by contradiction /* from formulas */
+          qed
+        qed
+      qed
+    qed
+  next
+    case ResponderAccept
+    solve( !KU( ~message ) @ #vk )
+      case SendRecord
+      solve( !KU( ideal_hybrid(~classical_component, ~pq_component, $I, $S,
+                               h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                  'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                  '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $I,
+                                  $S, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>))
+             ) @ #vk.1 )
+        case CompromiseSession_case_1
+        by contradiction /* from formulas */
+      next
+        case CompromiseSession_case_2
+        by contradiction /* from formulas */
+      next
+        case RatchetCompromiseBeforeRecovery_case_1
+        by contradiction /* from formulas */
+      next
+        case RatchetCompromiseBeforeRecovery_case_2
+        by contradiction /* from formulas */
+      next
+        case c_ideal_hybrid
+        solve( !KU( ~classical_component ) @ #vk.2 )
+          case CompromiseClassicalComponent
+          solve( !KU( ~pq_component ) @ #vk.3 )
+            case CompromisePostQuantumComponent
+            by contradiction /* from formulas */
+          qed
+        qed
+      qed
+    qed
+  qed
+qed
+
+lemma SEC_023_sender_metadata_confidentiality:
+  all-traces
+  "∀ S R td metadata packet chain #send #know.
+    ((SenderMetadataProtected( S, R, td, metadata, packet, chain ) @ #send) ∧
+     (K( metadata ) @ #know)) ⇒
+    (((∃ E P #c.
+        (SessionCompromise( E, P, td, chain ) @ #c) ∧ (#c < #know)) ∨
+      (∃ E P #c.
+        (RatchetKeyCompromise( E, P, td, chain ) @ #c) ∧ (#c < #know))) ∨
+     ((∃ I P #c.
+        (ClassicalComponentCompromise( I, P, td, chain ) @ #c) ∧ (#c < #know)) ∧
+      (∃ I P #q.
+        (PostQuantumComponentCompromise( I, P, td, chain ) @ #q) ∧
+        (#q < #know))))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ S R td metadata packet chain #send #know.
+  (SenderMetadataProtected( S, R, td, metadata, packet, chain ) @ #send) ∧
+  (K( metadata ) @ #know)
+ ∧
+  (∀ E P #c. (SessionCompromise( E, P, td, chain ) @ #c) ⇒ ¬(#c < #know)) ∧
+  (∀ E P #c.
+    (RatchetKeyCompromise( E, P, td, chain ) @ #c) ⇒ ¬(#c < #know)) ∧
+  (((∀ I P #c.
+      (ClassicalComponentCompromise( I, P, td, chain ) @ #c) ⇒ ¬(#c < #know)) ∨
+    (∀ I P #q.
+      (PostQuantumComponentCompromise( I, P, td, chain ) @ #q)
+     ⇒
+      ¬(#q < #know))))"
+*/
+simplify
+solve( (∀ I P #c.
+         (ClassicalComponentCompromise( I, P, td, chain ) @ #c)
+        ⇒
+         ¬(#c < #know))  ∥
+       (∀ I P #q.
+         (PostQuantumComponentCompromise( I, P, td, chain ) @ #q)
+        ⇒
+         ¬(#q < #know)) )
+  case case_1
+  solve( ChainState( $S, R, td, direction, n, chain ) ▶₀ #send )
+    case InitiatorAccept
+    solve( !KU( ~sender_metadata ) @ #vk )
+      case SendRecord
+      solve( !KU( ideal_hybrid(~classical_component, ~pq_component, $S, $R,
+                               h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                  'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                  '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $S,
+                                  $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>))
+             ) @ #vk.1 )
+        case CompromiseSession_case_1
+        by contradiction /* from formulas */
+      next
+        case CompromiseSession_case_2
+        by contradiction /* from formulas */
+      next
+        case RatchetCompromiseBeforeRecovery_case_1
+        by contradiction /* from formulas */
+      next
+        case RatchetCompromiseBeforeRecovery_case_2
+        by contradiction /* from formulas */
+      next
+        case c_ideal_hybrid
+        solve( !KU( ~classical_component ) @ #vk.2 )
+          case CompromiseClassicalComponent
+          by contradiction /* from formulas */
+        qed
+      qed
+    qed
+  next
+    case ResponderAccept
+    solve( !KU( ~sender_metadata ) @ #vk )
+      case SendRecord
+      solve( !KU( ideal_hybrid(~classical_component, ~pq_component, $I, $S,
+                               h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                  'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                  '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $I,
+                                  $S, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>))
+             ) @ #vk.1 )
+        case CompromiseSession_case_1
+        by contradiction /* from formulas */
+      next
+        case CompromiseSession_case_2
+        by contradiction /* from formulas */
+      next
+        case RatchetCompromiseBeforeRecovery_case_1
+        by contradiction /* from formulas */
+      next
+        case RatchetCompromiseBeforeRecovery_case_2
+        by contradiction /* from formulas */
+      next
+        case c_ideal_hybrid
+        solve( !KU( ~classical_component ) @ #vk.2 )
+          case CompromiseClassicalComponent
+          by contradiction /* from formulas */
+        qed
+      qed
+    qed
+  qed
+next
+  case case_2
+  solve( ChainState( $S, R, td, direction, n, chain ) ▶₀ #send )
+    case InitiatorAccept
+    solve( !KU( ~sender_metadata ) @ #vk )
+      case SendRecord
+      solve( !KU( ideal_hybrid(~classical_component, ~pq_component, $S, $R,
+                               h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                  'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                  '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $S,
+                                  $R, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>))
+             ) @ #vk.1 )
+        case CompromiseSession_case_1
+        by contradiction /* from formulas */
+      next
+        case CompromiseSession_case_2
+        by contradiction /* from formulas */
+      next
+        case RatchetCompromiseBeforeRecovery_case_1
+        by contradiction /* from formulas */
+      next
+        case RatchetCompromiseBeforeRecovery_case_2
+        by contradiction /* from formulas */
+      next
+        case c_ideal_hybrid
+        solve( !KU( ~classical_component ) @ #vk.2 )
+          case CompromiseClassicalComponent
+          solve( !KU( ~pq_component ) @ #vk.3 )
+            case CompromisePostQuantumComponent
+            by contradiction /* from formulas */
+          qed
+        qed
+      qed
+    qed
+  next
+    case ResponderAccept
+    solve( !KU( ~sender_metadata ) @ #vk )
+      case SendRecord
+      solve( !KU( ideal_hybrid(~classical_component, ~pq_component, $I, $S,
+                               h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                  'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                                  '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $I,
+                                  $S, ~pair, h(~prekey), h(~classical_component), h(~pq_component)>))
+             ) @ #vk.1 )
+        case CompromiseSession_case_1
+        by contradiction /* from formulas */
+      next
+        case CompromiseSession_case_2
+        by contradiction /* from formulas */
+      next
+        case RatchetCompromiseBeforeRecovery_case_1
+        by contradiction /* from formulas */
+      next
+        case RatchetCompromiseBeforeRecovery_case_2
+        by contradiction /* from formulas */
+      next
+        case c_ideal_hybrid
+        solve( !KU( ~classical_component ) @ #vk.2 )
+          case CompromiseClassicalComponent
+          solve( !KU( ~pq_component ) @ #vk.3 )
+            case CompromisePostQuantumComponent
+            by contradiction /* from formulas */
+          qed
+        qed
+      qed
+    qed
+  qed
+qed
+
+/* All wellformedness checks were successful. */
+
+end

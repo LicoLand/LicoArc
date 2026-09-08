@@ -9,11 +9,11 @@ specification; normative field semantics come only from the Field Registry.
 | --- | --- |
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-confirmed-message-ids` |
-| Decision status | `DECIDED` |
-| Definition status | `PARTIAL` |
+| Decision status | `RETIRED` |
+| Definition status | `NOT-SPECIFIED` |
 | Existing authority | [Field Registry](../../../spec/FIELD-REGISTRY.md) |
-| Predecessor or successor | Succeeds `FLD-confirmed-message-id`; no successor. |
-| Current conclusion | `confirmedMessageIds` is a bounded canonical non-empty array of Messages sharing one confirmation stage, outcome, and failure code when present. |
+| Predecessor or successor | Succeeds `FLD-confirmed-message-id`; succeeded by `FLD-confirmed-message-ids-v1`. |
+| Current conclusion | Retired: Generation 1 preserves bounded Message correlation but removes checkpoint-before-transition semantics. |
 
 ## Question
 
@@ -78,4 +78,4 @@ confirmation statement to be checkpoint-covered before finality.
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. Only the scope recorded by this decision and its linked normative authorities is defined; any remaining normative ambiguity requires a successor decision before entering the protocol definition.
+The retired definition is `NOT-SPECIFIED`; its successor owns initial V1 semantics.

@@ -14,7 +14,7 @@ disposition come only from the
 | Decision status | `OPEN`, `READY`, `DECIDED`, `REJECTED`, or `RETIRED` |
 | Definition status | `NOT-SPECIFIED`, `PARTIAL`, or `SPECIFIED` |
 | Candidate spellings | `<names or non-field carriers>` |
-| Candidate layer | `<Transport Profile / Outer Envelope / Pairwise Protection / Reliable Exchange / Generic Message>` |
+| Candidate layer | `<Transport Profile / Transport Body / Pairwise Protection / Reliable Exchange / Generic Message>` |
 | Observer set | `<Endpoint / Station / carrier / outside observer>` |
 | Existing authority | `<Canonical Field Registry link for decided or rejected scope; none while OPEN>` |
 | Authority targets | `<Canonical Field Registry / versioned schema / conformance paths>` |
