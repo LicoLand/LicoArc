@@ -57,7 +57,6 @@ test("Profile and Protocol Line identities use named non-circular semantic proje
         .find((capability) => capability.capabilityId === capabilityId).semanticIdentity),
     protectionProfileIds: fixture.line.protectionProfileIds,
     stableClaimIds: fixture.line.stableClaimIds,
-    selectionRules: fixture.protocolLines.selection
   });
 
   assert.equal(profileProjection[0], "ProtectionProfileSemanticProjectionV1");
@@ -84,7 +83,6 @@ test("Profile and Protocol Line identities use named non-circular semantic proje
         .find((capability) => capability.capabilityId === capabilityId).semanticIdentity),
     protectionProfileIds: fixture.line.protectionProfileIds,
     stableClaimIds: fixture.line.stableClaimIds,
-    selectionRules: fixture.protocolLines.selection
   };
   assert.equal(computeProtocolLineId(lineWithExcludedMetadata), fixture.line.protocolLineId);
 
@@ -94,18 +92,17 @@ test("Profile and Protocol Line identities use named non-circular semantic proje
 });
 
 test("cross-capability maxima are exact, positive, and fit their declared enclosing records", async () => {
-  const [protection, messaging, reliable, transport, group, evidence, identityProfiles] =
+  const [protection, messaging, reliable, transport, group, identityProfiles] =
     await Promise.all([
       "spec/v1/protection/bounds.json",
       "spec/v1/messaging/bounds.json",
       "spec/v1/reliable/bounds.json",
       "spec/v1/transport/bounds.json",
       "spec/v1/group/bounds.json",
-      "spec/v1/evidence/bounds.json",
       "spec/v1/identity/signature-profiles.json"
     ].map(readJson));
 
-  for (const source of [protection, messaging, reliable, transport, group, evidence]) {
+  for (const source of [protection, messaging, reliable, transport, group]) {
     for (const [name, value] of Object.entries(source.bounds)) {
       assert.ok(typeof value === "number" && Number.isSafeInteger(value) && value > 0,
         `${source.registryVersion}.${name}`);
@@ -124,20 +121,14 @@ test("cross-capability maxima are exact, positive, and fit their declared enclos
   assert.equal(group.bounds.MAX_GROUP_PAYLOAD_BYTES, messaging.bounds.MAX_PAYLOAD_BYTES);
 
   const signatureProfiles = new Map(identityProfiles.profiles.map((profile) => [profile.name, profile]));
-  assert.equal(evidence.bounds.ED25519_PUBLIC_KEY_BYTES,
+  assert.equal(protection.primitiveBytes.ED25519_PUBLIC_KEY,
     signatureProfiles.get("Ed25519").semanticDefinition.publicKeyBytes);
-  assert.equal(evidence.bounds.ED25519_SIGNATURE_BYTES,
+  assert.equal(protection.primitiveBytes.ED25519_SIGNATURE,
     signatureProfiles.get("Ed25519").semanticDefinition.signatureBytes);
-  assert.equal(evidence.bounds.ML_DSA_65_PUBLIC_KEY_BYTES,
+  assert.equal(protection.primitiveBytes.ML_DSA_65_PUBLIC_KEY,
     signatureProfiles.get("ML-DSA-65").semanticDefinition.publicKeyBytes);
-  assert.equal(evidence.bounds.ML_DSA_65_SIGNATURE_BYTES,
+  assert.equal(protection.primitiveBytes.ML_DSA_65_SIGNATURE,
     signatureProfiles.get("ML-DSA-65").semanticDefinition.signatureBytes);
-  assert.equal(evidence.bounds.MAX_EVIDENCE_CHECKPOINT_BYTES,
-    evidence.canonicalMaxima.checkpointBytes);
-  assert.equal(evidence.bounds.MAX_EVIDENCE_IDENTITY_BUNDLE_BYTES,
-    evidence.canonicalMaxima.identityBundleBytes);
-  assert.equal(evidence.bounds.MAX_EVIDENCE_VERIFICATION_PACKAGE_BYTES,
-    evidence.canonicalMaxima.verificationPackageBytes);
 });
 
 test("formal binding validation remains source-authoritative and lifecycle-generic", async () => {
@@ -244,10 +235,6 @@ function completeAdmissionFixture() {
   const profileId = computeProtectionProfileId(profileIdentityInput);
   const mandatoryCapabilities = ["capability.alpha", "licoarc.pairwise-protection.v1"];
   const capabilityIdentities = ["1".repeat(64), "2".repeat(64)];
-  const selection = {
-    choice: "unique-highest-common-generation",
-    fallback: "forbidden"
-  };
   const lineIdentityInput = {
     sessionRules: {
       newSession: "authenticated-complete-only",
@@ -260,7 +247,6 @@ function completeAdmissionFixture() {
     mandatoryCapabilitySemanticIdentities: capabilityIdentities,
     protectionProfileIds: [profileId],
     stableClaimIds,
-    selectionRules: selection
   });
   const line = {
     wireId: "synthetic.protocol-line.v1",
@@ -290,7 +276,7 @@ function completeAdmissionFixture() {
   }));
   return {
     line,
-    protocolLines: { selection },
+    protocolLines: { lines: [line] },
     protectionProfiles: {
       activeProfileIds: [profileId],
       profiles: [{

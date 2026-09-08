@@ -2,7 +2,7 @@
   "$schema": "https://licoarc.com/spec/schemas/conformance-corpus-manifest.schema.json",
   "manifestVersion": "licoarc.conformance-corpus-manifest.v1",
   "corpusId": "licoarc.protection.conformance.v1",
-  "caseCount": 21,
+  "caseCount": 28,
   "operationIds": [
     "licoarc.identity.compute-profile.v1",
     "licoarc.protection.admit-prekey-pair.v1",
@@ -17,6 +17,7 @@
     "licoarc.protection.restart-session.v1",
     "licoarc.protection.send-first-packet.v1",
     "licoarc.protection.send-record.v1",
+    "licoarc.protection.validate-authority-session-binding.v1",
     "licoarc.protection.validate-hybrid-result.v1",
     "licoarc.protection.validate-profile-shapes.v1",
     "licoarc.protection.verify-handshake-authentication.v1",

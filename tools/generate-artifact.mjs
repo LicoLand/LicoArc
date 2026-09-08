@@ -160,10 +160,7 @@ assertValidProtocolDefinition({
   profileIdentityInputs,
   lineIdentityInput: {
     sessionRules: {
-      authenticatedEffectiveGeneration: line.authenticatedEffectiveGeneration,
-      existingSessionPolicy: line.existingSessionPolicy,
       handshakeBinding: manifest.handshakeBinding,
-      newSessionPolicy: line.newSessionPolicy,
       sessionLock: manifest.sessionLock,
       translationPolicy: manifest.translationPolicy
     }
@@ -171,7 +168,7 @@ assertValidProtocolDefinition({
 });
 
 const body = {
-  artifactVersion: "licoarc.bundle.v2",
+  artifactVersion: "licoarc.bundle.v1",
   wireId: manifest.wireId,
   generation: manifest.generation,
   lifecycle: manifest.lifecycle,
@@ -193,7 +190,7 @@ if (checkOnly) {
     if (error?.code === "ENOENT") return "";
     throw error;
   });
-  if (current !== artifact) throw new Error("licoarc.bundle.v2 artifact is missing or stale");
+  if (current !== artifact) throw new Error("licoarc.bundle.v1 artifact is missing or stale");
 } else {
   await writeFile(output, artifact);
 }
@@ -403,9 +400,10 @@ function assertProofEvidence(evidence, security) {
   const expectedLemmas = new Set([
     "executable_honest_handshake",
     "executable_ratchet_evolution",
-    "executable_identity_and_route",
-    "executable_evidence",
-    "executable_reliable_and_metadata",
+    "executable_user_authority_and_route",
+    "executable_authority_transitions_and_possession",
+    "executable_sibling_session_binding",
+    "executable_authenticated_confirmation_and_metadata",
     "executable_resource_bounds",
     ...security.claims.claims.filter(({ status }) => status === "proved").map(({ proofLemma }) => proofLemma)
   ]);

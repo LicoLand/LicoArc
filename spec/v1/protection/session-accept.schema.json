@@ -2,14 +2,47 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://licoarc.com/spec/v1/protection/session-accept.schema.json",
   "title": "Decoded Core v1 responder SessionAccept",
-  "$defs": {"digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}},
-  "type": "object", "additionalProperties": false,
-  "required": ["transcriptDigest", "sessionContextDigest", "responderIdentityStateDigest", "pairSequence", "mac"],
+  "$defs": {
+    "digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "transcriptDigest",
+    "sessionContextDigest",
+    "initiatorUserAuthorityStateDigest",
+    "responderIdentityStateDigest",
+    "responderUserAuthorityStateDigest",
+    "pairSequence",
+    "mac"
+  ],
   "properties": {
-    "transcriptDigest": {"$ref": "#/$defs/digest"},
-    "sessionContextDigest": {"$ref": "#/$defs/digest"},
-    "responderIdentityStateDigest": {"$ref": "#/$defs/digest"},
-    "pairSequence": {"type": "integer", "minimum": 1, "maximum": 9007199254740991},
-    "mac": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+    "transcriptDigest": {
+      "$ref": "#/$defs/digest"
+    },
+    "sessionContextDigest": {
+      "$ref": "#/$defs/digest"
+    },
+    "initiatorUserAuthorityStateDigest": {
+      "$ref": "#/$defs/digest"
+    },
+    "responderIdentityStateDigest": {
+      "$ref": "#/$defs/digest"
+    },
+    "responderUserAuthorityStateDigest": {
+      "$ref": "#/$defs/digest"
+    },
+    "pairSequence": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991
+    },
+    "mac": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
   }
 }

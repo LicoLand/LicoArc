@@ -7,42 +7,293 @@
   "unknownLabelPolicy": "reject-record",
   "duplicateLabelPolicy": "reject-record",
   "records": {
-    "identityUpdate": {"recordType": 0, "protocolLineId": 1, "endpointIdentityRef": 2, "identityEpoch": 3, "previousIdentityStateDigest": 4, "transition": 5, "stateDigest": 6, "keyAuthorizations": 7, "revokedKeyIds": 8, "recoveryProof": 9, "continuityProof": 10, "endpointSignature": 11},
-    "affiliationUpdate": {"recordType": 0, "protocolLineId": 1, "endpointIdentityRef": 2, "affiliationEpoch": 3, "previousAffiliationUpdateDigest": 4, "transition": 5, "stationAffiliations": 6, "stateDigest": 7, "endpointSignature": 8},
-    "routeUpdate": {"recordType": 0, "protocolLineId": 1, "endpointIdentityRef": 2, "peerEndpointIdentityRef": 3, "routeEpoch": 4, "previousRouteUpdateDigest": 5, "transition": 6, "affiliationStateDigest": 7, "routeNotAfter": 8, "routes": 9, "endpointSignature": 10},
-    "firstContact": {"recordType": 0, "handleClass": 1, "deliveryHandle": 2, "audienceDigest": 3, "invitationBinding": 4, "purpose": 5, "singleUse": 6, "expiresAt": 7, "protectedInvitation": 8, "peerVerificationState": 9},
-    "discoveryInput": {"recordType": 0, "inputId": 1, "sourceKind": 2, "sourceRef": 3, "subjectEndpointIdentityRef": 4, "chainKind": 5, "stateEpoch": 6, "stateDigest": 7, "statementDigest": 8, "observedAt": 9, "expiresAt": 10, "sourceSignature": 11, "authenticatedInputOnly": 12},
-    "transparencyBundle": {"recordType": 0, "subjectEndpointIdentityRef": 1, "chainKind": 2, "stateEpoch": 3, "stateDigest": 4, "witnessInputs": 5, "gossipInputs": 6, "discoveryInputs": 7, "stationSignatureInputs": 8, "verificationInputs": 9, "authority": 10, "endpointRetainsContinuity": 11, "splitView": 12},
-    "associationClaim": {"recordType": 0, "claimId": 1, "issuerEndpointIdentityRef": 2, "subjectEndpointIdentityRefs": 3, "claimEpoch": 4, "previousClaimDigest": 5, "claimDigest": 6, "expiresAt": 7, "authority": 8, "issuerSignature": 9},
-    "stationDescriptor": {"recordType": 0, "stationId": 1, "descriptorSequence": 2, "previousDescriptorDigest": 3, "notBefore": 4, "notAfter": 5, "listeners": 6, "signingKeys": 7, "certificationRefs": 8, "signatures": 9}
+    "userAuthorityState": {
+      "recordType": 0,
+      "protocolLineId": 1,
+      "userIdentityRef": 2,
+      "authorityEpoch": 3,
+      "previousUserAuthorityStateDigest": 4,
+      "authorityTransitionKind": 5,
+      "managementSigningKeys": 6,
+      "recoverySigningKeys": 7,
+      "authorizedDevices": 8,
+      "possessionProof": 9,
+      "authoritySignatures": 10
+    },
+    "identityUpdate": {
+      "recordType": 0,
+      "protocolLineId": 1,
+      "endpointIdentityRef": 2,
+      "identityEpoch": 3,
+      "previousIdentityStateDigest": 4,
+      "transition": 5,
+      "stateDigest": 6,
+      "keyAuthorizations": 7,
+      "revokedKeyIds": 8,
+      "recoveryProof": 9,
+      "continuityProof": 10,
+      "endpointSignature": 11
+    },
+    "affiliationUpdate": {
+      "recordType": 0,
+      "protocolLineId": 1,
+      "endpointIdentityRef": 2,
+      "affiliationEpoch": 3,
+      "previousAffiliationUpdateDigest": 4,
+      "transition": 5,
+      "stationAffiliations": 6,
+      "stateDigest": 7,
+      "endpointSignature": 8
+    },
+    "routeUpdate": {
+      "recordType": 0,
+      "protocolLineId": 1,
+      "endpointIdentityRef": 2,
+      "peerEndpointIdentityRef": 3,
+      "routeEpoch": 4,
+      "previousRouteUpdateDigest": 5,
+      "transition": 6,
+      "affiliationStateDigest": 7,
+      "routeNotAfter": 8,
+      "routes": 9,
+      "endpointSignature": 10
+    },
+    "firstContact": {
+      "recordType": 0,
+      "handleClass": 1,
+      "deliveryHandle": 2,
+      "audienceDigest": 3,
+      "invitationBinding": 4,
+      "purpose": 5,
+      "singleUse": 6,
+      "expiresAt": 7,
+      "protectedInvitation": 8,
+      "peerVerificationState": 9
+    },
+    "discoveryInput": {
+      "recordType": 0,
+      "inputId": 1,
+      "sourceKind": 2,
+      "sourceRef": 3,
+      "subjectEndpointIdentityRef": 4,
+      "chainKind": 5,
+      "stateEpoch": 6,
+      "stateDigest": 7,
+      "statementDigest": 8,
+      "observedAt": 9,
+      "expiresAt": 10,
+      "sourceSignature": 11,
+      "authenticatedInputOnly": 12
+    },
+    "transparencyBundle": {
+      "recordType": 0,
+      "subjectEndpointIdentityRef": 1,
+      "chainKind": 2,
+      "stateEpoch": 3,
+      "stateDigest": 4,
+      "witnessInputs": 5,
+      "gossipInputs": 6,
+      "discoveryInputs": 7,
+      "stationSignatureInputs": 8,
+      "verificationInputs": 9,
+      "authority": 10,
+      "endpointRetainsContinuity": 11,
+      "splitView": 12
+    },
+    "stationDescriptor": {
+      "recordType": 0,
+      "stationId": 1,
+      "descriptorSequence": 2,
+      "previousDescriptorDigest": 3,
+      "notBefore": 4,
+      "notAfter": 5,
+      "listeners": 6,
+      "signingKeys": 7,
+      "certificationRefs": 8,
+      "signatures": 9
+    }
   },
   "structures": {
-    "signingKey": {"keyId": 0, "keyPurpose": 1, "keyState": 2, "keyProfileId": 3, "publicKey": 4, "validFromEpoch": 5, "revokedAtEpoch": 6},
-    "signature": {"keyProfileId": 0, "keyId": 1, "signaturePurpose": 2, "signatureValue": 3},
-    "continuityProof": {"proofKind": 0, "predecessorStateDigest": 1, "signature": 2},
-    "recoveryProof": {"recoveryDigest": 0, "witnesses": 1},
-    "stationAffiliation": {"stationDescriptorDigest": 0, "affiliationCommitment": 1, "affiliationNonce": 2, "affiliationNotAfter": 3, "stationAffiliationSignature": 4},
-    "route": {"stationDescriptorDigest": 0, "affiliationCommitment": 1, "transportProfileId": 2, "handleClass": 3, "deliveryHandle": 4, "serviceUntil": 5, "stationServiceSignature": 6},
-    "protectedInvitation": {"inviterEndpointIdentityRef": 0, "inviteeEndpointIdentityRef": 1, "invitationBinding": 2, "purpose": 3, "audienceDigest": 4, "handshakeNonce": 5},
-    "authenticatedInput": {"inputId": 0, "inputKind": 1, "sourceRef": 2, "stateEpoch": 3, "stateDigest": 4, "statementDigest": 5, "expiresAt": 6, "signature": 7, "authenticatedInputOnly": 8},
-    "stationListener": {"transportProfileId": 0, "endpointUri": 1},
-    "stationSigningKey": {"keyProfileId": 0, "keyId": 1, "publicKey": 2}
+    "signingKey": {
+      "keyId": 0,
+      "keyPurpose": 1,
+      "keyState": 2,
+      "keyProfileId": 3,
+      "publicKey": 4,
+      "validFromEpoch": 5,
+      "revokedAtEpoch": 6
+    },
+    "signature": {
+      "keyProfileId": 0,
+      "keyId": 1,
+      "signaturePurpose": 2,
+      "signatureValue": 3
+    },
+    "continuityProof": {
+      "proofKind": 0,
+      "predecessorStateDigest": 1,
+      "signature": 2
+    },
+    "recoveryProof": {
+      "recoveryDigest": 0,
+      "witnesses": 1
+    },
+    "stationAffiliation": {
+      "stationDescriptorDigest": 0,
+      "affiliationCommitment": 1,
+      "affiliationNonce": 2,
+      "affiliationNotAfter": 3,
+      "stationAffiliationSignature": 4
+    },
+    "route": {
+      "stationDescriptorDigest": 0,
+      "affiliationCommitment": 1,
+      "transportProfileId": 2,
+      "handleClass": 3,
+      "deliveryHandle": 4,
+      "serviceUntil": 5,
+      "stationServiceSignature": 6
+    },
+    "protectedInvitation": {
+      "inviterEndpointIdentityRef": 0,
+      "inviteeEndpointIdentityRef": 1,
+      "invitationBinding": 2,
+      "purpose": 3,
+      "audienceDigest": 4,
+      "handshakeNonce": 5
+    },
+    "authenticatedInput": {
+      "inputId": 0,
+      "inputKind": 1,
+      "sourceRef": 2,
+      "stateEpoch": 3,
+      "stateDigest": 4,
+      "statementDigest": 5,
+      "expiresAt": 6,
+      "signature": 7,
+      "authenticatedInputOnly": 8
+    },
+    "stationListener": {
+      "transportProfileId": 0,
+      "endpointUri": 1
+    },
+    "stationSigningKey": {
+      "keyProfileId": 0,
+      "keyId": 1,
+      "publicKey": 2
+    },
+    "authoritySigningKey": {
+      "keyId": 0,
+      "keyPurpose": 1,
+      "keyProfileId": 2,
+      "publicKey": 3
+    },
+    "authorizedDevice": {
+      "endpointIdentityRef": 0,
+      "identityStateDigest": 1,
+      "deviceStatus": 2,
+      "admittedAuthorityEpoch": 3,
+      "revokedAuthorityEpoch": 4,
+      "possessionProof": 5
+    },
+    "replacementPossessionProof": {
+      "managementSignatures": 0,
+      "recoverySignatures": 1
+    }
   },
   "labelRule": "each object value is the exact unsigned CBOR label of its member name",
   "enums": {
-    "recordType": {"identityUpdate": 0, "affiliationUpdate": 1, "routeUpdate": 2, "firstContact": 3, "discoveryInput": 4, "transparencyBundle": 5, "associationClaim": 6, "stationDescriptor": 7},
-    "identityTransition": {"genesis": 0, "rotation": 1, "revocation": 2, "recovery": 3},
-    "chainTransition": {"genesis": 0, "migration": 1, "rotation": 2, "revocation": 3, "recovery": 4},
-    "keyPurpose": {"identity": 0, "evidence": 1, "handshake": 2},
-    "keyState": {"active": 0, "revoked": 1, "recovery": 2},
-    "signaturePurpose": {"endpoint-continuity": 0, "endpoint-evidence": 1, "station-affiliation": 2, "station-route-service": 3, "witness": 4, "gossip": 5, "discovery": 6, "verification": 7, "station-descriptor": 8},
-    "sourceKind": {"directory": 0, "witness": 1, "gossip": 2, "station": 3},
-    "inputKind": {"witness": 0, "gossip": 1, "discovery": 2, "stationSignature": 3, "verificationRecord": 4},
-    "chainKind": {"identity": 0, "affiliation": 1, "route": 2},
-    "handleClass": {"async": 0, "firstContact": 1},
-    "invitationPurpose": {"firstContact": 0},
-    "peerVerificationState": {"unverified": 0},
-    "transparencyAuthority": {"bounded-authenticated-input-only": 0},
-    "associationAuthority": {"non-authoritative-protected-input": 0}
+    "recordType": {
+      "identityUpdate": 0,
+      "affiliationUpdate": 1,
+      "routeUpdate": 2,
+      "firstContact": 3,
+      "discoveryInput": 4,
+      "transparencyBundle": 5,
+      "stationDescriptor": 7,
+      "userAuthorityState": 8
+    },
+    "identityTransition": {
+      "genesis": 0,
+      "rotation": 1,
+      "revocation": 2,
+      "recovery": 3
+    },
+    "authorityTransition": {
+      "genesis": 0,
+      "management": 1,
+      "recovery": 2
+    },
+    "chainTransition": {
+      "genesis": 0,
+      "migration": 1,
+      "rotation": 2,
+      "revocation": 3,
+      "recovery": 4
+    },
+    "keyPurpose": {
+      "identity": 0,
+      "handshake": 1
+    },
+    "keyState": {
+      "active": 0,
+      "revoked": 1,
+      "recovery": 2
+    },
+    "signaturePurpose": {
+      "endpoint-continuity": 0,
+      "station-affiliation": 1,
+      "station-route-service": 2,
+      "witness": 3,
+      "gossip": 4,
+      "discovery": 5,
+      "verification": 6,
+      "station-descriptor": 7,
+      "authority-genesis": 8,
+      "authority-management": 9,
+      "authority-recovery": 10,
+      "device-possession": 11,
+      "replacement-management-possession": 12,
+      "replacement-recovery-possession": 13
+    },
+    "sourceKind": {
+      "directory": 0,
+      "witness": 1,
+      "gossip": 2,
+      "station": 3
+    },
+    "inputKind": {
+      "witness": 0,
+      "gossip": 1,
+      "discovery": 2,
+      "stationSignature": 3,
+      "verificationRecord": 4
+    },
+    "chainKind": {
+      "identity": 0,
+      "affiliation": 1,
+      "route": 2
+    },
+    "handleClass": {
+      "async": 0,
+      "firstContact": 1
+    },
+    "invitationPurpose": {
+      "firstContact": 0
+    },
+    "peerVerificationState": {
+      "unverified": 0
+    },
+    "transparencyAuthority": {
+      "bounded-authenticated-input-only": 0
+    },
+    "authorityKeyPurpose": {
+      "management": 0,
+      "recovery": 1
+    },
+    "deviceStatus": {
+      "active": 0,
+      "revoked": 1
+    }
   }
 }

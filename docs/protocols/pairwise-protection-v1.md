@@ -27,17 +27,12 @@ seed/public key 32 and signature 64 bytes; and ChaCha20-Poly1305 key 32, nonce
 final implicit-rejection behavior. Ed25519 verification is strict and
 ML-DSA-65 profile and length checks are exact.
 
-## Support, paired prekeys and transcript
+## Fixed context, paired prekeys and transcript
 
-Each Endpoint authenticates one bounded canonical support statement. Every
-entry is the exact `(wireId, generation, protocolLineId)` tuple; `wireId` is a
-source locator and `protocolLineId` is a 32-byte content identity. The
-statement carries the Endpoint's persistent monotonic minimum-generation
-floor. Selection validates exact known content identity, complete definition,
-new-session policy, session eligibility, both floors, mandatory capability
-closure and complete Profile membership, in that order, then selects the
-unique highest common generation. Zero or ambiguous results fail without
-fallback or state advance.
+Each Endpoint admits the single complete V1 / Generation 1 definition and its
+exact stable-core Profile. The authenticated first packet carries their content
+identities directly. Unknown or mismatched content rejects before state advance.
+A Station cannot choose protocol meaning.
 
 Every asynchronous establishment consumes one responder-issued pair: one raw
 X25519 one-time prekey and one ML-KEM-768 one-time prekey under the same
@@ -53,16 +48,14 @@ not require an unbounded tombstone collection. Publication, receipt and
 validity expiry never reserve or redeem a pair. There is no reservation state.
 Only the authenticated atomic session commit removes the complete pair.
 
-The deterministic prekey transcript first binds both complete support
-statements and floors plus the selected bundle. A non-circular handshake-core
-projection then binds the selected line/Profile identities, both identity
-states and initiator signing-key references, fixed roles and purpose,
-initiator X25519 public key and ML-KEM ciphertext. The initiator signatures,
-hybrid KDF and client confirmation bind that core digest. The final transcript
-digest covers the complete first packet, including both initiator signatures
-and the first confirmation ciphertext/tag, and is in turn bound by
-SessionAccept. Every domain is an exact NUL-terminated ASCII constant from
-`domains.json`; callers cannot choose or extend labels.
+The deterministic prekey transcript binds the fixed line/Profile identities,
+initiator identity-state digest and signing-key IDs, and the unsigned prekey
+bundle. The non-circular handshake core also binds both Endpoint and sibling
+user-authority-state digests, initiator key IDs and hybrid ephemeral inputs.
+The initiator dual signatures authenticate this core; the full first-packet
+transcript binds the signed prekey, both signatures and client confirmation.
+The closed canonical map has 15 labels and a maximum length of 9,655 bytes,
+including the maximum-width legal prekey sequence and validity integers.
 
 ## Hybrid schedule and confirmation
 
@@ -150,5 +143,5 @@ semantics and cannot change their protocol meaning.
 Ongoing post-quantum post-compromise recovery, Triple Ratchet and ML-KEM Braid
 remain future independent Profile scope. Pairwise Protection provides content
 confidentiality/authentication and bounded replay protection; it does not
-provide anonymity, transferable evidence, Station trust or application-effect
-completion.
+provide anonymity, third-party content attestation, Station trust, or
+application-effect completion.

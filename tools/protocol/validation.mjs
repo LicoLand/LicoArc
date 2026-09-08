@@ -152,8 +152,7 @@ export function assertCompleteProtocolLineAdmission({
     mandatoryCapabilitySemanticIdentities: line.mandatoryCapabilities
       .map((id) => capabilities.get(id).semanticIdentity),
     protectionProfileIds: line.protectionProfileIds,
-    stableClaimIds: line.stableClaimIds,
-    selectionRules: protocolLines.selection
+    stableClaimIds: line.stableClaimIds
   });
   return true;
 }

@@ -3,22 +3,6 @@
 ; Unknown/duplicate labels, indefinite lengths, non-shortest integers and
 ; trailing bytes are terminal invalid-encoding.
 
-support-entry = {
-  0 => tstr .size (1..128),          ; source/catalog wireId locator
-  1 => 1..9007199254740991,          ; generation
-  2 => bstr .size 32                 ; Protocol Line content identity
-}
-
-support-statement = {
-  0 => bstr .size 32,                ; identity-state digest
-  1 => 1..9007199254740991,          ; monotonic floor
-  2 => [1*16 support-entry],          ; sorted by generation, line ID, wireId
-  3 => bstr .size 32,                ; Ed25519 identity key reference
-  4 => bstr .size 32,                ; ML-DSA-65 identity key reference
-  5 => bstr .size 64,                ; strict plain Ed25519 signature
-  6 => bstr .size 3309               ; exact ML-DSA-65 signature
-}
-
 prekey-bundle = {
   0 => bstr .size 32,                ; Protocol Line content identity
   1 => bstr .size 32,                ; Protection Profile content identity
@@ -35,16 +19,16 @@ prekey-bundle = {
 }
 
 first-packet = {
-  0 => support-statement,            ; initiator complete support and floor
-  1 => support-statement,            ; responder complete support and floor
-  2 => bstr .size 32,                ; selected Protocol Line identity
-  3 => bstr .size 32,                ; selected Profile identity
-  4 => bstr .size 32,                ; initiator identity-state digest
-  5 => bstr .size 32,                ; responder identity-state digest
+  0 => bstr .size 32,                ; fixed Protocol Line identity
+  1 => bstr .size 32,                ; fixed Profile identity
+  2 => bstr .size 32,                ; initiator identity-state digest
+  3 => bstr .size 32,                ; initiator user-authority-state digest
+  4 => bstr .size 32,                ; responder identity-state digest
+  5 => bstr .size 32,                ; responder user-authority-state digest
   6 => prekey-bundle,
   7 => bstr .size 32,                ; fresh raw X25519 initiator public key
-  8 => bstr .size 1088,              ; final ML-KEM-768 ciphertext
-  9 => bstr .size 32,                ; initiator Ed25519 key reference
+  8 => bstr .size 1088,             ; final ML-KEM-768 ciphertext
+  9 => bstr .size 32,               ; initiator Ed25519 key reference
   10 => bstr .size 32,               ; initiator ML-DSA-65 key reference
   11 => bstr .size 64,               ; strict plain Ed25519 signature
   12 => bstr .size 3309,             ; exact ML-DSA-65 signature
@@ -55,9 +39,11 @@ first-packet = {
 session-accept = {
   0 => bstr .size 32,                ; complete first-packet transcript digest
   1 => bstr .size 32,                ; committed session-context digest
-  2 => bstr .size 32,                ; responder identity-state digest
-  3 => 1..9007199254740991,          ; redeemed pair sequence
-  4 => bstr .size 32                 ; full HMAC-SHA-256, never truncated
+  2 => bstr .size 32,                ; initiator user-authority-state digest
+  3 => bstr .size 32,                ; responder identity-state digest
+  4 => bstr .size 32,                ; responder user-authority-state digest
+  5 => 1..9007199254740991,          ; redeemed pair sequence
+  6 => bstr .size 32                 ; full HMAC-SHA-256, never truncated
 }
 
 ratchet-header = {

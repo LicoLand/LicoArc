@@ -62,10 +62,9 @@ export function protocolLineSemanticProjection({
   mandatoryCapabilitySemanticIdentities,
   protectionProfileIds,
   stableClaimIds,
-  selectionRules,
   sessionRules
 }) {
-  if (!Number.isSafeInteger(generation) || generation < 1) {
+  if (generation !== 1) {
     throw new SemanticIdentityError("invalid-protocol-line-generation");
   }
   const capabilities = canonicalDigestSet(
@@ -81,7 +80,6 @@ export function protocolLineSemanticProjection({
     capabilities,
     profiles,
     claims,
-    canonicalSemanticBytes(selectionRules),
     canonicalSemanticBytes(sessionRules)
   ]);
 }

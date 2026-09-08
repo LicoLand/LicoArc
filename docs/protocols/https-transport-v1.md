@@ -2,7 +2,7 @@
 
 Status: Candidate source specification. This document defines carriage only. It
 does not publish a Protocol Line, authorize a Station, implement an HTTP client
-or server, or turn a Station response into Endpoint evidence.
+or server, or turn a Station response into an Endpoint confirmation.
 
 ## Profile identity and authority
 
@@ -104,7 +104,7 @@ input. Malformed, conflicting, stale, over-bound, or status-mismatched input
 returns the byte-identical pre-state.
 No response, timestamp, signature, queue observation, claim, settlement, or
 deletion statement advances Endpoint Accepted, Effect Completed, freshness,
-replay, trust, peer identity, or transferable evidence.
+replay, trust, peer identity, acceptance, effect, or finality.
 
 ## Residual metadata
 

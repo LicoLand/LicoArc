@@ -3,124 +3,673 @@
   "$id": "https://licoarc.com/spec/v1/transport/response.schema.json",
   "title": "Lico Arc HTTPS Transport v1 control responses",
   "oneOf": [
-    { "$ref": "#/$defs/affiliateResponse" },
-    { "$ref": "#/$defs/reserveResponse" },
-    { "$ref": "#/$defs/submitResponse" },
-    { "$ref": "#/$defs/claimResponse" },
-    { "$ref": "#/$defs/settleResponse" }
+    {
+      "$ref": "#/$defs/affiliateResponse"
+    },
+    {
+      "$ref": "#/$defs/reserveResponse"
+    },
+    {
+      "$ref": "#/$defs/submitResponse"
+    },
+    {
+      "$ref": "#/$defs/claimResponse"
+    },
+    {
+      "$ref": "#/$defs/settleResponse"
+    }
   ],
   "$defs": {
-    "token256": { "type": "string", "pattern": "^[A-Za-z0-9_-]{43}$" },
-    "digest256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
-    "signature": { "type": "string", "pattern": "^[0-9a-f]{128}$" },
-    "epoch": { "type": "integer", "minimum": 0, "maximum": 9007199254740991 },
-    "outcome": { "type": "string", "enum": ["accepted", "rejected", "transient", "ambiguous"] },
-    "failureClass": { "type": "string", "enum": ["invalidRequest", "unsupportedProfile", "targetUnavailable", "packetTooLarge", "capacityUnavailable", "rateLimited", "conflict", "internalUnavailable"] },
+    "token256": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_-]{43}$"
+    },
+    "digest256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "signature": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{128}$"
+    },
+    "epoch": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "outcome": {
+      "type": "string",
+      "enum": [
+        "accepted",
+        "rejected",
+        "transient",
+        "ambiguous"
+      ]
+    },
+    "failureClass": {
+      "type": "string",
+      "enum": [
+        "invalidRequest",
+        "unsupportedProfile",
+        "targetUnavailable",
+        "packetTooLarge",
+        "capacityUnavailable",
+        "rateLimited",
+        "conflict",
+        "internalUnavailable"
+      ]
+    },
     "settlementResult": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["itemId", "settleOutcome"],
+      "required": [
+        "itemId",
+        "settleOutcome"
+      ],
       "properties": {
-        "itemId": { "$ref": "#/$defs/token256" },
-        "settleOutcome": { "type": "string", "enum": ["completed", "released", "staleClaim", "attemptLimit"] }
+        "itemId": {
+          "$ref": "#/$defs/token256"
+        },
+        "settleOutcome": {
+          "type": "string",
+          "enum": [
+            "completed",
+            "released",
+            "staleClaim",
+            "attemptLimit"
+          ]
+        }
       }
     },
     "claimedItem": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["itemId", "protectedPacket"],
+      "required": [
+        "itemId",
+        "protectedPacket"
+      ],
       "properties": {
-        "itemId": { "$ref": "#/$defs/token256" },
-        "protectedPacket": { "type": "string", "pattern": "^[0-9a-f]{2,1048576}$" }
+        "itemId": {
+          "$ref": "#/$defs/token256"
+        },
+        "protectedPacket": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{2,1048576}$"
+        }
       }
     },
     "affiliateResponse": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["operation", "outcome"],
+      "required": [
+        "operation",
+        "outcome"
+      ],
       "properties": {
-        "operation": { "const": "affiliate" },
-        "outcome": { "$ref": "#/$defs/outcome" },
-        "affiliationNotAfter": { "$ref": "#/$defs/epoch" },
-        "stationAffiliationSignature": { "$ref": "#/$defs/signature" },
-        "failureClass": { "$ref": "#/$defs/failureClass" },
-        "retryAfterMs": { "type": "integer", "minimum": 0, "maximum": 60000 }
+        "operation": {
+          "const": "affiliate"
+        },
+        "outcome": {
+          "$ref": "#/$defs/outcome"
+        },
+        "affiliationNotAfter": {
+          "$ref": "#/$defs/epoch"
+        },
+        "stationAffiliationSignature": {
+          "$ref": "#/$defs/signature"
+        },
+        "failureClass": {
+          "$ref": "#/$defs/failureClass"
+        },
+        "retryAfterMs": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 60000
+        }
       },
       "allOf": [
-        { "if": { "properties": { "outcome": { "const": "accepted" } } }, "then": { "required": ["affiliationNotAfter", "stationAffiliationSignature"], "not": { "anyOf": [{ "required": ["failureClass"] }, { "required": ["retryAfterMs"] }] } }, "else": { "required": ["failureClass"], "not": { "anyOf": [{ "required": ["affiliationNotAfter"] }, { "required": ["stationAffiliationSignature"] }] } } },
-        { "if": { "properties": { "outcome": { "not": { "const": "transient" } } } }, "then": { "not": { "required": ["retryAfterMs"] } } }
+        {
+          "if": {
+            "properties": {
+              "outcome": {
+                "const": "accepted"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "affiliationNotAfter",
+              "stationAffiliationSignature"
+            ],
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "failureClass"
+                  ]
+                },
+                {
+                  "required": [
+                    "retryAfterMs"
+                  ]
+                }
+              ]
+            }
+          },
+          "else": {
+            "required": [
+              "failureClass"
+            ],
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "affiliationNotAfter"
+                  ]
+                },
+                {
+                  "required": [
+                    "stationAffiliationSignature"
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "outcome": {
+                "not": {
+                  "const": "transient"
+                }
+              }
+            }
+          },
+          "then": {
+            "not": {
+              "required": [
+                "retryAfterMs"
+              ]
+            }
+          }
+        }
       ]
     },
     "reserveResponse": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["operation", "outcome"],
+      "required": [
+        "operation",
+        "outcome"
+      ],
       "properties": {
-        "operation": { "const": "reserve" },
-        "outcome": { "$ref": "#/$defs/outcome" },
-        "deliveryHandle": { "$ref": "#/$defs/token256" },
-        "handleClass": { "type": "string", "enum": ["async", "firstContact"] },
-        "serviceUntil": { "$ref": "#/$defs/epoch" },
-        "stationServiceSignature": { "$ref": "#/$defs/signature" },
-        "failureClass": { "$ref": "#/$defs/failureClass" },
-        "retryAfterMs": { "type": "integer", "minimum": 0, "maximum": 60000 }
+        "operation": {
+          "const": "reserve"
+        },
+        "outcome": {
+          "$ref": "#/$defs/outcome"
+        },
+        "deliveryHandle": {
+          "$ref": "#/$defs/token256"
+        },
+        "handleClass": {
+          "type": "string",
+          "enum": [
+            "async",
+            "firstContact"
+          ]
+        },
+        "serviceUntil": {
+          "$ref": "#/$defs/epoch"
+        },
+        "stationServiceSignature": {
+          "$ref": "#/$defs/signature"
+        },
+        "failureClass": {
+          "$ref": "#/$defs/failureClass"
+        },
+        "retryAfterMs": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 60000
+        }
       },
       "allOf": [
-        { "if": { "properties": { "outcome": { "const": "accepted" } } }, "then": { "required": ["deliveryHandle", "handleClass"], "not": { "anyOf": [{ "required": ["failureClass"] }, { "required": ["retryAfterMs"] }] } }, "else": { "required": ["failureClass"], "not": { "anyOf": [{ "required": ["deliveryHandle"] }, { "required": ["handleClass"] }, { "required": ["serviceUntil"] }, { "required": ["stationServiceSignature"] }] } } },
-        { "if": { "properties": { "outcome": { "const": "accepted" }, "handleClass": { "const": "async" } }, "required": ["handleClass"] }, "then": { "required": ["serviceUntil", "stationServiceSignature"] } },
-        { "if": { "properties": { "handleClass": { "const": "firstContact" } }, "required": ["handleClass"] }, "then": { "not": { "anyOf": [{ "required": ["serviceUntil"] }, { "required": ["stationServiceSignature"] }] } } },
-        { "if": { "properties": { "outcome": { "not": { "const": "transient" } } } }, "then": { "not": { "required": ["retryAfterMs"] } } }
+        {
+          "if": {
+            "properties": {
+              "outcome": {
+                "const": "accepted"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "deliveryHandle",
+              "handleClass"
+            ],
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "failureClass"
+                  ]
+                },
+                {
+                  "required": [
+                    "retryAfterMs"
+                  ]
+                }
+              ]
+            }
+          },
+          "else": {
+            "required": [
+              "failureClass"
+            ],
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "deliveryHandle"
+                  ]
+                },
+                {
+                  "required": [
+                    "handleClass"
+                  ]
+                },
+                {
+                  "required": [
+                    "serviceUntil"
+                  ]
+                },
+                {
+                  "required": [
+                    "stationServiceSignature"
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "outcome": {
+                "const": "accepted"
+              },
+              "handleClass": {
+                "const": "async"
+              }
+            },
+            "required": [
+              "handleClass"
+            ]
+          },
+          "then": {
+            "required": [
+              "serviceUntil",
+              "stationServiceSignature"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "handleClass": {
+                "const": "firstContact"
+              }
+            },
+            "required": [
+              "handleClass"
+            ]
+          },
+          "then": {
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "serviceUntil"
+                  ]
+                },
+                {
+                  "required": [
+                    "stationServiceSignature"
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "outcome": {
+                "not": {
+                  "const": "transient"
+                }
+              }
+            }
+          },
+          "then": {
+            "not": {
+              "required": [
+                "retryAfterMs"
+              ]
+            }
+          }
+        }
       ]
     },
     "submitResponse": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["operation", "outcome"],
+      "required": [
+        "operation",
+        "outcome"
+      ],
       "properties": {
-        "operation": { "const": "submit" },
-        "outcome": { "$ref": "#/$defs/outcome" },
-        "failureClass": { "$ref": "#/$defs/failureClass" },
-        "retryAfterMs": { "type": "integer", "minimum": 0, "maximum": 60000 }
+        "operation": {
+          "const": "submit"
+        },
+        "outcome": {
+          "$ref": "#/$defs/outcome"
+        },
+        "failureClass": {
+          "$ref": "#/$defs/failureClass"
+        },
+        "retryAfterMs": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 60000
+        }
       },
       "allOf": [
-        { "if": { "properties": { "outcome": { "const": "accepted" } } }, "then": { "not": { "anyOf": [{ "required": ["failureClass"] }, { "required": ["retryAfterMs"] }] } }, "else": { "required": ["failureClass"] } },
-        { "if": { "properties": { "outcome": { "not": { "const": "transient" } } } }, "then": { "not": { "required": ["retryAfterMs"] } } }
+        {
+          "if": {
+            "properties": {
+              "outcome": {
+                "const": "accepted"
+              }
+            }
+          },
+          "then": {
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "failureClass"
+                  ]
+                },
+                {
+                  "required": [
+                    "retryAfterMs"
+                  ]
+                }
+              ]
+            }
+          },
+          "else": {
+            "required": [
+              "failureClass"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "outcome": {
+                "not": {
+                  "const": "transient"
+                }
+              }
+            }
+          },
+          "then": {
+            "not": {
+              "required": [
+                "retryAfterMs"
+              ]
+            }
+          }
+        }
       ]
     },
     "claimResponse": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["operation", "outcome"],
+      "required": [
+        "operation",
+        "outcome"
+      ],
       "properties": {
-        "operation": { "const": "claim" },
-        "outcome": { "$ref": "#/$defs/outcome" },
-        "claimId": { "$ref": "#/$defs/token256" },
-        "claimEpoch": { "$ref": "#/$defs/epoch" },
-        "items": { "type": "array", "minItems": 1, "maxItems": 64, "uniqueItems": true, "items": { "$ref": "#/$defs/claimedItem" } },
-        "failureClass": { "$ref": "#/$defs/failureClass" },
-        "retryAfterMs": { "type": "integer", "minimum": 0, "maximum": 60000 }
+        "operation": {
+          "const": "claim"
+        },
+        "outcome": {
+          "$ref": "#/$defs/outcome"
+        },
+        "claimId": {
+          "$ref": "#/$defs/token256"
+        },
+        "claimEpoch": {
+          "$ref": "#/$defs/epoch"
+        },
+        "items": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 64,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/claimedItem"
+          }
+        },
+        "failureClass": {
+          "$ref": "#/$defs/failureClass"
+        },
+        "retryAfterMs": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 60000
+        }
       },
       "allOf": [
-        { "if": { "properties": { "outcome": { "const": "accepted" } } }, "then": { "not": { "anyOf": [{ "required": ["failureClass"] }, { "required": ["retryAfterMs"] }] } }, "else": { "required": ["failureClass"], "not": { "anyOf": [{ "required": ["claimId"] }, { "required": ["claimEpoch"] }, { "required": ["items"] }] } } },
-        { "if": { "required": ["items"] }, "then": { "required": ["claimId", "claimEpoch"] } },
-        { "if": { "anyOf": [{ "required": ["claimId"] }, { "required": ["claimEpoch"] }] }, "then": { "required": ["items", "claimId", "claimEpoch"] } },
-        { "if": { "properties": { "outcome": { "not": { "const": "transient" } } } }, "then": { "not": { "required": ["retryAfterMs"] } } }
+        {
+          "if": {
+            "properties": {
+              "outcome": {
+                "const": "accepted"
+              }
+            }
+          },
+          "then": {
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "failureClass"
+                  ]
+                },
+                {
+                  "required": [
+                    "retryAfterMs"
+                  ]
+                }
+              ]
+            }
+          },
+          "else": {
+            "required": [
+              "failureClass"
+            ],
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "claimId"
+                  ]
+                },
+                {
+                  "required": [
+                    "claimEpoch"
+                  ]
+                },
+                {
+                  "required": [
+                    "items"
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "items"
+            ]
+          },
+          "then": {
+            "required": [
+              "claimId",
+              "claimEpoch"
+            ]
+          }
+        },
+        {
+          "if": {
+            "anyOf": [
+              {
+                "required": [
+                  "claimId"
+                ]
+              },
+              {
+                "required": [
+                  "claimEpoch"
+                ]
+              }
+            ]
+          },
+          "then": {
+            "required": [
+              "items",
+              "claimId",
+              "claimEpoch"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "outcome": {
+                "not": {
+                  "const": "transient"
+                }
+              }
+            }
+          },
+          "then": {
+            "not": {
+              "required": [
+                "retryAfterMs"
+              ]
+            }
+          }
+        }
       ]
     },
     "settleResponse": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["operation", "outcome"],
+      "required": [
+        "operation",
+        "outcome"
+      ],
       "properties": {
-        "operation": { "const": "settle" },
-        "outcome": { "$ref": "#/$defs/outcome" },
-        "settlementResults": { "type": "array", "minItems": 1, "maxItems": 64, "uniqueItems": true, "items": { "$ref": "#/$defs/settlementResult" } },
-        "failureClass": { "$ref": "#/$defs/failureClass" },
-        "retryAfterMs": { "type": "integer", "minimum": 0, "maximum": 60000 }
+        "operation": {
+          "const": "settle"
+        },
+        "outcome": {
+          "$ref": "#/$defs/outcome"
+        },
+        "settlementResults": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 64,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/settlementResult"
+          }
+        },
+        "failureClass": {
+          "$ref": "#/$defs/failureClass"
+        },
+        "retryAfterMs": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 60000
+        }
       },
       "allOf": [
-        { "if": { "properties": { "outcome": { "const": "accepted" } } }, "then": { "required": ["settlementResults"], "not": { "anyOf": [{ "required": ["failureClass"] }, { "required": ["retryAfterMs"] }] } }, "else": { "required": ["failureClass"], "not": { "required": ["settlementResults"] } } },
-        { "if": { "properties": { "outcome": { "not": { "const": "transient" } } } }, "then": { "not": { "required": ["retryAfterMs"] } } }
+        {
+          "if": {
+            "properties": {
+              "outcome": {
+                "const": "accepted"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "settlementResults"
+            ],
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "failureClass"
+                  ]
+                },
+                {
+                  "required": [
+                    "retryAfterMs"
+                  ]
+                }
+              ]
+            }
+          },
+          "else": {
+            "required": [
+              "failureClass"
+            ],
+            "not": {
+              "required": [
+                "settlementResults"
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "outcome": {
+                "not": {
+                  "const": "transient"
+                }
+              }
+            }
+          },
+          "then": {
+            "not": {
+              "required": [
+                "retryAfterMs"
+              ]
+            }
+          }
+        }
       ]
     }
   }

@@ -5,15 +5,66 @@
   "profileLocator": "stable-core",
   "composition": "indivisible-no-component-negotiation",
   "primitives": [
-    {"name": "X25519", "variant": "raw-RFC7748", "privateKeyBytes": 32, "publicKeyBytes": 32, "sharedSecretBytes": 32, "validation": "reject-all-zero-shared-secret"},
-    {"name": "ML-KEM-768", "variant": "final-FIPS203", "dkSeedBytes": 64, "encapsulationKeyBytes": 1184, "ciphertextBytes": 1088, "sharedSecretBytes": 32, "validation": "implicit-rejection"},
-    {"name": "Ed25519", "variant": "plain-RFC8032", "seedBytes": 32, "publicKeyBytes": 32, "signatureBytes": 64, "validation": "strict-canonical-encoding-small-order-and-equation-checks"},
-    {"name": "ML-DSA-65", "variant": "final-FIPS204", "seedBytes": 32, "publicKeyBytes": 1952, "signatureBytes": 3309, "validation": "exact-profile-and-length"},
-    {"name": "HKDF-SHA-256", "extractBytes": 32, "maximumExpandBytes": 8160},
-    {"name": "HMAC-SHA-256", "outputBytes": 32, "truncation": "forbidden"},
-    {"name": "ChaCha20-Poly1305", "variant": "IETF-RFC8439", "keyBytes": 32, "nonceBytes": 12, "tagBytes": 16, "xchacha": false}
+    {
+      "name": "X25519",
+      "variant": "raw-RFC7748",
+      "privateKeyBytes": 32,
+      "publicKeyBytes": 32,
+      "sharedSecretBytes": 32,
+      "validation": "reject-all-zero-shared-secret"
+    },
+    {
+      "name": "ML-KEM-768",
+      "variant": "final-FIPS203",
+      "dkSeedBytes": 64,
+      "encapsulationKeyBytes": 1184,
+      "ciphertextBytes": 1088,
+      "sharedSecretBytes": 32,
+      "validation": "implicit-rejection"
+    },
+    {
+      "name": "Ed25519",
+      "variant": "plain-RFC8032",
+      "seedBytes": 32,
+      "publicKeyBytes": 32,
+      "signatureBytes": 64,
+      "validation": "strict-canonical-encoding-small-order-and-equation-checks"
+    },
+    {
+      "name": "ML-DSA-65",
+      "variant": "final-FIPS204",
+      "seedBytes": 32,
+      "publicKeyBytes": 1952,
+      "signatureBytes": 3309,
+      "validation": "exact-profile-and-length"
+    },
+    {
+      "name": "HKDF-SHA-256",
+      "extractBytes": 32,
+      "maximumExpandBytes": 8160
+    },
+    {
+      "name": "HMAC-SHA-256",
+      "outputBytes": 32,
+      "truncation": "forbidden"
+    },
+    {
+      "name": "ChaCha20-Poly1305",
+      "variant": "IETF-RFC8439",
+      "keyBytes": 32,
+      "nonceBytes": 12,
+      "tagBytes": 16,
+      "xchacha": false
+    }
   ],
-  "aliasesForbidden": ["Kyber", "Dilithium", "DHKEM(X25519,HKDF-SHA256)", "Ed25519ctx", "Ed25519ph", "XChaCha20-Poly1305"],
+  "aliasesForbidden": [
+    "Kyber",
+    "Dilithium",
+    "DHKEM(X25519,HKDF-SHA256)",
+    "Ed25519ctx",
+    "Ed25519ph",
+    "XChaCha20-Poly1305"
+  ],
   "dualAuthentication": {
     "signatureInput": "the exact operation domain followed by deterministic-CBOR of the named unsigned projection",
     "ed25519": "plain Ed25519 over the complete signatureInput; no prehash and no context variant",
@@ -23,19 +74,104 @@
     "partialSuccess": "terminal-handshake-rejected-without-state-advance-or-primitive-detail"
   },
   "canonicalProjections": {
-    "supportStatementUnsigned": ["identityStateDigest", "minimumProtocolGeneration", "entries", "ed25519KeyId", "mlDsa65KeyId"],
-    "prekeyBundleUnsigned": ["protocolLineId", "protectionProfileId", "responderIdentityStateDigest", "ed25519KeyId", "mlDsa65KeyId", "pairSequence", "x25519PublicKey", "mlKem768EncapsulationKey", "validFrom", "validUntil"],
-    "prekeyTranscript": ["protocolLineId", "protectionProfileId", "initiatorSupportUnsigned", "responderSupportUnsigned", "prekeyBundleUnsigned"],
-    "handshakeCore": ["prekeyTranscriptDigest", "selectedProtocolLineId", "selectedProtectionProfileId", "initiatorIdentityStateDigest", "responderIdentityStateDigest", "initiatorEd25519KeyId", "initiatorMlDsa65KeyId", "initiatorX25519PublicKey", "mlKem768Ciphertext"],
-    "initiatorSignatureInput": ["initiatorHandshakeSignatureDomain", "handshakeCoreDigest"],
-    "firstPacketTranscript": ["initiatorSupport", "responderSupport", "selectedProtocolLineId", "selectedProtectionProfileId", "initiatorIdentityStateDigest", "responderIdentityStateDigest", "prekeyBundle", "initiatorX25519PublicKey", "mlKem768Ciphertext", "initiatorEd25519KeyId", "initiatorMlDsa65KeyId", "initiatorEd25519Signature", "initiatorMlDsa65Signature", "clientConfirmCiphertext", "clientConfirmTag"],
-    "sessionAcceptUnsigned": ["transcriptDigest", "sessionContextDigest", "responderIdentityStateDigest", "pairSequence"],
-    "ratchetHeader": ["dh", "pn", "n"]
+    "prekeyBundleUnsigned": [
+      "protocolLineId",
+      "protectionProfileId",
+      "responderIdentityStateDigest",
+      "ed25519KeyId",
+      "mlDsa65KeyId",
+      "pairSequence",
+      "x25519PublicKey",
+      "mlKem768EncapsulationKey",
+      "validFrom",
+      "validUntil"
+    ],
+    "prekeyTranscript": [
+      "protocolLineId",
+      "protectionProfileId",
+      "initiatorIdentityStateDigest",
+      "initiatorEd25519KeyId",
+      "initiatorMlDsa65KeyId",
+      "prekeyBundleUnsigned"
+    ],
+    "handshakeCore": [
+      "prekeyTranscriptDigest",
+      "protocolLineId",
+      "protectionProfileId",
+      "initiatorIdentityStateDigest",
+      "initiatorUserAuthorityStateDigest",
+      "responderIdentityStateDigest",
+      "responderUserAuthorityStateDigest",
+      "initiatorEd25519KeyId",
+      "initiatorMlDsa65KeyId",
+      "initiatorX25519PublicKey",
+      "mlKem768Ciphertext"
+    ],
+    "initiatorSignatureInput": [
+      "initiatorHandshakeSignatureDomain",
+      "handshakeCoreDigest"
+    ],
+    "firstPacketTranscript": [
+      "protocolLineId",
+      "protectionProfileId",
+      "initiatorIdentityStateDigest",
+      "initiatorUserAuthorityStateDigest",
+      "responderIdentityStateDigest",
+      "responderUserAuthorityStateDigest",
+      "prekeyBundle",
+      "initiatorX25519PublicKey",
+      "mlKem768Ciphertext",
+      "initiatorEd25519KeyId",
+      "initiatorMlDsa65KeyId",
+      "initiatorEd25519Signature",
+      "initiatorMlDsa65Signature",
+      "clientConfirmCiphertext",
+      "clientConfirmTag"
+    ],
+    "sessionAcceptUnsigned": [
+      "transcriptDigest",
+      "sessionContextDigest",
+      "initiatorUserAuthorityStateDigest",
+      "responderIdentityStateDigest",
+      "responderUserAuthorityStateDigest",
+      "pairSequence"
+    ],
+    "ratchetHeader": [
+      "dh",
+      "pn",
+      "n"
+    ]
   },
   "validationOrder": {
-    "support": ["bounded-input", "deterministic-CBOR", "closed-labels-and-exact-shapes", "identity-key-resolution", "strict-dual-signatures", "monotonic-minimum-generation", "canonical-unique-support-entries", "known-content-identities", "complete-session-eligible-line-and-profile", "unique-highest-common-selection"],
-    "handshake": ["bounded-input", "deterministic-CBOR", "closed-labels-and-exact-shapes", "support-validation-and-selection", "identity-continuity-and-key-purpose", "bundle-validity-and-active-pair", "strict-bundle-dual-signatures", "strict-initiator-dual-signatures", "transcript-reproduction", "x25519-all-zero-rejection", "ml-kem-implicit-rejection", "hybrid-key-schedule", "client-confirm-AEAD", "tentative-state-bounds", "atomic-compare-and-commit"],
-    "receiveRecord": ["bounded-frame", "deterministic-header", "closed-labels-and-counter-range", "rollback-generation-check", "skipped-key-exact-lookup-or-bounded-tentative-derivation", "x25519-all-zero-rejection-on-DH-transition", "AEAD-authentication-with-exact-AAD", "tentative-state-bounds", "atomic-durable-commit", "plaintext-release"]
+    "handshake": [
+      "bounded-input",
+      "deterministic-CBOR",
+      "closed-labels-and-exact-shapes",
+      "exact-line-and-profile-admission",
+      "identity-continuity-and-key-purpose",
+      "bundle-validity-and-active-pair",
+      "strict-bundle-dual-signatures",
+      "strict-initiator-dual-signatures",
+      "transcript-reproduction",
+      "x25519-all-zero-rejection",
+      "ml-kem-implicit-rejection",
+      "hybrid-key-schedule",
+      "client-confirm-AEAD",
+      "tentative-state-bounds",
+      "atomic-compare-and-commit"
+    ],
+    "receiveRecord": [
+      "bounded-frame",
+      "deterministic-header",
+      "closed-labels-and-counter-range",
+      "rollback-generation-check",
+      "skipped-key-exact-lookup-or-bounded-tentative-derivation",
+      "x25519-all-zero-rejection-on-DH-transition",
+      "AEAD-authentication-with-exact-AAD",
+      "tentative-state-bounds",
+      "atomic-durable-commit",
+      "plaintext-release"
+    ]
   },
   "bundleValidity": {
     "unit": "unsigned-seconds-since-1970-01-01T00:00:00Z-without-leap-second-representation",
@@ -55,7 +191,7 @@
     "clientConfirmNonce": "HKDF-Expand-SHA-256(prk, clientConfirmNonce-domain || handshakeCoreDigest, 12)",
     "sessionAcceptKey": "HKDF-Expand-SHA-256(prk, sessionAcceptKey-domain || handshakeCoreDigest, 32)",
     "handshakeTranscriptDigest": "SHA-256(handshakeTranscriptDigest-domain || deterministic-CBOR(firstPacketTranscript))",
-    "sessionContextDigest": "SHA-256(sessionContext-domain || deterministic-CBOR([protocolLineId, protectionProfileId, handshakeTranscriptDigest, initiatorIdentityStateDigest, responderIdentityStateDigest, pairSequence]))"
+    "sessionContextDigest": "SHA-256(sessionContext-domain || deterministic-CBOR([protocolLineId, protectionProfileId, handshakeTranscriptDigest, initiatorIdentityStateDigest, initiatorUserAuthorityStateDigest, responderIdentityStateDigest, responderUserAuthorityStateDigest, pairSequence]))"
   },
   "confirmation": {
     "clientPlaintext": "exact-clientConfirmPlaintext-domain-bytes",
@@ -85,5 +221,10 @@
     "frame": "complete-canonical-header || ciphertext || tag",
     "headerConfidentiality": false
   },
-  "nonclaims": ["ongoing-post-quantum-post-compromise-recovery", "ratchet-header-confidentiality", "transferable-session-authentication", "physical-zeroization", "rollback-detection-under-fully-compromised-store"]
+  "nonclaims": [
+    "ongoing-post-quantum-post-compromise-recovery",
+    "ratchet-header-confidentiality",
+    "physical-zeroization",
+    "rollback-detection-under-fully-compromised-store"
+  ]
 }

@@ -26,7 +26,6 @@ reliable-event = {
   ? 7 => uint .le 13,                 ; closed failure code
   ? 8 => uint .le 3,                  ; Station hint only
   ? 9 => id128,
-  ? 10 => digest256,
   ? 11 => id128,
   ? 12 => uint .le 32,
   ? 13 => [0*32 chunk-range],
@@ -36,11 +35,11 @@ reliable-event = {
 
 confirmation = {
   0 => id128,                         ; confirmation identity
-  1 => uint .le 1,                   ; Endpoint Accepted/Effect Completed
-  2 => uint .le 2,                   ; succeeded/rejected/failed
+  1 => uint .le 1,                   ; confirmationStage: Endpoint Accepted/Effect Completed
+  2 => uint .le 2,                   ; confirmationOutcome: succeeded/rejected/failed
   3 => [1*32 id128],                  ; sorted unique bounded IDs
   ? 4 => uint .le 13,
-  ? 5 => digest256
+  ? 5 => digest256                    ; resultDigest for successful Effect Completed
 }
 
 chunk-range = {
@@ -53,7 +52,7 @@ projection-result = {
   1 => digest256,
   2 => uint .le 3,                    ; pending/delivered/rejected/failed
   ? 3 => uint .le 13,
-  4 => uint .le 1                      ; endpoint-evidence or none
+  4 => uint .le 1                      ; endpoint-confirmation or none
 }
 
 state-snapshot = {
@@ -69,7 +68,6 @@ state-snapshot = {
   9 => uint .le 256,                  ; immutable lifetime transition count
   ? 10 => uint .le 13,
   ? 11 => digest256,
-  ? 12 => digest256,
   ? 13 => id128,
   ? 14 => uint .le 32,
   ? 15 => uint .le 64,
@@ -87,7 +85,7 @@ bytes = bstr
 ; Event metadata never embeds a protected packet. A retryable outbox snapshot
 ; retains the exact packet plus its digest and accounts packet octets separately
 ; from event metadata. Event validation is atomic: intent identity, digest,
-; route epoch, expected state generation, packet identity, evidence digest, and
+; route epoch, expected state generation, packet identity, and
 ; all caller-provided bounds are checked against a tentative snapshot together.
 ; Send commits the advanced snapshot and exact retry packet before emission;
 ; restart restores the complete monotonic snapshot before accepting input.

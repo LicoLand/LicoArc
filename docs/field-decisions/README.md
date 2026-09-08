@@ -133,44 +133,51 @@ same bounded change.
 
 | Detail record | Detail record | Detail record | Detail record |
 | --- | --- | --- | --- |
-| [affiliation-commitment.md](fields/affiliation-commitment.md) | [affiliation-epoch.md](fields/affiliation-epoch.md) | [affiliation-nonce.md](fields/affiliation-nonce.md) | [affiliation-not-after.md](fields/affiliation-not-after.md) |
-| [affiliation-state-digest.md](fields/affiliation-state-digest.md) | [previous-affiliation-update-digest.md](fields/previous-affiliation-update-digest.md) | [station-affiliation-signature.md](fields/station-affiliation-signature.md) | [station-affiliations.md](fields/station-affiliations.md) |
-| [attachment-byte-length.md](fields/attachment-byte-length.md) | [attachment-chunk-count.md](fields/attachment-chunk-count.md) | [attachment-chunk-digest.md](fields/attachment-chunk-digest.md) | [attachment-chunk-length.md](fields/attachment-chunk-length.md) |
-| [attachment-chunk-offset.md](fields/attachment-chunk-offset.md) | [attachment-chunk-size.md](fields/attachment-chunk-size.md) | [attachment-content-digest.md](fields/attachment-content-digest.md) | [attachment-id.md](fields/attachment-id.md) |
-| [attachment-id-recovery.md](fields/attachment-id-recovery.md) | [attachment-media-type.md](fields/attachment-media-type.md) | [attachment-transfer-token.md](fields/attachment-transfer-token.md) | [attachments.md](fields/attachments.md) |
-| [capability-digest.md](fields/capability-digest.md) | [capability-epoch.md](fields/capability-epoch.md) | [capability-signature.md](fields/capability-signature.md) | [capability-valid-until.md](fields/capability-valid-until.md) |
-| [certification-refs.md](fields/certification-refs.md) | [chunk-final.md](fields/chunk-final.md) | [chunk-final-attachment.md](fields/chunk-final-attachment.md) | [chunk-index.md](fields/chunk-index.md) |
-| [chunk-range-end-exclusive.md](fields/chunk-range-end-exclusive.md) | [chunk-range-start.md](fields/chunk-range-start.md) |  |  |
-| [claim-epoch.md](fields/claim-epoch.md) | [claim-id.md](fields/claim-id.md) | [claimed-items.md](fields/claimed-items.md) | [confirmation-outcome.md](fields/confirmation-outcome.md) |
-| [confirmation-stage.md](fields/confirmation-stage.md) | [confirmed-message-id.md](fields/confirmed-message-id.md) | [content-type.md](fields/content-type.md) | [content.md](fields/content.md) |
-| [correlation-id.md](fields/correlation-id.md) | [correlation-id-recovery.md](fields/correlation-id-recovery.md) | [delivery-handle.md](fields/delivery-handle.md) | [descriptor-not-after.md](fields/descriptor-not-after.md) |
-| [descriptor-not-before.md](fields/descriptor-not-before.md) |  |  |  |
-| [descriptor-sequence.md](fields/descriptor-sequence.md) | [descriptor-signatures.md](fields/descriptor-signatures.md) | [endpoint-failure-code.md](fields/endpoint-failure-code.md) | [endpoint-identity.md](fields/endpoint-identity.md) |
-| [endpoint-uri.md](fields/endpoint-uri.md) | [explicit-packet-length.md](fields/explicit-packet-length.md) | [extension-criticality.md](fields/extension-criticality.md) | [extensions.md](fields/extensions.md) |
-| [failure-class.md](fields/failure-class.md) | [first-contact-token.md](fields/first-contact-token.md) | [handle-class.md](fields/handle-class.md) | [handshake-purpose.md](fields/handshake-purpose.md) |
-| [handshake-role.md](fields/handshake-role.md) | [hop-trace.md](fields/hop-trace.md) | [invitation-binding.md](fields/invitation-binding.md) | [item-id.md](fields/item-id.md) |
-| [listeners.md](fields/listeners.md) | [logical-message-id.md](fields/logical-message-id.md) | [message-kind.md](fields/message-kind.md) | [network-id.md](fields/network-id.md) |
-| [nonce.md](fields/nonce.md) | [plaintext.md](fields/plaintext.md) | [previous-descriptor-digest.md](fields/previous-descriptor-digest.md) | [protected-packet.md](fields/protected-packet.md) |
-| [previous-route-update-digest.md](fields/previous-route-update-digest.md) |  |  |  |
-| [protection-profile-id.md](fields/protection-profile-id.md) | [protocol-line-id.md](fields/protocol-line-id.md) | [provider-id.md](fields/provider-id.md) | [record-type.md](fields/record-type.md) |
-| [transport-framing.md](fields/transport-framing.md) | [requested-chunk-ranges.md](fields/requested-chunk-ranges.md) | [retention.md](fields/retention.md) | [retry-after.md](fields/retry-after.md) |
-| [route-epoch.md](fields/route-epoch.md) |  |  |  |
-| [route-not-after.md](fields/route-not-after.md) | [routes.md](fields/routes.md) | [sequence-counter.md](fields/sequence-counter.md) | [session-id.md](fields/session-id.md) |
-| [service-until.md](fields/service-until.md) |  |  |  |
+| [admitted-authority-epoch.md](fields/admitted-authority-epoch.md) | [affiliation-commitment.md](fields/affiliation-commitment.md) | [affiliation-epoch.md](fields/affiliation-epoch.md) | [affiliation-nonce.md](fields/affiliation-nonce.md) |
+| [affiliation-not-after.md](fields/affiliation-not-after.md) | [affiliation-state-digest.md](fields/affiliation-state-digest.md) | [attachment-byte-length.md](fields/attachment-byte-length.md) | [attachment-chunk-count.md](fields/attachment-chunk-count.md) |
+| [attachment-chunk-digest.md](fields/attachment-chunk-digest.md) | [attachment-chunk-length.md](fields/attachment-chunk-length.md) | [attachment-chunk-offset.md](fields/attachment-chunk-offset.md) | [attachment-chunk-size.md](fields/attachment-chunk-size.md) |
+| [attachment-content-digest.md](fields/attachment-content-digest.md) | [attachment-id-recovery.md](fields/attachment-id-recovery.md) | [attachment-id.md](fields/attachment-id.md) | [attachment-media-type.md](fields/attachment-media-type.md) |
+| [attachment-transfer-token.md](fields/attachment-transfer-token.md) | [attachments.md](fields/attachments.md) | [authority-epoch.md](fields/authority-epoch.md) | [authority-signatures.md](fields/authority-signatures.md) |
+| [authority-transition-kind.md](fields/authority-transition-kind.md) | [authorized-devices.md](fields/authorized-devices.md) | [certification-refs.md](fields/certification-refs.md) | [chunk-final-attachment.md](fields/chunk-final-attachment.md) |
+| [chunk-final.md](fields/chunk-final.md) | [chunk-index.md](fields/chunk-index.md) | [chunk-range-end-exclusive.md](fields/chunk-range-end-exclusive.md) | [chunk-range-start.md](fields/chunk-range-start.md) |
+| [claim-epoch.md](fields/claim-epoch.md) | [claim-id.md](fields/claim-id.md) | [claimed-items.md](fields/claimed-items.md) | [confirmation-id.md](fields/confirmation-id.md) |
+| [confirmation-outcome-compact.md](fields/confirmation-outcome-compact.md) | [confirmation-outcome-v1.md](fields/confirmation-outcome-v1.md) | [confirmation-outcome.md](fields/confirmation-outcome.md) | [confirmation-result-digest.md](fields/confirmation-result-digest.md) |
+| [confirmation-stage-compact.md](fields/confirmation-stage-compact.md) | [confirmation-stage-v1.md](fields/confirmation-stage-v1.md) | [confirmation-stage.md](fields/confirmation-stage.md) | [confirmed-message-id.md](fields/confirmed-message-id.md) |
+| [confirmed-message-ids-v1.md](fields/confirmed-message-ids-v1.md) | [confirmed-message-ids.md](fields/confirmed-message-ids.md) | [content-type-user-intent.md](fields/content-type-user-intent.md) | [content-type.md](fields/content-type.md) |
+| [content-user-intent.md](fields/content-user-intent.md) | [content.md](fields/content.md) | [control-budget-selector.md](fields/control-budget-selector.md) | [correlation-id-recovery.md](fields/correlation-id-recovery.md) |
+| [correlation-id.md](fields/correlation-id.md) | [delivery-handle.md](fields/delivery-handle.md) | [descriptor-not-after.md](fields/descriptor-not-after.md) | [descriptor-not-before.md](fields/descriptor-not-before.md) |
+| [descriptor-sequence.md](fields/descriptor-sequence.md) | [descriptor-signatures.md](fields/descriptor-signatures.md) | [device-status.md](fields/device-status.md) | [endpoint-failure-code-v1.md](fields/endpoint-failure-code-v1.md) |
+| [endpoint-failure-code.md](fields/endpoint-failure-code.md) | [endpoint-identity-session-binding.md](fields/endpoint-identity-session-binding.md) | [endpoint-identity.md](fields/endpoint-identity.md) | [endpoint-uri.md](fields/endpoint-uri.md) |
+| [evidence-counterparty-endpoint-identity-ref.md](fields/evidence-counterparty-endpoint-identity-ref.md) | [evidence-id.md](fields/evidence-id.md) | [evidence-protocol-line-id.md](fields/evidence-protocol-line-id.md) | [evidence-signatures.md](fields/evidence-signatures.md) |
+| [evidence-signer-endpoint-identity-ref.md](fields/evidence-signer-endpoint-identity-ref.md) | [evidence-signing-identity-state-digest.md](fields/evidence-signing-identity-state-digest.md) | [evidence-statement-digests.md](fields/evidence-statement-digests.md) | [evidence-timestamp.md](fields/evidence-timestamp.md) |
+| [explicit-packet-length.md](fields/explicit-packet-length.md) | [extension-criticality.md](fields/extension-criticality.md) | [extensions.md](fields/extensions.md) | [failure-class.md](fields/failure-class.md) |
+| [first-contact-token.md](fields/first-contact-token.md) | [generic-payload-length.md](fields/generic-payload-length.md) | [handle-class.md](fields/handle-class.md) | [handshake-purpose.md](fields/handshake-purpose.md) |
+| [handshake-role.md](fields/handshake-role.md) | [hop-trace.md](fields/hop-trace.md) | [initiator-user-authority-state-digest.md](fields/initiator-user-authority-state-digest.md) | [invitation-binding.md](fields/invitation-binding.md) |
+| [item-id.md](fields/item-id.md) | [legal-identity-evidence.md](fields/legal-identity-evidence.md) | [listeners.md](fields/listeners.md) | [logical-message-id.md](fields/logical-message-id.md) |
+| [management-signing-keys.md](fields/management-signing-keys.md) | [message-kind.md](fields/message-kind.md) | [network-id.md](fields/network-id.md) | [non-repudiation-selector.md](fields/non-repudiation-selector.md) |
+| [nonce.md](fields/nonce.md) | [payload-compression.md](fields/payload-compression.md) | [per-record-transferable-signature.md](fields/per-record-transferable-signature.md) | [periodic-keepalive.md](fields/periodic-keepalive.md) |
+| [plaintext.md](fields/plaintext.md) | [possession-proof.md](fields/possession-proof.md) | [previous-affiliation-update-digest.md](fields/previous-affiliation-update-digest.md) | [previous-descriptor-digest.md](fields/previous-descriptor-digest.md) |
+| [previous-route-update-digest.md](fields/previous-route-update-digest.md) | [previous-user-authority-state-digest.md](fields/previous-user-authority-state-digest.md) | [protected-packet.md](fields/protected-packet.md) | [protected-padding-absence.md](fields/protected-padding-absence.md) |
+| [protection-profile-id-session-binding.md](fields/protection-profile-id-session-binding.md) | [protection-profile-id.md](fields/protection-profile-id.md) | [protocol-overhead-length.md](fields/protocol-overhead-length.md) | [provider-id.md](fields/provider-id.md) |
+| [record-type-evidence-checkpoint.md](fields/record-type-evidence-checkpoint.md) | [record-type.md](fields/record-type.md) | [recovery-signing-keys.md](fields/recovery-signing-keys.md) | [requested-chunk-ranges-compact.md](fields/requested-chunk-ranges-compact.md) |
+| [requested-chunk-ranges.md](fields/requested-chunk-ranges.md) | [responder-user-authority-state-digest.md](fields/responder-user-authority-state-digest.md) | [retention.md](fields/retention.md) | [retry-after.md](fields/retry-after.md) |
+| [revoked-authority-epoch.md](fields/revoked-authority-epoch.md) | [route-epoch.md](fields/route-epoch.md) | [route-not-after.md](fields/route-not-after.md) | [routes.md](fields/routes.md) |
+| [sequence-counter.md](fields/sequence-counter.md) | [service-until.md](fields/service-until.md) | [session-authentication-as-transferable-evidence.md](fields/session-authentication-as-transferable-evidence.md) | [session-id.md](fields/session-id.md) |
 | [settle-action.md](fields/settle-action.md) | [settle-outcome.md](fields/settle-outcome.md) | [settlement-results.md](fields/settlement-results.md) | [settlements.md](fields/settlements.md) |
 | [signature-value.md](fields/signature-value.md) | [signing-key-id.md](fields/signing-key-id.md) | [signing-key-profile-id.md](fields/signing-key-profile-id.md) | [signing-key-public-bytes.md](fields/signing-key-public-bytes.md) |
-| [signing-keys.md](fields/signing-keys.md) | [station-descriptor-digest.md](fields/station-descriptor-digest.md) | [station-service-signature.md](fields/station-service-signature.md) |  |
-| [station-id.md](fields/station-id.md) | [station-operation-id.md](fields/station-operation-id.md) | [station-receipt.md](fields/station-receipt.md) | [station-timestamp.md](fields/station-timestamp.md) |
-| [supported-protection-profiles.md](fields/supported-protection-profiles.md) | [supported-protocol-lines.md](fields/supported-protocol-lines.md) | [transport-envelope-id.md](fields/transport-envelope-id.md) | [transport-profile-id.md](fields/transport-profile-id.md) |
-| [transport-retention.md](fields/transport-retention.md) | [verification-epoch.md](fields/verification-epoch.md) | [verification-evidence.md](fields/verification-evidence.md) | [verification-method-id.md](fields/verification-method-id.md) |
-| [protocol-line-id-session-binding.md](fields/protocol-line-id-session-binding.md) | [protection-profile-id-session-binding.md](fields/protection-profile-id-session-binding.md) | [capability-digest-session-binding.md](fields/capability-digest-session-binding.md) | [endpoint-identity-session-binding.md](fields/endpoint-identity-session-binding.md) |
-| [content-type-user-intent.md](fields/content-type-user-intent.md) | [content-user-intent.md](fields/content-user-intent.md) | [confirmed-message-ids.md](fields/confirmed-message-ids.md) | [confirmation-stage-compact.md](fields/confirmation-stage-compact.md) |
-| [confirmation-outcome-compact.md](fields/confirmation-outcome-compact.md) | [requested-chunk-ranges-compact.md](fields/requested-chunk-ranges-compact.md) | [generic-payload-length.md](fields/generic-payload-length.md) | [protocol-overhead-length.md](fields/protocol-overhead-length.md) |
-| [payload-compression.md](fields/payload-compression.md) | [protected-padding-absence.md](fields/protected-padding-absence.md) | [control-budget-selector.md](fields/control-budget-selector.md) | [periodic-keepalive.md](fields/periodic-keepalive.md) |
-| [record-type-evidence-checkpoint.md](fields/record-type-evidence-checkpoint.md) | [evidence-protocol-line-id.md](fields/evidence-protocol-line-id.md) | [evidence-signer-endpoint-identity-ref.md](fields/evidence-signer-endpoint-identity-ref.md) | [evidence-counterparty-endpoint-identity-ref.md](fields/evidence-counterparty-endpoint-identity-ref.md) |
-| [evidence-signing-identity-state-digest.md](fields/evidence-signing-identity-state-digest.md) | [evidence-statement-digests.md](fields/evidence-statement-digests.md) | [evidence-signatures.md](fields/evidence-signatures.md) | [per-record-transferable-signature.md](fields/per-record-transferable-signature.md) |
-| [session-authentication-as-transferable-evidence.md](fields/session-authentication-as-transferable-evidence.md) | [evidence-timestamp.md](fields/evidence-timestamp.md) | [non-repudiation-selector.md](fields/non-repudiation-selector.md) | [evidence-id.md](fields/evidence-id.md) |
-| [legal-identity-evidence.md](fields/legal-identity-evidence.md) |  |  |  |
+| [signing-keys.md](fields/signing-keys.md) | [station-affiliation-signature.md](fields/station-affiliation-signature.md) | [station-affiliations.md](fields/station-affiliations.md) | [station-descriptor-digest.md](fields/station-descriptor-digest.md) |
+| [station-id.md](fields/station-id.md) | [station-operation-id.md](fields/station-operation-id.md) | [station-receipt.md](fields/station-receipt.md) | [station-service-signature.md](fields/station-service-signature.md) |
+| [station-timestamp.md](fields/station-timestamp.md) | [transport-envelope-id.md](fields/transport-envelope-id.md) | [transport-framing.md](fields/transport-framing.md) | [transport-profile-id.md](fields/transport-profile-id.md) |
+| [transport-retention.md](fields/transport-retention.md) | [user-authority-state.md](fields/user-authority-state.md) | [user-identity-ref.md](fields/user-identity-ref.md) | [verification-epoch.md](fields/verification-epoch.md) |
+| [verification-evidence.md](fields/verification-evidence.md) | [verification-method-id.md](fields/verification-method-id.md) |  |  |
+
+## Initial V1 field authority
+
+The initial V1 / Generation 1 contract defines independent user/device
+identity, sibling authority-state session binding and exact Endpoint
+confirmations. Their linked registries, schemas, labels, grammars and corpora
+own the wire meaning. Endpoint authority epochs and local state generations
+are security state, not protocol-version policy.
 
 ## Closed Group field-decision inventory
 
@@ -185,21 +192,18 @@ or grants a Station or product permission authority.
 | [group-id.md](fields/group-id.md) | [group-epoch.md](fields/group-epoch.md) | [previous-group-state-digest.md](fields/previous-group-state-digest.md) | [group-members.md](fields/group-members.md) |
 | [group-member-role.md](fields/group-member-role.md) | [group-message-context.md](fields/group-message-context.md) | [endpoint-association-claim.md](fields/endpoint-association-claim.md) |  |
 
-## Core v1 decision inventory
+No Group field proposal remains open.
 
-No Group field proposal remains open in this workspace. A future semantic
-change requires a new Message Field Decision ID and a complete registry
-migration; it cannot reopen or reinterpret one of the seven closed records.
+## Core v1 establishment fields
 
-Core v1 has six independent decided and specified field questions. Their exact
-semantic conclusions, labels, objects, encodings, failures, and conformance
-cases are joined to the owning machine authorities and Canonical Field
-Registry. None permits component negotiation or fallback.
+The fixed initial protocol binds the existing line/Profile identities directly.
+Prekeys, the authenticated transcript, SessionAccept and ratchet headers have
+independent field decisions:
 
-| Core v1 record | Core v1 record | Core v1 record |
-| --- | --- | --- |
-| [protocol-support-statement-v1.md](fields/protocol-support-statement-v1.md) | [minimum-protocol-generation-v1.md](fields/minimum-protocol-generation-v1.md) | [prekey-bundle-v1.md](fields/prekey-bundle-v1.md) |
-| [handshake-transcript-v1.md](fields/handshake-transcript-v1.md) | [session-accept.md](fields/session-accept.md) | [ratchet-header.md](fields/ratchet-header.md) |
+- [prekey-bundle-v1.md](fields/prekey-bundle-v1.md)
+- [handshake-transcript-v1.md](fields/handshake-transcript-v1.md)
+- [session-accept.md](fields/session-accept.md)
+- [ratchet-header.md](fields/ratchet-header.md)
 
 ## Historical predecessor records
 

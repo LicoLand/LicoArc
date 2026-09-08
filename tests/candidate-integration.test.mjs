@@ -36,8 +36,8 @@ test("generator rejects cross-authority admission mismatches, fallback, and sour
         ? ["synthetic.missing-capability"]
         : [];
     }),
-    async (fixture) => mutateJson(fixture, "spec/protocol-lines.json", (value) => {
-      value.selection.implementationFallback = true;
+    async (fixture) => mutateJson(fixture, "spec/protection-profiles.json", (value) => {
+      value.admission.reducedSecurityFallback = "permitted";
     }),
     async (fixture) => mutateJson(fixture, "spec/v1/security/source-manifest.json", (value) => {
       value.sourceRoots = ["spec/v1/security"];

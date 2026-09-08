@@ -5,11 +5,18 @@
   "lifecycle": "Candidate",
   "definitionStatus": "COMPLETE",
   "sessionEligible": true,
-  "activeProfiles": ["spec/v1/protection/profile.json"],
+  "activeProfiles": [
+    "spec/v1/protection/profile.json"
+  ],
   "completePendingProfiles": [],
   "profileCatalog": "spec/protection-profiles.json",
   "decidedPendingDefinitionJoin": [],
-  "wireSchemas": ["spec/v1/protection/support.schema.json", "spec/v1/protection/prekey-bundle.schema.json", "spec/v1/protection/handshake.schema.json", "spec/v1/protection/session-accept.schema.json", "spec/v1/protection/record.schema.json"],
+  "wireSchemas": [
+    "spec/v1/protection/prekey-bundle.schema.json",
+    "spec/v1/protection/handshake.schema.json",
+    "spec/v1/protection/session-accept.schema.json",
+    "spec/v1/protection/record.schema.json"
+  ],
   "runtimeGrammar": "spec/v1/protection/runtime.cddl",
   "conformanceCorpus": "conformance/v1/protection/manifest.json",
   "unknownProfilePolicy": "terminal-reject",

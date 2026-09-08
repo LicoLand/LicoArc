@@ -4,21 +4,66 @@
   "title": "LicoArc formal security binding registry",
   "type": "object",
   "additionalProperties": false,
-  "required": ["$schema", "$id", "registryVersion", "lifecycle", "status", "requiredKinds", "semanticSourceDigest", "semanticSources", "bindings", "authority", "missingBindingPolicy", "modelAuthority"],
+  "required": [
+    "$schema",
+    "$id",
+    "registryVersion",
+    "lifecycle",
+    "status",
+    "requiredKinds",
+    "semanticSourceDigest",
+    "semanticSources",
+    "bindings",
+    "authority",
+    "missingBindingPolicy",
+    "modelAuthority"
+  ],
   "properties": {
-    "$schema": {"const": "https://licoarc.com/spec/schemas/security-formal-bindings.schema.json"},
-    "$id": {"const": "https://licoarc.com/spec/v1/security/formal-bindings.json"},
-    "registryVersion": {"const": "licoarc.formal-bindings.v1"},
-    "lifecycle": {"const": "Candidate"},
-    "status": {"type": "string", "enum": ["incomplete", "complete"]},
-    "requiredKinds": {"const": ["protocol-line-id", "profile-id", "algorithm-id", "domain-separator", "field-label", "bound", "failure-enum"]},
-    "semanticSourceDigest": {"type": "string", "pattern": "^[0-9a-f]{64}$", "maxLength": 64},
+    "$schema": {
+      "const": "https://licoarc.com/spec/schemas/security-formal-bindings.schema.json"
+    },
+    "$id": {
+      "const": "https://licoarc.com/spec/v1/security/formal-bindings.json"
+    },
+    "registryVersion": {
+      "const": "licoarc.formal-bindings.v1"
+    },
+    "lifecycle": {
+      "const": "Candidate"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "incomplete",
+        "complete"
+      ]
+    },
+    "requiredKinds": {
+      "const": [
+        "protocol-line-id",
+        "profile-id",
+        "algorithm-id",
+        "domain-separator",
+        "field-label",
+        "bound",
+        "failure-enum"
+      ]
+    },
+    "semanticSourceDigest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "maxLength": 64
+    },
     "semanticSources": {
       "type": "array",
       "minItems": 1,
       "maxItems": 64,
       "uniqueItems": true,
-      "items": {"type": "string", "pattern": "^spec/[A-Za-z0-9._/-]+$", "maxLength": 256}
+      "items": {
+        "type": "string",
+        "pattern": "^spec/[A-Za-z0-9._/-]+$",
+        "maxLength": 256
+      }
     },
     "bindings": {
       "type": "array",
@@ -27,22 +72,81 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["bindingId", "claimId", "kind", "authorityPath", "authorityPointer", "authorityDigest", "authorityValueDigest", "proofModel", "proofLemma"],
+        "required": [
+          "bindingId",
+          "claimId",
+          "kind",
+          "authorityPath",
+          "authorityPointer",
+          "authorityDigest",
+          "authorityValueDigest",
+          "proofModel",
+          "proofLemma"
+        ],
         "properties": {
-          "bindingId": {"type": "string", "pattern": "^BIND-[A-Z0-9-]+$", "maxLength": 128},
-          "claimId": {"type": "string", "pattern": "^SEC-[0-9]{3}$", "maxLength": 7},
-          "kind": {"type": "string", "enum": ["protocol-line-id", "profile-id", "algorithm-id", "domain-separator", "field-label", "bound", "failure-enum"]},
-          "authorityPath": {"type": "string", "pattern": "^(?:spec|docs)/[A-Za-z0-9._/-]+$", "maxLength": 256},
-          "authorityPointer": {"type": "string", "pattern": "^/(?:[A-Za-z0-9._~-]+/?)+$", "maxLength": 256},
-          "authorityDigest": {"type": "string", "pattern": "^[0-9a-f]{64}$", "maxLength": 64},
-          "authorityValueDigest": {"type": "string", "pattern": "^[0-9a-f]{64}$", "maxLength": 64},
-          "proofModel": {"type": "string", "pattern": "^[a-zA-Z0-9._/-]+$", "maxLength": 256},
-          "proofLemma": {"type": "string", "pattern": "^[a-zA-Z0-9._/-]+$", "maxLength": 256}
+          "bindingId": {
+            "type": "string",
+            "pattern": "^BIND-[A-Z0-9-]+$",
+            "maxLength": 128
+          },
+          "claimId": {
+            "type": "string",
+            "pattern": "^SEC-[0-9]{3}$",
+            "maxLength": 7
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "protocol-line-id",
+              "profile-id",
+              "algorithm-id",
+              "domain-separator",
+              "field-label",
+              "bound",
+              "failure-enum"
+            ]
+          },
+          "authorityPath": {
+            "type": "string",
+            "pattern": "^(?:spec|docs)/[A-Za-z0-9._/-]+$",
+            "maxLength": 256
+          },
+          "authorityPointer": {
+            "type": "string",
+            "pattern": "^/(?:[A-Za-z0-9._~-]+/?)+$",
+            "maxLength": 256
+          },
+          "authorityDigest": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$",
+            "maxLength": 64
+          },
+          "authorityValueDigest": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$",
+            "maxLength": 64
+          },
+          "proofModel": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9._/-]+$",
+            "maxLength": 256
+          },
+          "proofLemma": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9._/-]+$",
+            "maxLength": 256
+          }
         }
       }
     },
-    "authority": {"const": "generated-only-from-decided-specified-normative-sources"},
-    "missingBindingPolicy": {"const": "claim-remains-unproved-and-line-ineligible"},
-    "modelAuthority": {"const": "never-a-second-protocol"}
+    "authority": {
+      "const": "generated-only-from-decided-specified-normative-sources"
+    },
+    "missingBindingPolicy": {
+      "const": "claim-remains-unproved-and-line-ineligible"
+    },
+    "modelAuthority": {
+      "const": "never-a-second-protocol"
+    }
   }
 }

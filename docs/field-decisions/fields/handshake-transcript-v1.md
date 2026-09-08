@@ -1,4 +1,4 @@
-# Field Review: Handshake Transcript v1
+# Field Review: Fixed Initial Handshake Transcript
 
 ## Review state
 
@@ -8,87 +8,60 @@
 | Decision ID | `FLD-handshake-transcript-v1` |
 | Decision status | `DECIDED` |
 | Definition status | `SPECIFIED` |
-| Existing authority | [Pairwise Protection architecture](../../../ARCHITECTURE.md#3-pairwise-protection) and the [Canonical Field Registry](../../../spec/FIELD-REGISTRY.md) |
-| Authority targets | `spec/FIELD-REGISTRY.md`, `spec/v1/protection/`, `formal/`, `conformance/v1/protection/`, `spec/v1/manifest.json`, and `spec/protocol-lines.json` |
-| Predecessor or successor | Replaces the withdrawn Candidate transcript scope; it preserves no old digest, label, or wire. |
-| Current conclusion | One canonical transcript binds both complete support statements and floors, exact non-circular line/Profile content identities, identity-continuity state, role/purpose, the paired prekeys, public values, first ciphertext, and dual signatures before establishment. |
+| Existing authority | Approved initial V1 Endpoint authentication intent |
+| Authority targets | `spec/FIELD-REGISTRY.md`, `spec/v1/protection/handshake.schema.json`, `spec/v1/protection/labels.json`, `spec/v1/protection/runtime.cddl`, and `spec/v1/protection/algorithms.json` |
+| Predecessor or successor | None |
+| Current conclusion | One closed first packet authenticates the exact fixed context. |
 
 ## Question
 
-Which semantic values and canonical representation must the establishment
-transcript bind to reject downgrade, role confusion, unknown-key share,
-prekey substitution and session-lock mismatch?
+Which values must the Endpoints authenticate before committing a session?
 
 ## Role in communication
 
-Both Endpoints derive and validate the same transcript context. Its digest
-feeds the hybrid combiner, role-separated KDF domains, handshake signatures,
-client confirmation, and SessionAccept MAC. A digest never replaces validation
-of each referenced statement or value.
+The initiator sends the fixed line and Profile identities, both Endpoint and
+sibling user-authority-state digests, responder signed prekey, initiator key
+IDs, hybrid ephemeral inputs, two initiator signatures and client confirmation.
+The responder checks the exact identity/key bindings before accepting the
+confirmation and atomically redeeming the prekey pair.
 
 ## Contribution to LicoArc's final vision
 
-Makes the exact cross-capability composition and Endpoint identities
-interoperable and downgrade-resistant without granting a Station, Provider, or
-component negotiation authority.
+Establishes private Endpoint communication through an untrusted Station while
+leaving delivery and identity authority at the Endpoints.
 
 ## Field model and trade-offs
 
-| Transcript input | Approved semantic |
-| --- | --- |
-| Support | Both Endpoint-authenticated complete support statements and monotonic floors. |
-| Line/Profile | DIGEST256 content identities of the exact line and Profile; no self-referential or mutable lifecycle data. |
-| Identity | Both Endpoint identity-continuity state digests and authorized public-key references. |
-| Context | Derived role and fixed handshake purpose, with no implementation-local replacement. |
-| Prekeys | Selected responder paired sequence, X25519 public key, ML-KEM-768 public key, and the initiator ciphertext. |
-| Authentication | Initiator and responder identity signatures over the canonical transcript inputs. |
-| First packet | Complete canonical first ciphertext and its authenticated client-confirm value. |
-| Representation | Deterministic CBOR projection with distinct NUL-terminated ASCII domain separation. |
-
-The line content identity is computed from a canonical semantic projection of
-generation, mandatory capability semantic identities, active Profile
-identities, stable claim/nonclaim identifiers, and selection/session rules.
-The Profile identity is computed from its canonical semantic definition and
-stable claim/nonclaim identifiers. Self identity, containing catalogs,
-lifecycle/publication state, proof results/bindings, artifact digests, and
-external tool metadata are excluded from those preimages. Textual contract
-names and `wireId` values remain source/catalog locators only.
-
-## Visibility and trust
-
-Transcript values are Endpoint-authenticated and protected as required by the
-handshake; a Station may carry or suppress bytes but cannot interpret them as
-authority. The selected line owns mandatory capability membership and
-cross-capability bounds. Any mismatch, missing input, unknown identity, invalid
-signature, or non-canonical representation fails terminally with no state
-advance.
+The initial packet is one deterministic CBOR map with labels 0 through 14.
+Every member is required; extra, duplicate, missing, malformed, noncanonical,
+over-bound or trailing input rejects. Line/Profile and identity digests are
+32 bytes. The exact field lengths, integer bounds, signature input and
+transcript projections are owned by the linked machine authority.
 
 ## Necessity proof
 
-| Test | Finding |
-| --- | --- |
-| Required action | Bind every security- and capability-relevant establishment input into one independently reproducible context. |
-| Removal consequence | Component substitution, role confusion, identity mismatch, and content-identity ambiguity can produce divergent sessions. |
-| Derivation | A line/Profile digest alone cannot bind peer inputs, prekeys, public values, or the first ciphertext. |
-| Lower-layer carrier | Station and Transport cannot authenticate or define the Endpoint transcript. |
-| Protected placement | Transcript-bound values do not need repetition in ordinary established records; the selected Profile inherits the authenticated context. |
-| Duplicate-authority risk | Common capability/Profile/session fields and implementation labels would create competing authority and are rejected. |
+The content identities prevent protocol-context substitution. Identity states
+and key IDs prevent key misbinding; sibling authority digests preserve the
+independent device-authority boundary. Ephemeral values and confirmations bind
+the actual session keys. These values cannot be inferred from Station metadata.
+
+## Visibility and trust
+
+The intended recipient authenticates the packet. Station transport never
+supplies an identity decision or permission to advance protected state.
+
+## Alternatives
+
+Omitting exact context binding or trusting carrier claims is rejected. The
+single fixed protocol needs no version-policy exchange or alternate decoder.
 
 ## Decision history
 
-Repository review on 2026-08-31 adopted one deterministic transcript context,
-non-circular content-identity projections, complete cross-capability binding,
-and no independent negotiation or fallback. Exact compact labels, byte ordering,
-domain strings, and source vectors are closed by the linked machine authority.
-
-## Decision outcome
-
-The transcript binding is approved as one independent field semantic. It does
-not allocate a generic transcript field or authorize a common protected-record
-placement before the final source closure.
+The confirmed initial V1 / Generation 1 direction defines one unpublished
+wire shape. Device-authority epochs and ratchet state keep separate meanings.
 
 ## Definition evidence
 
-The decision status is `DECIDED` and the definition status is `SPECIFIED`.
-The linked schema, labels, byte ordering, domains, bounds, signature inputs,
-vectors, and aggregate source closure close the exact transcript semantics.
+The closed schema, labels, grammar, canonical projections and corpus own the
+specified packet and transcript. Independent implementations verify it in
+their own repositories.

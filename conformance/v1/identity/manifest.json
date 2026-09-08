@@ -2,9 +2,13 @@
   "$schema": "https://licoarc.com/spec/schemas/conformance-corpus-manifest.schema.json",
   "manifestVersion": "licoarc.conformance-corpus-manifest.v1",
   "corpusId": "licoarc.identity.conformance.v1",
-  "caseCount": 37,
+  "caseCount": 43,
   "operationIds": [
     "licoarc.foundation.canonicalize-governance-json.v1",
+    "licoarc.identity.admit-protected-authority-payload.v1",
+    "licoarc.identity.apply-user-authority-catch-up.v1",
+    "licoarc.identity.compute-user-authority-state-digest.v1",
+    "licoarc.identity.validate-user-authority-transition.v1",
     "licoarc.schema.validate-closed.v1"
   ],
   "envelopePaths": [

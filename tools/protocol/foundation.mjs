@@ -322,8 +322,8 @@ function assertFoundationRegistries(documents, limits) {
     if (identifier.wire !== false) throw new FoundationError("foundation identifiers cannot become runtime wire values");
   }
   const states = new Set(lifecycle.states.map(({ id }) => id));
-  if (!states.has("Candidate") || !states.has("Published") || !states.has("Deprecated") || !states.has("Retired")) throw new FoundationError("foundation lifecycle is incomplete");
-  const expectedTransitions = new Set(["Draft->Candidate", "Candidate->Candidate", "Candidate->Published", "Candidate->Retired", "Published->Deprecated", "Deprecated->Retired"]);
+  if (!states.has("Candidate") || !states.has("Published")) throw new FoundationError("foundation lifecycle is incomplete");
+  const expectedTransitions = new Set(["Draft->Candidate", "Candidate->Candidate", "Candidate->Published"]);
   const actualTransitions = new Set();
   for (const transition of lifecycle.transitions) {
     if (!states.has(transition.from) || !states.has(transition.to)) throw new FoundationError("foundation lifecycle transition references an unknown state");
@@ -333,8 +333,8 @@ function assertFoundationRegistries(documents, limits) {
   }
   if (actualTransitions.size !== expectedTransitions.size) throw new FoundationError("foundation lifecycle transition set is incomplete");
   const stateById = new Map(lifecycle.states.map((state) => [state.id, state]));
-  if (stateById.get("Published")?.mutable !== false || stateById.get("Deprecated")?.mutable !== false || stateById.get("Retired")?.mutable !== false || stateById.get("Retired")?.terminal !== true || lifecycle.definitionStatusRegistry !== "spec/protocol-lines.json") {
-    throw new FoundationError("published and retired lifecycle states must be immutable, with Retired terminal");
+  if (stateById.get("Published")?.mutable !== false || lifecycle.definitionStatusRegistry !== "spec/protocol-lines.json") {
+    throw new FoundationError("published content must be immutable");
   }
   const labelsByValue = new Set();
   const labelsByName = new Set();

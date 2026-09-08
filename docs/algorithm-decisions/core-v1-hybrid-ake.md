@@ -15,7 +15,7 @@
 ## Question and scope
 
 Which exact implementation-neutral Hybrid AKE construction closes Core v1
-asynchronous establishment, dual Endpoint authentication, downgrade binding,
+asynchronous establishment, dual Endpoint authentication, fixed context binding,
 paired prekey redemption, key confirmation, failure behavior, and the
 associated proof obligations? The decision covers primitive selection and
 shapes, the hybrid combiner, domain separation, transcript inputs, prekey
@@ -55,9 +55,9 @@ The closed LicoArc Algorithm Prototype is:
    role, context, and confirmation input uses a distinct NUL-terminated ASCII
    domain; labels are Protocol-Line constants and never caller-selected.
 4. **Authentication and confirmation.** Ed25519 and ML-DSA-65 authenticate
-   the canonical handshake inputs. The transcript binds both complete
-   Endpoint support statements and minimum-generation floors, the exact line
-   and Profile identities, identity-continuity state, role and purpose,
+   the canonical handshake inputs. The transcript binds the exact initial V1 line
+   and Profile identities, both Endpoint identity and user-authority states,
+   exact signing-key identifiers, role and purpose,
    selected paired prekeys, all public values, the first ciphertext, and both
    signatures. The initiator's first authenticated ciphertext carries the
    mandatory encrypted client-confirm value. The responder's SessionAccept is
@@ -123,7 +123,7 @@ post-compromise recovery require a separately decided and identified Profile.
 The decision fixes the future authority-vector classes: valid and malformed
 prekey bundles; every exact public and signature length; all-zero X25519;
 ML-KEM implicit rejection; wrong line/Profile, role, purpose, or identity
-state; support and minimum-generation downgrade; transcript substitution;
+state; fixed content-identity mismatch; transcript substitution;
 missing, repeated, or wrong-purpose signatures; client-confirm and
 SessionAccept mismatch; paired inventory exhaustion; concurrent redemption;
 exact replay; sequence rollback; over-bound input; and no-mutation-on-failure.

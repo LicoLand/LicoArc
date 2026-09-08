@@ -9,11 +9,11 @@ specification; normative field semantics come only from the Field Registry.
 | --- | --- |
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-evidence-signatures` |
-| Decision status | `DECIDED` |
-| Definition status | `SPECIFIED` |
+| Decision status | `RETIRED` |
+| Definition status | `NOT-SPECIFIED` |
 | Existing authority | [Field Registry](../../../spec/FIELD-REGISTRY.md) |
-| Predecessor or successor | None. |
-| Current conclusion | A bounded signature collection authenticates the complete checkpoint under the exact evidence-signing profile set selected by the Protocol Line. |
+| Predecessor or successor | Retired without successor; ordinary finality uses authenticated Endpoint confirmations. |
+| Current conclusion | No evidence signature collection is active. |
 
 ## Question
 
@@ -78,4 +78,4 @@ from these field semantics.
 
 ## Definition evidence
 
-The definition status is `SPECIFIED`. The Canonical Field Registry and linked machine-readable authorities close this record’s exact active semantics.
+The definition is retired and `NOT-SPECIFIED`; this record remains history only.

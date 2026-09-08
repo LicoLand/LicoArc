@@ -16,19 +16,47 @@
   "retiredRootPolicy": "reject-signature",
   "compromisedRootPolicy": "reject-signature-unless-recovery",
   "signatureScope": "licoarc.federation-governance.v1|role|bundleDigest",
-  "closedRecordTypes": ["governanceBundle"],
-  "roles": ["membership", "compatibility", "revocation", "distribution", "consistency", "recovery", "abuse"],
-  "requiredAuthorizationRoles": ["membership", "compatibility", "revocation", "distribution", "consistency", "recovery", "abuse"],
+  "closedRecordTypes": [
+    "governanceBundle"
+  ],
+  "roles": [
+    "membership",
+    "compatibility",
+    "revocation",
+    "distribution",
+    "consistency",
+    "recovery",
+    "abuse"
+  ],
+  "requiredAuthorizationRoles": [
+    "membership",
+    "compatibility",
+    "revocation",
+    "distribution",
+    "consistency",
+    "recovery",
+    "abuse"
+  ],
   "separateEndpointAdmission": true,
-  "distributionFamilies": ["oci-descriptor", "dsse-envelope", "tuf-root", "tuf-targets", "tuf-snapshot", "tuf-timestamp"],
+  "distributionFamilies": [
+    "oci-descriptor",
+    "dsse-envelope",
+    "tuf-root",
+    "tuf-targets",
+    "tuf-snapshot",
+    "tuf-timestamp"
+  ],
   "sourceClosure": {
-    "roots": ["conformance/v1/governance", "spec/v1/governance"],
+    "roots": [
+      "conformance/v1/governance",
+      "spec/v1/governance"
+    ],
     "undeclaredFiles": "reject",
     "symlinks": "reject",
     "sortedPaths": "required"
   },
   "authority": {
-    "governanceEvidence": "bounded-offline-input-only",
+    "governanceInputs": "bounded-offline-input-only",
     "endpointAdmission": "endpoint-local",
     "crossCapabilityTotals": "bounded-by-protocol-line",
     "inheritance": "forbidden"
@@ -41,7 +69,7 @@
     "retryReset": "forbidden"
   },
   "atomicity": {
-    "evaluation": "validate-complete-bundle-and-all-role-evidence-before-commit",
+    "evaluation": "validate-complete-bundle-and-all-role-inputs-before-commit",
     "replay": "same-bundle-digest-and-epoch-is-idempotent-without-mutation",
     "failure": "stale-rollback-expired-equivocating-or-insufficient-input-leaves-byte-identical-pre-state"
   },

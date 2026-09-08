@@ -8,24 +8,17 @@
     "COMPLETE"
   ],
   "lifecycleStates": [
-    "Candidate",
-    "Published",
-    "Deprecated",
-    "Retired"
+    "Candidate"
   ],
   "lines": [
     {
       "wireId": "licoarc.protocol-line.v1",
       "generation": 1,
-      "minimumGeneration": 1,
-      "protocolLineId": "c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83",
+      "protocolLineId": "c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08",
       "lifecycle": "Candidate",
       "definitionStatus": "COMPLETE",
       "sessionEligible": true,
       "publicationEligible": false,
-      "newSessionPolicy": "allow-authenticated",
-      "existingSessionPolicy": "terminate-on-authenticated-adoption",
-      "authenticatedEffectiveGeneration": null,
       "mandatoryCapabilities": [
         "licoarc.federation-governance.v1",
         "licoarc.generic-messaging.v1",
@@ -34,8 +27,7 @@
         "licoarc.identity.v1",
         "licoarc.pairwise-protection.v1",
         "licoarc.protocol-foundation.v1",
-        "licoarc.reliable-exchange.v1",
-        "licoarc.transferable-evidence.v1"
+        "licoarc.reliable-exchange.v1"
       ],
       "definedCapabilities": [
         "licoarc.federation-governance.v1",
@@ -45,11 +37,10 @@
         "licoarc.identity.v1",
         "licoarc.pairwise-protection.v1",
         "licoarc.protocol-foundation.v1",
-        "licoarc.reliable-exchange.v1",
-        "licoarc.transferable-evidence.v1"
+        "licoarc.reliable-exchange.v1"
       ],
       "protectionProfileIds": [
-        "c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf"
+        "4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17"
       ],
       "stableClaimIds": [
         "SEC-001",
@@ -79,31 +70,6 @@
       "blockers": []
     }
   ],
-  "selection": {
-    "supportStatementAuthority": "endpoint-authenticated",
-    "supportEntry": "wire-id-generation-and-protocol-line-id",
-    "minimumGeneration": "endpoint-authenticated-monotonic-floor",
-    "filterOrder": [
-      "known-exact-protocol-line-identity",
-      "complete-definition",
-      "new-session-policy-allows",
-      "session-eligible",
-      "meets-both-minimum-generations",
-      "all-mandatory-capabilities-defined",
-      "all-protection-profiles-complete-and-eligible"
-    ],
-    "choice": "unique-highest-common-generation",
-    "success": "selected-pending-transcript-authentication",
-    "zeroResult": "terminal-no-common-line",
-    "ambiguousHighest": "terminal-ambiguous-generation",
-    "unknown": "terminal-unknown-line",
-    "contentIdentityMismatch": "terminal-content-identity-mismatch",
-    "unauthenticatedSupport": "terminal-unauthenticated-support",
-    "fallback": "forbidden",
-    "componentNegotiation": "forbidden",
-    "translation": "forbidden",
-    "stateAdvanceOnFailure": false
-  },
   "contentIdentity": {
     "name": "ProtocolLineSemanticProjectionV1",
     "algorithm": "SHA-256-over-domain-and-deterministic-CBOR",
@@ -112,7 +78,6 @@
       "mandatory-capability-semantic-identities",
       "active-protection-profile-identities",
       "stable-positive-claim-identifiers",
-      "selection-rules",
       "session-rules"
     ],
     "exclude": [
@@ -128,15 +93,6 @@
   "immutability": {
     "publishedBytes": "protocol-line-id-bound-and-immutable",
     "lifecycleRecord": "may-change-without-changing-protocol-line-id",
-    "semanticChange": "new-complete-line-and-generation",
     "identifierReuse": "forbidden"
-  },
-  "retirement": {
-    "retiredNewSessions": "forbid-retired",
-    "existingSessionPolicyOwner": "authenticated-protocol-line-registry",
-    "effectiveBoundOwner": "authenticated-protocol-line-registry",
-    "implementationChoice": "forbidden",
-    "silentMigration": "forbidden",
-    "successorRebinding": "fresh-complete-authenticated-handshake-only"
   }
 }

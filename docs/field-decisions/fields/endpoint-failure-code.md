@@ -6,10 +6,11 @@
 | --- | --- |
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-endpoint-failure-code` |
-| Decision status | `DECIDED` |
-| Definition status | `SPECIFIED` |
+| Decision status | `RETIRED` |
+| Definition status | `NOT-SPECIFIED` |
 | Existing authority | [`FIELD-REGISTRY.md`](../../../spec/FIELD-REGISTRY.md) |
-| Current conclusion | A protected, bounded failure class is required when peer interoperability depends on distinguishing endpoint terminal and retryable outcomes. |
+| Predecessor or successor | Succeeded by `FLD-endpoint-failure-code-v1`. |
+| Current conclusion | Retired: Generation 1 preserves bounded failure meaning inside exact authenticated confirmation and removes checkpoint coverage. |
 
 ## Question
 
@@ -64,4 +65,4 @@ the containing confirmation statement to be checkpoint-covered.
 
 ## Definition evidence
 
-The definition status is `SPECIFIED`. The Canonical Field Registry and linked machine-readable authorities close this record’s exact active semantics.
+The retired definition is `NOT-SPECIFIED`; its successor owns initial V1 semantics.

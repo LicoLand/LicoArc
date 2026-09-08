@@ -11,11 +11,14 @@ runtime.
 **Endpoint**
 The user-controlled origin or destination of protected communication and the
 sole runtime authority for its keys, plaintext, protected state, peer
-acceptance, approval, effects, and endpoint-authenticated evidence.
+acceptance, approval, effects, and authenticated confirmations. Each
+independently key-holding device or isolated runtime is a separate Endpoint
+with independent keys and sessions.
 
 **Station**
 An independently operated, Endpoint-untrusted intermediary with only the
-transport authority granted by the pinned Protocol Line.
+transport authority granted by the pinned Protocol Line. It has no user/device
+roster and no identity, trust, confirmation, freshness, or finality authority.
 
 **Network**
 A federation interoperability context under one pinned Protocol Line. It is
@@ -27,7 +30,7 @@ not a fourth entity.
 
 **Protocol Line**
 A closed composition of mandatory capability semantics, Protection Profiles,
-security claims, selection rules, lifecycle policy, and content identity. One
+security claims, current status, and content identity. One
 session uses exactly one line.
 
 **Protocol Line identity**
@@ -48,12 +51,8 @@ establishment, SessionAccept, and bounded X25519 Double Ratchet.
 One responder-issued X25519 and ML-KEM-768 one-time-prekey pair sharing one
 monotonic sequence and one atomic redemption. A partial pair is invalid.
 
-**Support statement**
-An Endpoint-authenticated bounded set of exact `(wireId, generation,
-protocolLineId)` tuples plus its monotonic minimum-generation floor.
-
 **Session eligibility**
-A machine lifecycle property permitting authenticated new-session selection.
+A machine lifecycle property permitting sessions under the fixed V1 definition.
 It is not a publication, implementation, interoperability, or operation claim.
 
 **Content identity**
@@ -83,13 +82,31 @@ retry, confirmation, attachment recovery, terminal failure, and restart
 convergence. It cannot guarantee Station delivery.
 
 **Endpoint confirmation**
-An authenticated peer result that can advance the exact Reliable Exchange
-state. A Station result cannot substitute for it.
+An exact replay-bound result authenticated by the sending authorized Endpoint
+session. Endpoint Accepted requires the matching confirmation. Effect
+Completed also requires authenticated success and result binding. A Station
+result cannot substitute for it.
 
-**Transferable Evidence**
-An Endpoint-signed statement and checkpoint joined to an exact identity state
-and Protocol Line identity. It proves only the defined cryptographic
-attribution, not truth, intent, legal responsibility, trusted time, or delivery.
+**User authority state**
+A signed, predecessor-bound snapshot containing the self-certifying user
+reference, authority epoch, management and recovery public keys, and a bounded
+set of authorized Endpoint devices. The canonical state digest excludes its
+authority signatures.
+
+**Device authorization**
+User-authority admission of one independent Endpoint state after possession
+proof. It permits that Endpoint to participate under the accepted authority
+state; it does not set peer trust or merge device keys or sessions.
+
+**Authority recovery**
+A predecessor recovery-key-authorized transition that can replace authority
+keys and atomically revoke compromised and admit replacement Endpoints. It
+does not recreate absent user data or bypass any external account policy.
+
+**Sibling authority binding**
+The pairwise transcript binding of each Endpoint-state digest beside its own
+accepted user-authority-state digest. Authority snapshots do not contain the
+peer digest, so the binding has no digest cycle.
 
 **Transport Profile**
 A named, bounded contract for Station-facing operations and opaque protected
@@ -105,13 +122,8 @@ The maturity of repository-owned protocol semantics: `PENDING`, `DRAFT`,
 `PARTIAL`, or `COMPLETE`.
 
 **Lifecycle**
-The independent distribution/use state: `Candidate`, `Published`,
-`Deprecated`, or `Retired` as permitted by the owning registry.
-
-**Allocation tombstone**
-A permanently non-reusable retired identifier entry. It reserves only the
-identifier and carries no active wire, parser, implementation, or compatibility
-behavior. The current Profile registry retains exactly two.
+The independent definition and publication state. The initial V1 is a mutable
+`Candidate`; publication is a separately authorized action.
 
 **Source-integrity verification**
 Repository-owned checks that prove the tracked definition graph, corpora,

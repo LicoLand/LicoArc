@@ -7,7 +7,8 @@ definition. They establish only definition and source-integrity facts.
 
 The canonical manifest defines `licoarc.protocol-line.v1` as
 `Candidate` / `COMPLETE`, with `sessionEligible: true` and
-`publicationEligible: false`. It binds exactly nine complete capabilities, one
+`publicationEligible: false`, V1 / Generation 1. It binds
+exactly eight complete capabilities, one
 complete active `stable-core` Protection Profile, 23 stable positive security
 claims, no missing definitions, and no blockers.
 
@@ -15,7 +16,7 @@ claims, no missing definitions, and no blockers.
 
 `spec/v1/manifest.json` declares the Protocol Line content identity,
 capability source manifests, Profile catalog, security claim set, field
-registry digest, lifecycle and selection policy, and allowed source roots.
+registry digest, fixed admission and lifecycle facts, and allowed source roots.
 Undeclared files and symbolic links are rejected.
 
 Each capability source manifest declares its schemas, registries, policies,
@@ -61,8 +62,10 @@ remain outside this proof.
 
 The explicit Profile nonclaims are ongoing post-quantum post-compromise
 recovery, physical zeroization, ratchet-header confidentiality, rollback
-detection under a fully compromised store, and transferable session
-authentication.
+detection under a fully compromised store, and third-party-verifiable session
+authentication. The model establishes only its named idealized protocol
+claims. It does not establish SDK code correctness, Provider behavior, key
+custody, representative-device behavior, or interoperability.
 
 ## Artifact integrity
 
@@ -83,4 +86,8 @@ runtime-state input. In-memory regeneration must match
 | `npm run verify` | Artifact staleness check plus the complete repository test suite |
 
 These commands do not establish publication, downstream implementation,
-executable interoperability, audit, deployment, support, or operation.
+executable interoperability, audit, deployment, support, or operation. The
+independent TypeScript, Rust, and Go repositories must separately admit and
+execute the exact bundle; their focused decoders, authority validators,
+session gates, confirmation reducers, and corpus executors do not by
+themselves establish product integration or production operation.

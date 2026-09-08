@@ -9,11 +9,11 @@ specification; normative field semantics come only from the Field Registry.
 | --- | --- |
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-evidence-counterparty-endpoint-identity-ref` |
-| Decision status | `DECIDED` |
-| Definition status | `SPECIFIED` |
+| Decision status | `RETIRED` |
+| Definition status | `NOT-SPECIFIED` |
 | Existing authority | [Field Registry](../../../spec/FIELD-REGISTRY.md) |
-| Predecessor or successor | None. |
-| Current conclusion | Every checkpoint binds the other stable Endpoint identity in the exact pairwise statement context. |
+| Predecessor or successor | Retired without successor; Generation 1 inherits the peer from the authenticated session. |
+| Current conclusion | No evidence counterparty identity field is active. |
 
 ## Question
 
@@ -66,4 +66,4 @@ acceptor, or effect producer from one signature alone.
 
 ## Definition evidence
 
-The definition status is `SPECIFIED`. The Canonical Field Registry and linked machine-readable authorities close this record’s exact active semantics.
+The definition is retired and `NOT-SPECIFIED`; this record remains history only.

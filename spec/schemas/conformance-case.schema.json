@@ -4,40 +4,76 @@
   "title": "LicoArc authority-owned conformance case",
   "type": "object",
   "additionalProperties": false,
-  "required": ["$schema", "caseVersion", "id", "target", "context", "input", "expected"],
+  "required": [
+    "$schema",
+    "caseVersion",
+    "id",
+    "target",
+    "context",
+    "input",
+    "expected"
+  ],
   "properties": {
-    "$schema": {"const": "https://licoarc.com/spec/schemas/conformance-case.schema.json"},
-    "caseVersion": {"const": "licoarc.conformance-case.v1"},
-    "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9.-]{0,191}$", "maxLength": 192},
+    "$schema": {
+      "const": "https://licoarc.com/spec/schemas/conformance-case.schema.json"
+    },
+    "caseVersion": {
+      "const": "licoarc.conformance-case.v1"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9.-]{0,191}$",
+      "maxLength": 192
+    },
     "target": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["operationId"],
+      "required": [
+        "operationId"
+      ],
       "properties": {
-        "operationId": {"type": "string", "pattern": "^licoarc[.][a-z0-9-]+(?:[.][a-z0-9-]+)*[.]v[1-9][0-9]*$", "maxLength": 192}
+        "operationId": {
+          "type": "string",
+          "pattern": "^licoarc[.][a-z0-9-]+(?:[.][a-z0-9-]+)*[.]v[1-9][0-9]*$",
+          "maxLength": 192
+        }
       }
     },
-    "context": {"$ref": "#/$defs/context"},
+    "context": {
+      "$ref": "#/$defs/context"
+    },
     "input": {},
     "expected": {
       "oneOf": [
         {
           "type": "object",
           "additionalProperties": false,
-          "required": ["result"],
-          "properties": {"result": {}}
+          "required": [
+            "result"
+          ],
+          "properties": {
+            "result": {}
+          }
         },
         {
           "type": "object",
           "additionalProperties": false,
-          "required": ["error"],
+          "required": [
+            "error"
+          ],
           "properties": {
             "error": {
               "type": "object",
               "additionalProperties": false,
-              "required": ["code"],
+              "required": [
+                "code"
+              ],
               "properties": {
-                "code": {"type": "string", "pattern": "^[a-z][a-z0-9-]{0,127}$", "maxLength": 128}
+                "code": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9-]{0,127}$",
+                  "maxLength": 128
+                }
               }
             }
           }
@@ -49,7 +85,15 @@
     "context": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["sourceBindings", "catalogs", "publicMaterial", "clock", "state", "transport", "storage"],
+      "required": [
+        "sourceBindings",
+        "catalogs",
+        "publicMaterial",
+        "clock",
+        "state",
+        "transport",
+        "storage"
+      ],
       "properties": {
         "sourceBindings": {
           "type": "array",
@@ -59,15 +103,30 @@
           "items": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["sourcePath", "sha256"],
+            "required": [
+              "sourcePath",
+              "sha256"
+            ],
             "properties": {
-              "sourcePath": {"type": "string", "pattern": "^(?:spec|conformance|formal|docs)/[A-Za-z0-9._/-]+$", "maxLength": 256},
-              "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$", "maxLength": 64}
+              "sourcePath": {
+                "type": "string",
+                "pattern": "^(?:spec|conformance|formal|docs)/[A-Za-z0-9._/-]+$",
+                "maxLength": 256
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$",
+                "maxLength": 64
+              }
             }
           }
         },
-        "catalogs": {"$ref": "#/$defs/namedDocuments"},
-        "publicMaterial": {"$ref": "#/$defs/namedDocuments"},
+        "catalogs": {
+          "$ref": "#/$defs/namedDocuments"
+        },
+        "publicMaterial": {
+          "$ref": "#/$defs/namedDocuments"
+        },
         "clock": {},
         "state": {},
         "transport": {},
@@ -81,10 +140,22 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["name", "sourcePath", "value"],
+        "required": [
+          "name",
+          "sourcePath",
+          "value"
+        ],
         "properties": {
-          "name": {"type": "string", "pattern": "^[a-z][a-z0-9-]{0,127}$", "maxLength": 128},
-          "sourcePath": {"type": "string", "pattern": "^(?:spec|conformance|formal|docs)/[A-Za-z0-9._/-]+$", "maxLength": 256},
+          "name": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{0,127}$",
+            "maxLength": 128
+          },
+          "sourcePath": {
+            "type": "string",
+            "pattern": "^(?:spec|conformance|formal|docs)/[A-Za-z0-9._/-]+$",
+            "maxLength": 256
+          },
           "value": {}
         }
       }

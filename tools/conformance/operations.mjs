@@ -1,14 +1,16 @@
-import { createCipheriv, createHash, createHmac, hkdfSync } from "node:crypto";
+import { createCipheriv, createHash, createHmac, createPublicKey, hkdfSync, verify } from "node:crypto";
 import {
   assertValidProtocolCatalogs,
+  executeGroupMemberConfirmationCase,
+  executeReliableConfirmationCase,
+  executeUserAuthorityCase,
   canonicalizeRestrictedJson,
   computeProtectionProfileId,
   computeProtocolLineId,
   decodeDeterministicCbor,
   encodeDeterministicCbor,
   parseRestrictedJson,
-  resolveExistingSessionPolicy,
-  selectProtocolLine,
+  validateAuthoritySessionBinding,
   validateClosedSchema
 } from "../protocol/index.mjs";
 import {
@@ -26,10 +28,6 @@ export class ConformanceOperationError extends TypeError {
 }
 
 const operations = {
-  "licoarc.catalog.resolve-existing-session.v1": typed("invalid-existing-session-input", ({ input }) =>
-    resolveExistingSessionPolicy(decodeTaggedJson(input))),
-  "licoarc.catalog.select-protocol-line.v1": typed("invalid-protocol-line-selection-input", ({ input }) =>
-    selectProtocolLine(decodeTaggedJson(input))),
   "licoarc.catalog.validate.v1": typed("invalid-protocol-catalog", ({ input }) => {
     const value = decodeTaggedJson(input);
     assertValidProtocolCatalogs(value.protocolLines, value.protectionProfiles, value.schemas);
@@ -67,6 +65,20 @@ const operations = {
   "licoarc.identity.compute-protocol-line.v1": typed("invalid-protocol-line-content-identity-input", ({ input }) => ({
     protocolLineId: computeProtocolLineId(decodeTaggedJson(input))
   })),
+  "licoarc.identity.compute-user-authority-state-digest.v1": typed("invalid-user-authority-operation", ({ input }) =>
+    executeUserAuthorityCase(decodeTaggedJson(input))),
+  "licoarc.identity.validate-user-authority-transition.v1": typed("invalid-user-authority-operation", ({ input }) =>
+    executeUserAuthorityCase(decodeTaggedJson(input))),
+  "licoarc.identity.apply-user-authority-catch-up.v1": typed("invalid-user-authority-operation", ({ input }) =>
+    executeUserAuthorityCase(decodeTaggedJson(input))),
+  "licoarc.identity.admit-protected-authority-payload.v1": typed("invalid-user-authority-operation", ({ input }) =>
+    executeUserAuthorityCase(decodeTaggedJson(input))),
+  "licoarc.group.apply-member-confirmation.v1": typed("invalid-group-confirmation-operation", ({ input }) =>
+    executeGroupMemberConfirmationCase(decodeTaggedJson(input))),
+  "licoarc.reliable.apply-endpoint-confirmation.v1": typed("invalid-confirmation-operation", ({ input }) =>
+    executeReliableConfirmationCase(decodeTaggedJson(input))),
+  "licoarc.protection.validate-authority-session-binding.v1": typed("invalid-authority-session-binding", ({ input }) =>
+    validateAuthoritySessionBinding(decodeTaggedJson(input))),
   "licoarc.protection.admit-prekey-pair.v1": typed("invalid-prekey-admission-input", ({ input }) =>
     input.candidateSequence <= input.highWater || input.activeSequences.includes(input.candidateSequence)
       ? { error: "prekey-consumed", stateMutation: false }
@@ -155,10 +167,8 @@ const operations = {
       : { accepted: true, stateMutation: false }),
   "licoarc.protection.validate-profile-shapes.v1": typed("invalid-profile-shape-input", ({ context, input }) =>
     profileShapes(context, input.profileLocator)),
-  "licoarc.protection.verify-handshake-authentication.v1": typed("invalid-handshake-authentication-input", ({ input }) =>
-    input.ed25519 === "valid-plain-signature" && input.mlDsa65 === "valid-final-signature"
-      ? { accepted: true, stateMutation: true }
-      : { error: "handshake-rejected", stateMutation: false, primitiveDetailDisclosed: false }),
+  "licoarc.protection.verify-handshake-authentication.v1": typed("invalid-handshake-authentication-input", ({ input, context }) =>
+    verifyHandshakeAuthentication(input, context)),
   "licoarc.protection.verify-session-accept.v1": typed("invalid-session-accept-verification-input", ({ input }) =>
     input.macBytes === 32
       ? { accepted: true, stateMutation: true }
@@ -181,13 +191,53 @@ const operations = {
   })
 };
 
+function verifyHandshakeAuthentication(input, context) {
+  try {
+    const decoded = decodeDeterministicCbor(hexToBytes(input.firstPacketCanonicalHex), {
+      maxBytes: 9655, maxMapEntries: 15, maxArrayItems: 0, maxTextBytes: 0,
+    });
+    const map = value => new Map(Object.entries(value).map(([key,item]) => [Number(key),item]));
+    const packet = map(decoded);
+    const fixedMap = (value, count) => value instanceof Map && value.size === count &&
+      Array.from({ length: count }, (_, label) => value.has(label)).every(Boolean);
+    const bytes = (value, length) => value instanceof Uint8Array && value.length === length;
+    if (!fixedMap(packet, 15)) throw new TypeError();
+    const prekey = map(packet.get(6));
+    if (!fixedMap(prekey, 12)) throw new TypeError();
+    for (const [label, length] of [[0,32],[1,32],[2,32],[3,32],[4,32],[5,32],[7,32],[8,1088],[9,32],[10,32],[11,64],[12,3309],[13,36],[14,16]])
+      if (!bytes(packet.get(label), length)) throw new TypeError();
+    for (const [label, length] of [[0,32],[1,32],[2,32],[3,32],[4,32],[6,32],[7,1184],[10,64],[11,3309]])
+      if (!bytes(prekey.get(label), length)) throw new TypeError();
+    for (const label of [5,8,9]) if (!Number.isSafeInteger(prekey.get(label)) || prekey.get(label) < 0) throw new TypeError();
+    if (prekey.get(5) < 1 || prekey.get(9) <= prekey.get(8)) throw new TypeError();
+    const equal = (a, b) => Buffer.from(a).equals(Buffer.from(b));
+    const line = context.catalogs.find(({ name }) => name === "protocol-lines").value.lines[0];
+    const profile = context.catalogs.find(({ name }) => name === "protection-profiles").value.profiles[0];
+    for (const [actual, expected] of [[packet.get(0),hexToBytes(line.protocolLineId)], [packet.get(1),hexToBytes(profile.profileId)],
+      [prekey.get(0),packet.get(0)], [prekey.get(1),packet.get(1)], [prekey.get(2),packet.get(4)],
+      [packet.get(2),hexToBytes(input.identityStateDigest)], [packet.get(9),hexToBytes(input.ed25519KeyId)], [packet.get(10),hexToBytes(input.mlDsa65KeyId)]])
+      if (!equal(actual, expected)) throw new TypeError();
+    const digest = (domain, value) => createHash("sha256").update(domain).update(encodeDeterministicCbor(value)).digest();
+    const prekeyUnsigned = new Map([...prekey].filter(([label]) => label < 10));
+    const prekeyDigest = digest("LICOARC-V1/PREKEY-TRANSCRIPT/DIGEST\0", [packet.get(0),packet.get(1),packet.get(2),packet.get(9),packet.get(10),prekeyUnsigned]);
+    const core = digest("LICOARC-V1/HANDSHAKE-TRANSCRIPT/DIGEST\0", [prekeyDigest,...[0,1,2,3,4,5,9,10,7,8].map((label) => packet.get(label))]);
+    const message = Buffer.concat([Buffer.from("LICOARC-V1/HANDSHAKE/INITIATOR-SIGN\0"),core]);
+    const publicKey = (type, value) => createPublicKey({ key: hexToBytes(value), format: "raw-public", asymmetricKeyType: type });
+    if (!verify(null, message, publicKey("ed25519", input.ed25519PublicKey), packet.get(11)) ||
+        !verify(null, message, { key: publicKey("ml-dsa-65", input.mlDsa65PublicKey), context: Buffer.alloc(0) }, packet.get(12))) throw new TypeError();
+    return { accepted: true, stateMutation: false };
+  } catch {
+    return { error: "handshake-rejected", stateMutation: false, primitiveDetailDisclosed: false };
+  }
+}
+
 export const CONFORMANCE_OPERATIONS = Object.freeze(operations);
 export const CONFORMANCE_OPERATION_IDS = Object.freeze(Object.keys(operations).sort());
 
 function typed(defaultCode, executor) {
-  return Object.freeze(function executeConformanceOperation(argument) {
+  return Object.freeze(async function executeConformanceOperation(argument) {
     try {
-      return executor(argument);
+      return await executor(argument);
     } catch (error) {
       if (error instanceof ConformanceOperationError) throw error;
       const code = typeof error?.code === "string"

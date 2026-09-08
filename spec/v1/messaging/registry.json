@@ -95,7 +95,13 @@
       "MAX_ATTACHMENT_CONTROL_BYTES",
       "ATTACHMENT_RECOVERY_WINDOW"
     ],
-    "resetEvents": ["retry", "reconnect", "session-renewal", "route-change", "station-migration"]
+    "resetEvents": [
+      "retry",
+      "reconnect",
+      "session-renewal",
+      "route-change",
+      "station-migration"
+    ]
   },
   "failurePolicy": {
     "unknownCritical": "terminal-unknown-critical-extension",
@@ -114,6 +120,6 @@
     "storage-engines",
     "retry-scheduling",
     "station-to-station-protocol",
-    "station-receipts-as-endpoint-evidence"
+    "station-receipts-as-endpoint-confirmations"
   ]
 }

@@ -6,7 +6,8 @@ import {
   assertClosedJsonSchema,
   assertValidProtocolCatalogs,
   cborBytesToHex,
-  encodeDeterministicCbor
+  encodeDeterministicCbor,
+  validateAuthoritySessionBinding
 } from "../tools/protocol/index.mjs";
 
 const root = resolve(import.meta.dirname, "..");
@@ -76,14 +77,34 @@ test("final-standard primitive and wire shapes agree exactly across algorithms, 
   assert.equal(bounds.bounds.MAX_PLAINTEXT_BYTES + 64, bounds.bounds.MAX_PROTECTED_PACKET_BYTES);
   assert.equal(22 + bounds.primitiveBytes.DIGEST256 + bounds.bounds.MAX_RATCHET_HEADER_BYTES,
     bounds.bounds.MAX_RECORD_AAD_BYTES);
+  const maximumSessionAccept = encodeDeterministicCbor(new Map([
+    [0, new Uint8Array(32)],
+    [1, new Uint8Array(32)],
+    [2, new Uint8Array(32)],
+    [3, new Uint8Array(32)],
+    [4, new Uint8Array(32)],
+    [5, Number.MAX_SAFE_INTEGER],
+    [6, new Uint8Array(32)]
+  ]));
+  assert.equal(maximumSessionAccept.byteLength, 221);
+  assert.equal(bounds.bounds.MAX_SESSION_ACCEPT_BYTES, maximumSessionAccept.byteLength);
 
   const wireSchemas = await Promise.all(registry.wireSchemas.map(readJson));
-  const [supportSchema, prekeySchema, handshakeSchema, acceptSchema, recordSchema] = wireSchemas;
-  assert.equal(supportSchema.properties.ed25519Signature.$ref, "#/$defs/sig64");
-  assert.equal(supportSchema.properties.mlDsa65Signature.$ref, "#/$defs/sig3309");
+  const [prekeySchema, handshakeSchema, acceptSchema, recordSchema] = wireSchemas;
+  assert.equal(prekeySchema.$defs.ed25519Signature.pattern, "^[0-9a-f]{128}$");
+  assert.equal(prekeySchema.$defs.mlDsa65Signature.pattern, "^[0-9a-f]{6618}$");
   assert.equal(prekeySchema.$defs.mlKem768Ek.pattern, "^[0-9a-f]{2368}$");
   assert.equal(handshakeSchema.$defs.mlKem768Ciphertext.pattern, "^[0-9a-f]{2176}$");
   assert.equal(acceptSchema.properties.mac.pattern, "^[0-9a-f]{64}$");
+  assert.ok(handshakeSchema.required.includes("initiatorUserAuthorityStateDigest"));
+  assert.ok(handshakeSchema.required.includes("responderUserAuthorityStateDigest"));
+  assert.ok(acceptSchema.required.includes("initiatorUserAuthorityStateDigest"));
+  assert.ok(acceptSchema.required.includes("responderUserAuthorityStateDigest"));
+  const identitySchema = await readJson("spec/v1/identity/identity.schema.json");
+  assert.equal(Object.hasOwn(identitySchema.$defs.userAuthorityState.properties,
+    "initiatorUserAuthorityStateDigest"), false);
+  assert.equal(Object.hasOwn(identitySchema.$defs.userAuthorityState.properties,
+    "responderUserAuthorityStateDigest"), false);
   assert.equal(recordSchema.properties.tag.pattern, "^[0-9a-f]{32}$");
   assert.equal(recordSchema.properties.ciphertext.maxLength, bounds.bounds.MAX_PLAINTEXT_BYTES * 2);
 });
@@ -95,6 +116,24 @@ test("domain separators are fixed distinct ASCII byte strings with one terminal 
     assert.equal(bytes.at(-1), 0);
     assert.ok(bytes.subarray(0, -1).every((byte) => byte > 0 && byte < 128));
     assert.ok(!bytes.subarray(0, -1).includes(0));
+  }
+});
+
+test("authority session binding vectors require sibling endpoint and protected authority digests", () => {
+  const matching = vectors.cases.filter(({ target }) =>
+    target.operationId === "licoarc.protection.validate-authority-session-binding.v1");
+  assert.equal(matching.length, 3);
+  assert.equal(matching.some(({ id }) => id.endsWith("accept.sibling-endpoint-authority-digests")), true);
+  assert.equal(matching.some(({ expected }) =>
+    expected.error?.code === "authority-payload-digest-mismatch"), true);
+  assert.equal(profile.authorityBinding.authorityStateAcyclicity,
+    "authority-snapshots-never-contain-peer-authority-digests");
+  assert.equal(profile.authorityBinding.localPeerTrust, "unchanged");
+  const accepted = matching.find(({ id }) => id.endsWith("accept.sibling-endpoint-authority-digests"));
+  assert.deepEqual(validateAuthoritySessionBinding(accepted.input), { valid: true });
+  for (const rejected of matching.filter(({ expected }) => expected.error)) {
+    assert.throws(() => validateAuthoritySessionBinding(rejected.input),
+      (error) => error.code === rejected.expected.error.code);
   }
 });
 

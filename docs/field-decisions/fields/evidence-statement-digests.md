@@ -9,11 +9,11 @@ specification; normative field semantics come only from the Field Registry.
 | --- | --- |
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-evidence-statement-digests` |
-| Decision status | `DECIDED` |
-| Definition status | `SPECIFIED` |
+| Decision status | `RETIRED` |
+| Definition status | `NOT-SPECIFIED` |
 | Existing authority | [Field Registry](../../../spec/FIELD-REGISTRY.md) |
-| Predecessor or successor | None. |
-| Current conclusion | One bounded canonical digest list commits the exact transferable projections of several Endpoint statements under a single checkpoint signature set. |
+| Predecessor or successor | Retired without successor; authenticated confirmations bind their own exact transition inputs. |
+| Current conclusion | No transferable statement-digest list is active. |
 
 ## Question
 
@@ -87,4 +87,4 @@ checkpoint retransmission rather than unsigned fallback.
 
 ## Definition evidence
 
-The definition status is `SPECIFIED`. The Canonical Field Registry and linked machine-readable authorities close this record’s exact active semantics.
+The definition is retired and `NOT-SPECIFIED`; this record remains history only.

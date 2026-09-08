@@ -14,7 +14,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/transport/registry.json",
-            "sha256": "11e555ca4364a088df26ad3f82ec5616a36a1204498e023c062de41c6a459b9f"
+            "sha256": "611206a83a5522733ed112770df765533368306956af12ec0d87047b4e8a5310"
           }
         ],
         "catalogs": [
@@ -215,7 +215,7 @@
                   "internalUnavailable"
                 ],
                 "stationAuthority": "transport-hint-only",
-                "endpointEvidence": "never-created-by-station-outcome",
+                "endpointFinalityAuthority": "none",
                 "acceptedStoragePrecondition": "station-must-be-able-to-honor-fixed-window-before-accepting-submit"
               },
               "statusConsistency": {
@@ -284,7 +284,7 @@
                 "peer-authentication",
                 "endpoint-acceptance",
                 "effect-completion",
-                "endpoint-evidence",
+                "endpoint-finality-authority",
                 "anonymity",
                 "unlinkability",
                 "traffic-analysis-resistance",
@@ -337,7 +337,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/transport/registry.json",
-            "sha256": "11e555ca4364a088df26ad3f82ec5616a36a1204498e023c062de41c6a459b9f"
+            "sha256": "611206a83a5522733ed112770df765533368306956af12ec0d87047b4e8a5310"
           }
         ],
         "catalogs": [
@@ -538,7 +538,7 @@
                   "internalUnavailable"
                 ],
                 "stationAuthority": "transport-hint-only",
-                "endpointEvidence": "never-created-by-station-outcome",
+                "endpointFinalityAuthority": "none",
                 "acceptedStoragePrecondition": "station-must-be-able-to-honor-fixed-window-before-accepting-submit"
               },
               "statusConsistency": {
@@ -607,7 +607,7 @@
                 "peer-authentication",
                 "endpoint-acceptance",
                 "effect-completion",
-                "endpoint-evidence",
+                "endpoint-finality-authority",
                 "anonymity",
                 "unlinkability",
                 "traffic-analysis-resistance",
@@ -652,7 +652,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/transport/registry.json",
-            "sha256": "11e555ca4364a088df26ad3f82ec5616a36a1204498e023c062de41c6a459b9f"
+            "sha256": "611206a83a5522733ed112770df765533368306956af12ec0d87047b4e8a5310"
           }
         ],
         "catalogs": [
@@ -853,7 +853,7 @@
                   "internalUnavailable"
                 ],
                 "stationAuthority": "transport-hint-only",
-                "endpointEvidence": "never-created-by-station-outcome",
+                "endpointFinalityAuthority": "none",
                 "acceptedStoragePrecondition": "station-must-be-able-to-honor-fixed-window-before-accepting-submit"
               },
               "statusConsistency": {
@@ -922,7 +922,7 @@
                 "peer-authentication",
                 "endpoint-acceptance",
                 "effect-completion",
-                "endpoint-evidence",
+                "endpoint-finality-authority",
                 "anonymity",
                 "unlinkability",
                 "traffic-analysis-resistance",
@@ -973,7 +973,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/transport/registry.json",
-            "sha256": "11e555ca4364a088df26ad3f82ec5616a36a1204498e023c062de41c6a459b9f"
+            "sha256": "611206a83a5522733ed112770df765533368306956af12ec0d87047b4e8a5310"
           }
         ],
         "catalogs": [
@@ -1174,7 +1174,7 @@
                   "internalUnavailable"
                 ],
                 "stationAuthority": "transport-hint-only",
-                "endpointEvidence": "never-created-by-station-outcome",
+                "endpointFinalityAuthority": "none",
                 "acceptedStoragePrecondition": "station-must-be-able-to-honor-fixed-window-before-accepting-submit"
               },
               "statusConsistency": {
@@ -1243,7 +1243,7 @@
                 "peer-authentication",
                 "endpoint-acceptance",
                 "effect-completion",
-                "endpoint-evidence",
+                "endpoint-finality-authority",
                 "anonymity",
                 "unlinkability",
                 "traffic-analysis-resistance",
@@ -1286,7 +1286,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/transport/registry.json",
-            "sha256": "11e555ca4364a088df26ad3f82ec5616a36a1204498e023c062de41c6a459b9f"
+            "sha256": "611206a83a5522733ed112770df765533368306956af12ec0d87047b4e8a5310"
           }
         ],
         "catalogs": [
@@ -1487,7 +1487,7 @@
                   "internalUnavailable"
                 ],
                 "stationAuthority": "transport-hint-only",
-                "endpointEvidence": "never-created-by-station-outcome",
+                "endpointFinalityAuthority": "none",
                 "acceptedStoragePrecondition": "station-must-be-able-to-honor-fixed-window-before-accepting-submit"
               },
               "statusConsistency": {
@@ -1556,7 +1556,7 @@
                 "peer-authentication",
                 "endpoint-acceptance",
                 "effect-completion",
-                "endpoint-evidence",
+                "endpoint-finality-authority",
                 "anonymity",
                 "unlinkability",
                 "traffic-analysis-resistance",
@@ -1599,7 +1599,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/transport/registry.json",
-            "sha256": "11e555ca4364a088df26ad3f82ec5616a36a1204498e023c062de41c6a459b9f"
+            "sha256": "611206a83a5522733ed112770df765533368306956af12ec0d87047b4e8a5310"
           }
         ],
         "catalogs": [
@@ -1800,7 +1800,7 @@
                   "internalUnavailable"
                 ],
                 "stationAuthority": "transport-hint-only",
-                "endpointEvidence": "never-created-by-station-outcome",
+                "endpointFinalityAuthority": "none",
                 "acceptedStoragePrecondition": "station-must-be-able-to-honor-fixed-window-before-accepting-submit"
               },
               "statusConsistency": {
@@ -1869,7 +1869,7 @@
                 "peer-authentication",
                 "endpoint-acceptance",
                 "effect-completion",
-                "endpoint-evidence",
+                "endpoint-finality-authority",
                 "anonymity",
                 "unlinkability",
                 "traffic-analysis-resistance",
@@ -1912,7 +1912,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/transport/registry.json",
-            "sha256": "11e555ca4364a088df26ad3f82ec5616a36a1204498e023c062de41c6a459b9f"
+            "sha256": "611206a83a5522733ed112770df765533368306956af12ec0d87047b4e8a5310"
           }
         ],
         "catalogs": [
@@ -2113,7 +2113,7 @@
                   "internalUnavailable"
                 ],
                 "stationAuthority": "transport-hint-only",
-                "endpointEvidence": "never-created-by-station-outcome",
+                "endpointFinalityAuthority": "none",
                 "acceptedStoragePrecondition": "station-must-be-able-to-honor-fixed-window-before-accepting-submit"
               },
               "statusConsistency": {
@@ -2182,7 +2182,7 @@
                 "peer-authentication",
                 "endpoint-acceptance",
                 "effect-completion",
-                "endpoint-evidence",
+                "endpoint-finality-authority",
                 "anonymity",
                 "unlinkability",
                 "traffic-analysis-resistance",
@@ -2225,7 +2225,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/transport/registry.json",
-            "sha256": "11e555ca4364a088df26ad3f82ec5616a36a1204498e023c062de41c6a459b9f"
+            "sha256": "611206a83a5522733ed112770df765533368306956af12ec0d87047b4e8a5310"
           }
         ],
         "catalogs": [
@@ -2426,7 +2426,7 @@
                   "internalUnavailable"
                 ],
                 "stationAuthority": "transport-hint-only",
-                "endpointEvidence": "never-created-by-station-outcome",
+                "endpointFinalityAuthority": "none",
                 "acceptedStoragePrecondition": "station-must-be-able-to-honor-fixed-window-before-accepting-submit"
               },
               "statusConsistency": {
@@ -2495,7 +2495,7 @@
                 "peer-authentication",
                 "endpoint-acceptance",
                 "effect-completion",
-                "endpoint-evidence",
+                "endpoint-finality-authority",
                 "anonymity",
                 "unlinkability",
                 "traffic-analysis-resistance",
@@ -2538,7 +2538,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/transport/registry.json",
-            "sha256": "11e555ca4364a088df26ad3f82ec5616a36a1204498e023c062de41c6a459b9f"
+            "sha256": "611206a83a5522733ed112770df765533368306956af12ec0d87047b4e8a5310"
           }
         ],
         "catalogs": [
@@ -2739,7 +2739,7 @@
                   "internalUnavailable"
                 ],
                 "stationAuthority": "transport-hint-only",
-                "endpointEvidence": "never-created-by-station-outcome",
+                "endpointFinalityAuthority": "none",
                 "acceptedStoragePrecondition": "station-must-be-able-to-honor-fixed-window-before-accepting-submit"
               },
               "statusConsistency": {
@@ -2808,7 +2808,7 @@
                 "peer-authentication",
                 "endpoint-acceptance",
                 "effect-completion",
-                "endpoint-evidence",
+                "endpoint-finality-authority",
                 "anonymity",
                 "unlinkability",
                 "traffic-analysis-resistance",
@@ -2851,7 +2851,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/transport/registry.json",
-            "sha256": "11e555ca4364a088df26ad3f82ec5616a36a1204498e023c062de41c6a459b9f"
+            "sha256": "611206a83a5522733ed112770df765533368306956af12ec0d87047b4e8a5310"
           }
         ],
         "catalogs": [
@@ -3052,7 +3052,7 @@
                   "internalUnavailable"
                 ],
                 "stationAuthority": "transport-hint-only",
-                "endpointEvidence": "never-created-by-station-outcome",
+                "endpointFinalityAuthority": "none",
                 "acceptedStoragePrecondition": "station-must-be-able-to-honor-fixed-window-before-accepting-submit"
               },
               "statusConsistency": {
@@ -3121,7 +3121,7 @@
                 "peer-authentication",
                 "endpoint-acceptance",
                 "effect-completion",
-                "endpoint-evidence",
+                "endpoint-finality-authority",
                 "anonymity",
                 "unlinkability",
                 "traffic-analysis-resistance",
@@ -3164,7 +3164,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/transport/registry.json",
-            "sha256": "11e555ca4364a088df26ad3f82ec5616a36a1204498e023c062de41c6a459b9f"
+            "sha256": "611206a83a5522733ed112770df765533368306956af12ec0d87047b4e8a5310"
           }
         ],
         "catalogs": [
@@ -3365,7 +3365,7 @@
                   "internalUnavailable"
                 ],
                 "stationAuthority": "transport-hint-only",
-                "endpointEvidence": "never-created-by-station-outcome",
+                "endpointFinalityAuthority": "none",
                 "acceptedStoragePrecondition": "station-must-be-able-to-honor-fixed-window-before-accepting-submit"
               },
               "statusConsistency": {
@@ -3434,7 +3434,7 @@
                 "peer-authentication",
                 "endpoint-acceptance",
                 "effect-completion",
-                "endpoint-evidence",
+                "endpoint-finality-authority",
                 "anonymity",
                 "unlinkability",
                 "traffic-analysis-resistance",
@@ -3477,7 +3477,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/transport/registry.json",
-            "sha256": "11e555ca4364a088df26ad3f82ec5616a36a1204498e023c062de41c6a459b9f"
+            "sha256": "611206a83a5522733ed112770df765533368306956af12ec0d87047b4e8a5310"
           }
         ],
         "catalogs": [
@@ -3678,7 +3678,7 @@
                   "internalUnavailable"
                 ],
                 "stationAuthority": "transport-hint-only",
-                "endpointEvidence": "never-created-by-station-outcome",
+                "endpointFinalityAuthority": "none",
                 "acceptedStoragePrecondition": "station-must-be-able-to-honor-fixed-window-before-accepting-submit"
               },
               "statusConsistency": {
@@ -3747,7 +3747,7 @@
                 "peer-authentication",
                 "endpoint-acceptance",
                 "effect-completion",
-                "endpoint-evidence",
+                "endpoint-finality-authority",
                 "anonymity",
                 "unlinkability",
                 "traffic-analysis-resistance",
@@ -3790,7 +3790,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/transport/registry.json",
-            "sha256": "11e555ca4364a088df26ad3f82ec5616a36a1204498e023c062de41c6a459b9f"
+            "sha256": "611206a83a5522733ed112770df765533368306956af12ec0d87047b4e8a5310"
           }
         ],
         "catalogs": [
@@ -3991,7 +3991,7 @@
                   "internalUnavailable"
                 ],
                 "stationAuthority": "transport-hint-only",
-                "endpointEvidence": "never-created-by-station-outcome",
+                "endpointFinalityAuthority": "none",
                 "acceptedStoragePrecondition": "station-must-be-able-to-honor-fixed-window-before-accepting-submit"
               },
               "statusConsistency": {
@@ -4060,7 +4060,7 @@
                 "peer-authentication",
                 "endpoint-acceptance",
                 "effect-completion",
-                "endpoint-evidence",
+                "endpoint-finality-authority",
                 "anonymity",
                 "unlinkability",
                 "traffic-analysis-resistance",
@@ -4103,7 +4103,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/transport/registry.json",
-            "sha256": "11e555ca4364a088df26ad3f82ec5616a36a1204498e023c062de41c6a459b9f"
+            "sha256": "611206a83a5522733ed112770df765533368306956af12ec0d87047b4e8a5310"
           }
         ],
         "catalogs": [
@@ -4304,7 +4304,7 @@
                   "internalUnavailable"
                 ],
                 "stationAuthority": "transport-hint-only",
-                "endpointEvidence": "never-created-by-station-outcome",
+                "endpointFinalityAuthority": "none",
                 "acceptedStoragePrecondition": "station-must-be-able-to-honor-fixed-window-before-accepting-submit"
               },
               "statusConsistency": {
@@ -4373,7 +4373,7 @@
                 "peer-authentication",
                 "endpoint-acceptance",
                 "effect-completion",
-                "endpoint-evidence",
+                "endpoint-finality-authority",
                 "anonymity",
                 "unlinkability",
                 "traffic-analysis-resistance",
@@ -4416,7 +4416,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/transport/registry.json",
-            "sha256": "11e555ca4364a088df26ad3f82ec5616a36a1204498e023c062de41c6a459b9f"
+            "sha256": "611206a83a5522733ed112770df765533368306956af12ec0d87047b4e8a5310"
           }
         ],
         "catalogs": [
@@ -4617,7 +4617,7 @@
                   "internalUnavailable"
                 ],
                 "stationAuthority": "transport-hint-only",
-                "endpointEvidence": "never-created-by-station-outcome",
+                "endpointFinalityAuthority": "none",
                 "acceptedStoragePrecondition": "station-must-be-able-to-honor-fixed-window-before-accepting-submit"
               },
               "statusConsistency": {
@@ -4686,7 +4686,7 @@
                 "peer-authentication",
                 "endpoint-acceptance",
                 "effect-completion",
-                "endpoint-evidence",
+                "endpoint-finality-authority",
                 "anonymity",
                 "unlinkability",
                 "traffic-analysis-resistance",
@@ -4729,7 +4729,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/transport/registry.json",
-            "sha256": "11e555ca4364a088df26ad3f82ec5616a36a1204498e023c062de41c6a459b9f"
+            "sha256": "611206a83a5522733ed112770df765533368306956af12ec0d87047b4e8a5310"
           }
         ],
         "catalogs": [
@@ -4930,7 +4930,7 @@
                   "internalUnavailable"
                 ],
                 "stationAuthority": "transport-hint-only",
-                "endpointEvidence": "never-created-by-station-outcome",
+                "endpointFinalityAuthority": "none",
                 "acceptedStoragePrecondition": "station-must-be-able-to-honor-fixed-window-before-accepting-submit"
               },
               "statusConsistency": {
@@ -4999,7 +4999,7 @@
                 "peer-authentication",
                 "endpoint-acceptance",
                 "effect-completion",
-                "endpoint-evidence",
+                "endpoint-finality-authority",
                 "anonymity",
                 "unlinkability",
                 "traffic-analysis-resistance",
@@ -5056,7 +5056,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/transport/registry.json",
-            "sha256": "11e555ca4364a088df26ad3f82ec5616a36a1204498e023c062de41c6a459b9f"
+            "sha256": "611206a83a5522733ed112770df765533368306956af12ec0d87047b4e8a5310"
           }
         ],
         "catalogs": [
@@ -5257,7 +5257,7 @@
                   "internalUnavailable"
                 ],
                 "stationAuthority": "transport-hint-only",
-                "endpointEvidence": "never-created-by-station-outcome",
+                "endpointFinalityAuthority": "none",
                 "acceptedStoragePrecondition": "station-must-be-able-to-honor-fixed-window-before-accepting-submit"
               },
               "statusConsistency": {
@@ -5326,7 +5326,7 @@
                 "peer-authentication",
                 "endpoint-acceptance",
                 "effect-completion",
-                "endpoint-evidence",
+                "endpoint-finality-authority",
                 "anonymity",
                 "unlinkability",
                 "traffic-analysis-resistance",
@@ -5391,7 +5391,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/transport/registry.json",
-            "sha256": "11e555ca4364a088df26ad3f82ec5616a36a1204498e023c062de41c6a459b9f"
+            "sha256": "611206a83a5522733ed112770df765533368306956af12ec0d87047b4e8a5310"
           }
         ],
         "catalogs": [
@@ -5592,7 +5592,7 @@
                   "internalUnavailable"
                 ],
                 "stationAuthority": "transport-hint-only",
-                "endpointEvidence": "never-created-by-station-outcome",
+                "endpointFinalityAuthority": "none",
                 "acceptedStoragePrecondition": "station-must-be-able-to-honor-fixed-window-before-accepting-submit"
               },
               "statusConsistency": {
@@ -5661,7 +5661,7 @@
                 "peer-authentication",
                 "endpoint-acceptance",
                 "effect-completion",
-                "endpoint-evidence",
+                "endpoint-finality-authority",
                 "anonymity",
                 "unlinkability",
                 "traffic-analysis-resistance",
@@ -5726,7 +5726,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/transport/registry.json",
-            "sha256": "11e555ca4364a088df26ad3f82ec5616a36a1204498e023c062de41c6a459b9f"
+            "sha256": "611206a83a5522733ed112770df765533368306956af12ec0d87047b4e8a5310"
           }
         ],
         "catalogs": [
@@ -5927,7 +5927,7 @@
                   "internalUnavailable"
                 ],
                 "stationAuthority": "transport-hint-only",
-                "endpointEvidence": "never-created-by-station-outcome",
+                "endpointFinalityAuthority": "none",
                 "acceptedStoragePrecondition": "station-must-be-able-to-honor-fixed-window-before-accepting-submit"
               },
               "statusConsistency": {
@@ -5996,7 +5996,7 @@
                 "peer-authentication",
                 "endpoint-acceptance",
                 "effect-completion",
-                "endpoint-evidence",
+                "endpoint-finality-authority",
                 "anonymity",
                 "unlinkability",
                 "traffic-analysis-resistance",
@@ -6039,7 +6039,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/transport/registry.json",
-            "sha256": "11e555ca4364a088df26ad3f82ec5616a36a1204498e023c062de41c6a459b9f"
+            "sha256": "611206a83a5522733ed112770df765533368306956af12ec0d87047b4e8a5310"
           }
         ],
         "catalogs": [
@@ -6240,7 +6240,7 @@
                   "internalUnavailable"
                 ],
                 "stationAuthority": "transport-hint-only",
-                "endpointEvidence": "never-created-by-station-outcome",
+                "endpointFinalityAuthority": "none",
                 "acceptedStoragePrecondition": "station-must-be-able-to-honor-fixed-window-before-accepting-submit"
               },
               "statusConsistency": {
@@ -6309,7 +6309,7 @@
                 "peer-authentication",
                 "endpoint-acceptance",
                 "effect-completion",
-                "endpoint-evidence",
+                "endpoint-finality-authority",
                 "anonymity",
                 "unlinkability",
                 "traffic-analysis-resistance",
@@ -6352,7 +6352,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/transport/registry.json",
-            "sha256": "11e555ca4364a088df26ad3f82ec5616a36a1204498e023c062de41c6a459b9f"
+            "sha256": "611206a83a5522733ed112770df765533368306956af12ec0d87047b4e8a5310"
           }
         ],
         "catalogs": [
@@ -6553,7 +6553,7 @@
                   "internalUnavailable"
                 ],
                 "stationAuthority": "transport-hint-only",
-                "endpointEvidence": "never-created-by-station-outcome",
+                "endpointFinalityAuthority": "none",
                 "acceptedStoragePrecondition": "station-must-be-able-to-honor-fixed-window-before-accepting-submit"
               },
               "statusConsistency": {
@@ -6622,7 +6622,7 @@
                 "peer-authentication",
                 "endpoint-acceptance",
                 "effect-completion",
-                "endpoint-evidence",
+                "endpoint-finality-authority",
                 "anonymity",
                 "unlinkability",
                 "traffic-analysis-resistance",
@@ -6669,7 +6669,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/transport/registry.json",
-            "sha256": "11e555ca4364a088df26ad3f82ec5616a36a1204498e023c062de41c6a459b9f"
+            "sha256": "611206a83a5522733ed112770df765533368306956af12ec0d87047b4e8a5310"
           }
         ],
         "catalogs": [
@@ -6870,7 +6870,7 @@
                   "internalUnavailable"
                 ],
                 "stationAuthority": "transport-hint-only",
-                "endpointEvidence": "never-created-by-station-outcome",
+                "endpointFinalityAuthority": "none",
                 "acceptedStoragePrecondition": "station-must-be-able-to-honor-fixed-window-before-accepting-submit"
               },
               "statusConsistency": {
@@ -6939,7 +6939,7 @@
                 "peer-authentication",
                 "endpoint-acceptance",
                 "effect-completion",
-                "endpoint-evidence",
+                "endpoint-finality-authority",
                 "anonymity",
                 "unlinkability",
                 "traffic-analysis-resistance",
@@ -6982,7 +6982,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/transport/registry.json",
-            "sha256": "11e555ca4364a088df26ad3f82ec5616a36a1204498e023c062de41c6a459b9f"
+            "sha256": "611206a83a5522733ed112770df765533368306956af12ec0d87047b4e8a5310"
           }
         ],
         "catalogs": [
@@ -7183,7 +7183,7 @@
                   "internalUnavailable"
                 ],
                 "stationAuthority": "transport-hint-only",
-                "endpointEvidence": "never-created-by-station-outcome",
+                "endpointFinalityAuthority": "none",
                 "acceptedStoragePrecondition": "station-must-be-able-to-honor-fixed-window-before-accepting-submit"
               },
               "statusConsistency": {
@@ -7252,7 +7252,7 @@
                 "peer-authentication",
                 "endpoint-acceptance",
                 "effect-completion",
-                "endpoint-evidence",
+                "endpoint-finality-authority",
                 "anonymity",
                 "unlinkability",
                 "traffic-analysis-resistance",
@@ -7295,7 +7295,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/transport/registry.json",
-            "sha256": "11e555ca4364a088df26ad3f82ec5616a36a1204498e023c062de41c6a459b9f"
+            "sha256": "611206a83a5522733ed112770df765533368306956af12ec0d87047b4e8a5310"
           }
         ],
         "catalogs": [
@@ -7496,7 +7496,7 @@
                   "internalUnavailable"
                 ],
                 "stationAuthority": "transport-hint-only",
-                "endpointEvidence": "never-created-by-station-outcome",
+                "endpointFinalityAuthority": "none",
                 "acceptedStoragePrecondition": "station-must-be-able-to-honor-fixed-window-before-accepting-submit"
               },
               "statusConsistency": {
@@ -7565,7 +7565,7 @@
                 "peer-authentication",
                 "endpoint-acceptance",
                 "effect-completion",
-                "endpoint-evidence",
+                "endpoint-finality-authority",
                 "anonymity",
                 "unlinkability",
                 "traffic-analysis-resistance",
@@ -7611,7 +7611,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/transport/registry.json",
-            "sha256": "11e555ca4364a088df26ad3f82ec5616a36a1204498e023c062de41c6a459b9f"
+            "sha256": "611206a83a5522733ed112770df765533368306956af12ec0d87047b4e8a5310"
           }
         ],
         "catalogs": [
@@ -7812,7 +7812,7 @@
                   "internalUnavailable"
                 ],
                 "stationAuthority": "transport-hint-only",
-                "endpointEvidence": "never-created-by-station-outcome",
+                "endpointFinalityAuthority": "none",
                 "acceptedStoragePrecondition": "station-must-be-able-to-honor-fixed-window-before-accepting-submit"
               },
               "statusConsistency": {
@@ -7881,7 +7881,7 @@
                 "peer-authentication",
                 "endpoint-acceptance",
                 "effect-completion",
-                "endpoint-evidence",
+                "endpoint-finality-authority",
                 "anonymity",
                 "unlinkability",
                 "traffic-analysis-resistance",
@@ -7924,7 +7924,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/transport/registry.json",
-            "sha256": "11e555ca4364a088df26ad3f82ec5616a36a1204498e023c062de41c6a459b9f"
+            "sha256": "611206a83a5522733ed112770df765533368306956af12ec0d87047b4e8a5310"
           }
         ],
         "catalogs": [
@@ -8125,7 +8125,7 @@
                   "internalUnavailable"
                 ],
                 "stationAuthority": "transport-hint-only",
-                "endpointEvidence": "never-created-by-station-outcome",
+                "endpointFinalityAuthority": "none",
                 "acceptedStoragePrecondition": "station-must-be-able-to-honor-fixed-window-before-accepting-submit"
               },
               "statusConsistency": {
@@ -8194,7 +8194,7 @@
                 "peer-authentication",
                 "endpoint-acceptance",
                 "effect-completion",
-                "endpoint-evidence",
+                "endpoint-finality-authority",
                 "anonymity",
                 "unlinkability",
                 "traffic-analysis-resistance",
@@ -8237,7 +8237,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/transport/registry.json",
-            "sha256": "11e555ca4364a088df26ad3f82ec5616a36a1204498e023c062de41c6a459b9f"
+            "sha256": "611206a83a5522733ed112770df765533368306956af12ec0d87047b4e8a5310"
           }
         ],
         "catalogs": [
@@ -8438,7 +8438,7 @@
                   "internalUnavailable"
                 ],
                 "stationAuthority": "transport-hint-only",
-                "endpointEvidence": "never-created-by-station-outcome",
+                "endpointFinalityAuthority": "none",
                 "acceptedStoragePrecondition": "station-must-be-able-to-honor-fixed-window-before-accepting-submit"
               },
               "statusConsistency": {
@@ -8507,7 +8507,7 @@
                 "peer-authentication",
                 "endpoint-acceptance",
                 "effect-completion",
-                "endpoint-evidence",
+                "endpoint-finality-authority",
                 "anonymity",
                 "unlinkability",
                 "traffic-analysis-resistance",
@@ -8550,7 +8550,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/transport/registry.json",
-            "sha256": "11e555ca4364a088df26ad3f82ec5616a36a1204498e023c062de41c6a459b9f"
+            "sha256": "611206a83a5522733ed112770df765533368306956af12ec0d87047b4e8a5310"
           }
         ],
         "catalogs": [
@@ -8751,7 +8751,7 @@
                   "internalUnavailable"
                 ],
                 "stationAuthority": "transport-hint-only",
-                "endpointEvidence": "never-created-by-station-outcome",
+                "endpointFinalityAuthority": "none",
                 "acceptedStoragePrecondition": "station-must-be-able-to-honor-fixed-window-before-accepting-submit"
               },
               "statusConsistency": {
@@ -8820,7 +8820,7 @@
                 "peer-authentication",
                 "endpoint-acceptance",
                 "effect-completion",
-                "endpoint-evidence",
+                "endpoint-finality-authority",
                 "anonymity",
                 "unlinkability",
                 "traffic-analysis-resistance",

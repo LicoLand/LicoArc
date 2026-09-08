@@ -9,17 +9,11 @@ const templatePath = 'formal/licoarc-core-v1.spthy';
 const generatedPath = 'formal/generated/licoarc-core-v1.spthy';
 const bindingsPath = 'spec/v1/security/formal-bindings.json';
 
+// Packaging digests in the aggregate manifest include formal evidence; bind the
+// actual protocol catalogs and semantic sources here to keep the proof graph acyclic.
 const semanticPaths = [
   'spec/protection-profiles.json',
   'spec/protocol-lines.json',
-  'spec/v1/evidence/bounds.json',
-  'spec/v1/evidence/checkpoint.schema.json',
-  'spec/v1/evidence/identity-bundle.schema.json',
-  'spec/v1/evidence/labels.json',
-  'spec/v1/evidence/registry.json',
-  'spec/v1/evidence/runtime.cddl',
-  'spec/v1/evidence/source-manifest.json',
-  'spec/v1/evidence/statement.schema.json',
   'spec/v1/identity/identity.policy.json',
   'spec/v1/identity/identity.schema.json',
   'spec/v1/identity/labels.json',
@@ -27,7 +21,6 @@ const semanticPaths = [
   'spec/v1/identity/runtime.cddl',
   'spec/v1/identity/signature-profiles.json',
   'spec/v1/identity/source-manifest.json',
-  'spec/v1/manifest.json',
   'spec/v1/protection/algorithms.json',
   'spec/v1/protection/bounds.json',
   'spec/v1/protection/domains.json',
@@ -40,7 +33,6 @@ const semanticPaths = [
   'spec/v1/protection/runtime.cddl',
   'spec/v1/protection/session-accept.schema.json',
   'spec/v1/protection/state.json',
-  'spec/v1/protection/support.schema.json',
   'spec/v1/reliable/bounds.json',
   'spec/v1/reliable/confirmation.schema.json',
   'spec/v1/reliable/event.schema.json',
@@ -65,26 +57,26 @@ const claimProofs = new Map([
   ['SEC-003', 'SEC_003_classical_pq_hybrid_robustness'],
   ['SEC-004', 'SEC_004_unknown_key_share_resistance'],
   ['SEC-005', 'SEC_005_key_compromise_impersonation_boundary'],
-  ['SEC-006', 'SEC_006_protocol_line_downgrade_resistance'],
-  ['SEC-007', 'SEC_007_protection_profile_downgrade_resistance'],
+  ['SEC-006', 'SEC_006_protocol_line_content_binding'],
+  ['SEC-007', 'SEC_007_protection_profile_content_binding'],
   ['SEC-008', 'SEC_008_session_independence'],
   ['SEC-009', 'SEC_009_initial_forward_secrecy'],
   ['SEC-010', 'SEC_010_double_ratchet_forward_secrecy'],
   ['SEC-011', 'SEC_011_double_ratchet_post_compromise_recovery'],
   ['SEC-012', 'SEC_012_replay_resistance'],
   ['SEC-013', 'SEC_013_state_rollback_resistance'],
-  ['SEC-014', 'SEC_014_identity_continuity'],
+  ['SEC-014', 'SEC_014_self_certifying_user_authority'],
   ['SEC-015', 'SEC_015_route_migration_safety'],
-  ['SEC-016', 'SEC_016_evidence_unforgeability'],
-  ['SEC-017', 'SEC_017_evidence_identity_attribution'],
-  ['SEC-018', 'SEC_018_station_cannot_manufacture_endpoint_accepted'],
-  ['SEC-019', 'SEC_019_station_cannot_manufacture_effect_completed'],
+  ['SEC-016', 'SEC_016_management_and_recovery_transition_authorization'],
+  ['SEC-017', 'SEC_017_endpoint_possession_authorization'],
+  ['SEC-018', 'SEC_018_acyclic_sibling_endpoint_authority_session_binding'],
+  ['SEC-019', 'SEC_019_authenticated_confirmation_finality'],
   ['SEC-020', 'SEC_020_fail_closed_resource_bounds'],
   ['SEC-021', 'SEC_021_pairwise_record_confidentiality'],
   ['SEC-022', 'SEC_022_pairwise_record_authentication_and_integrity'],
   ['SEC-023', 'SEC_023_sender_metadata_confidentiality'],
 ]);
-const bindingAuthorities = [
+const defaultBindingAuthorities = [
   ['protocol-line-id', 'spec/protocol-lines.json', '/lines/0/protocolLineId'],
   ['profile-id', 'spec/protection-profiles.json', '/profiles/0/profileId'],
   ['algorithm-id', 'spec/v1/protection/algorithms.json', '/primitives'],
@@ -93,9 +85,32 @@ const bindingAuthorities = [
   ['bound', 'spec/v1/protection/bounds.json', '/bounds'],
   ['failure-enum', 'spec/v1/protection/failures.json', '/failures'],
 ];
-const bindingPlan = [...claimProofs].flatMap(([claimId, proofLemma]) =>
-  bindingAuthorities.map(([kind, authorityPath, pointer]) =>
-    [claimId, kind, authorityPath, pointer, proofLemma]));
+const identityBindingAuthorities = [
+  ['protocol-line-id', 'spec/protocol-lines.json', '/lines/0/protocolLineId'],
+  ['profile-id', 'spec/protection-profiles.json', '/profiles/0/profileId'],
+  ['algorithm-id', 'spec/v1/protection/algorithms.json', '/primitives'],
+  ['domain-separator', 'spec/v1/protection/domains.json', '/domains'],
+  ['field-label', 'spec/v1/identity/labels.json', '/records/userAuthorityState'],
+  ['bound', 'spec/v1/identity/identity.policy.json', '/bounds'],
+  ['failure-enum', 'spec/v1/identity/identity.policy.json', '/unknownPolicy'],
+];
+const confirmationBindingAuthorities = [
+  ['protocol-line-id', 'spec/protocol-lines.json', '/lines/0/protocolLineId'],
+  ['profile-id', 'spec/protection-profiles.json', '/profiles/0/profileId'],
+  ['algorithm-id', 'spec/v1/protection/algorithms.json', '/primitives'],
+  ['domain-separator', 'spec/v1/protection/domains.json', '/domains'],
+  ['field-label', 'spec/v1/reliable/labels.json', '/confirmation'],
+  ['bound', 'spec/v1/reliable/bounds.json', '/bounds'],
+  ['failure-enum', 'spec/v1/reliable/registry.json', '/failurePolicy'],
+];
+const identityClaimIds = new Set(['SEC-014', 'SEC-016', 'SEC-017', 'SEC-018']);
+const bindingPlan = [...claimProofs].flatMap(([claimId, proofLemma]) => {
+  const authorities = claimId === 'SEC-019'
+    ? confirmationBindingAuthorities
+    : identityClaimIds.has(claimId) ? identityBindingAuthorities : defaultBindingAuthorities;
+  return authorities.map(([kind, authorityPath, pointer]) =>
+    [claimId, kind, authorityPath, pointer, proofLemma]);
+});
 
 function sha256(bytes) {
   return createHash('sha256').update(bytes).digest('hex');

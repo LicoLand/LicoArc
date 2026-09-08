@@ -2,16 +2,18 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://licoarc.com/spec/v1/protection/state.json",
   "registryVersion": "licoarc.pairwise-protection-state.v1",
-  "initiatorStates": ["NEW", "FIRST-PACKET-COMMITTED", "AWAITING-ACCEPT", "ESTABLISHED", "DELETED"],
-  "responderStates": ["ACTIVE-PAIR", "ESTABLISHED", "DELETED"],
-  "supportFloorState": {
-    "value": "persistent-unsigned-minimumProtocolGeneration",
-    "update": "accept-only-an-authenticated-value-greater-than-or-equal-to-the-committed-value",
-    "lowerInput": "terminal-downgrade-without-mutation",
-    "lowerRestoredState": "terminal-state-rollback-before-selection-or-emission",
-    "resetEvents": ["retry", "reconnect", "restart", "route-change", "station-migration", "session-deletion"],
-    "resetEffect": "none"
-  },
+  "initiatorStates": [
+    "NEW",
+    "FIRST-PACKET-COMMITTED",
+    "AWAITING-ACCEPT",
+    "ESTABLISHED",
+    "DELETED"
+  ],
+  "responderStates": [
+    "ACTIVE-PAIR",
+    "ESTABLISHED",
+    "DELETED"
+  ],
   "prekeyInventory": {
     "state": "persistent-never-decreasing-high-water-plus-bounded-map-sequence-to-paired-secret-state",
     "activeMapBound": "MAX_ACTIVE_PREKEY_PAIRS",
@@ -34,16 +36,83 @@
     "deletion": "remove-the-binding-in-the-session-deletion-commit; later first-packet replay returns prekey-consumed-from-high-water-state"
   },
   "handshakeTransitions": [
-    {"from": "NEW", "event": "create-first-packet", "commit": ["derived-session-tentative-state", "exact-retryable-first-packet", "state-generation+1"], "durability": "before-first-or-retry-emission", "to": "FIRST-PACKET-COMMITTED"},
-    {"from": "FIRST-PACKET-COMMITTED", "event": "emit-or-retry-exact-packet", "commit": [], "to": "AWAITING-ACCEPT"},
-    {"from": "AWAITING-ACCEPT", "event": "retry-exact-first-packet", "commit": [], "result": "emit-identical-stored-packet", "to": "AWAITING-ACCEPT"},
-    {"from": "AWAITING-ACCEPT", "event": "verify-session-accept", "commit": ["established-state", "state-generation+1"], "to": "ESTABLISHED"},
-    {"from": "ACTIVE-PAIR", "event": "authenticated-first-packet", "commit": ["session-state", "remove-complete-pair-from-active-map", "non-reusable-sequence-by-high-water", "identical-session-accept", "state-generation+1"], "atomicCompareAndCommit": true, "commitState": "ACCEPT-COMMITTED/ESTABLISHED", "to": "ESTABLISHED"},
-    {"from": "ESTABLISHED", "event": "exact-first-packet-replay", "commit": [], "result": "return-identical-committed-session-accept", "to": "ESTABLISHED"},
-    {"from": "stale-ACTIVE-PAIR-snapshot", "event": "concurrent-losing-commit", "commit": [], "result": "prekey-consumed", "durableState": "ESTABLISHED"}
+    {
+      "from": "NEW",
+      "event": "create-first-packet",
+      "commit": [
+        "derived-session-tentative-state",
+        "exact-retryable-first-packet",
+        "state-generation+1"
+      ],
+      "durability": "before-first-or-retry-emission",
+      "to": "FIRST-PACKET-COMMITTED"
+    },
+    {
+      "from": "FIRST-PACKET-COMMITTED",
+      "event": "emit-or-retry-exact-packet",
+      "commit": [],
+      "to": "AWAITING-ACCEPT"
+    },
+    {
+      "from": "AWAITING-ACCEPT",
+      "event": "retry-exact-first-packet",
+      "commit": [],
+      "result": "emit-identical-stored-packet",
+      "to": "AWAITING-ACCEPT"
+    },
+    {
+      "from": "AWAITING-ACCEPT",
+      "event": "verify-session-accept",
+      "commit": [
+        "established-state",
+        "state-generation+1"
+      ],
+      "to": "ESTABLISHED"
+    },
+    {
+      "from": "ACTIVE-PAIR",
+      "event": "authenticated-first-packet",
+      "commit": [
+        "session-state",
+        "remove-complete-pair-from-active-map",
+        "non-reusable-sequence-by-high-water",
+        "identical-session-accept",
+        "state-generation+1"
+      ],
+      "atomicCompareAndCommit": true,
+      "commitState": "ACCEPT-COMMITTED/ESTABLISHED",
+      "to": "ESTABLISHED"
+    },
+    {
+      "from": "ESTABLISHED",
+      "event": "exact-first-packet-replay",
+      "commit": [],
+      "result": "return-identical-committed-session-accept",
+      "to": "ESTABLISHED"
+    },
+    {
+      "from": "stale-ACTIVE-PAIR-snapshot",
+      "event": "concurrent-losing-commit",
+      "commit": [],
+      "result": "prekey-consumed",
+      "durableState": "ESTABLISHED"
+    }
   ],
   "ratchetState": {
-    "fields": ["stateGeneration", "rootKey", "localRatchetKeyPair", "peerRatchetPublicKey", "sendingChainKey", "receivingChainKey", "pn", "ns", "nr", "skippedKeys", "retryablePacket", "durableInbox"],
+    "fields": [
+      "stateGeneration",
+      "rootKey",
+      "localRatchetKeyPair",
+      "peerRatchetPublicKey",
+      "sendingChainKey",
+      "receivingChainKey",
+      "pn",
+      "ns",
+      "nr",
+      "skippedKeys",
+      "retryablePacket",
+      "durableInbox"
+    ],
     "skippedKeyIndex": "tuple(raw-x25519-ratchet-public-key,message-number)",
     "lookupComplexity": "expected-O(1)-bounded-hash-map",
     "deriveLimit": "minimum-of-MAX_SKIP_PER_RECORD-and-remaining-MAX_SKIPPED_KEYS",
@@ -51,15 +120,43 @@
     "replay": "missing-consumed-coordinate-at-or-below-committed-chain-position-is-terminal-replay"
   },
   "ratchetInitialization": {
-    "initiator": {"localRatchetKeyPair": "fresh-initiator-X25519-handshake-keypair", "peerRatchetPublicKey": "redeemed-responder-X25519-prekey", "sendingChain": "initialI2RChain", "receivingChain": null},
-    "responder": {"localRatchetKeyPair": "redeemed-responder-X25519-prekey-pair", "peerRatchetPublicKey": "initiator-X25519-handshake-public-key", "sendingChain": null, "receivingChain": "initialI2RChain"},
-    "counters": {"pn": 0, "ns": 0, "nr": 0},
+    "initiator": {
+      "localRatchetKeyPair": "fresh-initiator-X25519-handshake-keypair",
+      "peerRatchetPublicKey": "redeemed-responder-X25519-prekey",
+      "sendingChain": "initialI2RChain",
+      "receivingChain": null
+    },
+    "responder": {
+      "localRatchetKeyPair": "redeemed-responder-X25519-prekey-pair",
+      "peerRatchetPublicKey": "initiator-X25519-handshake-public-key",
+      "sendingChain": null,
+      "receivingChain": "initialI2RChain"
+    },
+    "counters": {
+      "pn": 0,
+      "ns": 0,
+      "nr": 0
+    },
     "responderBootstrap": "before-the-first-established-R2I-send-generate-a-fresh-local-X25519-keypair-then-derive-nextRootR2I-and-nextChainR2I-from-DH(fresh-local,initiator-handshake-public)",
     "nonceUniqueness": "one-derived-nonce-per-direction-chain-and-N; retry-reuses-the-identical-committed-ciphertext-and-never-reencrypts"
   },
   "dhTransition": {
-    "receiveOrder": ["if-an-old-receiving-chain-exists-derive-skips-through-header-PN-within-bounds", "set-PN-to-current-NS", "set-NS-and-NR-to-zero", "HKDF-extract-current-root-with-X25519(current-local-private,new-peer-public)", "derive-next-root-and-receiving-chain-with-the-incoming-direction-domain", "generate-one-fresh-local-X25519-ratchet-keypair", "HKDF-extract-next-root-with-X25519(new-local-private,new-peer-public)", "derive-next-root-and-sending-chain-with-the-opposite-direction-domain"],
-    "preconditions": ["new-peer-public-is-not-stale", "X25519-results-are-not-all-zero", "header-PN-and-N-within-bounds", "no-counter-wrap"],
+    "receiveOrder": [
+      "if-an-old-receiving-chain-exists-derive-skips-through-header-PN-within-bounds",
+      "set-PN-to-current-NS",
+      "set-NS-and-NR-to-zero",
+      "HKDF-extract-current-root-with-X25519(current-local-private,new-peer-public)",
+      "derive-next-root-and-receiving-chain-with-the-incoming-direction-domain",
+      "generate-one-fresh-local-X25519-ratchet-keypair",
+      "HKDF-extract-next-root-with-X25519(new-local-private,new-peer-public)",
+      "derive-next-root-and-sending-chain-with-the-opposite-direction-domain"
+    ],
+    "preconditions": [
+      "new-peer-public-is-not-stale",
+      "X25519-results-are-not-all-zero",
+      "header-PN-and-N-within-bounds",
+      "no-counter-wrap"
+    ],
     "commit": "only-after-record-AEAD-authentication-and-complete-persistence"
   },
   "send": {
@@ -84,7 +181,11 @@
   "deletion": {
     "transition": "atomically-persist-DELETED-with-state-generation+1-and-remove-session-root-chain-message-skipped-prekey-and-retry-material-from-reachable-protocol-state",
     "after": "every-send-receive-retry-accept-operation-returns-deleted-without-output-or-mutation",
-    "doesNotClaim": ["physical-zeroization", "rollback-detection-under-fully-compromised-store", "memory-side-channel-resistance"]
+    "doesNotClaim": [
+      "physical-zeroization",
+      "rollback-detection-under-fully-compromised-store",
+      "memory-side-channel-resistance"
+    ]
   },
   "tentativeRule": "all parsing-derivation-authentication-and-bound-checks-use-an-isolated snapshot; only the named atomic commit may mutate durable state"
 }

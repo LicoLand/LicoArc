@@ -169,6 +169,10 @@ test("role separation, distribution bindings, recovery, and local authority boun
   assert.equal(bundle.abusePolicy.advisoryOnly, true);
   assert.equal(bundle.abusePolicy.membershipEffect, "none");
   assert.equal(bundle.abusePolicy.endpointAdmissionEffect, "local-only");
+  assert.equal(bundle.consistency.consistencyDigest, digest(without(bundle.consistency, "consistencyDigest")));
+  assert.equal(bundle.abusePolicy.advisories[0].advisoryDigest,
+    digest(without(bundle.abusePolicy.advisories[0], "advisoryDigest")));
+  assert.deepEqual(bundle.recovery.transitionDigests, []);
   assert.equal(policy.rootPolicy.rotation.oldRootMayAuthorizeReplacement, false);
   assert.equal(policy.endpointAdmission.authority, "endpoint-local");
   assert.ok(policy.outOfScope.includes("credentials"));
@@ -216,7 +220,7 @@ function buildRotation(previousBundleDigest) {
     previousBundleDigest,
     replacedRootIds: [oldRoot.rootId],
     replacementRootIds: [replacement.rootId],
-    evidenceDigests: [digest({ oldRootId: oldRoot.rootId, newRootId: replacement.rootId, predecessor: oldRoot.rootDigest })]
+    transitionDigests: [digest({ oldRootId: oldRoot.rootId, newRootId: replacement.rootId, predecessor: oldRoot.rootDigest })]
   });
   bundle.distribution = distributionFor(bundle.rootSet);
   bundle.consistency = consistencyFor();
@@ -392,9 +396,9 @@ function consistencyFor(distribution = null) {
     snapshotDigest,
     observations,
     splitView: false,
-    evidenceDigest: DIGEST_ZERO
+    consistencyDigest: DIGEST_ZERO
   };
-  consistency.evidenceDigest = digest(without(consistency, "evidenceDigest"));
+  consistency.consistencyDigest = digest(without(consistency, "consistencyDigest"));
   return consistency;
 }
 
@@ -418,14 +422,14 @@ function abusePolicyFor() {
     scopeRef: digestTag(181),
     category: "review",
     expiresAt: 2500,
-    evidenceDigest: DIGEST_ZERO
+    advisoryDigest: DIGEST_ZERO
   };
-  advisory.evidenceDigest = digest(without(advisory, "evidenceDigest"));
+  advisory.advisoryDigest = digest(without(advisory, "advisoryDigest"));
   return {
     authority: "local-operator-policy",
     advisoryOnly: true,
     advisories: [advisory],
-    protectedEvidence: "never-included",
+    protectedIncidentMaterial: "never-included",
     membershipEffect: "none",
     compatibilityEffect: "none",
     endpointAdmissionEffect: "local-only"
@@ -439,7 +443,7 @@ function recoveryFor(overrides = {}) {
     previousBundleDigest: overrides.previousBundleDigest ?? null,
     replacedRootIds: overrides.replacedRootIds ?? [],
     replacementRootIds: overrides.replacementRootIds ?? [],
-    evidenceDigests: overrides.evidenceDigests ?? [],
+    transitionDigests: overrides.transitionDigests ?? [],
     recoveryDigest: DIGEST_ZERO
   };
 }
@@ -460,7 +464,7 @@ function evaluate(bundle, state, now) {
   if (bundle.bundleEpoch !== undefined && bundle.bundleEpoch === state.bundleEpoch && state.bundleDigest !== null && bundle.bundleDigest !== state.bundleDigest) return reject("replay");
   if (bundle.bundleEpoch !== undefined && bundle.bundleEpoch === state.bundleEpoch && state.bundleDigest !== null && bundle.bundleDigest === state.bundleDigest && bundle.bundleDigest !== digest(signedMetadata(bundle))) return reject("replay");
   if (bundle.rootSet?.some((root) => root.status === "compromised") && bundle.recovery?.event !== "compromise-recovery") return reject("compromised-root");
-  if (bundle.recovery?.event === "none" && (bundle.recovery.previousBundleDigest !== null || bundle.recovery.replacedRootIds.length > 0 || bundle.recovery.replacementRootIds.length > 0 || bundle.recovery.evidenceDigests.length > 0)) return reject("invalid-rotation");
+  if (bundle.recovery?.event === "none" && (bundle.recovery.previousBundleDigest !== null || bundle.recovery.replacedRootIds.length > 0 || bundle.recovery.replacementRootIds.length > 0 || bundle.recovery.transitionDigests.length > 0)) return reject("invalid-rotation");
   if (bundle.recovery?.event === "root-rotation" && (!bundle.recovery.previousBundleDigest || bundle.recovery.replacedRootIds.length === 0 || bundle.recovery.replacementRootIds.length === 0)) return reject("invalid-rotation");
   if (bundle.recovery?.event === "root-rotation" && bundle.recovery.previousBundleDigest !== state.bundleDigest) return reject("invalid-recovery");
   if (bundle.recovery?.event === "compromise-recovery" && bundle.recovery.previousBundleDigest !== state.bundleDigest) return reject("invalid-recovery");

@@ -42,14 +42,20 @@
   },
   "authority": {
     "stateAndTransition": "owning-group-capability-and-endpoint-protection",
-    "perMemberProjection": "owning-group-capability-and-endpoint-evidence",
+    "perMemberProjection": "owning-group-capability-and-endpoint-confirmation",
     "endpointAdmission": "endpoint-local",
     "crossCapabilityTotals": "bounded-by-protocol-line",
     "inheritance": "forbidden"
   },
   "stateIdentity": {
     "digest": "SHA-256(domain=LICOARC-GROUP-STATE\\0, canonical-state)",
-    "tuple": ["groupId", "groupEpoch", "previousGroupStateDigest", "members", "transitionDigest"],
+    "tuple": [
+      "groupId",
+      "groupEpoch",
+      "previousGroupStateDigest",
+      "members",
+      "transitionDigest"
+    ],
     "genesisEpoch": 0,
     "successorRule": "exactly-predecessor-epoch-plus-one",
     "predecessorRule": "exact-complete-canonical-immediate-predecessor"
@@ -57,11 +63,15 @@
   "transitionAuthorization": {
     "genesis": "author-is-a-state-authority-member-in-the-genesis-snapshot",
     "successor": "author-is-a-state-authority-in-the-exact-predecessor-snapshot",
-    "operations": ["add", "remove", "role"],
+    "operations": [
+      "add",
+      "remove",
+      "role"
+    ],
     "stationOrder": "never-authority",
     "productPermissions": "never-authority",
     "arrivalOrder": "never-authority",
-    "evidence": "the-Endpoint-protection-and-Endpoint-evidence-context-authenticate-the-transition"
+    "authentication": "the-Endpoint-protection-context-authenticates-the-transition"
   },
   "forkPolicy": {
     "samePredecessorAndEpochSameDigest": "idempotent-duplicate",
@@ -76,7 +86,7 @@
     "maxRecipients": "MAX_GROUP_PROJECTIONS",
     "projectionId": "first-16-bytes-SHA-256(domain=LICOARC-GROUP-PROJECTION\\0, stateDigest, messageId, recipient)",
     "retry": "per-member-at-least-once-with-stable-projection-id",
-    "stationReceipt": "never-endpoint-evidence"
+    "stationReceipt": "never-endpoint-confirmation"
   },
   "aggregationPolicy": {
     "resultOrder": "recipient-endpoint-reference-byte-order",
@@ -84,10 +94,10 @@
     "allDelivered": "complete",
     "noDeliveredAndAllTerminalFailure": "failed",
     "otherwise": "partial",
-    "authority": "endpoint-evidence-or-none-only"
+    "authority": "endpoint-confirmation-or-none-only"
   },
   "persistencePolicy": {
-    "restart": "restore-high-water-predecessor-evidence-current-members-tombstones-and-per-member-projections-before-accepting-input",
+    "restart": "restore-high-water-predecessor-state-current-members-tombstones-and-per-member-projections-before-accepting-input",
     "bounded": true,
     "persistedStationState": false,
     "persistedProductPermission": false,
@@ -109,7 +119,7 @@
     "transition": "validate-complete-predecessor-and-protected-operation-then-commit-successor-once",
     "projection": "register-one-stable-projection-per-canonical-recipient-or-commit-none",
     "result": "same-projection-and-identical-result-replays-without-reapplying-state",
-    "restart": "restore-current-state-predecessor-evidence-tombstones-and-projections-before-input",
+    "restart": "restore-current-state-predecessor-state-tombstones-and-projections-before-input",
     "failure": "malformed-gap-fork-stale-unauthorized-or-over-bound-input-leaves-byte-identical-pre-state"
   },
   "outOfScope": [

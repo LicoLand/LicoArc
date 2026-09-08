@@ -1,8 +1,9 @@
 # LicoArc Tamarin proof closure
 
 This directory contains the source-bound symbolic proof for all current Core
-security claims across Pairwise Protection, Endpoint identity and route
-continuity, transferable Evidence, Reliable Exchange, and Transport semantic
+security claims across Pairwise Protection, self-certifying user authority,
+Endpoint possession, authority transitions, sibling session binding,
+authenticated confirmation finality, route continuity, and Transport semantic
 sources. The normative protocol remains under `spec/`; this model cannot add
 protocol meaning.
 
@@ -17,11 +18,13 @@ verification, authenticated records, and source-derived bound classifier as
 ideal symbolic operations. Its results therefore depend on admitted primitive
 security, exact key-purpose and continuity resolution, authenticated peer-key
 acceptance, fresh entropy, complete validation before mutation, and atomic
-durable compare-and-commit. It does not prove computational security or
-downstream implementation resource accounting. The modeled Pairwise
+durable compare-and-commit. It does not prove computational security, real SDK
+behavior, cryptographic implementation correctness, or downstream
+implementation resource accounting. The modeled Pairwise
 Protection Profile's explicit nonclaims are
 physical zeroization, rollback detection after complete store compromise,
-ratchet-header confidentiality, transferable session authentication, and
+ratchet-header confidentiality, session authentication outside its bound
+Endpoint pair, and
 ongoing post-quantum post-compromise recovery. The recovery lemma models only
 a fresh uncompromised classical DH input.
 

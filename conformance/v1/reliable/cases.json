@@ -14,7 +14,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/reliable/registry.json",
-            "sha256": "be617a82b39b5287693ed13d84a6f74e387340d26af6ca55d06290e53233fb25"
+            "sha256": "c601617bd02732c6a875a842e3110072a7c00454f6a619720ba0057010fb2b8f"
           }
         ],
         "catalogs": [
@@ -53,7 +53,7 @@
                 "trailingBytes": "reject"
               },
               "stateAuthority": {
-                "endpoint": "logical-intent-deduplication-evidence-and-effect-state",
+                "endpoint": "logical-intent-deduplication-confirmation-and-effect-state",
                 "station": "opaque-carriage-and-untrusted-operation-hints-only",
                 "application": "effect-and-idempotency-result-only",
                 "scheduler": "caller-owned",
@@ -80,7 +80,6 @@
                 ],
                 "inbox": [
                   "new",
-                  "pending-evidence",
                   "accepted",
                   "effect-pending",
                   "completed",
@@ -118,6 +117,8 @@
               },
               "confirmation": {
                 "identity": "one-confirmation-id-per-result",
+                "authentication": "exact-protected-authorized-sending-Endpoint-session",
+                "binding": "confirmation-id-message-ids-sender-session-stage-outcome-failure-and-result",
                 "stages": [
                   "endpointAccepted",
                   "effectCompleted"
@@ -135,7 +136,7 @@
               "attachment": {
                 "normalFeedback": "bounded-attachment-receive-state",
                 "routineChunkConfirmation": "forbidden",
-                "finality": "empty-verified-receive-state-requires-endpoint-evidence-checkpoint",
+                "finality": "complete-authenticated-chunks-content-digest-and-exact-endpoint-confirmation",
                 "windowReset": "forbidden-on-retry-restart-session-renewal-route-change-station-migration-replay"
               },
               "group": {
@@ -205,7 +206,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/reliable/registry.json",
-            "sha256": "be617a82b39b5287693ed13d84a6f74e387340d26af6ca55d06290e53233fb25"
+            "sha256": "c601617bd02732c6a875a842e3110072a7c00454f6a619720ba0057010fb2b8f"
           }
         ],
         "catalogs": [
@@ -244,7 +245,7 @@
                 "trailingBytes": "reject"
               },
               "stateAuthority": {
-                "endpoint": "logical-intent-deduplication-evidence-and-effect-state",
+                "endpoint": "logical-intent-deduplication-confirmation-and-effect-state",
                 "station": "opaque-carriage-and-untrusted-operation-hints-only",
                 "application": "effect-and-idempotency-result-only",
                 "scheduler": "caller-owned",
@@ -271,7 +272,6 @@
                 ],
                 "inbox": [
                   "new",
-                  "pending-evidence",
                   "accepted",
                   "effect-pending",
                   "completed",
@@ -309,6 +309,8 @@
               },
               "confirmation": {
                 "identity": "one-confirmation-id-per-result",
+                "authentication": "exact-protected-authorized-sending-Endpoint-session",
+                "binding": "confirmation-id-message-ids-sender-session-stage-outcome-failure-and-result",
                 "stages": [
                   "endpointAccepted",
                   "effectCompleted"
@@ -326,7 +328,7 @@
               "attachment": {
                 "normalFeedback": "bounded-attachment-receive-state",
                 "routineChunkConfirmation": "forbidden",
-                "finality": "empty-verified-receive-state-requires-endpoint-evidence-checkpoint",
+                "finality": "complete-authenticated-chunks-content-digest-and-exact-endpoint-confirmation",
                 "windowReset": "forbidden-on-retry-restart-session-renewal-route-change-station-migration-replay"
               },
               "group": {
@@ -379,7 +381,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/reliable/registry.json",
-            "sha256": "be617a82b39b5287693ed13d84a6f74e387340d26af6ca55d06290e53233fb25"
+            "sha256": "c601617bd02732c6a875a842e3110072a7c00454f6a619720ba0057010fb2b8f"
           }
         ],
         "catalogs": [
@@ -418,7 +420,7 @@
                 "trailingBytes": "reject"
               },
               "stateAuthority": {
-                "endpoint": "logical-intent-deduplication-evidence-and-effect-state",
+                "endpoint": "logical-intent-deduplication-confirmation-and-effect-state",
                 "station": "opaque-carriage-and-untrusted-operation-hints-only",
                 "application": "effect-and-idempotency-result-only",
                 "scheduler": "caller-owned",
@@ -445,7 +447,6 @@
                 ],
                 "inbox": [
                   "new",
-                  "pending-evidence",
                   "accepted",
                   "effect-pending",
                   "completed",
@@ -483,6 +484,8 @@
               },
               "confirmation": {
                 "identity": "one-confirmation-id-per-result",
+                "authentication": "exact-protected-authorized-sending-Endpoint-session",
+                "binding": "confirmation-id-message-ids-sender-session-stage-outcome-failure-and-result",
                 "stages": [
                   "endpointAccepted",
                   "effectCompleted"
@@ -500,7 +503,7 @@
               "attachment": {
                 "normalFeedback": "bounded-attachment-receive-state",
                 "routineChunkConfirmation": "forbidden",
-                "finality": "empty-verified-receive-state-requires-endpoint-evidence-checkpoint",
+                "finality": "complete-authenticated-chunks-content-digest-and-exact-endpoint-confirmation",
                 "windowReset": "forbidden-on-retry-restart-session-renewal-route-change-station-migration-replay"
               },
               "group": {
@@ -553,7 +556,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/reliable/registry.json",
-            "sha256": "be617a82b39b5287693ed13d84a6f74e387340d26af6ca55d06290e53233fb25"
+            "sha256": "c601617bd02732c6a875a842e3110072a7c00454f6a619720ba0057010fb2b8f"
           }
         ],
         "catalogs": [
@@ -592,7 +595,7 @@
                 "trailingBytes": "reject"
               },
               "stateAuthority": {
-                "endpoint": "logical-intent-deduplication-evidence-and-effect-state",
+                "endpoint": "logical-intent-deduplication-confirmation-and-effect-state",
                 "station": "opaque-carriage-and-untrusted-operation-hints-only",
                 "application": "effect-and-idempotency-result-only",
                 "scheduler": "caller-owned",
@@ -619,7 +622,6 @@
                 ],
                 "inbox": [
                   "new",
-                  "pending-evidence",
                   "accepted",
                   "effect-pending",
                   "completed",
@@ -657,6 +659,8 @@
               },
               "confirmation": {
                 "identity": "one-confirmation-id-per-result",
+                "authentication": "exact-protected-authorized-sending-Endpoint-session",
+                "binding": "confirmation-id-message-ids-sender-session-stage-outcome-failure-and-result",
                 "stages": [
                   "endpointAccepted",
                   "effectCompleted"
@@ -674,7 +678,7 @@
               "attachment": {
                 "normalFeedback": "bounded-attachment-receive-state",
                 "routineChunkConfirmation": "forbidden",
-                "finality": "empty-verified-receive-state-requires-endpoint-evidence-checkpoint",
+                "finality": "complete-authenticated-chunks-content-digest-and-exact-endpoint-confirmation",
                 "windowReset": "forbidden-on-retry-restart-session-renewal-route-change-station-migration-replay"
               },
               "group": {
@@ -745,7 +749,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/reliable/registry.json",
-            "sha256": "be617a82b39b5287693ed13d84a6f74e387340d26af6ca55d06290e53233fb25"
+            "sha256": "c601617bd02732c6a875a842e3110072a7c00454f6a619720ba0057010fb2b8f"
           }
         ],
         "catalogs": [
@@ -784,7 +788,7 @@
                 "trailingBytes": "reject"
               },
               "stateAuthority": {
-                "endpoint": "logical-intent-deduplication-evidence-and-effect-state",
+                "endpoint": "logical-intent-deduplication-confirmation-and-effect-state",
                 "station": "opaque-carriage-and-untrusted-operation-hints-only",
                 "application": "effect-and-idempotency-result-only",
                 "scheduler": "caller-owned",
@@ -811,7 +815,6 @@
                 ],
                 "inbox": [
                   "new",
-                  "pending-evidence",
                   "accepted",
                   "effect-pending",
                   "completed",
@@ -849,6 +852,8 @@
               },
               "confirmation": {
                 "identity": "one-confirmation-id-per-result",
+                "authentication": "exact-protected-authorized-sending-Endpoint-session",
+                "binding": "confirmation-id-message-ids-sender-session-stage-outcome-failure-and-result",
                 "stages": [
                   "endpointAccepted",
                   "effectCompleted"
@@ -866,7 +871,7 @@
               "attachment": {
                 "normalFeedback": "bounded-attachment-receive-state",
                 "routineChunkConfirmation": "forbidden",
-                "finality": "empty-verified-receive-state-requires-endpoint-evidence-checkpoint",
+                "finality": "complete-authenticated-chunks-content-digest-and-exact-endpoint-confirmation",
                 "windowReset": "forbidden-on-retry-restart-session-renewal-route-change-station-migration-replay"
               },
               "group": {
@@ -919,7 +924,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/reliable/registry.json",
-            "sha256": "be617a82b39b5287693ed13d84a6f74e387340d26af6ca55d06290e53233fb25"
+            "sha256": "c601617bd02732c6a875a842e3110072a7c00454f6a619720ba0057010fb2b8f"
           }
         ],
         "catalogs": [
@@ -958,7 +963,7 @@
                 "trailingBytes": "reject"
               },
               "stateAuthority": {
-                "endpoint": "logical-intent-deduplication-evidence-and-effect-state",
+                "endpoint": "logical-intent-deduplication-confirmation-and-effect-state",
                 "station": "opaque-carriage-and-untrusted-operation-hints-only",
                 "application": "effect-and-idempotency-result-only",
                 "scheduler": "caller-owned",
@@ -985,7 +990,6 @@
                 ],
                 "inbox": [
                   "new",
-                  "pending-evidence",
                   "accepted",
                   "effect-pending",
                   "completed",
@@ -1023,6 +1027,8 @@
               },
               "confirmation": {
                 "identity": "one-confirmation-id-per-result",
+                "authentication": "exact-protected-authorized-sending-Endpoint-session",
+                "binding": "confirmation-id-message-ids-sender-session-stage-outcome-failure-and-result",
                 "stages": [
                   "endpointAccepted",
                   "effectCompleted"
@@ -1040,7 +1046,7 @@
               "attachment": {
                 "normalFeedback": "bounded-attachment-receive-state",
                 "routineChunkConfirmation": "forbidden",
-                "finality": "empty-verified-receive-state-requires-endpoint-evidence-checkpoint",
+                "finality": "complete-authenticated-chunks-content-digest-and-exact-endpoint-confirmation",
                 "windowReset": "forbidden-on-retry-restart-session-renewal-route-change-station-migration-replay"
               },
               "group": {
@@ -1100,7 +1106,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/reliable/registry.json",
-            "sha256": "be617a82b39b5287693ed13d84a6f74e387340d26af6ca55d06290e53233fb25"
+            "sha256": "c601617bd02732c6a875a842e3110072a7c00454f6a619720ba0057010fb2b8f"
           }
         ],
         "catalogs": [
@@ -1139,7 +1145,7 @@
                 "trailingBytes": "reject"
               },
               "stateAuthority": {
-                "endpoint": "logical-intent-deduplication-evidence-and-effect-state",
+                "endpoint": "logical-intent-deduplication-confirmation-and-effect-state",
                 "station": "opaque-carriage-and-untrusted-operation-hints-only",
                 "application": "effect-and-idempotency-result-only",
                 "scheduler": "caller-owned",
@@ -1166,7 +1172,6 @@
                 ],
                 "inbox": [
                   "new",
-                  "pending-evidence",
                   "accepted",
                   "effect-pending",
                   "completed",
@@ -1204,6 +1209,8 @@
               },
               "confirmation": {
                 "identity": "one-confirmation-id-per-result",
+                "authentication": "exact-protected-authorized-sending-Endpoint-session",
+                "binding": "confirmation-id-message-ids-sender-session-stage-outcome-failure-and-result",
                 "stages": [
                   "endpointAccepted",
                   "effectCompleted"
@@ -1221,7 +1228,7 @@
               "attachment": {
                 "normalFeedback": "bounded-attachment-receive-state",
                 "routineChunkConfirmation": "forbidden",
-                "finality": "empty-verified-receive-state-requires-endpoint-evidence-checkpoint",
+                "finality": "complete-authenticated-chunks-content-digest-and-exact-endpoint-confirmation",
                 "windowReset": "forbidden-on-retry-restart-session-renewal-route-change-station-migration-replay"
               },
               "group": {
@@ -1285,7 +1292,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/reliable/registry.json",
-            "sha256": "be617a82b39b5287693ed13d84a6f74e387340d26af6ca55d06290e53233fb25"
+            "sha256": "c601617bd02732c6a875a842e3110072a7c00454f6a619720ba0057010fb2b8f"
           }
         ],
         "catalogs": [
@@ -1324,7 +1331,7 @@
                 "trailingBytes": "reject"
               },
               "stateAuthority": {
-                "endpoint": "logical-intent-deduplication-evidence-and-effect-state",
+                "endpoint": "logical-intent-deduplication-confirmation-and-effect-state",
                 "station": "opaque-carriage-and-untrusted-operation-hints-only",
                 "application": "effect-and-idempotency-result-only",
                 "scheduler": "caller-owned",
@@ -1351,7 +1358,6 @@
                 ],
                 "inbox": [
                   "new",
-                  "pending-evidence",
                   "accepted",
                   "effect-pending",
                   "completed",
@@ -1389,6 +1395,8 @@
               },
               "confirmation": {
                 "identity": "one-confirmation-id-per-result",
+                "authentication": "exact-protected-authorized-sending-Endpoint-session",
+                "binding": "confirmation-id-message-ids-sender-session-stage-outcome-failure-and-result",
                 "stages": [
                   "endpointAccepted",
                   "effectCompleted"
@@ -1406,7 +1414,7 @@
               "attachment": {
                 "normalFeedback": "bounded-attachment-receive-state",
                 "routineChunkConfirmation": "forbidden",
-                "finality": "empty-verified-receive-state-requires-endpoint-evidence-checkpoint",
+                "finality": "complete-authenticated-chunks-content-digest-and-exact-endpoint-confirmation",
                 "windowReset": "forbidden-on-retry-restart-session-renewal-route-change-station-migration-replay"
               },
               "group": {
@@ -1459,7 +1467,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/reliable/registry.json",
-            "sha256": "be617a82b39b5287693ed13d84a6f74e387340d26af6ca55d06290e53233fb25"
+            "sha256": "c601617bd02732c6a875a842e3110072a7c00454f6a619720ba0057010fb2b8f"
           }
         ],
         "catalogs": [
@@ -1498,7 +1506,7 @@
                 "trailingBytes": "reject"
               },
               "stateAuthority": {
-                "endpoint": "logical-intent-deduplication-evidence-and-effect-state",
+                "endpoint": "logical-intent-deduplication-confirmation-and-effect-state",
                 "station": "opaque-carriage-and-untrusted-operation-hints-only",
                 "application": "effect-and-idempotency-result-only",
                 "scheduler": "caller-owned",
@@ -1525,7 +1533,6 @@
                 ],
                 "inbox": [
                   "new",
-                  "pending-evidence",
                   "accepted",
                   "effect-pending",
                   "completed",
@@ -1563,6 +1570,8 @@
               },
               "confirmation": {
                 "identity": "one-confirmation-id-per-result",
+                "authentication": "exact-protected-authorized-sending-Endpoint-session",
+                "binding": "confirmation-id-message-ids-sender-session-stage-outcome-failure-and-result",
                 "stages": [
                   "endpointAccepted",
                   "effectCompleted"
@@ -1580,7 +1589,7 @@
               "attachment": {
                 "normalFeedback": "bounded-attachment-receive-state",
                 "routineChunkConfirmation": "forbidden",
-                "finality": "empty-verified-receive-state-requires-endpoint-evidence-checkpoint",
+                "finality": "complete-authenticated-chunks-content-digest-and-exact-endpoint-confirmation",
                 "windowReset": "forbidden-on-retry-restart-session-renewal-route-change-station-migration-replay"
               },
               "group": {
@@ -1640,7 +1649,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/reliable/registry.json",
-            "sha256": "be617a82b39b5287693ed13d84a6f74e387340d26af6ca55d06290e53233fb25"
+            "sha256": "c601617bd02732c6a875a842e3110072a7c00454f6a619720ba0057010fb2b8f"
           }
         ],
         "catalogs": [
@@ -1679,7 +1688,7 @@
                 "trailingBytes": "reject"
               },
               "stateAuthority": {
-                "endpoint": "logical-intent-deduplication-evidence-and-effect-state",
+                "endpoint": "logical-intent-deduplication-confirmation-and-effect-state",
                 "station": "opaque-carriage-and-untrusted-operation-hints-only",
                 "application": "effect-and-idempotency-result-only",
                 "scheduler": "caller-owned",
@@ -1706,7 +1715,6 @@
                 ],
                 "inbox": [
                   "new",
-                  "pending-evidence",
                   "accepted",
                   "effect-pending",
                   "completed",
@@ -1744,6 +1752,8 @@
               },
               "confirmation": {
                 "identity": "one-confirmation-id-per-result",
+                "authentication": "exact-protected-authorized-sending-Endpoint-session",
+                "binding": "confirmation-id-message-ids-sender-session-stage-outcome-failure-and-result",
                 "stages": [
                   "endpointAccepted",
                   "effectCompleted"
@@ -1761,7 +1771,7 @@
               "attachment": {
                 "normalFeedback": "bounded-attachment-receive-state",
                 "routineChunkConfirmation": "forbidden",
-                "finality": "empty-verified-receive-state-requires-endpoint-evidence-checkpoint",
+                "finality": "complete-authenticated-chunks-content-digest-and-exact-endpoint-confirmation",
                 "windowReset": "forbidden-on-retry-restart-session-renewal-route-change-station-migration-replay"
               },
               "group": {
@@ -1814,7 +1824,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/reliable/registry.json",
-            "sha256": "be617a82b39b5287693ed13d84a6f74e387340d26af6ca55d06290e53233fb25"
+            "sha256": "c601617bd02732c6a875a842e3110072a7c00454f6a619720ba0057010fb2b8f"
           }
         ],
         "catalogs": [
@@ -1853,7 +1863,7 @@
                 "trailingBytes": "reject"
               },
               "stateAuthority": {
-                "endpoint": "logical-intent-deduplication-evidence-and-effect-state",
+                "endpoint": "logical-intent-deduplication-confirmation-and-effect-state",
                 "station": "opaque-carriage-and-untrusted-operation-hints-only",
                 "application": "effect-and-idempotency-result-only",
                 "scheduler": "caller-owned",
@@ -1880,7 +1890,6 @@
                 ],
                 "inbox": [
                   "new",
-                  "pending-evidence",
                   "accepted",
                   "effect-pending",
                   "completed",
@@ -1918,6 +1927,8 @@
               },
               "confirmation": {
                 "identity": "one-confirmation-id-per-result",
+                "authentication": "exact-protected-authorized-sending-Endpoint-session",
+                "binding": "confirmation-id-message-ids-sender-session-stage-outcome-failure-and-result",
                 "stages": [
                   "endpointAccepted",
                   "effectCompleted"
@@ -1935,7 +1946,7 @@
               "attachment": {
                 "normalFeedback": "bounded-attachment-receive-state",
                 "routineChunkConfirmation": "forbidden",
-                "finality": "empty-verified-receive-state-requires-endpoint-evidence-checkpoint",
+                "finality": "complete-authenticated-chunks-content-digest-and-exact-endpoint-confirmation",
                 "windowReset": "forbidden-on-retry-restart-session-renewal-route-change-station-migration-replay"
               },
               "group": {
@@ -1988,7 +1999,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/reliable/registry.json",
-            "sha256": "be617a82b39b5287693ed13d84a6f74e387340d26af6ca55d06290e53233fb25"
+            "sha256": "c601617bd02732c6a875a842e3110072a7c00454f6a619720ba0057010fb2b8f"
           }
         ],
         "catalogs": [
@@ -2027,7 +2038,7 @@
                 "trailingBytes": "reject"
               },
               "stateAuthority": {
-                "endpoint": "logical-intent-deduplication-evidence-and-effect-state",
+                "endpoint": "logical-intent-deduplication-confirmation-and-effect-state",
                 "station": "opaque-carriage-and-untrusted-operation-hints-only",
                 "application": "effect-and-idempotency-result-only",
                 "scheduler": "caller-owned",
@@ -2054,7 +2065,6 @@
                 ],
                 "inbox": [
                   "new",
-                  "pending-evidence",
                   "accepted",
                   "effect-pending",
                   "completed",
@@ -2092,6 +2102,8 @@
               },
               "confirmation": {
                 "identity": "one-confirmation-id-per-result",
+                "authentication": "exact-protected-authorized-sending-Endpoint-session",
+                "binding": "confirmation-id-message-ids-sender-session-stage-outcome-failure-and-result",
                 "stages": [
                   "endpointAccepted",
                   "effectCompleted"
@@ -2109,7 +2121,7 @@
               "attachment": {
                 "normalFeedback": "bounded-attachment-receive-state",
                 "routineChunkConfirmation": "forbidden",
-                "finality": "empty-verified-receive-state-requires-endpoint-evidence-checkpoint",
+                "finality": "complete-authenticated-chunks-content-digest-and-exact-endpoint-confirmation",
                 "windowReset": "forbidden-on-retry-restart-session-renewal-route-change-station-migration-replay"
               },
               "group": {
@@ -2169,7 +2181,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/reliable/registry.json",
-            "sha256": "be617a82b39b5287693ed13d84a6f74e387340d26af6ca55d06290e53233fb25"
+            "sha256": "c601617bd02732c6a875a842e3110072a7c00454f6a619720ba0057010fb2b8f"
           }
         ],
         "catalogs": [
@@ -2208,7 +2220,7 @@
                 "trailingBytes": "reject"
               },
               "stateAuthority": {
-                "endpoint": "logical-intent-deduplication-evidence-and-effect-state",
+                "endpoint": "logical-intent-deduplication-confirmation-and-effect-state",
                 "station": "opaque-carriage-and-untrusted-operation-hints-only",
                 "application": "effect-and-idempotency-result-only",
                 "scheduler": "caller-owned",
@@ -2235,7 +2247,6 @@
                 ],
                 "inbox": [
                   "new",
-                  "pending-evidence",
                   "accepted",
                   "effect-pending",
                   "completed",
@@ -2273,6 +2284,8 @@
               },
               "confirmation": {
                 "identity": "one-confirmation-id-per-result",
+                "authentication": "exact-protected-authorized-sending-Endpoint-session",
+                "binding": "confirmation-id-message-ids-sender-session-stage-outcome-failure-and-result",
                 "stages": [
                   "endpointAccepted",
                   "effectCompleted"
@@ -2290,7 +2303,7 @@
               "attachment": {
                 "normalFeedback": "bounded-attachment-receive-state",
                 "routineChunkConfirmation": "forbidden",
-                "finality": "empty-verified-receive-state-requires-endpoint-evidence-checkpoint",
+                "finality": "complete-authenticated-chunks-content-digest-and-exact-endpoint-confirmation",
                 "windowReset": "forbidden-on-retry-restart-session-renewal-route-change-station-migration-replay"
               },
               "group": {
@@ -2343,7 +2356,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/reliable/registry.json",
-            "sha256": "be617a82b39b5287693ed13d84a6f74e387340d26af6ca55d06290e53233fb25"
+            "sha256": "c601617bd02732c6a875a842e3110072a7c00454f6a619720ba0057010fb2b8f"
           }
         ],
         "catalogs": [
@@ -2382,7 +2395,7 @@
                 "trailingBytes": "reject"
               },
               "stateAuthority": {
-                "endpoint": "logical-intent-deduplication-evidence-and-effect-state",
+                "endpoint": "logical-intent-deduplication-confirmation-and-effect-state",
                 "station": "opaque-carriage-and-untrusted-operation-hints-only",
                 "application": "effect-and-idempotency-result-only",
                 "scheduler": "caller-owned",
@@ -2409,7 +2422,6 @@
                 ],
                 "inbox": [
                   "new",
-                  "pending-evidence",
                   "accepted",
                   "effect-pending",
                   "completed",
@@ -2447,6 +2459,8 @@
               },
               "confirmation": {
                 "identity": "one-confirmation-id-per-result",
+                "authentication": "exact-protected-authorized-sending-Endpoint-session",
+                "binding": "confirmation-id-message-ids-sender-session-stage-outcome-failure-and-result",
                 "stages": [
                   "endpointAccepted",
                   "effectCompleted"
@@ -2464,7 +2478,7 @@
               "attachment": {
                 "normalFeedback": "bounded-attachment-receive-state",
                 "routineChunkConfirmation": "forbidden",
-                "finality": "empty-verified-receive-state-requires-endpoint-evidence-checkpoint",
+                "finality": "complete-authenticated-chunks-content-digest-and-exact-endpoint-confirmation",
                 "windowReset": "forbidden-on-retry-restart-session-renewal-route-change-station-migration-replay"
               },
               "group": {
@@ -2526,7 +2540,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/reliable/registry.json",
-            "sha256": "be617a82b39b5287693ed13d84a6f74e387340d26af6ca55d06290e53233fb25"
+            "sha256": "c601617bd02732c6a875a842e3110072a7c00454f6a619720ba0057010fb2b8f"
           }
         ],
         "catalogs": [
@@ -2565,7 +2579,7 @@
                 "trailingBytes": "reject"
               },
               "stateAuthority": {
-                "endpoint": "logical-intent-deduplication-evidence-and-effect-state",
+                "endpoint": "logical-intent-deduplication-confirmation-and-effect-state",
                 "station": "opaque-carriage-and-untrusted-operation-hints-only",
                 "application": "effect-and-idempotency-result-only",
                 "scheduler": "caller-owned",
@@ -2592,7 +2606,6 @@
                 ],
                 "inbox": [
                   "new",
-                  "pending-evidence",
                   "accepted",
                   "effect-pending",
                   "completed",
@@ -2630,6 +2643,8 @@
               },
               "confirmation": {
                 "identity": "one-confirmation-id-per-result",
+                "authentication": "exact-protected-authorized-sending-Endpoint-session",
+                "binding": "confirmation-id-message-ids-sender-session-stage-outcome-failure-and-result",
                 "stages": [
                   "endpointAccepted",
                   "effectCompleted"
@@ -2647,7 +2662,7 @@
               "attachment": {
                 "normalFeedback": "bounded-attachment-receive-state",
                 "routineChunkConfirmation": "forbidden",
-                "finality": "empty-verified-receive-state-requires-endpoint-evidence-checkpoint",
+                "finality": "complete-authenticated-chunks-content-digest-and-exact-endpoint-confirmation",
                 "windowReset": "forbidden-on-retry-restart-session-renewal-route-change-station-migration-replay"
               },
               "group": {
@@ -2700,7 +2715,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/reliable/registry.json",
-            "sha256": "be617a82b39b5287693ed13d84a6f74e387340d26af6ca55d06290e53233fb25"
+            "sha256": "c601617bd02732c6a875a842e3110072a7c00454f6a619720ba0057010fb2b8f"
           }
         ],
         "catalogs": [
@@ -2739,7 +2754,7 @@
                 "trailingBytes": "reject"
               },
               "stateAuthority": {
-                "endpoint": "logical-intent-deduplication-evidence-and-effect-state",
+                "endpoint": "logical-intent-deduplication-confirmation-and-effect-state",
                 "station": "opaque-carriage-and-untrusted-operation-hints-only",
                 "application": "effect-and-idempotency-result-only",
                 "scheduler": "caller-owned",
@@ -2766,7 +2781,6 @@
                 ],
                 "inbox": [
                   "new",
-                  "pending-evidence",
                   "accepted",
                   "effect-pending",
                   "completed",
@@ -2804,6 +2818,8 @@
               },
               "confirmation": {
                 "identity": "one-confirmation-id-per-result",
+                "authentication": "exact-protected-authorized-sending-Endpoint-session",
+                "binding": "confirmation-id-message-ids-sender-session-stage-outcome-failure-and-result",
                 "stages": [
                   "endpointAccepted",
                   "effectCompleted"
@@ -2821,7 +2837,7 @@
               "attachment": {
                 "normalFeedback": "bounded-attachment-receive-state",
                 "routineChunkConfirmation": "forbidden",
-                "finality": "empty-verified-receive-state-requires-endpoint-evidence-checkpoint",
+                "finality": "complete-authenticated-chunks-content-digest-and-exact-endpoint-confirmation",
                 "windowReset": "forbidden-on-retry-restart-session-renewal-route-change-station-migration-replay"
               },
               "group": {
@@ -2874,7 +2890,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/reliable/registry.json",
-            "sha256": "be617a82b39b5287693ed13d84a6f74e387340d26af6ca55d06290e53233fb25"
+            "sha256": "c601617bd02732c6a875a842e3110072a7c00454f6a619720ba0057010fb2b8f"
           }
         ],
         "catalogs": [
@@ -2913,7 +2929,7 @@
                 "trailingBytes": "reject"
               },
               "stateAuthority": {
-                "endpoint": "logical-intent-deduplication-evidence-and-effect-state",
+                "endpoint": "logical-intent-deduplication-confirmation-and-effect-state",
                 "station": "opaque-carriage-and-untrusted-operation-hints-only",
                 "application": "effect-and-idempotency-result-only",
                 "scheduler": "caller-owned",
@@ -2940,7 +2956,6 @@
                 ],
                 "inbox": [
                   "new",
-                  "pending-evidence",
                   "accepted",
                   "effect-pending",
                   "completed",
@@ -2978,6 +2993,8 @@
               },
               "confirmation": {
                 "identity": "one-confirmation-id-per-result",
+                "authentication": "exact-protected-authorized-sending-Endpoint-session",
+                "binding": "confirmation-id-message-ids-sender-session-stage-outcome-failure-and-result",
                 "stages": [
                   "endpointAccepted",
                   "effectCompleted"
@@ -2995,7 +3012,7 @@
               "attachment": {
                 "normalFeedback": "bounded-attachment-receive-state",
                 "routineChunkConfirmation": "forbidden",
-                "finality": "empty-verified-receive-state-requires-endpoint-evidence-checkpoint",
+                "finality": "complete-authenticated-chunks-content-digest-and-exact-endpoint-confirmation",
                 "windowReset": "forbidden-on-retry-restart-session-renewal-route-change-station-migration-replay"
               },
               "group": {
@@ -3050,7 +3067,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/reliable/registry.json",
-            "sha256": "be617a82b39b5287693ed13d84a6f74e387340d26af6ca55d06290e53233fb25"
+            "sha256": "c601617bd02732c6a875a842e3110072a7c00454f6a619720ba0057010fb2b8f"
           }
         ],
         "catalogs": [
@@ -3089,7 +3106,7 @@
                 "trailingBytes": "reject"
               },
               "stateAuthority": {
-                "endpoint": "logical-intent-deduplication-evidence-and-effect-state",
+                "endpoint": "logical-intent-deduplication-confirmation-and-effect-state",
                 "station": "opaque-carriage-and-untrusted-operation-hints-only",
                 "application": "effect-and-idempotency-result-only",
                 "scheduler": "caller-owned",
@@ -3116,7 +3133,6 @@
                 ],
                 "inbox": [
                   "new",
-                  "pending-evidence",
                   "accepted",
                   "effect-pending",
                   "completed",
@@ -3154,6 +3170,8 @@
               },
               "confirmation": {
                 "identity": "one-confirmation-id-per-result",
+                "authentication": "exact-protected-authorized-sending-Endpoint-session",
+                "binding": "confirmation-id-message-ids-sender-session-stage-outcome-failure-and-result",
                 "stages": [
                   "endpointAccepted",
                   "effectCompleted"
@@ -3171,7 +3189,7 @@
               "attachment": {
                 "normalFeedback": "bounded-attachment-receive-state",
                 "routineChunkConfirmation": "forbidden",
-                "finality": "empty-verified-receive-state-requires-endpoint-evidence-checkpoint",
+                "finality": "complete-authenticated-chunks-content-digest-and-exact-endpoint-confirmation",
                 "windowReset": "forbidden-on-retry-restart-session-renewal-route-change-station-migration-replay"
               },
               "group": {
@@ -3212,6 +3230,373 @@
       "expected": {
         "error": {
           "code": "trailing-bytes"
+        }
+      }
+    },
+    {
+      "$schema": "https://licoarc.com/spec/schemas/conformance-case.schema.json",
+      "caseVersion": "licoarc.conformance-case.v1",
+      "id": "reliable-confirmation-valid",
+      "target": {
+        "operationId": "licoarc.reliable.apply-endpoint-confirmation.v1"
+      },
+      "context": {
+        "sourceBindings": [
+          {
+            "sourcePath": "spec/v1/reliable/registry.json",
+            "sha256": "c601617bd02732c6a875a842e3110072a7c00454f6a619720ba0057010fb2b8f"
+          }
+        ],
+        "catalogs": [],
+        "publicMaterial": [],
+        "clock": {},
+        "state": {},
+        "transport": {},
+        "storage": {}
+      },
+      "input": {
+        "kind": "message",
+        "state": {
+          "logicalMessageId": "01010101010101010101010101010101",
+          "finalityState": "pending",
+          "transitionCount": 0,
+          "confirmations": {},
+          "localEffectAudit": []
+        },
+        "confirmation": {
+          "confirmationId": "05050505050505050505050505050505",
+          "confirmedMessageIds": [
+            "01010101010101010101010101010101"
+          ],
+          "confirmationStage": "endpointAccepted",
+          "confirmationOutcome": "succeeded"
+        },
+        "session": {
+          "sessionId": "03030303030303030303030303030303",
+          "senderEndpointRef": "0202020202020202020202020202020202020202020202020202020202020202",
+          "expectedSenderEndpointRef": "0202020202020202020202020202020202020202020202020202020202020202",
+          "authenticated": true,
+          "senderAuthorized": true
+        }
+      },
+      "expected": {
+        "result": {
+          "status": "advanced",
+          "finalityState": "accepted",
+          "stateMutation": true
+        }
+      }
+    },
+    {
+      "$schema": "https://licoarc.com/spec/schemas/conformance-case.schema.json",
+      "caseVersion": "licoarc.conformance-case.v1",
+      "id": "reliable-confirmation-missing",
+      "target": {
+        "operationId": "licoarc.reliable.apply-endpoint-confirmation.v1"
+      },
+      "context": {
+        "sourceBindings": [
+          {
+            "sourcePath": "spec/v1/reliable/registry.json",
+            "sha256": "c601617bd02732c6a875a842e3110072a7c00454f6a619720ba0057010fb2b8f"
+          }
+        ],
+        "catalogs": [],
+        "publicMaterial": [],
+        "clock": {},
+        "state": {},
+        "transport": {},
+        "storage": {}
+      },
+      "input": {
+        "kind": "message",
+        "state": {
+          "logicalMessageId": "01010101010101010101010101010101",
+          "finalityState": "pending",
+          "transitionCount": 0,
+          "confirmations": {},
+          "localEffectAudit": []
+        },
+        "session": {
+          "sessionId": "03030303030303030303030303030303",
+          "senderEndpointRef": "0202020202020202020202020202020202020202020202020202020202020202",
+          "expectedSenderEndpointRef": "0202020202020202020202020202020202020202020202020202020202020202",
+          "authenticated": true,
+          "senderAuthorized": true
+        }
+      },
+      "expected": {
+        "error": {
+          "code": "invalid-confirmation"
+        }
+      }
+    },
+    {
+      "$schema": "https://licoarc.com/spec/schemas/conformance-case.schema.json",
+      "caseVersion": "licoarc.conformance-case.v1",
+      "id": "reliable-confirmation-forged-sender",
+      "target": {
+        "operationId": "licoarc.reliable.apply-endpoint-confirmation.v1"
+      },
+      "context": {
+        "sourceBindings": [
+          {
+            "sourcePath": "spec/v1/reliable/registry.json",
+            "sha256": "c601617bd02732c6a875a842e3110072a7c00454f6a619720ba0057010fb2b8f"
+          }
+        ],
+        "catalogs": [],
+        "publicMaterial": [],
+        "clock": {},
+        "state": {},
+        "transport": {},
+        "storage": {}
+      },
+      "input": {
+        "kind": "message",
+        "state": {
+          "logicalMessageId": "01010101010101010101010101010101",
+          "finalityState": "pending",
+          "transitionCount": 0,
+          "confirmations": {},
+          "localEffectAudit": []
+        },
+        "confirmation": {
+          "confirmationId": "05050505050505050505050505050505",
+          "confirmedMessageIds": [
+            "01010101010101010101010101010101"
+          ],
+          "confirmationStage": "endpointAccepted",
+          "confirmationOutcome": "succeeded"
+        },
+        "session": {
+          "sessionId": "03030303030303030303030303030303",
+          "senderEndpointRef": "0202020202020202020202020202020202020202020202020202020202020202",
+          "expectedSenderEndpointRef": "0202020202020202020202020202020202020202020202020202020202020202",
+          "authenticated": true,
+          "senderAuthorized": false
+        }
+      },
+      "expected": {
+        "error": {
+          "code": "sender-unauthorized"
+        }
+      }
+    },
+    {
+      "$schema": "https://licoarc.com/spec/schemas/conformance-case.schema.json",
+      "caseVersion": "licoarc.conformance-case.v1",
+      "id": "reliable-confirmation-exact-replay",
+      "target": {
+        "operationId": "licoarc.reliable.apply-endpoint-confirmation.v1"
+      },
+      "context": {
+        "sourceBindings": [
+          {
+            "sourcePath": "spec/v1/reliable/registry.json",
+            "sha256": "c601617bd02732c6a875a842e3110072a7c00454f6a619720ba0057010fb2b8f"
+          }
+        ],
+        "catalogs": [],
+        "publicMaterial": [],
+        "clock": {},
+        "state": {},
+        "transport": {},
+        "storage": {}
+      },
+      "input": {
+        "kind": "message",
+        "state": {
+          "logicalMessageId": "01010101010101010101010101010101",
+          "finalityState": "accepted",
+          "transitionCount": 0,
+          "confirmations": {
+            "05050505050505050505050505050505": "99c073d03589f5c777a44fb128cf499641fd17e0f42787a35a32804a1a7f8bbe"
+          },
+          "localEffectAudit": []
+        },
+        "confirmation": {
+          "confirmationId": "05050505050505050505050505050505",
+          "confirmedMessageIds": [
+            "01010101010101010101010101010101"
+          ],
+          "confirmationStage": "endpointAccepted",
+          "confirmationOutcome": "succeeded"
+        },
+        "session": {
+          "sessionId": "03030303030303030303030303030303",
+          "senderEndpointRef": "0202020202020202020202020202020202020202020202020202020202020202",
+          "expectedSenderEndpointRef": "0202020202020202020202020202020202020202020202020202020202020202",
+          "authenticated": true,
+          "senderAuthorized": true
+        }
+      },
+      "expected": {
+        "result": {
+          "status": "duplicate",
+          "finalityState": "accepted",
+          "stateMutation": false
+        }
+      }
+    },
+    {
+      "$schema": "https://licoarc.com/spec/schemas/conformance-case.schema.json",
+      "caseVersion": "licoarc.conformance-case.v1",
+      "id": "reliable-confirmation-wrong-result",
+      "target": {
+        "operationId": "licoarc.reliable.apply-endpoint-confirmation.v1"
+      },
+      "context": {
+        "sourceBindings": [
+          {
+            "sourcePath": "spec/v1/reliable/registry.json",
+            "sha256": "c601617bd02732c6a875a842e3110072a7c00454f6a619720ba0057010fb2b8f"
+          }
+        ],
+        "catalogs": [],
+        "publicMaterial": [],
+        "clock": {},
+        "state": {},
+        "transport": {},
+        "storage": {}
+      },
+      "input": {
+        "kind": "message",
+        "state": {
+          "logicalMessageId": "01010101010101010101010101010101",
+          "finalityState": "accepted",
+          "transitionCount": 0,
+          "confirmations": {},
+          "localEffectAudit": []
+        },
+        "confirmation": {
+          "confirmationId": "06060606060606060606060606060606",
+          "confirmedMessageIds": [
+            "01010101010101010101010101010101"
+          ],
+          "confirmationStage": "effectCompleted",
+          "confirmationOutcome": "succeeded",
+          "resultDigest": "0404040404040404040404040404040404040404040404040404040404040404"
+        },
+        "session": {
+          "sessionId": "03030303030303030303030303030303",
+          "senderEndpointRef": "0202020202020202020202020202020202020202020202020202020202020202",
+          "expectedSenderEndpointRef": "0202020202020202020202020202020202020202020202020202020202020202",
+          "authenticated": true,
+          "senderAuthorized": true
+        },
+        "expectedResultDigest": "0909090909090909090909090909090909090909090909090909090909090909"
+      },
+      "expected": {
+        "error": {
+          "code": "wrong-result-digest"
+        }
+      }
+    },
+    {
+      "$schema": "https://licoarc.com/spec/schemas/conformance-case.schema.json",
+      "caseVersion": "licoarc.conformance-case.v1",
+      "id": "reliable-confirmation-station-only",
+      "target": {
+        "operationId": "licoarc.reliable.apply-endpoint-confirmation.v1"
+      },
+      "context": {
+        "sourceBindings": [
+          {
+            "sourcePath": "spec/v1/reliable/registry.json",
+            "sha256": "c601617bd02732c6a875a842e3110072a7c00454f6a619720ba0057010fb2b8f"
+          }
+        ],
+        "catalogs": [],
+        "publicMaterial": [],
+        "clock": {},
+        "state": {},
+        "transport": {},
+        "storage": {}
+      },
+      "input": {
+        "kind": "message",
+        "state": {
+          "logicalMessageId": "01010101010101010101010101010101",
+          "finalityState": "pending",
+          "transitionCount": 0,
+          "confirmations": {},
+          "localEffectAudit": []
+        },
+        "confirmation": {
+          "confirmationId": "05050505050505050505050505050505",
+          "confirmedMessageIds": [
+            "01010101010101010101010101010101"
+          ],
+          "confirmationStage": "endpointAccepted",
+          "confirmationOutcome": "succeeded"
+        },
+        "session": {
+          "sessionId": "03030303030303030303030303030303",
+          "senderEndpointRef": "0202020202020202020202020202020202020202020202020202020202020202",
+          "expectedSenderEndpointRef": "0202020202020202020202020202020202020202020202020202020202020202",
+          "authenticated": false,
+          "senderAuthorized": true
+        }
+      },
+      "expected": {
+        "error": {
+          "code": "confirmation-unauthenticated"
+        }
+      }
+    },
+    {
+      "$schema": "https://licoarc.com/spec/schemas/conformance-case.schema.json",
+      "caseVersion": "licoarc.conformance-case.v1",
+      "id": "reliable-attachment-incomplete-before-confirmation",
+      "target": {
+        "operationId": "licoarc.reliable.apply-endpoint-confirmation.v1"
+      },
+      "context": {
+        "sourceBindings": [
+          {
+            "sourcePath": "spec/v1/reliable/registry.json",
+            "sha256": "c601617bd02732c6a875a842e3110072a7c00454f6a619720ba0057010fb2b8f"
+          }
+        ],
+        "catalogs": [],
+        "publicMaterial": [],
+        "clock": {},
+        "state": {},
+        "transport": {},
+        "storage": {}
+      },
+      "input": {
+        "kind": "attachment",
+        "state": {
+          "logicalMessageId": "01010101010101010101010101010101",
+          "finalityState": "pending",
+          "transitionCount": 0,
+          "confirmations": {},
+          "localEffectAudit": [],
+          "completeAuthenticatedChunks": false,
+          "declaredContentDigest": "0707070707070707070707070707070707070707070707070707070707070707",
+          "authenticatedContentDigest": "0707070707070707070707070707070707070707070707070707070707070707"
+        },
+        "confirmation": {
+          "confirmationId": "05050505050505050505050505050505",
+          "confirmedMessageIds": [
+            "01010101010101010101010101010101"
+          ],
+          "confirmationStage": "endpointAccepted",
+          "confirmationOutcome": "succeeded"
+        },
+        "session": {
+          "sessionId": "03030303030303030303030303030303",
+          "senderEndpointRef": "0202020202020202020202020202020202020202020202020202020202020202",
+          "expectedSenderEndpointRef": "0202020202020202020202020202020202020202020202020202020202020202",
+          "authenticated": true,
+          "senderAuthorized": true
+        }
+      },
+      "expected": {
+        "error": {
+          "code": "attachment-chunks-incomplete"
         }
       }
     }

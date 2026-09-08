@@ -5,10 +5,11 @@
   "encoding": "exact-ASCII-bytes-including-one-terminal-NUL",
   "callerSelected": false,
   "domains": {
-    "supportStatementSignature": "LICOARC-V1/SUPPORT-STATEMENT/SIGN\u0000",
     "prekeyBundleSignature": "LICOARC-V1/PREKEY-BUNDLE/SIGN\u0000",
     "prekeyTranscriptDigest": "LICOARC-V1/PREKEY-TRANSCRIPT/DIGEST\u0000",
     "handshakeTranscriptDigest": "LICOARC-V1/HANDSHAKE-TRANSCRIPT/DIGEST\u0000",
+    "userAuthorityPayload": "LICOARC-V1/PROTECTED-USER-AUTHORITY/PAYLOAD\u0000",
+    "applicationAuthorityAdmission": "LICOARC-V1/APPLICATION/AUTHORITY-ADMISSION\u0000",
     "initiatorHandshakeSignature": "LICOARC-V1/HANDSHAKE/INITIATOR-SIGN\u0000",
     "hybridExtractSalt": "LICOARC-V1/HYBRID/EXTRACT-SALT\u0000",
     "hybridExtract": "LICOARC-V1/HYBRID/EXTRACT\u0000",

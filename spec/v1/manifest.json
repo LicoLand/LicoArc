@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "manifestVersion": "licoarc.protocol-line-manifest.v2",
+  "manifestVersion": "licoarc.protocol-line-manifest.v1",
   "wireId": "licoarc.protocol-line.v1",
-  "protocolLineId": "c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83",
+  "protocolLineId": "c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08",
   "generation": 1,
   "lifecycle": "Candidate",
   "definitionStatus": "COMPLETE",
@@ -12,7 +12,7 @@
   "protectionProfileCatalog": "spec/protection-profiles.json",
   "fieldRegistry": {
     "path": "spec/FIELD-REGISTRY.md",
-    "sourceDigest": "c303294c12798a0817645400122c19e59a733e2c157a61892c00c0da38c4fa8d",
+    "sourceDigest": "b12222aa376c1d83d885b2d9c29063c7f5a11d14b719b76b9afa3704fddd131d",
     "authority": "canonical-field-registry"
   },
   "capabilities": [
@@ -20,31 +20,31 @@
       "capabilityId": "licoarc.federation-governance.v1",
       "version": 1,
       "definitionStatus": "COMPLETE",
-      "semanticIdentity": "2c4ea340f250c2255bf1f01906e77f9e92b296ce41bb3f1e20c7ba1cdcca1de5",
+      "semanticIdentity": "c98128656377ad872124e5293a02b3c87d2c3c97b20d5ea210c7a5c71d11a8a1",
       "sourceManifestPath": "spec/v1/governance/source-manifest.json",
       "sourceRoots": [],
       "sourcePaths": [],
-      "sourceDigest": "2c4ea340f250c2255bf1f01906e77f9e92b296ce41bb3f1e20c7ba1cdcca1de5"
+      "sourceDigest": "b8a223ebab40213e4efcfc591973d6367ebe5c1cc68d5a60168c65d90b608eab"
     },
     {
       "capabilityId": "licoarc.generic-messaging.v1",
       "version": 1,
       "definitionStatus": "COMPLETE",
-      "semanticIdentity": "3a50a25021f62bcd907ccf196b86ab071b4b10253acc89c1f0fa1ca2f40e3fb6",
+      "semanticIdentity": "b0bb068b0acd09aa09666a0380c3cae98e4c0e9739e732484e874aa088f1ac24",
       "sourceManifestPath": "spec/v1/messaging/source-manifest.json",
       "sourceRoots": [],
       "sourcePaths": [],
-      "sourceDigest": "3a50a25021f62bcd907ccf196b86ab071b4b10253acc89c1f0fa1ca2f40e3fb6"
+      "sourceDigest": "9fc7e1635ef076db2108747aae4f70167412c35bd87945e51d26c7be41402ef4"
     },
     {
       "capabilityId": "licoarc.group-collaboration.v1",
       "version": 1,
       "definitionStatus": "COMPLETE",
-      "semanticIdentity": "3cc2f007c08efef2802599ffbc451e5c69a898bb1362fd6875bd18b1eae01edc",
+      "semanticIdentity": "a853f9db567d4f4d7204ede9f33b458770632887f6ccd0fc765cf04fbfea61ac",
       "sourceManifestPath": "spec/v1/group/source-manifest.json",
       "sourceRoots": [],
       "sourcePaths": [],
-      "sourceDigest": "3cc2f007c08efef2802599ffbc451e5c69a898bb1362fd6875bd18b1eae01edc"
+      "sourceDigest": "1b65d55ecb15d67ff8a06bf6542fc33a92ef6ecb7ab25dea997c3313b79a346b"
     },
     {
       "capabilityId": "licoarc.https-transport.v1",
@@ -54,61 +54,51 @@
       "sourceManifestPath": "spec/v1/transport/source-manifest.json",
       "sourceRoots": [],
       "sourcePaths": [],
-      "sourceDigest": "a9d0f795eb0032b8228c67f40bea808ae4d5239dde0ce7e75a94d7d950e6abde"
+      "sourceDigest": "418c4da90461d7c985af8e3c5a66314e19c9c3f178271e2a70118e314c156924"
     },
     {
       "capabilityId": "licoarc.identity.v1",
       "version": 1,
       "definitionStatus": "COMPLETE",
-      "semanticIdentity": "6d1a77a52baa56f471364c7c1de9508086998659c34e9b447937c72901723096",
+      "semanticIdentity": "41e3cd1302565ec7275c2a047f93c38cf2e570e080d103b58dd6a1506a20537b",
       "sourceManifestPath": "spec/v1/identity/source-manifest.json",
       "sourceRoots": [],
       "sourcePaths": [],
-      "sourceDigest": "6d1a77a52baa56f471364c7c1de9508086998659c34e9b447937c72901723096"
+      "sourceDigest": "808409a4f3ddcbe7796b19ca3d2128faa33a3f6c5d1973067ea45f3725435bf8"
     },
     {
       "capabilityId": "licoarc.pairwise-protection.v1",
       "version": 1,
       "definitionStatus": "COMPLETE",
-      "semanticIdentity": "c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf",
+      "semanticIdentity": "4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17",
       "sourceManifestPath": "spec/v1/protection/source-manifest.json",
       "sourceRoots": [],
       "sourcePaths": [],
-      "sourceDigest": "8ff27e0453cd187997daf32be1258512a54ccbb3b5a5f48b8eed529d3f3d16fe"
+      "sourceDigest": "cd07cdc2b5e7c99f2fbe8fe87ef202f6c87389f0e379957913f4e38ca1590f97"
     },
     {
       "capabilityId": "licoarc.protocol-foundation.v1",
       "version": 1,
       "definitionStatus": "COMPLETE",
-      "semanticIdentity": "93989534d02789ed811b54bd8049ee16f87676b2ee8c262cd17016bb883cf712",
+      "semanticIdentity": "b1348b600b9f8baae49c9fbe5b5ba66e7540db03dfa957e7545f482c07f2a741",
       "sourceManifestPath": "spec/v1/foundation/source-manifest.json",
       "sourceRoots": [],
       "sourcePaths": [],
-      "sourceDigest": "93989534d02789ed811b54bd8049ee16f87676b2ee8c262cd17016bb883cf712"
+      "sourceDigest": "a3863797f71e3827ee4bd2670c042223454ec2fa646d532296a739fcd57d9a73"
     },
     {
       "capabilityId": "licoarc.reliable-exchange.v1",
       "version": 1,
       "definitionStatus": "COMPLETE",
-      "semanticIdentity": "08ca2e5789db48513b9dfa389893c19d5bce292300ea8a21a01800d8215dbc3c",
+      "semanticIdentity": "77dea4067691dc394a282af29dae2128926854dfa978a6dd83add9ff02ebea26",
       "sourceManifestPath": "spec/v1/reliable/source-manifest.json",
       "sourceRoots": [],
       "sourcePaths": [],
-      "sourceDigest": "08ca2e5789db48513b9dfa389893c19d5bce292300ea8a21a01800d8215dbc3c"
-    },
-    {
-      "capabilityId": "licoarc.transferable-evidence.v1",
-      "version": 1,
-      "definitionStatus": "COMPLETE",
-      "semanticIdentity": "def39a90f77d2727af37c7c7716617130cbd417663cba10bc0d784d74b959a7f",
-      "sourceManifestPath": "spec/v1/evidence/source-manifest.json",
-      "sourceRoots": [],
-      "sourcePaths": [],
-      "sourceDigest": "def39a90f77d2727af37c7c7716617130cbd417663cba10bc0d784d74b959a7f"
+      "sourceDigest": "82fdb131cf0a4aae61d6df1efa60b6865af2c432835b5d43d01adcbc8b1725ac"
     }
   ],
   "protectionProfileIds": [
-    "c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf"
+    "4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17"
   ],
   "stableClaimIds": [
     "SEC-001",

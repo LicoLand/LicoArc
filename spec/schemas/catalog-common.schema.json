@@ -3,16 +3,66 @@
   "$id": "https://licoarc.com/spec/schemas/catalog-common.schema.json",
   "title": "LicoArc shared bounded catalog values",
   "$defs": {
-    "digest256": {"type": "string", "pattern": "^[0-9a-f]{64}$", "maxLength": 64},
-    "pendingDigest256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$", "maxLength": 64},
-    "definitionStatus": {"type": "string", "enum": ["DRAFT", "PARTIAL", "COMPLETE"]},
-    "pendingDefinitionStatus": {"type": "string", "enum": ["PENDING", "DRAFT", "PARTIAL", "COMPLETE"]},
-    "lifecycle": {"type": "string", "enum": ["Candidate", "Published", "Deprecated", "Retired"]},
-    "generation": {"type": "integer", "minimum": 1, "maximum": 9007199254740991},
-    "protocolLocator": {"type": "string", "pattern": "^licoarc\\.[a-z][a-z0-9-]*(?:\\.[a-z][a-z0-9-]*)?\\.v[1-9][0-9]*$", "maxLength": 128},
-    "profileLocator": {"type": "string", "pattern": "^[a-z][a-z0-9-]+$", "maxLength": 128},
-    "sourcePath": {"type": "string", "pattern": "^(?:spec|conformance)/[A-Za-z0-9._/-]+$", "maxLength": 256},
-    "claimId": {"type": "string", "pattern": "^SEC-[0-9]{3}$", "maxLength": 7},
-    "blockerId": {"type": "string", "pattern": "^(?:ALG|AUTH|CORPUS|FIELD|FLD|SEC)-[A-Za-z0-9-]+$", "maxLength": 128}
+    "digest256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "maxLength": 64
+    },
+    "pendingDigest256": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[0-9a-f]{64}$",
+      "maxLength": 64
+    },
+    "definitionStatus": {
+      "type": "string",
+      "enum": [
+        "DRAFT",
+        "PARTIAL",
+        "COMPLETE"
+      ]
+    },
+    "pendingDefinitionStatus": {
+      "type": "string",
+      "enum": [
+        "PENDING",
+        "DRAFT",
+        "PARTIAL",
+        "COMPLETE"
+      ]
+    },
+    "lifecycle": {
+      "const": "Candidate"
+    },
+    "generation": {
+      "const": 1
+    },
+    "protocolLocator": {
+      "type": "string",
+      "pattern": "^licoarc\\.[a-z][a-z0-9-]*(?:\\.[a-z][a-z0-9-]*)?\\.v[1-9][0-9]*$",
+      "maxLength": 128
+    },
+    "profileLocator": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]+$",
+      "maxLength": 128
+    },
+    "sourcePath": {
+      "type": "string",
+      "pattern": "^(?:spec|conformance)/[A-Za-z0-9._/-]+$",
+      "maxLength": 256
+    },
+    "claimId": {
+      "type": "string",
+      "pattern": "^SEC-[0-9]{3}$",
+      "maxLength": 7
+    },
+    "blockerId": {
+      "type": "string",
+      "pattern": "^(?:ALG|AUTH|CORPUS|FIELD|FLD|SEC)-[A-Za-z0-9-]+$",
+      "maxLength": 128
+    }
   }
 }

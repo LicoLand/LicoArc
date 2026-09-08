@@ -35,7 +35,7 @@ snapshot and exact retry packet before emission. Restart restores that
 complete monotonic snapshot before processing new input; a lower generation
 is `state-rollback` and emits no packet or effect. Restart never discovers a
 retired state root and never resets a retry, Route, confirmation, attachment,
-or evidence lifetime bound.
+or retained-state bound.
 
 Each metadata-only event names the expected snapshot generation and is
 validated against the complete immutable current snapshot before one atomic
@@ -43,7 +43,7 @@ compare-and-commit. An event never embeds protected packet bytes. The tagged
 states are data, not a class
 hierarchy: outbox states are `created`, `in-flight`, `ambiguous`, `accepted`,
 `completed`, `cancelled`, and `failed`; inbox states additionally include
-`new`, `pending-evidence`, and `effect-pending`. A same-identity, same-bytes
+`new`, `accepted`, and `effect-pending`. A same-identity, same-bytes
 replay is idempotent. The same identity with a different protected meaning is
 `intent-conflict` and cannot mutate state.
 
@@ -73,10 +73,10 @@ terminal `confirmation-conflict`.
 
 The closed confirmation stages are exactly:
 
-1. Endpoint Accepted: a checkpoint-covered Endpoint statement that the
-   protected record was durably accepted and deduplicated.
-2. Effect Completed: a checkpoint-covered Endpoint statement that the
-   caller-owned local effect completed.
+1. Endpoint Accepted: the exact protected authorized Endpoint confirmation
+   reports that the record was accepted and deduplicated.
+2. Effect Completed: the exact protected authorized Endpoint confirmation has
+   outcome `succeeded` and binds the caller-owned local result digest.
 
 The closed confirmation outcomes are `succeeded`, `rejected`, and `failed`.
 Pending work and transport ambiguity are local/transport states, never Endpoint
@@ -92,20 +92,21 @@ it supplies the idempotency input and records the Endpoint result.
 Attachment recovery reuses Generic Messaging's fixed chunk grid and bounded
 Receive State. A non-empty range request is selective recovery feedback; a
 successful chunk does not generate a routine confirmation. Empty ranges are
-valid only after exact length and whole-content digest verification, and the
-final empty verified state requires an Evidence Checkpoint before attachment
-completion advances. Completion, cancellation, and failure are absorbing.
+valid only after exact length and whole-content digest verification. Attachment
+completion additionally requires the matching authenticated Endpoint
+confirmation. Completion, cancellation, and failure are absorbing.
 
 Group delivery keeps one stable projection identity per recipient. Results are
 sorted by recipient Endpoint reference and are independently `pending`,
 `delivered`, `rejected`, or `failed`. The aggregate is `complete` only when all
 members are delivered, `failed` only when every member is terminal and none is
-delivered, and `partial` otherwise. Station results cannot supply a member's
-Endpoint evidence or change the aggregate.
+delivered, and `partial` otherwise. A member result is authorized only by the
+matching protected Endpoint confirmation; Station results cannot change the
+aggregate.
 
 ## Conformance and privacy
 
-The focused suite [`tests/reliable-evidence.test.mjs`](../../tests/reliable-evidence.test.mjs)
+The focused suite [`tests/reliable-confirmations.test.mjs`](../../tests/reliable-confirmations.test.mjs)
 checks deterministic CBOR, exact stable intent and packet retry behavior,
 Route migration, application idempotency conflict, confirmations, attachment
 recovery, Group partial failure, restart snapshots, typed terminal outcomes,

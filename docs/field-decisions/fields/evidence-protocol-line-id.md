@@ -9,11 +9,11 @@ specification; normative field semantics come only from the Field Registry.
 | --- | --- |
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-evidence-protocol-line-id` |
-| Decision status | `DECIDED` |
-| Definition status | `SPECIFIED` |
+| Decision status | `RETIRED` |
+| Definition status | `NOT-SPECIFIED` |
 | Existing authority | [Field Registry](../../../spec/FIELD-REGISTRY.md) |
-| Predecessor or successor | None. |
-| Current conclusion | Transferable evidence repeats `protocolLineId` because an independent verifier cannot inherit a live session binding. |
+| Predecessor or successor | Retired without successor; Generation 1 inherits line identity from the authenticated session. |
+| Current conclusion | No evidence-only Protocol Line repetition is active. |
 
 ## Question
 
@@ -66,4 +66,4 @@ verifier and therefore changes the derivability test.
 
 ## Definition evidence
 
-The definition status is `SPECIFIED`. The Canonical Field Registry and linked machine-readable authorities close this record’s exact active semantics.
+The definition is retired and `NOT-SPECIFIED`; this record remains history only.

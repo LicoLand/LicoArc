@@ -7,7 +7,7 @@ functions:
   ideal_hybrid/5,
   ratchet_step/2
 
-/* generated semantic-source binding: ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd */
+/* generated semantic-source binding: de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc */
 
 /*
 This source-bound model verifies the protocol state/event invariants named by
@@ -24,10 +24,11 @@ transferable session authentication, and ongoing post-quantum post-compromise
 recovery are the modeled Profile's explicit nonclaims. Ratchet recovery below
 models only a fresh uncompromised classical DH input.
 
-The Dolev-Yao network represents the untrusted Station carrier. Only Endpoint
-rules emit EndpointAccepted and EndpointEffectCompleted. Identity, route, and
-Evidence acceptance require the exact persistent verification authority
-created for an Endpoint key; compromise is an explicit alternate trace.
+The Dolev-Yao network represents the untrusted Station carrier. Identity,
+route, user-authority, Endpoint-possession, and confirmation acceptance require
+an exact persistent verification authority. User-authority and Endpoint-state
+digests are independent siblings in the session transcript; the model does not
+place either digest inside the other state.
 */
 
 rule ProvisionPair:
@@ -46,8 +47,8 @@ rule ProvisionPair:
     !PrekeyMaterial($R, ~pair, ~prekey) ]
 
 rule InitiatorFirstPacket:
-  let transcript = h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', 'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83',
-                      'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf', $I, R, pair, prekey_pub,
+  let transcript = h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc', 'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08',
+                      '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17', $I, R, pair, prekey_pub,
                       h(~classical_component), h(~pq_component)>)
       root = ideal_hybrid(~classical_component, ~pq_component, $I, R, transcript)
   in
@@ -65,12 +66,13 @@ rule ResponderAccept:
   [ ResponderReady($R, I, pair, prekey_pub),
     HandshakeOffer(I, $R, pair, transcript, root, coordinate) ]
   --[ ResponderAccepted($R, I, pair, transcript, root),
-      LineSelected('c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83'), ProfileSelected('c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf'),
+      LineAuthenticated('c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08'), ProfileAuthenticated('4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17'),
       AtomicHandshakeCommit($R, pair, transcript) ]->
   [ !Established($R, I, transcript, root),
     !ReplayBinding($R, pair, transcript),
     ChainState($R, I, transcript, 'i2r', coordinate, root),
     RatchetInitial($R, I, transcript, root),
+    SessionBindingReady($R, I, transcript),
     SessionAccept(I, $R, pair, transcript, root, coordinate) ]
 
 rule ReplayExactFirstPacket:
@@ -85,7 +87,20 @@ rule InitiatorAccept:
       AtomicHandshakeCommit($I, pair, transcript) ]->
   [ !Established($I, R, transcript, root),
     ChainState($I, R, transcript, 'i2r', coordinate, root),
-    RatchetInitial($I, R, transcript, root) ]
+    RatchetInitial($I, R, transcript, root),
+    SessionBindingReady($I, R, transcript) ]
+
+rule BindSiblingAuthorityState:
+  let endpoint_state = h(<'endpoint-state', $E, transcript>)
+      authority_state = h(<'user-authority-state', $E, transcript>)
+      peer_endpoint_state = h(<'endpoint-state', P, transcript>)
+      peer_authority_state = h(<'user-authority-state', P, transcript>)
+  in
+  [ SessionBindingReady($E, P, transcript) ]
+  --[ SessionSiblingBound($E, P, transcript,
+                          endpoint_state, authority_state,
+                          peer_endpoint_state, peer_authority_state) ]->
+  [ ]
 
 rule SendRecord:
   let packet = senc(<~message, ~sender_metadata, transcript, direction, n>, chain)
@@ -104,7 +119,7 @@ rule ReceiveRecord:
   --[ RecordReceived($R, S, transcript, direction, n, message, packet, chain),
       EndpointAccepted($R, S, transcript, direction, n, message, packet, chain),
       AtomicReceiveCommit($R, transcript, direction, n) ]->
-  [ !DurableInbox($R, S, transcript, direction, n, h(message)) ]
+  [ DurableInbox($R, S, transcript, direction, n, h(message)) ]
 
 rule CompromiseSession:
   [ !Established($E, P, transcript, root) ]
@@ -155,26 +170,122 @@ rule RatchetCompromiseAdvanced:
   --[ RatchetKeyCompromise($E, P, transcript, next) ]->
   [ Out(next) ]
 
-rule AuthorizeIdentitySuccessor:
-  let successor = h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', $E, pk(old_secret), pk(~new_secret)>)
-      signed = sign(<'identity-continuity', 'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', $E,
-                     pk(old_secret), pk(~new_secret), successor>, old_secret)
+rule ProvisionUserAuthority:
+  let user_ref = h(<'user-authority-genesis', 'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                     pk(~management_secret), pk(~recovery_secret)>)
+      endpoint_state = h(<'endpoint-state', 'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                           $E, pk(~endpoint_secret)>)
+      authority_state = h(<'user-authority-state', 'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                            user_ref, '0', pk(~management_secret),
+                            pk(~recovery_secret), $E, endpoint_state>)
+      possession = sign(<'endpoint-possession', 'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                          user_ref, '0', $E, endpoint_state>, ~endpoint_secret)
+      management_signature = sign(<'user-authority-genesis-management',
+                                    'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc', user_ref,
+                                    authority_state>, ~management_secret)
+      recovery_signature = sign(<'user-authority-genesis-recovery',
+                                  'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc', user_ref,
+                                  authority_state>, ~recovery_secret)
   in
-  [ !IdentityMaterial($E, old_secret), Fr(~new_secret) ]
-  --[ IdentitySuccessorAuthorized($E, pk(old_secret), pk(~new_secret), successor) ]->
-  [ Out(<pk(~new_secret), successor, signed>) ]
+  [ Fr(~management_secret), Fr(~recovery_secret), Fr(~endpoint_secret) ]
+  --[ UserAuthorityGenesisCreated(user_ref, authority_state,
+                                  pk(~management_secret), pk(~recovery_secret)),
+      EndpointPossessionAuthorized(user_ref, '0', $E, endpoint_state,
+                                   pk(~endpoint_secret), possession) ]->
+  [ !ManagementAuthority(user_ref, authority_state, ~management_secret),
+    !RecoveryAuthority(user_ref, authority_state, ~recovery_secret),
+    !AuthorityGenesisVerification(user_ref, authority_state,
+                                  ~management_secret, ~recovery_secret),
+    !EndpointVerification($E, ~endpoint_secret),
+    AuthorityGenesisEnvelope(user_ref, authority_state,
+                             pk(~management_secret), pk(~recovery_secret),
+                             $E, endpoint_state, pk(~endpoint_secret),
+                             possession, management_signature,
+                             recovery_signature) ]
 
-rule AcceptIdentitySuccessor:
-  [ !IdentityVerification($E, old_secret),
-    In(<new_public, successor,
-        sign(<'identity-continuity', 'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', $E,
-              pk(old_secret), new_public, successor>, old_secret)>) ]
-  --[ IdentityContinuityAccepted($E, pk(old_secret), new_public, successor) ]->
+rule AcceptUserAuthorityGenesis:
+  [ !AuthorityGenesisVerification(user_ref, authority_state,
+                                   management_secret, recovery_secret),
+    !EndpointVerification($E, endpoint_secret),
+    AuthorityGenesisEnvelope(
+        user_ref, authority_state, pk(management_secret), pk(recovery_secret),
+        $E, endpoint_state, pk(endpoint_secret),
+        sign(<'endpoint-possession', 'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+              user_ref, '0', $E, endpoint_state>, endpoint_secret),
+        sign(<'user-authority-genesis-management', 'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+              user_ref, authority_state>, management_secret),
+        sign(<'user-authority-genesis-recovery', 'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+              user_ref, authority_state>, recovery_secret)) ]
+  --[ UserAuthorityGenesisAccepted(user_ref, authority_state,
+                                   pk(management_secret), pk(recovery_secret)),
+      EndpointPossessionAccepted(user_ref, '0', $E, endpoint_state,
+                                 pk(endpoint_secret)) ]->
   [ ]
 
+rule AuthorizeManagementTransition:
+  let signed = sign(<'user-authority-management-transition',
+                     'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc', user_ref, predecessor,
+                     ~successor>, management_secret)
+  in
+  [ !ManagementAuthority(user_ref, predecessor, management_secret),
+    Fr(~successor) ]
+  --[ ManagementTransitionAuthorized(user_ref, predecessor, ~successor,
+                                     pk(management_secret)) ]->
+  [ ManagementTransitionEnvelope(user_ref, predecessor, ~successor,
+                                 pk(management_secret), signed) ]
+
+rule AcceptManagementTransition:
+  [ !ManagementAuthority(user_ref, predecessor, management_secret),
+    ManagementTransitionEnvelope(
+        user_ref, predecessor, successor, pk(management_secret),
+        sign(<'user-authority-management-transition',
+              'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc', user_ref, predecessor,
+              successor>, management_secret)) ]
+  --[ AuthorityTransitionAccepted(user_ref, predecessor, successor,
+                                  'management', pk(management_secret)) ]->
+  [ ]
+
+rule AuthorizeRecoveryTransition:
+  let signed = sign(<'user-authority-recovery-transition',
+                     'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc', user_ref, predecessor,
+                     ~successor>, recovery_secret)
+  in
+  [ !RecoveryAuthority(user_ref, predecessor, recovery_secret),
+    Fr(~successor) ]
+  --[ RecoveryTransitionAuthorized(user_ref, predecessor, ~successor,
+                                   pk(recovery_secret)) ]->
+  [ RecoveryTransitionEnvelope(user_ref, predecessor, ~successor,
+                               pk(recovery_secret), signed) ]
+
+rule AcceptRecoveryTransition:
+  [ !RecoveryAuthority(user_ref, predecessor, recovery_secret),
+    RecoveryTransitionEnvelope(
+        user_ref, predecessor, successor, pk(recovery_secret),
+        sign(<'user-authority-recovery-transition',
+              'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc', user_ref, predecessor,
+              successor>, recovery_secret)) ]
+  --[ AuthorityTransitionAccepted(user_ref, predecessor, successor,
+                                  'recovery', pk(recovery_secret)) ]->
+  [ ]
+
+rule CompromiseManagementAuthority:
+  [ !ManagementAuthority(user_ref, state, management_secret) ]
+  --[ ManagementAuthorityCompromise(user_ref, state, pk(management_secret)) ]->
+  [ Out(management_secret) ]
+
+rule CompromiseRecoveryAuthority:
+  [ !RecoveryAuthority(user_ref, state, recovery_secret) ]
+  --[ RecoveryAuthorityCompromise(user_ref, state, pk(recovery_secret)) ]->
+  [ Out(recovery_secret) ]
+
+rule CompromiseEndpointAuthority:
+  [ !EndpointVerification($E, endpoint_secret) ]
+  --[ EndpointAuthorityCompromise($E, pk(endpoint_secret)) ]->
+  [ Out(endpoint_secret) ]
+
 rule AuthorizeRouteMigration:
-  let route_digest = h(<'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', $E, $P, ~old_route, ~new_route>)
-      signed = sign(<'route-migration', 'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', $E, $P,
+  let route_digest = h(<'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc', $E, $P, ~old_route, ~new_route>)
+      signed = sign(<'route-migration', 'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc', $E, $P,
                      ~old_route, ~new_route, route_digest>, secret)
   in
   [ !IdentityMaterial($E, secret), Fr(~old_route), Fr(~new_route) ]
@@ -185,54 +296,69 @@ rule AuthorizeRouteMigration:
 rule AcceptRouteMigration:
   [ !IdentityVerification($E, secret),
     In(<$E, P, pk(secret), old_route, new_route, route_digest,
-        sign(<'route-migration', 'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd', $E, P,
+        sign(<'route-migration', 'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc', $E, P,
               old_route, new_route, route_digest>, secret)>) ]
   --[ RouteMigrationAccepted($E, P, pk(secret), old_route, new_route,
                              route_digest) ]->
   [ ]
 
-rule IssueEvidence:
-  let signed = sign(<'endpoint-evidence', 'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd',
-                     $E, ~statement>, secret)
+rule IssueAuthenticatedConfirmation:
+  let confirmation = sign(<'authenticated-confirmation',
+                            'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc', $E, S, transcript,
+                            ~confirmation_id, ~logical_message_ids,
+                            ~stage, message_digest, ~result_digest>, secret)
   in
-  [ !IdentityMaterial($E, secret), Fr(~statement) ]
-  --[ EvidenceIssued($E, pk(secret), ~statement, signed) ]->
-  [ Out(<$E, pk(secret), ~statement, signed>) ]
+  [ !IdentityMaterial($E, secret),
+    DurableInbox($E, S, transcript, direction, n, message_digest),
+    Fr(~confirmation_id), Fr(~logical_message_ids),
+    Fr(~stage), Fr(~result_digest) ]
+  --[ AuthenticatedConfirmationIssued($E, S, transcript,
+                                      ~confirmation_id, ~logical_message_ids,
+                                      ~stage, message_digest, ~result_digest,
+                                      confirmation, pk(secret)) ]->
+  [ ConfirmationEnvelope($E, S, transcript, ~confirmation_id,
+                         ~logical_message_ids, ~stage, message_digest,
+                         ~result_digest, confirmation) ]
 
-rule AcceptEvidence:
-  [ !IdentityVerification($E, secret),
-    In(<$E, pk(secret), statement,
-        sign(<'endpoint-evidence', 'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd',
-              $E, statement>, secret)>) ]
-  --[ EvidenceAccepted($E, pk(secret), statement,
-                       sign(<'endpoint-evidence', 'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd',
-                             $E, statement>, secret)) ]->
-  [ ]
-
-rule CompleteEndpointEffect:
-  [ !DurableInbox($E, S, transcript, direction, n, message_digest) ]
-  --[ EndpointEffectCompleted($E, S, transcript, direction, n, message_digest) ]->
+rule AcceptAuthenticatedConfirmation:
+  [ !IdentityVerification(E, secret),
+    ConfirmationEnvelope(
+        E, $S, transcript, confirmation_id, logical_message_ids,
+        stage, message_digest, result_digest,
+        sign(<'authenticated-confirmation', 'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+              E, $S, transcript, confirmation_id, logical_message_ids,
+              stage, message_digest, result_digest>, secret)) ]
+  --[ AuthenticatedConfirmationFinalized($S, E, transcript,
+                                         confirmation_id, logical_message_ids,
+                                         stage, message_digest, result_digest,
+                                         sign(<'authenticated-confirmation',
+                                               'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc',
+                                               E, $S, transcript,
+                                               confirmation_id,
+                                               logical_message_ids, stage,
+                                               message_digest, result_digest>,
+                                              secret), pk(secret)) ]->
   [ ]
 
 rule ClassifyWithinResourceBounds:
   [ Fr(~input) ]
-  --[ InputClassifiedWithinBounds(~input, 'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd') ]->
+  --[ InputClassifiedWithinBounds(~input, 'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc') ]->
   [ WithinResourceBounds(~input), Out(~input) ]
 
 rule AcceptWithinResourceBounds:
   [ WithinResourceBounds(input), In(input) ]
-  --[ ResourceBoundsValidated(input, 'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd'),
+  --[ ResourceBoundsValidated(input, 'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc'),
       ParserAccepted(input), ParserStateCommitted(input) ]->
   [ ]
 
 rule ClassifyOverResourceBounds:
   [ Fr(~input) ]
-  --[ InputClassifiedOverBounds(~input, 'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd') ]->
+  --[ InputClassifiedOverBounds(~input, 'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc') ]->
   [ OverResourceBounds(~input), Out(~input) ]
 
 rule RejectOverResourceBounds:
   [ OverResourceBounds(input), In(input) ]
-  --[ ResourceLimitRejected(input, 'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd') ]->
+  --[ ResourceLimitRejected(input, 'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc') ]->
   [ ]
 
 lemma executable_honest_handshake:
@@ -246,31 +372,51 @@ lemma executable_ratchet_evolution:
    RatchetAdvanced(E1, P1, td1, old1, next1) @ advance
    & RatchetRecovered(E2, P2, td2, old2, next2) @ recover"
 
-lemma executable_identity_and_route:
+lemma executable_user_authority_and_route:
   exists-trace
-  "Ex E P old_public new_public successor old_route new_route route_digest
-      #identity #route.
-   IdentityContinuityAccepted(E, old_public, new_public, successor) @ identity
-   & RouteMigrationAccepted(E, P, old_public, old_route, new_route,
+  "Ex user_ref authority_state management_public recovery_public
+      E P public old_route new_route route_digest #authority #route.
+   UserAuthorityGenesisAccepted(user_ref, authority_state,
+                                management_public, recovery_public) @ authority
+   & RouteMigrationAccepted(E, P, public, old_route, new_route,
                             route_digest) @ route"
 
-lemma executable_evidence:
+lemma executable_authority_transitions_and_possession:
   exists-trace
-  "Ex E public statement signed #accept.
-   EvidenceAccepted(E, public, statement, signed) @ accept"
+  "Ex user_ref predecessor management_successor recovery_successor
+      management_public recovery_public E endpoint_state endpoint_public
+      #management #recovery #possession.
+   AuthorityTransitionAccepted(user_ref, predecessor, management_successor,
+                               'management', management_public) @ management
+   & AuthorityTransitionAccepted(user_ref, predecessor, recovery_successor,
+                                 'recovery', recovery_public) @ recovery
+   & EndpointPossessionAccepted(user_ref, '0', E, endpoint_state,
+                                endpoint_public) @ possession"
 
-lemma executable_reliable_and_metadata:
+lemma executable_sibling_session_binding:
   exists-trace
-  "Ex S R td direction n message packet chain metadata message_digest #send #accept #effect.
+  "Ex E P td endpoint_state authority_state peer_endpoint_state
+      peer_authority_state #bound.
+   SessionSiblingBound(E, P, td, endpoint_state, authority_state,
+                       peer_endpoint_state, peer_authority_state) @ bound"
+
+lemma executable_authenticated_confirmation_and_metadata:
+  exists-trace
+  "Ex S R td direction n message packet chain metadata confirmation_id
+      logical_message_ids stage message_digest result_digest confirmation public
+      #send #accept #finality.
    SenderMetadataProtected(S, R, td, metadata, packet, chain) @ send
    & EndpointAccepted(R, S, td, direction, n, message, packet, chain) @ accept
-   & EndpointEffectCompleted(R, S, td, direction, n, message_digest) @ effect"
+   & AuthenticatedConfirmationFinalized(S, R, td, confirmation_id,
+                                       logical_message_ids, stage,
+                                       message_digest, result_digest,
+                                       confirmation, public) @ finality"
 
 lemma executable_resource_bounds:
   exists-trace
   "Ex accepted rejected #accept #reject.
    ParserAccepted(accepted) @ accept
-   & ResourceLimitRejected(rejected, 'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd') @ reject"
+   & ResourceLimitRejected(rejected, 'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc') @ reject"
 
 lemma SEC_001_hybrid_ake_key_secrecy:
   "All I R td root #established #know.
@@ -304,11 +450,11 @@ lemma SEC_003_classical_pq_hybrid_robustness:
      | ((Ex #c. ClassicalComponentCompromise(I, R, td, root) @ c & c < know)
       & (Ex #q. PostQuantumComponentCompromise(I, R, td, root) @ q & q < know))"
 
-lemma SEC_006_protocol_line_downgrade_resistance:
-  "All line #i. LineSelected(line) @ i ==> line = 'c29c454f3d39273a15d500b9d665b0eed5e93864d63243822e10ba22f5384d83'"
+lemma SEC_006_protocol_line_content_binding:
+  "All line #i. LineAuthenticated(line) @ i ==> line = 'c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08'"
 
-lemma SEC_007_protection_profile_downgrade_resistance:
-  "All profile #i. ProfileSelected(profile) @ i ==> profile = 'c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf'"
+lemma SEC_007_protection_profile_content_binding:
+  "All profile #i. ProfileAuthenticated(profile) @ i ==> profile = '4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17'"
 
 lemma SEC_008_session_independence:
   "All I1 R1 td1 root1 I2 R2 td2 root2 #e1 #e2 #compromise #know.
@@ -351,13 +497,14 @@ lemma SEC_013_state_rollback_resistance:
   "All E td direction n #i #j. AtomicReceiveCommit(E, td, direction, n) @ i
    & AtomicReceiveCommit(E, td, direction, n) @ j ==> #i = #j"
 
-lemma SEC_014_identity_continuity:
-  "All E old_public new_public successor #accept.
-   IdentityContinuityAccepted(E, old_public, new_public, successor) @ accept
-   ==> (Ex #authorize.
-        IdentitySuccessorAuthorized(E, old_public, new_public, successor) @ authorize
-        & authorize < accept)
-     | (Ex #c. IdentityMaterialCompromise(E, old_public) @ c & c < accept)"
+lemma SEC_014_self_certifying_user_authority:
+  "All user_ref authority_state management_public recovery_public #accept.
+   UserAuthorityGenesisAccepted(user_ref, authority_state,
+                                management_public, recovery_public) @ accept
+   ==> Ex #create.
+       UserAuthorityGenesisCreated(user_ref, authority_state,
+                                   management_public, recovery_public) @ create
+       & create < accept"
 
 lemma SEC_015_route_migration_safety:
   "All E P public old_route new_route route_digest #accept.
@@ -368,43 +515,62 @@ lemma SEC_015_route_migration_safety:
         & authorize < accept)
      | (Ex #c. IdentityMaterialCompromise(E, public) @ c & c < accept)"
 
-lemma SEC_016_evidence_unforgeability:
-  "All E public statement signed #accept.
-   EvidenceAccepted(E, public, statement, signed) @ accept
-   ==> (Ex #issue. EvidenceIssued(E, public, statement, signed) @ issue
-                   & issue < accept)
-     | (Ex #c. IdentityMaterialCompromise(E, public) @ c & c < accept)"
+lemma SEC_016_management_and_recovery_transition_authorization:
+  "All user_ref predecessor successor kind public #accept.
+   AuthorityTransitionAccepted(user_ref, predecessor, successor,
+                               kind, public) @ accept
+   ==> (kind = 'management'
+        & ((Ex #authorize.
+            ManagementTransitionAuthorized(user_ref, predecessor, successor,
+                                           public) @ authorize
+            & authorize < accept)
+           | (Ex #c. ManagementAuthorityCompromise(user_ref, predecessor,
+                                                    public) @ c & c < accept)))
+     | (kind = 'recovery'
+        & ((Ex #authorize.
+            RecoveryTransitionAuthorized(user_ref, predecessor, successor,
+                                         public) @ authorize
+            & authorize < accept)
+           | (Ex #c. RecoveryAuthorityCompromise(user_ref, predecessor,
+                                                  public) @ c & c < accept)))"
 
-lemma SEC_017_evidence_identity_attribution:
-  "All E public statement signed #accept.
-   EvidenceAccepted(E, public, statement, signed) @ accept
-   ==> (Ex #provision. EndpointIdentityProvisioned(E, public) @ provision
-                       & provision < accept)
-     & ((Ex #issue. EvidenceIssued(E, public, statement, signed) @ issue
-                    & issue < accept)
-       | (Ex #c. IdentityMaterialCompromise(E, public) @ c & c < accept))"
+lemma SEC_017_endpoint_possession_authorization:
+  "All user_ref epoch E endpoint_state endpoint_public #accept.
+   EndpointPossessionAccepted(user_ref, epoch, E, endpoint_state,
+                              endpoint_public) @ accept
+   ==> (Ex proof #authorize.
+        EndpointPossessionAuthorized(user_ref, epoch, E, endpoint_state,
+                                     endpoint_public, proof) @ authorize
+        & authorize < accept)
+     | (Ex #c. EndpointAuthorityCompromise(E, endpoint_public) @ c & c < accept)"
 
-lemma SEC_018_station_cannot_manufacture_endpoint_accepted:
-  "All R S td direction n message packet chain #accept.
-   EndpointAccepted(R, S, td, direction, n, message, packet, chain) @ accept
-   ==> (Ex #send. RecordSent(S, R, td, direction, n, message, packet, chain) @ send
-                   & send < accept)
-     | (Ex E P #c. SessionCompromise(E, P, td, chain) @ c & c < accept)
-     | (Ex E P #c. RatchetKeyCompromise(E, P, td, chain) @ c & c < accept)
-     | ((Ex I P #c. ClassicalComponentCompromise(I, P, td, chain) @ c & c < accept)
-      & (Ex I P #q. PostQuantumComponentCompromise(I, P, td, chain) @ q & q < accept))"
+lemma SEC_018_acyclic_sibling_endpoint_authority_session_binding:
+  "All E P td endpoint_state authority_state peer_endpoint_state
+       peer_authority_state #bound.
+   SessionSiblingBound(E, P, td, endpoint_state, authority_state,
+                       peer_endpoint_state, peer_authority_state) @ bound
+   ==> not(endpoint_state = authority_state)
+     & not(peer_endpoint_state = peer_authority_state)"
 
-lemma SEC_019_station_cannot_manufacture_effect_completed:
-  "All R S td direction n message_digest #complete.
-   EndpointEffectCompleted(R, S, td, direction, n, message_digest) @ complete
-   ==> Ex message packet chain #accept.
-       EndpointAccepted(R, S, td, direction, n, message, packet, chain) @ accept
-       & accept < complete"
+lemma SEC_019_authenticated_confirmation_finality:
+  "All S E td confirmation_id logical_message_ids stage message_digest
+       result_digest confirmation public #finality.
+   AuthenticatedConfirmationFinalized(S, E, td, confirmation_id,
+                                      logical_message_ids, stage,
+                                      message_digest, result_digest,
+                                      confirmation, public) @ finality
+   ==> (Ex #issue.
+        AuthenticatedConfirmationIssued(E, S, td, confirmation_id,
+                                        logical_message_ids, stage,
+                                        message_digest, result_digest,
+                                        confirmation, public) @ issue
+        & issue < finality)
+     | (Ex #c. IdentityMaterialCompromise(E, public) @ c & c < finality)"
 
 lemma SEC_020_fail_closed_resource_bounds:
   "(All input #accept. ParserAccepted(input) @ accept
-    ==> ResourceBoundsValidated(input, 'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd') @ accept)
-   & (All input #reject. ResourceLimitRejected(input, 'ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd') @ reject
+    ==> ResourceBoundsValidated(input, 'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc') @ accept)
+   & (All input #reject. ResourceLimitRejected(input, 'de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc') @ reject
       ==> not (Ex #commit. ParserStateCommitted(input) @ commit))"
 
 lemma SEC_022_pairwise_record_authentication_and_integrity:

@@ -2,8 +2,8 @@
 
 Status: complete mandatory capability in the Candidate Protocol Line. This
 document closes the representation, registry, schema, parsing, and generation
-contract shared by the other eight capabilities. Their own source roots define
-their semantics. The current Protocol Line integration binds all nine complete
+contract shared by the other seven capabilities. Their own source roots define
+their semantics. The current Protocol Line integration binds all eight complete
 capabilities to one content identity.
 
 ## Authority and source closure
@@ -110,17 +110,11 @@ totals. No Foundation limit is inherited as a universal protocol ceiling.
 | `MAX_NESTING_DEPTH` | 16 | Recursive parser depth |
 | `MAX_INTEGER` | 9,007,199,254,740,991 | Safe integer ceiling |
 
-The lifecycle registry closes `Draft → Candidate → Published →
-Deprecated → Retired`, with an explicit Candidate regeneration transition
-and direct withdrawal of an unpublished Candidate. Published bytes remain
-immutable through deprecation and retirement. Exact new-session and
-existing-session behavior comes only from the authenticated Protocol Line or
-Profile registry entry; an implementation, Station, Provider, or
-unauthenticated input cannot choose continuation, termination, migration, or
-fallback. Unknown states and transitions, mixed lifecycle composition,
-retired inputs, and downgrade-selected inputs fail closed. Foundation
-identifiers are source-contract or encoding-contract identifiers only; they
-are not capability, Provider, product, account, or runtime identifiers.
+The lifecycle registry closes `Draft → Candidate → Published`, with an explicit
+Candidate regeneration transition. LicoArc currently has one unreleased
+V1 / Generation 1 Candidate. Endpoints admit its exact fixed content identities.
+Foundation identifiers name source or encoding contracts; they do not identify
+Providers, products, accounts, or runtime instances.
 
 ## Generation and content identity
 

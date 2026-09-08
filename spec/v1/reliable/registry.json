@@ -30,7 +30,7 @@
     "trailingBytes": "reject"
   },
   "stateAuthority": {
-    "endpoint": "logical-intent-deduplication-evidence-and-effect-state",
+    "endpoint": "logical-intent-deduplication-confirmation-and-effect-state",
     "station": "opaque-carriage-and-untrusted-operation-hints-only",
     "application": "effect-and-idempotency-result-only",
     "scheduler": "caller-owned",
@@ -46,10 +46,35 @@
     "guaranteedStationDelivery": "forbidden-claim"
   },
   "closedStateTags": {
-    "outbox": ["created", "in-flight", "ambiguous", "accepted", "completed", "cancelled", "failed"],
-    "inbox": ["new", "pending-evidence", "accepted", "effect-pending", "completed", "cancelled", "failed"],
-    "attachment": ["pending", "complete", "cancelled", "failed"],
-    "aggregate": ["pending", "partial", "complete", "failed"]
+    "outbox": [
+      "created",
+      "in-flight",
+      "ambiguous",
+      "accepted",
+      "completed",
+      "cancelled",
+      "failed"
+    ],
+    "inbox": [
+      "new",
+      "accepted",
+      "effect-pending",
+      "completed",
+      "cancelled",
+      "failed"
+    ],
+    "attachment": [
+      "pending",
+      "complete",
+      "cancelled",
+      "failed"
+    ],
+    "aggregate": [
+      "pending",
+      "partial",
+      "complete",
+      "failed"
+    ]
   },
   "resourceAccounting": {
     "intent": "MAX_PROTECTED_INTENT_BYTES-counts-the-complete-canonical-intent",
@@ -69,8 +94,17 @@
   },
   "confirmation": {
     "identity": "one-confirmation-id-per-result",
-    "stages": ["endpointAccepted", "effectCompleted"],
-    "outcomes": ["succeeded", "rejected", "failed"],
+    "authentication": "exact-protected-authorized-sending-Endpoint-session",
+    "binding": "confirmation-id-message-ids-sender-session-stage-outcome-failure-and-result",
+    "stages": [
+      "endpointAccepted",
+      "effectCompleted"
+    ],
+    "outcomes": [
+      "succeeded",
+      "rejected",
+      "failed"
+    ],
     "pendingAndAmbiguous": "transport-or-local-state-only-never-an-endpoint-confirmation",
     "grouping": "sorted-unique-message-ids-with-one-stage-outcome-and-failure",
     "conflict": "same-confirmation-id-with-different-canonical-result-is-terminal",
@@ -79,7 +113,7 @@
   "attachment": {
     "normalFeedback": "bounded-attachment-receive-state",
     "routineChunkConfirmation": "forbidden",
-    "finality": "empty-verified-receive-state-requires-endpoint-evidence-checkpoint",
+    "finality": "complete-authenticated-chunks-content-digest-and-exact-endpoint-confirmation",
     "windowReset": "forbidden-on-retry-restart-session-renewal-route-change-station-migration-replay"
   },
   "group": {

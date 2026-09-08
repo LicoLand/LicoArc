@@ -3,9 +3,42 @@
 ; governance names are not wire values. Definite lengths and canonical CBOR
 ; ordering are mandatory; unknown or duplicate labels fail closed.
 
-identity-record = identity-update / affiliation-update / route-update /
+identity-record = user-authority-state / identity-update / affiliation-update / route-update /
                   first-contact / discovery-input / transparency-bundle /
-                  association-claim / station-descriptor
+                  station-descriptor
+
+user-authority-state = {
+  0 => 8, 1 => digest256, 2 => digest256, 3 => authority-epoch,
+  ? 4 => digest256, 5 => authority-transition,
+  6 => authority-signing-key-composition,
+  7 => authority-signing-key-composition,
+  8 => [1*16 authorized-device],
+  ? 9 => replacement-possession-proof,
+  10 => authority-signature-composition
+}
+
+authority-signing-key-composition = [
+  ed25519-authority-signing-key,
+  ml-dsa-65-authority-signing-key
+]
+ed25519-authority-signing-key = {
+  0 => digest256, 1 => authority-key-purpose,
+  2 => ed25519-profile-id, 3 => bstr .size 32
+}
+ml-dsa-65-authority-signing-key = {
+  0 => digest256, 1 => authority-key-purpose,
+  2 => ml-dsa-65-profile-id, 3 => bstr .size 1952
+}
+authorized-device = {
+  0 => digest256, 1 => digest256, 2 => device-status,
+  3 => authority-epoch, ? 4 => authority-epoch,
+  5 => authority-signature-composition
+}
+replacement-possession-proof = {
+  ? 0 => authority-signature-composition,
+  ? 1 => authority-signature-composition
+}
+authority-signature-composition = [ed25519-authority-signature, ml-dsa-65-authority-signature]
 
 identity-update = {
   0 => 0, 1 => digest256, 2 => digest256, 3 => epoch,
@@ -48,12 +81,6 @@ transparency-bundle = {
   6 => [*8 authenticated-input], 7 => [*8 authenticated-input],
   8 => [*8 authenticated-input], 9 => [*8 authenticated-input],
   10 => 0, 11 => true, ? 12 => bool
-}
-
-association-claim = {
-  0 => 6, 1 => id128, 2 => digest256, 3 => [1*8 digest256],
-  4 => epoch, ? 5 => digest256, 6 => digest256,
-  7 => unix-seconds, 8 => 0, 9 => signature
 }
 
 station-descriptor = {
@@ -117,6 +144,8 @@ endpoint-continuity-signature = ed25519-continuity-signature / ml-dsa-65-continu
 station-affiliation-signature = ed25519-station-affiliation-signature / ml-dsa-65-station-affiliation-signature
 station-route-signature = ed25519-station-route-signature / ml-dsa-65-station-route-signature
 station-descriptor-signature = ed25519-station-descriptor-signature / ml-dsa-65-station-descriptor-signature
+ed25519-authority-signature = { 0 => ed25519-profile-id, 1 => digest256, 2 => 9..14, 3 => bstr .size 64 }
+ml-dsa-65-authority-signature = { 0 => ml-dsa-65-profile-id, 1 => digest256, 2 => 9..14, 3 => bstr .size 3309 }
 
 ed25519-signature = { 0 => ed25519-profile-id, 1 => digest256, 2 => signature-purpose, 3 => bstr .size 64 }
 ml-dsa-65-signature = { 0 => ml-dsa-65-profile-id, 1 => digest256, 2 => signature-purpose, 3 => bstr .size 3309 }
@@ -129,7 +158,10 @@ ml-dsa-65-station-route-signature = { 0 => ml-dsa-65-profile-id, 1 => digest256,
 ed25519-station-descriptor-signature = { 0 => ed25519-profile-id, 1 => digest256, 2 => 8, 3 => bstr .size 64 }
 ml-dsa-65-station-descriptor-signature = { 0 => ml-dsa-65-profile-id, 1 => digest256, 2 => 8, 3 => bstr .size 3309 }
 
+authority-transition = 0 / 1 / 2
 identity-transition = 0 / 1 / 2 / 3
+authority-key-purpose = 0 / 1
+device-status = 0 / 1
 chain-transition = 0 / 1 / 2 / 3 / 4
 key-purpose = 0 / 1 / 2
 key-state = 0 / 1 / 2
@@ -142,5 +174,6 @@ digest256 = bstr .size 32
 token256 = bstr .size 32
 id128 = bstr .size 16
 epoch = uint .between 1 9007199254740991
+authority-epoch = uint .between 0 9007199254740991
 unix-seconds = uint .between 0 9007199254740991
 endpoint-uri = tstr .size (10..128)

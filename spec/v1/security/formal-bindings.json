@@ -13,18 +13,10 @@
     "bound",
     "failure-enum"
   ],
-  "semanticSourceDigest": "ec6b77e2c536500fdcfa6d70aabccaab3e2db4aa8db08c06241300f3d67dfdbd",
+  "semanticSourceDigest": "de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc",
   "semanticSources": [
     "spec/protection-profiles.json",
     "spec/protocol-lines.json",
-    "spec/v1/evidence/bounds.json",
-    "spec/v1/evidence/checkpoint.schema.json",
-    "spec/v1/evidence/identity-bundle.schema.json",
-    "spec/v1/evidence/labels.json",
-    "spec/v1/evidence/registry.json",
-    "spec/v1/evidence/runtime.cddl",
-    "spec/v1/evidence/source-manifest.json",
-    "spec/v1/evidence/statement.schema.json",
     "spec/v1/identity/identity.policy.json",
     "spec/v1/identity/identity.schema.json",
     "spec/v1/identity/labels.json",
@@ -32,7 +24,6 @@
     "spec/v1/identity/runtime.cddl",
     "spec/v1/identity/signature-profiles.json",
     "spec/v1/identity/source-manifest.json",
-    "spec/v1/manifest.json",
     "spec/v1/protection/algorithms.json",
     "spec/v1/protection/bounds.json",
     "spec/v1/protection/domains.json",
@@ -45,7 +36,6 @@
     "spec/v1/protection/runtime.cddl",
     "spec/v1/protection/session-accept.schema.json",
     "spec/v1/protection/state.json",
-    "spec/v1/protection/support.schema.json",
     "spec/v1/reliable/bounds.json",
     "spec/v1/reliable/confirmation.schema.json",
     "spec/v1/reliable/event.schema.json",
@@ -70,7 +60,7 @@
       "kind": "algorithm-id",
       "authorityPath": "spec/v1/protection/algorithms.json",
       "authorityPointer": "/primitives",
-      "authorityDigest": "18256dc027951749d0501a21fa27552e960eb1cab74317bdf0689b21dfa44cc7",
+      "authorityDigest": "a7e3bc97fa63b7038768270d9d9aea111cd60953c98096a41c8aa84c731a267c",
       "authorityValueDigest": "523edc153cf6c10e9f06bcfcad96792d394f09636f4b62511babb44e3a580d24",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_001_hybrid_ake_key_secrecy"
@@ -81,8 +71,8 @@
       "kind": "bound",
       "authorityPath": "spec/v1/protection/bounds.json",
       "authorityPointer": "/bounds",
-      "authorityDigest": "17774552a0183911243457f727933c0db89e2144926fa56da2e1c83470927471",
-      "authorityValueDigest": "99f65101b8c6764c993597ce2e6e85e228b975b6336513970d7027122aec7ecb",
+      "authorityDigest": "ce4d8fef20815ab6731a79d2c011c4f294768a1e1fd959474aa91928bb81ad27",
+      "authorityValueDigest": "7e7d2a50a6bbbf6ed347e64af8922333868acc03a89369cc9a844a7d400b049f",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_001_hybrid_ake_key_secrecy"
     },
@@ -92,8 +82,8 @@
       "kind": "domain-separator",
       "authorityPath": "spec/v1/protection/domains.json",
       "authorityPointer": "/domains",
-      "authorityDigest": "c821a8289e36b2ea7ff19378f2d525d65b1f5d6a619b0010ea354050e4aa032c",
-      "authorityValueDigest": "04259801d313f397abdb2ba617699fadb182c4d68d91399fa3d9ce9d3eea1228",
+      "authorityDigest": "6cf2329a18f571e3f00aaf62e01e8980e7700ff1e5e8403a674293fc21cb26b3",
+      "authorityValueDigest": "23b8e522d4221c0165f0fb82033d203a75aa89e0b855f5a6ffd3029afecd9cdc",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_001_hybrid_ake_key_secrecy"
     },
@@ -103,8 +93,8 @@
       "kind": "failure-enum",
       "authorityPath": "spec/v1/protection/failures.json",
       "authorityPointer": "/failures",
-      "authorityDigest": "e4e0b70a919e056d620aa3fed552d53c25d46a2a7770c2103f4cbc25e299ef44",
-      "authorityValueDigest": "9d54769d565ee1f4ea610ecb4fe43dfd342de3949f7489821fa5352b4eeec543",
+      "authorityDigest": "b1b28c20f007f0e25be7f23c635dfef39ca4ce6e50a0d210c58290c038b9bbf9",
+      "authorityValueDigest": "99aac31635d1fd604449e59e38116e237f39d776a4a28a94cb1bad4355f258ff",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_001_hybrid_ake_key_secrecy"
     },
@@ -114,7 +104,7 @@
       "kind": "field-label",
       "authorityPath": "spec/v1/protection/labels.json",
       "authorityPointer": "/ratchetHeader",
-      "authorityDigest": "3922dbd20adbbdf4cdc653d8965c3d2e18fede7cf0255c45bb354ccf51c4c604",
+      "authorityDigest": "1ff9f42d5e63b6720bc7a40af7812957d56d7dda0ec413ff17e5e53cc3595857",
       "authorityValueDigest": "db3101c2d04d732a1ef99666d74f08a9eb6ad9c2dfb04b44487dda319158078d",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_001_hybrid_ake_key_secrecy"
@@ -125,8 +115,8 @@
       "kind": "profile-id",
       "authorityPath": "spec/protection-profiles.json",
       "authorityPointer": "/profiles/0/profileId",
-      "authorityDigest": "086e9abe3af4a5191fcfdcca438527314763f6a81ae148b33de9e880f72f4933",
-      "authorityValueDigest": "d3113cd206d0d72a4f8155a934764ceb1f16169eea99dfe91557220b58315470",
+      "authorityDigest": "77a01bd7f8d1399b1bd59626842e297db83f250fe8d50e4fc90b3b079db56f7e",
+      "authorityValueDigest": "b0a8800a73cf45f1c97d8eb714ee501ecb602126b47e184ae39f7e1e40360873",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_001_hybrid_ake_key_secrecy"
     },
@@ -136,8 +126,8 @@
       "kind": "protocol-line-id",
       "authorityPath": "spec/protocol-lines.json",
       "authorityPointer": "/lines/0/protocolLineId",
-      "authorityDigest": "20bea021e70a886112c1e3920b4f40a5c50712496786962d5dee6f1d44ee4e05",
-      "authorityValueDigest": "83f11435706a6ae5e3f1cba92a1f1dffa680cea801dbc8077efe9bdf03e70f2e",
+      "authorityDigest": "e3d91a2fe3944d1e31856df808fc3477249a6a81c995a472f095d1abec941d22",
+      "authorityValueDigest": "d2b610a001b00993b84a9374d9553414cf6ea46868f142aef003c610cb0f039e",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_001_hybrid_ake_key_secrecy"
     },
@@ -147,7 +137,7 @@
       "kind": "algorithm-id",
       "authorityPath": "spec/v1/protection/algorithms.json",
       "authorityPointer": "/primitives",
-      "authorityDigest": "18256dc027951749d0501a21fa27552e960eb1cab74317bdf0689b21dfa44cc7",
+      "authorityDigest": "a7e3bc97fa63b7038768270d9d9aea111cd60953c98096a41c8aa84c731a267c",
       "authorityValueDigest": "523edc153cf6c10e9f06bcfcad96792d394f09636f4b62511babb44e3a580d24",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_002_mutual_endpoint_authentication"
@@ -158,8 +148,8 @@
       "kind": "bound",
       "authorityPath": "spec/v1/protection/bounds.json",
       "authorityPointer": "/bounds",
-      "authorityDigest": "17774552a0183911243457f727933c0db89e2144926fa56da2e1c83470927471",
-      "authorityValueDigest": "99f65101b8c6764c993597ce2e6e85e228b975b6336513970d7027122aec7ecb",
+      "authorityDigest": "ce4d8fef20815ab6731a79d2c011c4f294768a1e1fd959474aa91928bb81ad27",
+      "authorityValueDigest": "7e7d2a50a6bbbf6ed347e64af8922333868acc03a89369cc9a844a7d400b049f",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_002_mutual_endpoint_authentication"
     },
@@ -169,8 +159,8 @@
       "kind": "domain-separator",
       "authorityPath": "spec/v1/protection/domains.json",
       "authorityPointer": "/domains",
-      "authorityDigest": "c821a8289e36b2ea7ff19378f2d525d65b1f5d6a619b0010ea354050e4aa032c",
-      "authorityValueDigest": "04259801d313f397abdb2ba617699fadb182c4d68d91399fa3d9ce9d3eea1228",
+      "authorityDigest": "6cf2329a18f571e3f00aaf62e01e8980e7700ff1e5e8403a674293fc21cb26b3",
+      "authorityValueDigest": "23b8e522d4221c0165f0fb82033d203a75aa89e0b855f5a6ffd3029afecd9cdc",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_002_mutual_endpoint_authentication"
     },
@@ -180,8 +170,8 @@
       "kind": "failure-enum",
       "authorityPath": "spec/v1/protection/failures.json",
       "authorityPointer": "/failures",
-      "authorityDigest": "e4e0b70a919e056d620aa3fed552d53c25d46a2a7770c2103f4cbc25e299ef44",
-      "authorityValueDigest": "9d54769d565ee1f4ea610ecb4fe43dfd342de3949f7489821fa5352b4eeec543",
+      "authorityDigest": "b1b28c20f007f0e25be7f23c635dfef39ca4ce6e50a0d210c58290c038b9bbf9",
+      "authorityValueDigest": "99aac31635d1fd604449e59e38116e237f39d776a4a28a94cb1bad4355f258ff",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_002_mutual_endpoint_authentication"
     },
@@ -191,7 +181,7 @@
       "kind": "field-label",
       "authorityPath": "spec/v1/protection/labels.json",
       "authorityPointer": "/ratchetHeader",
-      "authorityDigest": "3922dbd20adbbdf4cdc653d8965c3d2e18fede7cf0255c45bb354ccf51c4c604",
+      "authorityDigest": "1ff9f42d5e63b6720bc7a40af7812957d56d7dda0ec413ff17e5e53cc3595857",
       "authorityValueDigest": "db3101c2d04d732a1ef99666d74f08a9eb6ad9c2dfb04b44487dda319158078d",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_002_mutual_endpoint_authentication"
@@ -202,8 +192,8 @@
       "kind": "profile-id",
       "authorityPath": "spec/protection-profiles.json",
       "authorityPointer": "/profiles/0/profileId",
-      "authorityDigest": "086e9abe3af4a5191fcfdcca438527314763f6a81ae148b33de9e880f72f4933",
-      "authorityValueDigest": "d3113cd206d0d72a4f8155a934764ceb1f16169eea99dfe91557220b58315470",
+      "authorityDigest": "77a01bd7f8d1399b1bd59626842e297db83f250fe8d50e4fc90b3b079db56f7e",
+      "authorityValueDigest": "b0a8800a73cf45f1c97d8eb714ee501ecb602126b47e184ae39f7e1e40360873",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_002_mutual_endpoint_authentication"
     },
@@ -213,8 +203,8 @@
       "kind": "protocol-line-id",
       "authorityPath": "spec/protocol-lines.json",
       "authorityPointer": "/lines/0/protocolLineId",
-      "authorityDigest": "20bea021e70a886112c1e3920b4f40a5c50712496786962d5dee6f1d44ee4e05",
-      "authorityValueDigest": "83f11435706a6ae5e3f1cba92a1f1dffa680cea801dbc8077efe9bdf03e70f2e",
+      "authorityDigest": "e3d91a2fe3944d1e31856df808fc3477249a6a81c995a472f095d1abec941d22",
+      "authorityValueDigest": "d2b610a001b00993b84a9374d9553414cf6ea46868f142aef003c610cb0f039e",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_002_mutual_endpoint_authentication"
     },
@@ -224,7 +214,7 @@
       "kind": "algorithm-id",
       "authorityPath": "spec/v1/protection/algorithms.json",
       "authorityPointer": "/primitives",
-      "authorityDigest": "18256dc027951749d0501a21fa27552e960eb1cab74317bdf0689b21dfa44cc7",
+      "authorityDigest": "a7e3bc97fa63b7038768270d9d9aea111cd60953c98096a41c8aa84c731a267c",
       "authorityValueDigest": "523edc153cf6c10e9f06bcfcad96792d394f09636f4b62511babb44e3a580d24",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_003_classical_pq_hybrid_robustness"
@@ -235,8 +225,8 @@
       "kind": "bound",
       "authorityPath": "spec/v1/protection/bounds.json",
       "authorityPointer": "/bounds",
-      "authorityDigest": "17774552a0183911243457f727933c0db89e2144926fa56da2e1c83470927471",
-      "authorityValueDigest": "99f65101b8c6764c993597ce2e6e85e228b975b6336513970d7027122aec7ecb",
+      "authorityDigest": "ce4d8fef20815ab6731a79d2c011c4f294768a1e1fd959474aa91928bb81ad27",
+      "authorityValueDigest": "7e7d2a50a6bbbf6ed347e64af8922333868acc03a89369cc9a844a7d400b049f",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_003_classical_pq_hybrid_robustness"
     },
@@ -246,8 +236,8 @@
       "kind": "domain-separator",
       "authorityPath": "spec/v1/protection/domains.json",
       "authorityPointer": "/domains",
-      "authorityDigest": "c821a8289e36b2ea7ff19378f2d525d65b1f5d6a619b0010ea354050e4aa032c",
-      "authorityValueDigest": "04259801d313f397abdb2ba617699fadb182c4d68d91399fa3d9ce9d3eea1228",
+      "authorityDigest": "6cf2329a18f571e3f00aaf62e01e8980e7700ff1e5e8403a674293fc21cb26b3",
+      "authorityValueDigest": "23b8e522d4221c0165f0fb82033d203a75aa89e0b855f5a6ffd3029afecd9cdc",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_003_classical_pq_hybrid_robustness"
     },
@@ -257,8 +247,8 @@
       "kind": "failure-enum",
       "authorityPath": "spec/v1/protection/failures.json",
       "authorityPointer": "/failures",
-      "authorityDigest": "e4e0b70a919e056d620aa3fed552d53c25d46a2a7770c2103f4cbc25e299ef44",
-      "authorityValueDigest": "9d54769d565ee1f4ea610ecb4fe43dfd342de3949f7489821fa5352b4eeec543",
+      "authorityDigest": "b1b28c20f007f0e25be7f23c635dfef39ca4ce6e50a0d210c58290c038b9bbf9",
+      "authorityValueDigest": "99aac31635d1fd604449e59e38116e237f39d776a4a28a94cb1bad4355f258ff",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_003_classical_pq_hybrid_robustness"
     },
@@ -268,7 +258,7 @@
       "kind": "field-label",
       "authorityPath": "spec/v1/protection/labels.json",
       "authorityPointer": "/ratchetHeader",
-      "authorityDigest": "3922dbd20adbbdf4cdc653d8965c3d2e18fede7cf0255c45bb354ccf51c4c604",
+      "authorityDigest": "1ff9f42d5e63b6720bc7a40af7812957d56d7dda0ec413ff17e5e53cc3595857",
       "authorityValueDigest": "db3101c2d04d732a1ef99666d74f08a9eb6ad9c2dfb04b44487dda319158078d",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_003_classical_pq_hybrid_robustness"
@@ -279,8 +269,8 @@
       "kind": "profile-id",
       "authorityPath": "spec/protection-profiles.json",
       "authorityPointer": "/profiles/0/profileId",
-      "authorityDigest": "086e9abe3af4a5191fcfdcca438527314763f6a81ae148b33de9e880f72f4933",
-      "authorityValueDigest": "d3113cd206d0d72a4f8155a934764ceb1f16169eea99dfe91557220b58315470",
+      "authorityDigest": "77a01bd7f8d1399b1bd59626842e297db83f250fe8d50e4fc90b3b079db56f7e",
+      "authorityValueDigest": "b0a8800a73cf45f1c97d8eb714ee501ecb602126b47e184ae39f7e1e40360873",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_003_classical_pq_hybrid_robustness"
     },
@@ -290,8 +280,8 @@
       "kind": "protocol-line-id",
       "authorityPath": "spec/protocol-lines.json",
       "authorityPointer": "/lines/0/protocolLineId",
-      "authorityDigest": "20bea021e70a886112c1e3920b4f40a5c50712496786962d5dee6f1d44ee4e05",
-      "authorityValueDigest": "83f11435706a6ae5e3f1cba92a1f1dffa680cea801dbc8077efe9bdf03e70f2e",
+      "authorityDigest": "e3d91a2fe3944d1e31856df808fc3477249a6a81c995a472f095d1abec941d22",
+      "authorityValueDigest": "d2b610a001b00993b84a9374d9553414cf6ea46868f142aef003c610cb0f039e",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_003_classical_pq_hybrid_robustness"
     },
@@ -301,7 +291,7 @@
       "kind": "algorithm-id",
       "authorityPath": "spec/v1/protection/algorithms.json",
       "authorityPointer": "/primitives",
-      "authorityDigest": "18256dc027951749d0501a21fa27552e960eb1cab74317bdf0689b21dfa44cc7",
+      "authorityDigest": "a7e3bc97fa63b7038768270d9d9aea111cd60953c98096a41c8aa84c731a267c",
       "authorityValueDigest": "523edc153cf6c10e9f06bcfcad96792d394f09636f4b62511babb44e3a580d24",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_004_unknown_key_share_resistance"
@@ -312,8 +302,8 @@
       "kind": "bound",
       "authorityPath": "spec/v1/protection/bounds.json",
       "authorityPointer": "/bounds",
-      "authorityDigest": "17774552a0183911243457f727933c0db89e2144926fa56da2e1c83470927471",
-      "authorityValueDigest": "99f65101b8c6764c993597ce2e6e85e228b975b6336513970d7027122aec7ecb",
+      "authorityDigest": "ce4d8fef20815ab6731a79d2c011c4f294768a1e1fd959474aa91928bb81ad27",
+      "authorityValueDigest": "7e7d2a50a6bbbf6ed347e64af8922333868acc03a89369cc9a844a7d400b049f",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_004_unknown_key_share_resistance"
     },
@@ -323,8 +313,8 @@
       "kind": "domain-separator",
       "authorityPath": "spec/v1/protection/domains.json",
       "authorityPointer": "/domains",
-      "authorityDigest": "c821a8289e36b2ea7ff19378f2d525d65b1f5d6a619b0010ea354050e4aa032c",
-      "authorityValueDigest": "04259801d313f397abdb2ba617699fadb182c4d68d91399fa3d9ce9d3eea1228",
+      "authorityDigest": "6cf2329a18f571e3f00aaf62e01e8980e7700ff1e5e8403a674293fc21cb26b3",
+      "authorityValueDigest": "23b8e522d4221c0165f0fb82033d203a75aa89e0b855f5a6ffd3029afecd9cdc",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_004_unknown_key_share_resistance"
     },
@@ -334,8 +324,8 @@
       "kind": "failure-enum",
       "authorityPath": "spec/v1/protection/failures.json",
       "authorityPointer": "/failures",
-      "authorityDigest": "e4e0b70a919e056d620aa3fed552d53c25d46a2a7770c2103f4cbc25e299ef44",
-      "authorityValueDigest": "9d54769d565ee1f4ea610ecb4fe43dfd342de3949f7489821fa5352b4eeec543",
+      "authorityDigest": "b1b28c20f007f0e25be7f23c635dfef39ca4ce6e50a0d210c58290c038b9bbf9",
+      "authorityValueDigest": "99aac31635d1fd604449e59e38116e237f39d776a4a28a94cb1bad4355f258ff",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_004_unknown_key_share_resistance"
     },
@@ -345,7 +335,7 @@
       "kind": "field-label",
       "authorityPath": "spec/v1/protection/labels.json",
       "authorityPointer": "/ratchetHeader",
-      "authorityDigest": "3922dbd20adbbdf4cdc653d8965c3d2e18fede7cf0255c45bb354ccf51c4c604",
+      "authorityDigest": "1ff9f42d5e63b6720bc7a40af7812957d56d7dda0ec413ff17e5e53cc3595857",
       "authorityValueDigest": "db3101c2d04d732a1ef99666d74f08a9eb6ad9c2dfb04b44487dda319158078d",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_004_unknown_key_share_resistance"
@@ -356,8 +346,8 @@
       "kind": "profile-id",
       "authorityPath": "spec/protection-profiles.json",
       "authorityPointer": "/profiles/0/profileId",
-      "authorityDigest": "086e9abe3af4a5191fcfdcca438527314763f6a81ae148b33de9e880f72f4933",
-      "authorityValueDigest": "d3113cd206d0d72a4f8155a934764ceb1f16169eea99dfe91557220b58315470",
+      "authorityDigest": "77a01bd7f8d1399b1bd59626842e297db83f250fe8d50e4fc90b3b079db56f7e",
+      "authorityValueDigest": "b0a8800a73cf45f1c97d8eb714ee501ecb602126b47e184ae39f7e1e40360873",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_004_unknown_key_share_resistance"
     },
@@ -367,8 +357,8 @@
       "kind": "protocol-line-id",
       "authorityPath": "spec/protocol-lines.json",
       "authorityPointer": "/lines/0/protocolLineId",
-      "authorityDigest": "20bea021e70a886112c1e3920b4f40a5c50712496786962d5dee6f1d44ee4e05",
-      "authorityValueDigest": "83f11435706a6ae5e3f1cba92a1f1dffa680cea801dbc8077efe9bdf03e70f2e",
+      "authorityDigest": "e3d91a2fe3944d1e31856df808fc3477249a6a81c995a472f095d1abec941d22",
+      "authorityValueDigest": "d2b610a001b00993b84a9374d9553414cf6ea46868f142aef003c610cb0f039e",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_004_unknown_key_share_resistance"
     },
@@ -378,7 +368,7 @@
       "kind": "algorithm-id",
       "authorityPath": "spec/v1/protection/algorithms.json",
       "authorityPointer": "/primitives",
-      "authorityDigest": "18256dc027951749d0501a21fa27552e960eb1cab74317bdf0689b21dfa44cc7",
+      "authorityDigest": "a7e3bc97fa63b7038768270d9d9aea111cd60953c98096a41c8aa84c731a267c",
       "authorityValueDigest": "523edc153cf6c10e9f06bcfcad96792d394f09636f4b62511babb44e3a580d24",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_005_key_compromise_impersonation_boundary"
@@ -389,8 +379,8 @@
       "kind": "bound",
       "authorityPath": "spec/v1/protection/bounds.json",
       "authorityPointer": "/bounds",
-      "authorityDigest": "17774552a0183911243457f727933c0db89e2144926fa56da2e1c83470927471",
-      "authorityValueDigest": "99f65101b8c6764c993597ce2e6e85e228b975b6336513970d7027122aec7ecb",
+      "authorityDigest": "ce4d8fef20815ab6731a79d2c011c4f294768a1e1fd959474aa91928bb81ad27",
+      "authorityValueDigest": "7e7d2a50a6bbbf6ed347e64af8922333868acc03a89369cc9a844a7d400b049f",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_005_key_compromise_impersonation_boundary"
     },
@@ -400,8 +390,8 @@
       "kind": "domain-separator",
       "authorityPath": "spec/v1/protection/domains.json",
       "authorityPointer": "/domains",
-      "authorityDigest": "c821a8289e36b2ea7ff19378f2d525d65b1f5d6a619b0010ea354050e4aa032c",
-      "authorityValueDigest": "04259801d313f397abdb2ba617699fadb182c4d68d91399fa3d9ce9d3eea1228",
+      "authorityDigest": "6cf2329a18f571e3f00aaf62e01e8980e7700ff1e5e8403a674293fc21cb26b3",
+      "authorityValueDigest": "23b8e522d4221c0165f0fb82033d203a75aa89e0b855f5a6ffd3029afecd9cdc",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_005_key_compromise_impersonation_boundary"
     },
@@ -411,8 +401,8 @@
       "kind": "failure-enum",
       "authorityPath": "spec/v1/protection/failures.json",
       "authorityPointer": "/failures",
-      "authorityDigest": "e4e0b70a919e056d620aa3fed552d53c25d46a2a7770c2103f4cbc25e299ef44",
-      "authorityValueDigest": "9d54769d565ee1f4ea610ecb4fe43dfd342de3949f7489821fa5352b4eeec543",
+      "authorityDigest": "b1b28c20f007f0e25be7f23c635dfef39ca4ce6e50a0d210c58290c038b9bbf9",
+      "authorityValueDigest": "99aac31635d1fd604449e59e38116e237f39d776a4a28a94cb1bad4355f258ff",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_005_key_compromise_impersonation_boundary"
     },
@@ -422,7 +412,7 @@
       "kind": "field-label",
       "authorityPath": "spec/v1/protection/labels.json",
       "authorityPointer": "/ratchetHeader",
-      "authorityDigest": "3922dbd20adbbdf4cdc653d8965c3d2e18fede7cf0255c45bb354ccf51c4c604",
+      "authorityDigest": "1ff9f42d5e63b6720bc7a40af7812957d56d7dda0ec413ff17e5e53cc3595857",
       "authorityValueDigest": "db3101c2d04d732a1ef99666d74f08a9eb6ad9c2dfb04b44487dda319158078d",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_005_key_compromise_impersonation_boundary"
@@ -433,8 +423,8 @@
       "kind": "profile-id",
       "authorityPath": "spec/protection-profiles.json",
       "authorityPointer": "/profiles/0/profileId",
-      "authorityDigest": "086e9abe3af4a5191fcfdcca438527314763f6a81ae148b33de9e880f72f4933",
-      "authorityValueDigest": "d3113cd206d0d72a4f8155a934764ceb1f16169eea99dfe91557220b58315470",
+      "authorityDigest": "77a01bd7f8d1399b1bd59626842e297db83f250fe8d50e4fc90b3b079db56f7e",
+      "authorityValueDigest": "b0a8800a73cf45f1c97d8eb714ee501ecb602126b47e184ae39f7e1e40360873",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_005_key_compromise_impersonation_boundary"
     },
@@ -444,8 +434,8 @@
       "kind": "protocol-line-id",
       "authorityPath": "spec/protocol-lines.json",
       "authorityPointer": "/lines/0/protocolLineId",
-      "authorityDigest": "20bea021e70a886112c1e3920b4f40a5c50712496786962d5dee6f1d44ee4e05",
-      "authorityValueDigest": "83f11435706a6ae5e3f1cba92a1f1dffa680cea801dbc8077efe9bdf03e70f2e",
+      "authorityDigest": "e3d91a2fe3944d1e31856df808fc3477249a6a81c995a472f095d1abec941d22",
+      "authorityValueDigest": "d2b610a001b00993b84a9374d9553414cf6ea46868f142aef003c610cb0f039e",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_005_key_compromise_impersonation_boundary"
     },
@@ -455,10 +445,10 @@
       "kind": "algorithm-id",
       "authorityPath": "spec/v1/protection/algorithms.json",
       "authorityPointer": "/primitives",
-      "authorityDigest": "18256dc027951749d0501a21fa27552e960eb1cab74317bdf0689b21dfa44cc7",
+      "authorityDigest": "a7e3bc97fa63b7038768270d9d9aea111cd60953c98096a41c8aa84c731a267c",
       "authorityValueDigest": "523edc153cf6c10e9f06bcfcad96792d394f09636f4b62511babb44e3a580d24",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
-      "proofLemma": "SEC_006_protocol_line_downgrade_resistance"
+      "proofLemma": "SEC_006_protocol_line_content_binding"
     },
     {
       "bindingId": "BIND-SEC-006-BOUND-1",
@@ -466,10 +456,10 @@
       "kind": "bound",
       "authorityPath": "spec/v1/protection/bounds.json",
       "authorityPointer": "/bounds",
-      "authorityDigest": "17774552a0183911243457f727933c0db89e2144926fa56da2e1c83470927471",
-      "authorityValueDigest": "99f65101b8c6764c993597ce2e6e85e228b975b6336513970d7027122aec7ecb",
+      "authorityDigest": "ce4d8fef20815ab6731a79d2c011c4f294768a1e1fd959474aa91928bb81ad27",
+      "authorityValueDigest": "7e7d2a50a6bbbf6ed347e64af8922333868acc03a89369cc9a844a7d400b049f",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
-      "proofLemma": "SEC_006_protocol_line_downgrade_resistance"
+      "proofLemma": "SEC_006_protocol_line_content_binding"
     },
     {
       "bindingId": "BIND-SEC-006-DOMAIN-SEPARATOR-1",
@@ -477,10 +467,10 @@
       "kind": "domain-separator",
       "authorityPath": "spec/v1/protection/domains.json",
       "authorityPointer": "/domains",
-      "authorityDigest": "c821a8289e36b2ea7ff19378f2d525d65b1f5d6a619b0010ea354050e4aa032c",
-      "authorityValueDigest": "04259801d313f397abdb2ba617699fadb182c4d68d91399fa3d9ce9d3eea1228",
+      "authorityDigest": "6cf2329a18f571e3f00aaf62e01e8980e7700ff1e5e8403a674293fc21cb26b3",
+      "authorityValueDigest": "23b8e522d4221c0165f0fb82033d203a75aa89e0b855f5a6ffd3029afecd9cdc",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
-      "proofLemma": "SEC_006_protocol_line_downgrade_resistance"
+      "proofLemma": "SEC_006_protocol_line_content_binding"
     },
     {
       "bindingId": "BIND-SEC-006-FAILURE-ENUM-1",
@@ -488,10 +478,10 @@
       "kind": "failure-enum",
       "authorityPath": "spec/v1/protection/failures.json",
       "authorityPointer": "/failures",
-      "authorityDigest": "e4e0b70a919e056d620aa3fed552d53c25d46a2a7770c2103f4cbc25e299ef44",
-      "authorityValueDigest": "9d54769d565ee1f4ea610ecb4fe43dfd342de3949f7489821fa5352b4eeec543",
+      "authorityDigest": "b1b28c20f007f0e25be7f23c635dfef39ca4ce6e50a0d210c58290c038b9bbf9",
+      "authorityValueDigest": "99aac31635d1fd604449e59e38116e237f39d776a4a28a94cb1bad4355f258ff",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
-      "proofLemma": "SEC_006_protocol_line_downgrade_resistance"
+      "proofLemma": "SEC_006_protocol_line_content_binding"
     },
     {
       "bindingId": "BIND-SEC-006-FIELD-LABEL-1",
@@ -499,10 +489,10 @@
       "kind": "field-label",
       "authorityPath": "spec/v1/protection/labels.json",
       "authorityPointer": "/ratchetHeader",
-      "authorityDigest": "3922dbd20adbbdf4cdc653d8965c3d2e18fede7cf0255c45bb354ccf51c4c604",
+      "authorityDigest": "1ff9f42d5e63b6720bc7a40af7812957d56d7dda0ec413ff17e5e53cc3595857",
       "authorityValueDigest": "db3101c2d04d732a1ef99666d74f08a9eb6ad9c2dfb04b44487dda319158078d",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
-      "proofLemma": "SEC_006_protocol_line_downgrade_resistance"
+      "proofLemma": "SEC_006_protocol_line_content_binding"
     },
     {
       "bindingId": "BIND-SEC-006-PROFILE-ID-1",
@@ -510,10 +500,10 @@
       "kind": "profile-id",
       "authorityPath": "spec/protection-profiles.json",
       "authorityPointer": "/profiles/0/profileId",
-      "authorityDigest": "086e9abe3af4a5191fcfdcca438527314763f6a81ae148b33de9e880f72f4933",
-      "authorityValueDigest": "d3113cd206d0d72a4f8155a934764ceb1f16169eea99dfe91557220b58315470",
+      "authorityDigest": "77a01bd7f8d1399b1bd59626842e297db83f250fe8d50e4fc90b3b079db56f7e",
+      "authorityValueDigest": "b0a8800a73cf45f1c97d8eb714ee501ecb602126b47e184ae39f7e1e40360873",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
-      "proofLemma": "SEC_006_protocol_line_downgrade_resistance"
+      "proofLemma": "SEC_006_protocol_line_content_binding"
     },
     {
       "bindingId": "BIND-SEC-006-PROTOCOL-LINE-ID-1",
@@ -521,10 +511,10 @@
       "kind": "protocol-line-id",
       "authorityPath": "spec/protocol-lines.json",
       "authorityPointer": "/lines/0/protocolLineId",
-      "authorityDigest": "20bea021e70a886112c1e3920b4f40a5c50712496786962d5dee6f1d44ee4e05",
-      "authorityValueDigest": "83f11435706a6ae5e3f1cba92a1f1dffa680cea801dbc8077efe9bdf03e70f2e",
+      "authorityDigest": "e3d91a2fe3944d1e31856df808fc3477249a6a81c995a472f095d1abec941d22",
+      "authorityValueDigest": "d2b610a001b00993b84a9374d9553414cf6ea46868f142aef003c610cb0f039e",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
-      "proofLemma": "SEC_006_protocol_line_downgrade_resistance"
+      "proofLemma": "SEC_006_protocol_line_content_binding"
     },
     {
       "bindingId": "BIND-SEC-007-ALGORITHM-ID-1",
@@ -532,10 +522,10 @@
       "kind": "algorithm-id",
       "authorityPath": "spec/v1/protection/algorithms.json",
       "authorityPointer": "/primitives",
-      "authorityDigest": "18256dc027951749d0501a21fa27552e960eb1cab74317bdf0689b21dfa44cc7",
+      "authorityDigest": "a7e3bc97fa63b7038768270d9d9aea111cd60953c98096a41c8aa84c731a267c",
       "authorityValueDigest": "523edc153cf6c10e9f06bcfcad96792d394f09636f4b62511babb44e3a580d24",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
-      "proofLemma": "SEC_007_protection_profile_downgrade_resistance"
+      "proofLemma": "SEC_007_protection_profile_content_binding"
     },
     {
       "bindingId": "BIND-SEC-007-BOUND-1",
@@ -543,10 +533,10 @@
       "kind": "bound",
       "authorityPath": "spec/v1/protection/bounds.json",
       "authorityPointer": "/bounds",
-      "authorityDigest": "17774552a0183911243457f727933c0db89e2144926fa56da2e1c83470927471",
-      "authorityValueDigest": "99f65101b8c6764c993597ce2e6e85e228b975b6336513970d7027122aec7ecb",
+      "authorityDigest": "ce4d8fef20815ab6731a79d2c011c4f294768a1e1fd959474aa91928bb81ad27",
+      "authorityValueDigest": "7e7d2a50a6bbbf6ed347e64af8922333868acc03a89369cc9a844a7d400b049f",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
-      "proofLemma": "SEC_007_protection_profile_downgrade_resistance"
+      "proofLemma": "SEC_007_protection_profile_content_binding"
     },
     {
       "bindingId": "BIND-SEC-007-DOMAIN-SEPARATOR-1",
@@ -554,10 +544,10 @@
       "kind": "domain-separator",
       "authorityPath": "spec/v1/protection/domains.json",
       "authorityPointer": "/domains",
-      "authorityDigest": "c821a8289e36b2ea7ff19378f2d525d65b1f5d6a619b0010ea354050e4aa032c",
-      "authorityValueDigest": "04259801d313f397abdb2ba617699fadb182c4d68d91399fa3d9ce9d3eea1228",
+      "authorityDigest": "6cf2329a18f571e3f00aaf62e01e8980e7700ff1e5e8403a674293fc21cb26b3",
+      "authorityValueDigest": "23b8e522d4221c0165f0fb82033d203a75aa89e0b855f5a6ffd3029afecd9cdc",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
-      "proofLemma": "SEC_007_protection_profile_downgrade_resistance"
+      "proofLemma": "SEC_007_protection_profile_content_binding"
     },
     {
       "bindingId": "BIND-SEC-007-FAILURE-ENUM-1",
@@ -565,10 +555,10 @@
       "kind": "failure-enum",
       "authorityPath": "spec/v1/protection/failures.json",
       "authorityPointer": "/failures",
-      "authorityDigest": "e4e0b70a919e056d620aa3fed552d53c25d46a2a7770c2103f4cbc25e299ef44",
-      "authorityValueDigest": "9d54769d565ee1f4ea610ecb4fe43dfd342de3949f7489821fa5352b4eeec543",
+      "authorityDigest": "b1b28c20f007f0e25be7f23c635dfef39ca4ce6e50a0d210c58290c038b9bbf9",
+      "authorityValueDigest": "99aac31635d1fd604449e59e38116e237f39d776a4a28a94cb1bad4355f258ff",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
-      "proofLemma": "SEC_007_protection_profile_downgrade_resistance"
+      "proofLemma": "SEC_007_protection_profile_content_binding"
     },
     {
       "bindingId": "BIND-SEC-007-FIELD-LABEL-1",
@@ -576,10 +566,10 @@
       "kind": "field-label",
       "authorityPath": "spec/v1/protection/labels.json",
       "authorityPointer": "/ratchetHeader",
-      "authorityDigest": "3922dbd20adbbdf4cdc653d8965c3d2e18fede7cf0255c45bb354ccf51c4c604",
+      "authorityDigest": "1ff9f42d5e63b6720bc7a40af7812957d56d7dda0ec413ff17e5e53cc3595857",
       "authorityValueDigest": "db3101c2d04d732a1ef99666d74f08a9eb6ad9c2dfb04b44487dda319158078d",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
-      "proofLemma": "SEC_007_protection_profile_downgrade_resistance"
+      "proofLemma": "SEC_007_protection_profile_content_binding"
     },
     {
       "bindingId": "BIND-SEC-007-PROFILE-ID-1",
@@ -587,10 +577,10 @@
       "kind": "profile-id",
       "authorityPath": "spec/protection-profiles.json",
       "authorityPointer": "/profiles/0/profileId",
-      "authorityDigest": "086e9abe3af4a5191fcfdcca438527314763f6a81ae148b33de9e880f72f4933",
-      "authorityValueDigest": "d3113cd206d0d72a4f8155a934764ceb1f16169eea99dfe91557220b58315470",
+      "authorityDigest": "77a01bd7f8d1399b1bd59626842e297db83f250fe8d50e4fc90b3b079db56f7e",
+      "authorityValueDigest": "b0a8800a73cf45f1c97d8eb714ee501ecb602126b47e184ae39f7e1e40360873",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
-      "proofLemma": "SEC_007_protection_profile_downgrade_resistance"
+      "proofLemma": "SEC_007_protection_profile_content_binding"
     },
     {
       "bindingId": "BIND-SEC-007-PROTOCOL-LINE-ID-1",
@@ -598,10 +588,10 @@
       "kind": "protocol-line-id",
       "authorityPath": "spec/protocol-lines.json",
       "authorityPointer": "/lines/0/protocolLineId",
-      "authorityDigest": "20bea021e70a886112c1e3920b4f40a5c50712496786962d5dee6f1d44ee4e05",
-      "authorityValueDigest": "83f11435706a6ae5e3f1cba92a1f1dffa680cea801dbc8077efe9bdf03e70f2e",
+      "authorityDigest": "e3d91a2fe3944d1e31856df808fc3477249a6a81c995a472f095d1abec941d22",
+      "authorityValueDigest": "d2b610a001b00993b84a9374d9553414cf6ea46868f142aef003c610cb0f039e",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
-      "proofLemma": "SEC_007_protection_profile_downgrade_resistance"
+      "proofLemma": "SEC_007_protection_profile_content_binding"
     },
     {
       "bindingId": "BIND-SEC-008-ALGORITHM-ID-1",
@@ -609,7 +599,7 @@
       "kind": "algorithm-id",
       "authorityPath": "spec/v1/protection/algorithms.json",
       "authorityPointer": "/primitives",
-      "authorityDigest": "18256dc027951749d0501a21fa27552e960eb1cab74317bdf0689b21dfa44cc7",
+      "authorityDigest": "a7e3bc97fa63b7038768270d9d9aea111cd60953c98096a41c8aa84c731a267c",
       "authorityValueDigest": "523edc153cf6c10e9f06bcfcad96792d394f09636f4b62511babb44e3a580d24",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_008_session_independence"
@@ -620,8 +610,8 @@
       "kind": "bound",
       "authorityPath": "spec/v1/protection/bounds.json",
       "authorityPointer": "/bounds",
-      "authorityDigest": "17774552a0183911243457f727933c0db89e2144926fa56da2e1c83470927471",
-      "authorityValueDigest": "99f65101b8c6764c993597ce2e6e85e228b975b6336513970d7027122aec7ecb",
+      "authorityDigest": "ce4d8fef20815ab6731a79d2c011c4f294768a1e1fd959474aa91928bb81ad27",
+      "authorityValueDigest": "7e7d2a50a6bbbf6ed347e64af8922333868acc03a89369cc9a844a7d400b049f",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_008_session_independence"
     },
@@ -631,8 +621,8 @@
       "kind": "domain-separator",
       "authorityPath": "spec/v1/protection/domains.json",
       "authorityPointer": "/domains",
-      "authorityDigest": "c821a8289e36b2ea7ff19378f2d525d65b1f5d6a619b0010ea354050e4aa032c",
-      "authorityValueDigest": "04259801d313f397abdb2ba617699fadb182c4d68d91399fa3d9ce9d3eea1228",
+      "authorityDigest": "6cf2329a18f571e3f00aaf62e01e8980e7700ff1e5e8403a674293fc21cb26b3",
+      "authorityValueDigest": "23b8e522d4221c0165f0fb82033d203a75aa89e0b855f5a6ffd3029afecd9cdc",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_008_session_independence"
     },
@@ -642,8 +632,8 @@
       "kind": "failure-enum",
       "authorityPath": "spec/v1/protection/failures.json",
       "authorityPointer": "/failures",
-      "authorityDigest": "e4e0b70a919e056d620aa3fed552d53c25d46a2a7770c2103f4cbc25e299ef44",
-      "authorityValueDigest": "9d54769d565ee1f4ea610ecb4fe43dfd342de3949f7489821fa5352b4eeec543",
+      "authorityDigest": "b1b28c20f007f0e25be7f23c635dfef39ca4ce6e50a0d210c58290c038b9bbf9",
+      "authorityValueDigest": "99aac31635d1fd604449e59e38116e237f39d776a4a28a94cb1bad4355f258ff",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_008_session_independence"
     },
@@ -653,7 +643,7 @@
       "kind": "field-label",
       "authorityPath": "spec/v1/protection/labels.json",
       "authorityPointer": "/ratchetHeader",
-      "authorityDigest": "3922dbd20adbbdf4cdc653d8965c3d2e18fede7cf0255c45bb354ccf51c4c604",
+      "authorityDigest": "1ff9f42d5e63b6720bc7a40af7812957d56d7dda0ec413ff17e5e53cc3595857",
       "authorityValueDigest": "db3101c2d04d732a1ef99666d74f08a9eb6ad9c2dfb04b44487dda319158078d",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_008_session_independence"
@@ -664,8 +654,8 @@
       "kind": "profile-id",
       "authorityPath": "spec/protection-profiles.json",
       "authorityPointer": "/profiles/0/profileId",
-      "authorityDigest": "086e9abe3af4a5191fcfdcca438527314763f6a81ae148b33de9e880f72f4933",
-      "authorityValueDigest": "d3113cd206d0d72a4f8155a934764ceb1f16169eea99dfe91557220b58315470",
+      "authorityDigest": "77a01bd7f8d1399b1bd59626842e297db83f250fe8d50e4fc90b3b079db56f7e",
+      "authorityValueDigest": "b0a8800a73cf45f1c97d8eb714ee501ecb602126b47e184ae39f7e1e40360873",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_008_session_independence"
     },
@@ -675,8 +665,8 @@
       "kind": "protocol-line-id",
       "authorityPath": "spec/protocol-lines.json",
       "authorityPointer": "/lines/0/protocolLineId",
-      "authorityDigest": "20bea021e70a886112c1e3920b4f40a5c50712496786962d5dee6f1d44ee4e05",
-      "authorityValueDigest": "83f11435706a6ae5e3f1cba92a1f1dffa680cea801dbc8077efe9bdf03e70f2e",
+      "authorityDigest": "e3d91a2fe3944d1e31856df808fc3477249a6a81c995a472f095d1abec941d22",
+      "authorityValueDigest": "d2b610a001b00993b84a9374d9553414cf6ea46868f142aef003c610cb0f039e",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_008_session_independence"
     },
@@ -686,7 +676,7 @@
       "kind": "algorithm-id",
       "authorityPath": "spec/v1/protection/algorithms.json",
       "authorityPointer": "/primitives",
-      "authorityDigest": "18256dc027951749d0501a21fa27552e960eb1cab74317bdf0689b21dfa44cc7",
+      "authorityDigest": "a7e3bc97fa63b7038768270d9d9aea111cd60953c98096a41c8aa84c731a267c",
       "authorityValueDigest": "523edc153cf6c10e9f06bcfcad96792d394f09636f4b62511babb44e3a580d24",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_009_initial_forward_secrecy"
@@ -697,8 +687,8 @@
       "kind": "bound",
       "authorityPath": "spec/v1/protection/bounds.json",
       "authorityPointer": "/bounds",
-      "authorityDigest": "17774552a0183911243457f727933c0db89e2144926fa56da2e1c83470927471",
-      "authorityValueDigest": "99f65101b8c6764c993597ce2e6e85e228b975b6336513970d7027122aec7ecb",
+      "authorityDigest": "ce4d8fef20815ab6731a79d2c011c4f294768a1e1fd959474aa91928bb81ad27",
+      "authorityValueDigest": "7e7d2a50a6bbbf6ed347e64af8922333868acc03a89369cc9a844a7d400b049f",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_009_initial_forward_secrecy"
     },
@@ -708,8 +698,8 @@
       "kind": "domain-separator",
       "authorityPath": "spec/v1/protection/domains.json",
       "authorityPointer": "/domains",
-      "authorityDigest": "c821a8289e36b2ea7ff19378f2d525d65b1f5d6a619b0010ea354050e4aa032c",
-      "authorityValueDigest": "04259801d313f397abdb2ba617699fadb182c4d68d91399fa3d9ce9d3eea1228",
+      "authorityDigest": "6cf2329a18f571e3f00aaf62e01e8980e7700ff1e5e8403a674293fc21cb26b3",
+      "authorityValueDigest": "23b8e522d4221c0165f0fb82033d203a75aa89e0b855f5a6ffd3029afecd9cdc",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_009_initial_forward_secrecy"
     },
@@ -719,8 +709,8 @@
       "kind": "failure-enum",
       "authorityPath": "spec/v1/protection/failures.json",
       "authorityPointer": "/failures",
-      "authorityDigest": "e4e0b70a919e056d620aa3fed552d53c25d46a2a7770c2103f4cbc25e299ef44",
-      "authorityValueDigest": "9d54769d565ee1f4ea610ecb4fe43dfd342de3949f7489821fa5352b4eeec543",
+      "authorityDigest": "b1b28c20f007f0e25be7f23c635dfef39ca4ce6e50a0d210c58290c038b9bbf9",
+      "authorityValueDigest": "99aac31635d1fd604449e59e38116e237f39d776a4a28a94cb1bad4355f258ff",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_009_initial_forward_secrecy"
     },
@@ -730,7 +720,7 @@
       "kind": "field-label",
       "authorityPath": "spec/v1/protection/labels.json",
       "authorityPointer": "/ratchetHeader",
-      "authorityDigest": "3922dbd20adbbdf4cdc653d8965c3d2e18fede7cf0255c45bb354ccf51c4c604",
+      "authorityDigest": "1ff9f42d5e63b6720bc7a40af7812957d56d7dda0ec413ff17e5e53cc3595857",
       "authorityValueDigest": "db3101c2d04d732a1ef99666d74f08a9eb6ad9c2dfb04b44487dda319158078d",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_009_initial_forward_secrecy"
@@ -741,8 +731,8 @@
       "kind": "profile-id",
       "authorityPath": "spec/protection-profiles.json",
       "authorityPointer": "/profiles/0/profileId",
-      "authorityDigest": "086e9abe3af4a5191fcfdcca438527314763f6a81ae148b33de9e880f72f4933",
-      "authorityValueDigest": "d3113cd206d0d72a4f8155a934764ceb1f16169eea99dfe91557220b58315470",
+      "authorityDigest": "77a01bd7f8d1399b1bd59626842e297db83f250fe8d50e4fc90b3b079db56f7e",
+      "authorityValueDigest": "b0a8800a73cf45f1c97d8eb714ee501ecb602126b47e184ae39f7e1e40360873",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_009_initial_forward_secrecy"
     },
@@ -752,8 +742,8 @@
       "kind": "protocol-line-id",
       "authorityPath": "spec/protocol-lines.json",
       "authorityPointer": "/lines/0/protocolLineId",
-      "authorityDigest": "20bea021e70a886112c1e3920b4f40a5c50712496786962d5dee6f1d44ee4e05",
-      "authorityValueDigest": "83f11435706a6ae5e3f1cba92a1f1dffa680cea801dbc8077efe9bdf03e70f2e",
+      "authorityDigest": "e3d91a2fe3944d1e31856df808fc3477249a6a81c995a472f095d1abec941d22",
+      "authorityValueDigest": "d2b610a001b00993b84a9374d9553414cf6ea46868f142aef003c610cb0f039e",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_009_initial_forward_secrecy"
     },
@@ -763,7 +753,7 @@
       "kind": "algorithm-id",
       "authorityPath": "spec/v1/protection/algorithms.json",
       "authorityPointer": "/primitives",
-      "authorityDigest": "18256dc027951749d0501a21fa27552e960eb1cab74317bdf0689b21dfa44cc7",
+      "authorityDigest": "a7e3bc97fa63b7038768270d9d9aea111cd60953c98096a41c8aa84c731a267c",
       "authorityValueDigest": "523edc153cf6c10e9f06bcfcad96792d394f09636f4b62511babb44e3a580d24",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_010_double_ratchet_forward_secrecy"
@@ -774,8 +764,8 @@
       "kind": "bound",
       "authorityPath": "spec/v1/protection/bounds.json",
       "authorityPointer": "/bounds",
-      "authorityDigest": "17774552a0183911243457f727933c0db89e2144926fa56da2e1c83470927471",
-      "authorityValueDigest": "99f65101b8c6764c993597ce2e6e85e228b975b6336513970d7027122aec7ecb",
+      "authorityDigest": "ce4d8fef20815ab6731a79d2c011c4f294768a1e1fd959474aa91928bb81ad27",
+      "authorityValueDigest": "7e7d2a50a6bbbf6ed347e64af8922333868acc03a89369cc9a844a7d400b049f",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_010_double_ratchet_forward_secrecy"
     },
@@ -785,8 +775,8 @@
       "kind": "domain-separator",
       "authorityPath": "spec/v1/protection/domains.json",
       "authorityPointer": "/domains",
-      "authorityDigest": "c821a8289e36b2ea7ff19378f2d525d65b1f5d6a619b0010ea354050e4aa032c",
-      "authorityValueDigest": "04259801d313f397abdb2ba617699fadb182c4d68d91399fa3d9ce9d3eea1228",
+      "authorityDigest": "6cf2329a18f571e3f00aaf62e01e8980e7700ff1e5e8403a674293fc21cb26b3",
+      "authorityValueDigest": "23b8e522d4221c0165f0fb82033d203a75aa89e0b855f5a6ffd3029afecd9cdc",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_010_double_ratchet_forward_secrecy"
     },
@@ -796,8 +786,8 @@
       "kind": "failure-enum",
       "authorityPath": "spec/v1/protection/failures.json",
       "authorityPointer": "/failures",
-      "authorityDigest": "e4e0b70a919e056d620aa3fed552d53c25d46a2a7770c2103f4cbc25e299ef44",
-      "authorityValueDigest": "9d54769d565ee1f4ea610ecb4fe43dfd342de3949f7489821fa5352b4eeec543",
+      "authorityDigest": "b1b28c20f007f0e25be7f23c635dfef39ca4ce6e50a0d210c58290c038b9bbf9",
+      "authorityValueDigest": "99aac31635d1fd604449e59e38116e237f39d776a4a28a94cb1bad4355f258ff",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_010_double_ratchet_forward_secrecy"
     },
@@ -807,7 +797,7 @@
       "kind": "field-label",
       "authorityPath": "spec/v1/protection/labels.json",
       "authorityPointer": "/ratchetHeader",
-      "authorityDigest": "3922dbd20adbbdf4cdc653d8965c3d2e18fede7cf0255c45bb354ccf51c4c604",
+      "authorityDigest": "1ff9f42d5e63b6720bc7a40af7812957d56d7dda0ec413ff17e5e53cc3595857",
       "authorityValueDigest": "db3101c2d04d732a1ef99666d74f08a9eb6ad9c2dfb04b44487dda319158078d",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_010_double_ratchet_forward_secrecy"
@@ -818,8 +808,8 @@
       "kind": "profile-id",
       "authorityPath": "spec/protection-profiles.json",
       "authorityPointer": "/profiles/0/profileId",
-      "authorityDigest": "086e9abe3af4a5191fcfdcca438527314763f6a81ae148b33de9e880f72f4933",
-      "authorityValueDigest": "d3113cd206d0d72a4f8155a934764ceb1f16169eea99dfe91557220b58315470",
+      "authorityDigest": "77a01bd7f8d1399b1bd59626842e297db83f250fe8d50e4fc90b3b079db56f7e",
+      "authorityValueDigest": "b0a8800a73cf45f1c97d8eb714ee501ecb602126b47e184ae39f7e1e40360873",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_010_double_ratchet_forward_secrecy"
     },
@@ -829,8 +819,8 @@
       "kind": "protocol-line-id",
       "authorityPath": "spec/protocol-lines.json",
       "authorityPointer": "/lines/0/protocolLineId",
-      "authorityDigest": "20bea021e70a886112c1e3920b4f40a5c50712496786962d5dee6f1d44ee4e05",
-      "authorityValueDigest": "83f11435706a6ae5e3f1cba92a1f1dffa680cea801dbc8077efe9bdf03e70f2e",
+      "authorityDigest": "e3d91a2fe3944d1e31856df808fc3477249a6a81c995a472f095d1abec941d22",
+      "authorityValueDigest": "d2b610a001b00993b84a9374d9553414cf6ea46868f142aef003c610cb0f039e",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_010_double_ratchet_forward_secrecy"
     },
@@ -840,7 +830,7 @@
       "kind": "algorithm-id",
       "authorityPath": "spec/v1/protection/algorithms.json",
       "authorityPointer": "/primitives",
-      "authorityDigest": "18256dc027951749d0501a21fa27552e960eb1cab74317bdf0689b21dfa44cc7",
+      "authorityDigest": "a7e3bc97fa63b7038768270d9d9aea111cd60953c98096a41c8aa84c731a267c",
       "authorityValueDigest": "523edc153cf6c10e9f06bcfcad96792d394f09636f4b62511babb44e3a580d24",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_011_double_ratchet_post_compromise_recovery"
@@ -851,8 +841,8 @@
       "kind": "bound",
       "authorityPath": "spec/v1/protection/bounds.json",
       "authorityPointer": "/bounds",
-      "authorityDigest": "17774552a0183911243457f727933c0db89e2144926fa56da2e1c83470927471",
-      "authorityValueDigest": "99f65101b8c6764c993597ce2e6e85e228b975b6336513970d7027122aec7ecb",
+      "authorityDigest": "ce4d8fef20815ab6731a79d2c011c4f294768a1e1fd959474aa91928bb81ad27",
+      "authorityValueDigest": "7e7d2a50a6bbbf6ed347e64af8922333868acc03a89369cc9a844a7d400b049f",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_011_double_ratchet_post_compromise_recovery"
     },
@@ -862,8 +852,8 @@
       "kind": "domain-separator",
       "authorityPath": "spec/v1/protection/domains.json",
       "authorityPointer": "/domains",
-      "authorityDigest": "c821a8289e36b2ea7ff19378f2d525d65b1f5d6a619b0010ea354050e4aa032c",
-      "authorityValueDigest": "04259801d313f397abdb2ba617699fadb182c4d68d91399fa3d9ce9d3eea1228",
+      "authorityDigest": "6cf2329a18f571e3f00aaf62e01e8980e7700ff1e5e8403a674293fc21cb26b3",
+      "authorityValueDigest": "23b8e522d4221c0165f0fb82033d203a75aa89e0b855f5a6ffd3029afecd9cdc",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_011_double_ratchet_post_compromise_recovery"
     },
@@ -873,8 +863,8 @@
       "kind": "failure-enum",
       "authorityPath": "spec/v1/protection/failures.json",
       "authorityPointer": "/failures",
-      "authorityDigest": "e4e0b70a919e056d620aa3fed552d53c25d46a2a7770c2103f4cbc25e299ef44",
-      "authorityValueDigest": "9d54769d565ee1f4ea610ecb4fe43dfd342de3949f7489821fa5352b4eeec543",
+      "authorityDigest": "b1b28c20f007f0e25be7f23c635dfef39ca4ce6e50a0d210c58290c038b9bbf9",
+      "authorityValueDigest": "99aac31635d1fd604449e59e38116e237f39d776a4a28a94cb1bad4355f258ff",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_011_double_ratchet_post_compromise_recovery"
     },
@@ -884,7 +874,7 @@
       "kind": "field-label",
       "authorityPath": "spec/v1/protection/labels.json",
       "authorityPointer": "/ratchetHeader",
-      "authorityDigest": "3922dbd20adbbdf4cdc653d8965c3d2e18fede7cf0255c45bb354ccf51c4c604",
+      "authorityDigest": "1ff9f42d5e63b6720bc7a40af7812957d56d7dda0ec413ff17e5e53cc3595857",
       "authorityValueDigest": "db3101c2d04d732a1ef99666d74f08a9eb6ad9c2dfb04b44487dda319158078d",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_011_double_ratchet_post_compromise_recovery"
@@ -895,8 +885,8 @@
       "kind": "profile-id",
       "authorityPath": "spec/protection-profiles.json",
       "authorityPointer": "/profiles/0/profileId",
-      "authorityDigest": "086e9abe3af4a5191fcfdcca438527314763f6a81ae148b33de9e880f72f4933",
-      "authorityValueDigest": "d3113cd206d0d72a4f8155a934764ceb1f16169eea99dfe91557220b58315470",
+      "authorityDigest": "77a01bd7f8d1399b1bd59626842e297db83f250fe8d50e4fc90b3b079db56f7e",
+      "authorityValueDigest": "b0a8800a73cf45f1c97d8eb714ee501ecb602126b47e184ae39f7e1e40360873",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_011_double_ratchet_post_compromise_recovery"
     },
@@ -906,8 +896,8 @@
       "kind": "protocol-line-id",
       "authorityPath": "spec/protocol-lines.json",
       "authorityPointer": "/lines/0/protocolLineId",
-      "authorityDigest": "20bea021e70a886112c1e3920b4f40a5c50712496786962d5dee6f1d44ee4e05",
-      "authorityValueDigest": "83f11435706a6ae5e3f1cba92a1f1dffa680cea801dbc8077efe9bdf03e70f2e",
+      "authorityDigest": "e3d91a2fe3944d1e31856df808fc3477249a6a81c995a472f095d1abec941d22",
+      "authorityValueDigest": "d2b610a001b00993b84a9374d9553414cf6ea46868f142aef003c610cb0f039e",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_011_double_ratchet_post_compromise_recovery"
     },
@@ -917,7 +907,7 @@
       "kind": "algorithm-id",
       "authorityPath": "spec/v1/protection/algorithms.json",
       "authorityPointer": "/primitives",
-      "authorityDigest": "18256dc027951749d0501a21fa27552e960eb1cab74317bdf0689b21dfa44cc7",
+      "authorityDigest": "a7e3bc97fa63b7038768270d9d9aea111cd60953c98096a41c8aa84c731a267c",
       "authorityValueDigest": "523edc153cf6c10e9f06bcfcad96792d394f09636f4b62511babb44e3a580d24",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_012_replay_resistance"
@@ -928,8 +918,8 @@
       "kind": "bound",
       "authorityPath": "spec/v1/protection/bounds.json",
       "authorityPointer": "/bounds",
-      "authorityDigest": "17774552a0183911243457f727933c0db89e2144926fa56da2e1c83470927471",
-      "authorityValueDigest": "99f65101b8c6764c993597ce2e6e85e228b975b6336513970d7027122aec7ecb",
+      "authorityDigest": "ce4d8fef20815ab6731a79d2c011c4f294768a1e1fd959474aa91928bb81ad27",
+      "authorityValueDigest": "7e7d2a50a6bbbf6ed347e64af8922333868acc03a89369cc9a844a7d400b049f",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_012_replay_resistance"
     },
@@ -939,8 +929,8 @@
       "kind": "domain-separator",
       "authorityPath": "spec/v1/protection/domains.json",
       "authorityPointer": "/domains",
-      "authorityDigest": "c821a8289e36b2ea7ff19378f2d525d65b1f5d6a619b0010ea354050e4aa032c",
-      "authorityValueDigest": "04259801d313f397abdb2ba617699fadb182c4d68d91399fa3d9ce9d3eea1228",
+      "authorityDigest": "6cf2329a18f571e3f00aaf62e01e8980e7700ff1e5e8403a674293fc21cb26b3",
+      "authorityValueDigest": "23b8e522d4221c0165f0fb82033d203a75aa89e0b855f5a6ffd3029afecd9cdc",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_012_replay_resistance"
     },
@@ -950,8 +940,8 @@
       "kind": "failure-enum",
       "authorityPath": "spec/v1/protection/failures.json",
       "authorityPointer": "/failures",
-      "authorityDigest": "e4e0b70a919e056d620aa3fed552d53c25d46a2a7770c2103f4cbc25e299ef44",
-      "authorityValueDigest": "9d54769d565ee1f4ea610ecb4fe43dfd342de3949f7489821fa5352b4eeec543",
+      "authorityDigest": "b1b28c20f007f0e25be7f23c635dfef39ca4ce6e50a0d210c58290c038b9bbf9",
+      "authorityValueDigest": "99aac31635d1fd604449e59e38116e237f39d776a4a28a94cb1bad4355f258ff",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_012_replay_resistance"
     },
@@ -961,7 +951,7 @@
       "kind": "field-label",
       "authorityPath": "spec/v1/protection/labels.json",
       "authorityPointer": "/ratchetHeader",
-      "authorityDigest": "3922dbd20adbbdf4cdc653d8965c3d2e18fede7cf0255c45bb354ccf51c4c604",
+      "authorityDigest": "1ff9f42d5e63b6720bc7a40af7812957d56d7dda0ec413ff17e5e53cc3595857",
       "authorityValueDigest": "db3101c2d04d732a1ef99666d74f08a9eb6ad9c2dfb04b44487dda319158078d",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_012_replay_resistance"
@@ -972,8 +962,8 @@
       "kind": "profile-id",
       "authorityPath": "spec/protection-profiles.json",
       "authorityPointer": "/profiles/0/profileId",
-      "authorityDigest": "086e9abe3af4a5191fcfdcca438527314763f6a81ae148b33de9e880f72f4933",
-      "authorityValueDigest": "d3113cd206d0d72a4f8155a934764ceb1f16169eea99dfe91557220b58315470",
+      "authorityDigest": "77a01bd7f8d1399b1bd59626842e297db83f250fe8d50e4fc90b3b079db56f7e",
+      "authorityValueDigest": "b0a8800a73cf45f1c97d8eb714ee501ecb602126b47e184ae39f7e1e40360873",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_012_replay_resistance"
     },
@@ -983,8 +973,8 @@
       "kind": "protocol-line-id",
       "authorityPath": "spec/protocol-lines.json",
       "authorityPointer": "/lines/0/protocolLineId",
-      "authorityDigest": "20bea021e70a886112c1e3920b4f40a5c50712496786962d5dee6f1d44ee4e05",
-      "authorityValueDigest": "83f11435706a6ae5e3f1cba92a1f1dffa680cea801dbc8077efe9bdf03e70f2e",
+      "authorityDigest": "e3d91a2fe3944d1e31856df808fc3477249a6a81c995a472f095d1abec941d22",
+      "authorityValueDigest": "d2b610a001b00993b84a9374d9553414cf6ea46868f142aef003c610cb0f039e",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_012_replay_resistance"
     },
@@ -994,7 +984,7 @@
       "kind": "algorithm-id",
       "authorityPath": "spec/v1/protection/algorithms.json",
       "authorityPointer": "/primitives",
-      "authorityDigest": "18256dc027951749d0501a21fa27552e960eb1cab74317bdf0689b21dfa44cc7",
+      "authorityDigest": "a7e3bc97fa63b7038768270d9d9aea111cd60953c98096a41c8aa84c731a267c",
       "authorityValueDigest": "523edc153cf6c10e9f06bcfcad96792d394f09636f4b62511babb44e3a580d24",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_013_state_rollback_resistance"
@@ -1005,8 +995,8 @@
       "kind": "bound",
       "authorityPath": "spec/v1/protection/bounds.json",
       "authorityPointer": "/bounds",
-      "authorityDigest": "17774552a0183911243457f727933c0db89e2144926fa56da2e1c83470927471",
-      "authorityValueDigest": "99f65101b8c6764c993597ce2e6e85e228b975b6336513970d7027122aec7ecb",
+      "authorityDigest": "ce4d8fef20815ab6731a79d2c011c4f294768a1e1fd959474aa91928bb81ad27",
+      "authorityValueDigest": "7e7d2a50a6bbbf6ed347e64af8922333868acc03a89369cc9a844a7d400b049f",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_013_state_rollback_resistance"
     },
@@ -1016,8 +1006,8 @@
       "kind": "domain-separator",
       "authorityPath": "spec/v1/protection/domains.json",
       "authorityPointer": "/domains",
-      "authorityDigest": "c821a8289e36b2ea7ff19378f2d525d65b1f5d6a619b0010ea354050e4aa032c",
-      "authorityValueDigest": "04259801d313f397abdb2ba617699fadb182c4d68d91399fa3d9ce9d3eea1228",
+      "authorityDigest": "6cf2329a18f571e3f00aaf62e01e8980e7700ff1e5e8403a674293fc21cb26b3",
+      "authorityValueDigest": "23b8e522d4221c0165f0fb82033d203a75aa89e0b855f5a6ffd3029afecd9cdc",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_013_state_rollback_resistance"
     },
@@ -1027,8 +1017,8 @@
       "kind": "failure-enum",
       "authorityPath": "spec/v1/protection/failures.json",
       "authorityPointer": "/failures",
-      "authorityDigest": "e4e0b70a919e056d620aa3fed552d53c25d46a2a7770c2103f4cbc25e299ef44",
-      "authorityValueDigest": "9d54769d565ee1f4ea610ecb4fe43dfd342de3949f7489821fa5352b4eeec543",
+      "authorityDigest": "b1b28c20f007f0e25be7f23c635dfef39ca4ce6e50a0d210c58290c038b9bbf9",
+      "authorityValueDigest": "99aac31635d1fd604449e59e38116e237f39d776a4a28a94cb1bad4355f258ff",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_013_state_rollback_resistance"
     },
@@ -1038,7 +1028,7 @@
       "kind": "field-label",
       "authorityPath": "spec/v1/protection/labels.json",
       "authorityPointer": "/ratchetHeader",
-      "authorityDigest": "3922dbd20adbbdf4cdc653d8965c3d2e18fede7cf0255c45bb354ccf51c4c604",
+      "authorityDigest": "1ff9f42d5e63b6720bc7a40af7812957d56d7dda0ec413ff17e5e53cc3595857",
       "authorityValueDigest": "db3101c2d04d732a1ef99666d74f08a9eb6ad9c2dfb04b44487dda319158078d",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_013_state_rollback_resistance"
@@ -1049,8 +1039,8 @@
       "kind": "profile-id",
       "authorityPath": "spec/protection-profiles.json",
       "authorityPointer": "/profiles/0/profileId",
-      "authorityDigest": "086e9abe3af4a5191fcfdcca438527314763f6a81ae148b33de9e880f72f4933",
-      "authorityValueDigest": "d3113cd206d0d72a4f8155a934764ceb1f16169eea99dfe91557220b58315470",
+      "authorityDigest": "77a01bd7f8d1399b1bd59626842e297db83f250fe8d50e4fc90b3b079db56f7e",
+      "authorityValueDigest": "b0a8800a73cf45f1c97d8eb714ee501ecb602126b47e184ae39f7e1e40360873",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_013_state_rollback_resistance"
     },
@@ -1060,8 +1050,8 @@
       "kind": "protocol-line-id",
       "authorityPath": "spec/protocol-lines.json",
       "authorityPointer": "/lines/0/protocolLineId",
-      "authorityDigest": "20bea021e70a886112c1e3920b4f40a5c50712496786962d5dee6f1d44ee4e05",
-      "authorityValueDigest": "83f11435706a6ae5e3f1cba92a1f1dffa680cea801dbc8077efe9bdf03e70f2e",
+      "authorityDigest": "e3d91a2fe3944d1e31856df808fc3477249a6a81c995a472f095d1abec941d22",
+      "authorityValueDigest": "d2b610a001b00993b84a9374d9553414cf6ea46868f142aef003c610cb0f039e",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_013_state_rollback_resistance"
     },
@@ -1071,21 +1061,21 @@
       "kind": "algorithm-id",
       "authorityPath": "spec/v1/protection/algorithms.json",
       "authorityPointer": "/primitives",
-      "authorityDigest": "18256dc027951749d0501a21fa27552e960eb1cab74317bdf0689b21dfa44cc7",
+      "authorityDigest": "a7e3bc97fa63b7038768270d9d9aea111cd60953c98096a41c8aa84c731a267c",
       "authorityValueDigest": "523edc153cf6c10e9f06bcfcad96792d394f09636f4b62511babb44e3a580d24",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
-      "proofLemma": "SEC_014_identity_continuity"
+      "proofLemma": "SEC_014_self_certifying_user_authority"
     },
     {
       "bindingId": "BIND-SEC-014-BOUND-1",
       "claimId": "SEC-014",
       "kind": "bound",
-      "authorityPath": "spec/v1/protection/bounds.json",
+      "authorityPath": "spec/v1/identity/identity.policy.json",
       "authorityPointer": "/bounds",
-      "authorityDigest": "17774552a0183911243457f727933c0db89e2144926fa56da2e1c83470927471",
-      "authorityValueDigest": "99f65101b8c6764c993597ce2e6e85e228b975b6336513970d7027122aec7ecb",
+      "authorityDigest": "6677c214343e3d33de607f7dbb6daaa5a1df797459a06b6bf4cecd05d3dc055a",
+      "authorityValueDigest": "4742737eaac7f4bf25f3a58fbcd3ace5ebd38e508c6fe3551ec139af7a068c44",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
-      "proofLemma": "SEC_014_identity_continuity"
+      "proofLemma": "SEC_014_self_certifying_user_authority"
     },
     {
       "bindingId": "BIND-SEC-014-DOMAIN-SEPARATOR-1",
@@ -1093,32 +1083,32 @@
       "kind": "domain-separator",
       "authorityPath": "spec/v1/protection/domains.json",
       "authorityPointer": "/domains",
-      "authorityDigest": "c821a8289e36b2ea7ff19378f2d525d65b1f5d6a619b0010ea354050e4aa032c",
-      "authorityValueDigest": "04259801d313f397abdb2ba617699fadb182c4d68d91399fa3d9ce9d3eea1228",
+      "authorityDigest": "6cf2329a18f571e3f00aaf62e01e8980e7700ff1e5e8403a674293fc21cb26b3",
+      "authorityValueDigest": "23b8e522d4221c0165f0fb82033d203a75aa89e0b855f5a6ffd3029afecd9cdc",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
-      "proofLemma": "SEC_014_identity_continuity"
+      "proofLemma": "SEC_014_self_certifying_user_authority"
     },
     {
       "bindingId": "BIND-SEC-014-FAILURE-ENUM-1",
       "claimId": "SEC-014",
       "kind": "failure-enum",
-      "authorityPath": "spec/v1/protection/failures.json",
-      "authorityPointer": "/failures",
-      "authorityDigest": "e4e0b70a919e056d620aa3fed552d53c25d46a2a7770c2103f4cbc25e299ef44",
-      "authorityValueDigest": "9d54769d565ee1f4ea610ecb4fe43dfd342de3949f7489821fa5352b4eeec543",
+      "authorityPath": "spec/v1/identity/identity.policy.json",
+      "authorityPointer": "/unknownPolicy",
+      "authorityDigest": "6677c214343e3d33de607f7dbb6daaa5a1df797459a06b6bf4cecd05d3dc055a",
+      "authorityValueDigest": "9d13b1bce40a105f17fefd9e747a8acda007392d70c2cdcb35e8227b1e9195a7",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
-      "proofLemma": "SEC_014_identity_continuity"
+      "proofLemma": "SEC_014_self_certifying_user_authority"
     },
     {
       "bindingId": "BIND-SEC-014-FIELD-LABEL-1",
       "claimId": "SEC-014",
       "kind": "field-label",
-      "authorityPath": "spec/v1/protection/labels.json",
-      "authorityPointer": "/ratchetHeader",
-      "authorityDigest": "3922dbd20adbbdf4cdc653d8965c3d2e18fede7cf0255c45bb354ccf51c4c604",
-      "authorityValueDigest": "db3101c2d04d732a1ef99666d74f08a9eb6ad9c2dfb04b44487dda319158078d",
+      "authorityPath": "spec/v1/identity/labels.json",
+      "authorityPointer": "/records/userAuthorityState",
+      "authorityDigest": "7821c0e9d865d88ab5d0a1793c09f1ea711b1fcb0798c917429a3c7e6a7c69ed",
+      "authorityValueDigest": "e8af67a66228c6c6a69f2ead17704518b3391fedbee7cf1bf5c744e3c01f8034",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
-      "proofLemma": "SEC_014_identity_continuity"
+      "proofLemma": "SEC_014_self_certifying_user_authority"
     },
     {
       "bindingId": "BIND-SEC-014-PROFILE-ID-1",
@@ -1126,10 +1116,10 @@
       "kind": "profile-id",
       "authorityPath": "spec/protection-profiles.json",
       "authorityPointer": "/profiles/0/profileId",
-      "authorityDigest": "086e9abe3af4a5191fcfdcca438527314763f6a81ae148b33de9e880f72f4933",
-      "authorityValueDigest": "d3113cd206d0d72a4f8155a934764ceb1f16169eea99dfe91557220b58315470",
+      "authorityDigest": "77a01bd7f8d1399b1bd59626842e297db83f250fe8d50e4fc90b3b079db56f7e",
+      "authorityValueDigest": "b0a8800a73cf45f1c97d8eb714ee501ecb602126b47e184ae39f7e1e40360873",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
-      "proofLemma": "SEC_014_identity_continuity"
+      "proofLemma": "SEC_014_self_certifying_user_authority"
     },
     {
       "bindingId": "BIND-SEC-014-PROTOCOL-LINE-ID-1",
@@ -1137,10 +1127,10 @@
       "kind": "protocol-line-id",
       "authorityPath": "spec/protocol-lines.json",
       "authorityPointer": "/lines/0/protocolLineId",
-      "authorityDigest": "20bea021e70a886112c1e3920b4f40a5c50712496786962d5dee6f1d44ee4e05",
-      "authorityValueDigest": "83f11435706a6ae5e3f1cba92a1f1dffa680cea801dbc8077efe9bdf03e70f2e",
+      "authorityDigest": "e3d91a2fe3944d1e31856df808fc3477249a6a81c995a472f095d1abec941d22",
+      "authorityValueDigest": "d2b610a001b00993b84a9374d9553414cf6ea46868f142aef003c610cb0f039e",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
-      "proofLemma": "SEC_014_identity_continuity"
+      "proofLemma": "SEC_014_self_certifying_user_authority"
     },
     {
       "bindingId": "BIND-SEC-015-ALGORITHM-ID-1",
@@ -1148,7 +1138,7 @@
       "kind": "algorithm-id",
       "authorityPath": "spec/v1/protection/algorithms.json",
       "authorityPointer": "/primitives",
-      "authorityDigest": "18256dc027951749d0501a21fa27552e960eb1cab74317bdf0689b21dfa44cc7",
+      "authorityDigest": "a7e3bc97fa63b7038768270d9d9aea111cd60953c98096a41c8aa84c731a267c",
       "authorityValueDigest": "523edc153cf6c10e9f06bcfcad96792d394f09636f4b62511babb44e3a580d24",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_015_route_migration_safety"
@@ -1159,8 +1149,8 @@
       "kind": "bound",
       "authorityPath": "spec/v1/protection/bounds.json",
       "authorityPointer": "/bounds",
-      "authorityDigest": "17774552a0183911243457f727933c0db89e2144926fa56da2e1c83470927471",
-      "authorityValueDigest": "99f65101b8c6764c993597ce2e6e85e228b975b6336513970d7027122aec7ecb",
+      "authorityDigest": "ce4d8fef20815ab6731a79d2c011c4f294768a1e1fd959474aa91928bb81ad27",
+      "authorityValueDigest": "7e7d2a50a6bbbf6ed347e64af8922333868acc03a89369cc9a844a7d400b049f",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_015_route_migration_safety"
     },
@@ -1170,8 +1160,8 @@
       "kind": "domain-separator",
       "authorityPath": "spec/v1/protection/domains.json",
       "authorityPointer": "/domains",
-      "authorityDigest": "c821a8289e36b2ea7ff19378f2d525d65b1f5d6a619b0010ea354050e4aa032c",
-      "authorityValueDigest": "04259801d313f397abdb2ba617699fadb182c4d68d91399fa3d9ce9d3eea1228",
+      "authorityDigest": "6cf2329a18f571e3f00aaf62e01e8980e7700ff1e5e8403a674293fc21cb26b3",
+      "authorityValueDigest": "23b8e522d4221c0165f0fb82033d203a75aa89e0b855f5a6ffd3029afecd9cdc",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_015_route_migration_safety"
     },
@@ -1181,8 +1171,8 @@
       "kind": "failure-enum",
       "authorityPath": "spec/v1/protection/failures.json",
       "authorityPointer": "/failures",
-      "authorityDigest": "e4e0b70a919e056d620aa3fed552d53c25d46a2a7770c2103f4cbc25e299ef44",
-      "authorityValueDigest": "9d54769d565ee1f4ea610ecb4fe43dfd342de3949f7489821fa5352b4eeec543",
+      "authorityDigest": "b1b28c20f007f0e25be7f23c635dfef39ca4ce6e50a0d210c58290c038b9bbf9",
+      "authorityValueDigest": "99aac31635d1fd604449e59e38116e237f39d776a4a28a94cb1bad4355f258ff",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_015_route_migration_safety"
     },
@@ -1192,7 +1182,7 @@
       "kind": "field-label",
       "authorityPath": "spec/v1/protection/labels.json",
       "authorityPointer": "/ratchetHeader",
-      "authorityDigest": "3922dbd20adbbdf4cdc653d8965c3d2e18fede7cf0255c45bb354ccf51c4c604",
+      "authorityDigest": "1ff9f42d5e63b6720bc7a40af7812957d56d7dda0ec413ff17e5e53cc3595857",
       "authorityValueDigest": "db3101c2d04d732a1ef99666d74f08a9eb6ad9c2dfb04b44487dda319158078d",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_015_route_migration_safety"
@@ -1203,8 +1193,8 @@
       "kind": "profile-id",
       "authorityPath": "spec/protection-profiles.json",
       "authorityPointer": "/profiles/0/profileId",
-      "authorityDigest": "086e9abe3af4a5191fcfdcca438527314763f6a81ae148b33de9e880f72f4933",
-      "authorityValueDigest": "d3113cd206d0d72a4f8155a934764ceb1f16169eea99dfe91557220b58315470",
+      "authorityDigest": "77a01bd7f8d1399b1bd59626842e297db83f250fe8d50e4fc90b3b079db56f7e",
+      "authorityValueDigest": "b0a8800a73cf45f1c97d8eb714ee501ecb602126b47e184ae39f7e1e40360873",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_015_route_migration_safety"
     },
@@ -1214,8 +1204,8 @@
       "kind": "protocol-line-id",
       "authorityPath": "spec/protocol-lines.json",
       "authorityPointer": "/lines/0/protocolLineId",
-      "authorityDigest": "20bea021e70a886112c1e3920b4f40a5c50712496786962d5dee6f1d44ee4e05",
-      "authorityValueDigest": "83f11435706a6ae5e3f1cba92a1f1dffa680cea801dbc8077efe9bdf03e70f2e",
+      "authorityDigest": "e3d91a2fe3944d1e31856df808fc3477249a6a81c995a472f095d1abec941d22",
+      "authorityValueDigest": "d2b610a001b00993b84a9374d9553414cf6ea46868f142aef003c610cb0f039e",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_015_route_migration_safety"
     },
@@ -1225,21 +1215,21 @@
       "kind": "algorithm-id",
       "authorityPath": "spec/v1/protection/algorithms.json",
       "authorityPointer": "/primitives",
-      "authorityDigest": "18256dc027951749d0501a21fa27552e960eb1cab74317bdf0689b21dfa44cc7",
+      "authorityDigest": "a7e3bc97fa63b7038768270d9d9aea111cd60953c98096a41c8aa84c731a267c",
       "authorityValueDigest": "523edc153cf6c10e9f06bcfcad96792d394f09636f4b62511babb44e3a580d24",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
-      "proofLemma": "SEC_016_evidence_unforgeability"
+      "proofLemma": "SEC_016_management_and_recovery_transition_authorization"
     },
     {
       "bindingId": "BIND-SEC-016-BOUND-1",
       "claimId": "SEC-016",
       "kind": "bound",
-      "authorityPath": "spec/v1/protection/bounds.json",
+      "authorityPath": "spec/v1/identity/identity.policy.json",
       "authorityPointer": "/bounds",
-      "authorityDigest": "17774552a0183911243457f727933c0db89e2144926fa56da2e1c83470927471",
-      "authorityValueDigest": "99f65101b8c6764c993597ce2e6e85e228b975b6336513970d7027122aec7ecb",
+      "authorityDigest": "6677c214343e3d33de607f7dbb6daaa5a1df797459a06b6bf4cecd05d3dc055a",
+      "authorityValueDigest": "4742737eaac7f4bf25f3a58fbcd3ace5ebd38e508c6fe3551ec139af7a068c44",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
-      "proofLemma": "SEC_016_evidence_unforgeability"
+      "proofLemma": "SEC_016_management_and_recovery_transition_authorization"
     },
     {
       "bindingId": "BIND-SEC-016-DOMAIN-SEPARATOR-1",
@@ -1247,32 +1237,32 @@
       "kind": "domain-separator",
       "authorityPath": "spec/v1/protection/domains.json",
       "authorityPointer": "/domains",
-      "authorityDigest": "c821a8289e36b2ea7ff19378f2d525d65b1f5d6a619b0010ea354050e4aa032c",
-      "authorityValueDigest": "04259801d313f397abdb2ba617699fadb182c4d68d91399fa3d9ce9d3eea1228",
+      "authorityDigest": "6cf2329a18f571e3f00aaf62e01e8980e7700ff1e5e8403a674293fc21cb26b3",
+      "authorityValueDigest": "23b8e522d4221c0165f0fb82033d203a75aa89e0b855f5a6ffd3029afecd9cdc",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
-      "proofLemma": "SEC_016_evidence_unforgeability"
+      "proofLemma": "SEC_016_management_and_recovery_transition_authorization"
     },
     {
       "bindingId": "BIND-SEC-016-FAILURE-ENUM-1",
       "claimId": "SEC-016",
       "kind": "failure-enum",
-      "authorityPath": "spec/v1/protection/failures.json",
-      "authorityPointer": "/failures",
-      "authorityDigest": "e4e0b70a919e056d620aa3fed552d53c25d46a2a7770c2103f4cbc25e299ef44",
-      "authorityValueDigest": "9d54769d565ee1f4ea610ecb4fe43dfd342de3949f7489821fa5352b4eeec543",
+      "authorityPath": "spec/v1/identity/identity.policy.json",
+      "authorityPointer": "/unknownPolicy",
+      "authorityDigest": "6677c214343e3d33de607f7dbb6daaa5a1df797459a06b6bf4cecd05d3dc055a",
+      "authorityValueDigest": "9d13b1bce40a105f17fefd9e747a8acda007392d70c2cdcb35e8227b1e9195a7",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
-      "proofLemma": "SEC_016_evidence_unforgeability"
+      "proofLemma": "SEC_016_management_and_recovery_transition_authorization"
     },
     {
       "bindingId": "BIND-SEC-016-FIELD-LABEL-1",
       "claimId": "SEC-016",
       "kind": "field-label",
-      "authorityPath": "spec/v1/protection/labels.json",
-      "authorityPointer": "/ratchetHeader",
-      "authorityDigest": "3922dbd20adbbdf4cdc653d8965c3d2e18fede7cf0255c45bb354ccf51c4c604",
-      "authorityValueDigest": "db3101c2d04d732a1ef99666d74f08a9eb6ad9c2dfb04b44487dda319158078d",
+      "authorityPath": "spec/v1/identity/labels.json",
+      "authorityPointer": "/records/userAuthorityState",
+      "authorityDigest": "7821c0e9d865d88ab5d0a1793c09f1ea711b1fcb0798c917429a3c7e6a7c69ed",
+      "authorityValueDigest": "e8af67a66228c6c6a69f2ead17704518b3391fedbee7cf1bf5c744e3c01f8034",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
-      "proofLemma": "SEC_016_evidence_unforgeability"
+      "proofLemma": "SEC_016_management_and_recovery_transition_authorization"
     },
     {
       "bindingId": "BIND-SEC-016-PROFILE-ID-1",
@@ -1280,10 +1270,10 @@
       "kind": "profile-id",
       "authorityPath": "spec/protection-profiles.json",
       "authorityPointer": "/profiles/0/profileId",
-      "authorityDigest": "086e9abe3af4a5191fcfdcca438527314763f6a81ae148b33de9e880f72f4933",
-      "authorityValueDigest": "d3113cd206d0d72a4f8155a934764ceb1f16169eea99dfe91557220b58315470",
+      "authorityDigest": "77a01bd7f8d1399b1bd59626842e297db83f250fe8d50e4fc90b3b079db56f7e",
+      "authorityValueDigest": "b0a8800a73cf45f1c97d8eb714ee501ecb602126b47e184ae39f7e1e40360873",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
-      "proofLemma": "SEC_016_evidence_unforgeability"
+      "proofLemma": "SEC_016_management_and_recovery_transition_authorization"
     },
     {
       "bindingId": "BIND-SEC-016-PROTOCOL-LINE-ID-1",
@@ -1291,10 +1281,10 @@
       "kind": "protocol-line-id",
       "authorityPath": "spec/protocol-lines.json",
       "authorityPointer": "/lines/0/protocolLineId",
-      "authorityDigest": "20bea021e70a886112c1e3920b4f40a5c50712496786962d5dee6f1d44ee4e05",
-      "authorityValueDigest": "83f11435706a6ae5e3f1cba92a1f1dffa680cea801dbc8077efe9bdf03e70f2e",
+      "authorityDigest": "e3d91a2fe3944d1e31856df808fc3477249a6a81c995a472f095d1abec941d22",
+      "authorityValueDigest": "d2b610a001b00993b84a9374d9553414cf6ea46868f142aef003c610cb0f039e",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
-      "proofLemma": "SEC_016_evidence_unforgeability"
+      "proofLemma": "SEC_016_management_and_recovery_transition_authorization"
     },
     {
       "bindingId": "BIND-SEC-017-ALGORITHM-ID-1",
@@ -1302,21 +1292,21 @@
       "kind": "algorithm-id",
       "authorityPath": "spec/v1/protection/algorithms.json",
       "authorityPointer": "/primitives",
-      "authorityDigest": "18256dc027951749d0501a21fa27552e960eb1cab74317bdf0689b21dfa44cc7",
+      "authorityDigest": "a7e3bc97fa63b7038768270d9d9aea111cd60953c98096a41c8aa84c731a267c",
       "authorityValueDigest": "523edc153cf6c10e9f06bcfcad96792d394f09636f4b62511babb44e3a580d24",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
-      "proofLemma": "SEC_017_evidence_identity_attribution"
+      "proofLemma": "SEC_017_endpoint_possession_authorization"
     },
     {
       "bindingId": "BIND-SEC-017-BOUND-1",
       "claimId": "SEC-017",
       "kind": "bound",
-      "authorityPath": "spec/v1/protection/bounds.json",
+      "authorityPath": "spec/v1/identity/identity.policy.json",
       "authorityPointer": "/bounds",
-      "authorityDigest": "17774552a0183911243457f727933c0db89e2144926fa56da2e1c83470927471",
-      "authorityValueDigest": "99f65101b8c6764c993597ce2e6e85e228b975b6336513970d7027122aec7ecb",
+      "authorityDigest": "6677c214343e3d33de607f7dbb6daaa5a1df797459a06b6bf4cecd05d3dc055a",
+      "authorityValueDigest": "4742737eaac7f4bf25f3a58fbcd3ace5ebd38e508c6fe3551ec139af7a068c44",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
-      "proofLemma": "SEC_017_evidence_identity_attribution"
+      "proofLemma": "SEC_017_endpoint_possession_authorization"
     },
     {
       "bindingId": "BIND-SEC-017-DOMAIN-SEPARATOR-1",
@@ -1324,32 +1314,32 @@
       "kind": "domain-separator",
       "authorityPath": "spec/v1/protection/domains.json",
       "authorityPointer": "/domains",
-      "authorityDigest": "c821a8289e36b2ea7ff19378f2d525d65b1f5d6a619b0010ea354050e4aa032c",
-      "authorityValueDigest": "04259801d313f397abdb2ba617699fadb182c4d68d91399fa3d9ce9d3eea1228",
+      "authorityDigest": "6cf2329a18f571e3f00aaf62e01e8980e7700ff1e5e8403a674293fc21cb26b3",
+      "authorityValueDigest": "23b8e522d4221c0165f0fb82033d203a75aa89e0b855f5a6ffd3029afecd9cdc",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
-      "proofLemma": "SEC_017_evidence_identity_attribution"
+      "proofLemma": "SEC_017_endpoint_possession_authorization"
     },
     {
       "bindingId": "BIND-SEC-017-FAILURE-ENUM-1",
       "claimId": "SEC-017",
       "kind": "failure-enum",
-      "authorityPath": "spec/v1/protection/failures.json",
-      "authorityPointer": "/failures",
-      "authorityDigest": "e4e0b70a919e056d620aa3fed552d53c25d46a2a7770c2103f4cbc25e299ef44",
-      "authorityValueDigest": "9d54769d565ee1f4ea610ecb4fe43dfd342de3949f7489821fa5352b4eeec543",
+      "authorityPath": "spec/v1/identity/identity.policy.json",
+      "authorityPointer": "/unknownPolicy",
+      "authorityDigest": "6677c214343e3d33de607f7dbb6daaa5a1df797459a06b6bf4cecd05d3dc055a",
+      "authorityValueDigest": "9d13b1bce40a105f17fefd9e747a8acda007392d70c2cdcb35e8227b1e9195a7",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
-      "proofLemma": "SEC_017_evidence_identity_attribution"
+      "proofLemma": "SEC_017_endpoint_possession_authorization"
     },
     {
       "bindingId": "BIND-SEC-017-FIELD-LABEL-1",
       "claimId": "SEC-017",
       "kind": "field-label",
-      "authorityPath": "spec/v1/protection/labels.json",
-      "authorityPointer": "/ratchetHeader",
-      "authorityDigest": "3922dbd20adbbdf4cdc653d8965c3d2e18fede7cf0255c45bb354ccf51c4c604",
-      "authorityValueDigest": "db3101c2d04d732a1ef99666d74f08a9eb6ad9c2dfb04b44487dda319158078d",
+      "authorityPath": "spec/v1/identity/labels.json",
+      "authorityPointer": "/records/userAuthorityState",
+      "authorityDigest": "7821c0e9d865d88ab5d0a1793c09f1ea711b1fcb0798c917429a3c7e6a7c69ed",
+      "authorityValueDigest": "e8af67a66228c6c6a69f2ead17704518b3391fedbee7cf1bf5c744e3c01f8034",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
-      "proofLemma": "SEC_017_evidence_identity_attribution"
+      "proofLemma": "SEC_017_endpoint_possession_authorization"
     },
     {
       "bindingId": "BIND-SEC-017-PROFILE-ID-1",
@@ -1357,10 +1347,10 @@
       "kind": "profile-id",
       "authorityPath": "spec/protection-profiles.json",
       "authorityPointer": "/profiles/0/profileId",
-      "authorityDigest": "086e9abe3af4a5191fcfdcca438527314763f6a81ae148b33de9e880f72f4933",
-      "authorityValueDigest": "d3113cd206d0d72a4f8155a934764ceb1f16169eea99dfe91557220b58315470",
+      "authorityDigest": "77a01bd7f8d1399b1bd59626842e297db83f250fe8d50e4fc90b3b079db56f7e",
+      "authorityValueDigest": "b0a8800a73cf45f1c97d8eb714ee501ecb602126b47e184ae39f7e1e40360873",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
-      "proofLemma": "SEC_017_evidence_identity_attribution"
+      "proofLemma": "SEC_017_endpoint_possession_authorization"
     },
     {
       "bindingId": "BIND-SEC-017-PROTOCOL-LINE-ID-1",
@@ -1368,10 +1358,10 @@
       "kind": "protocol-line-id",
       "authorityPath": "spec/protocol-lines.json",
       "authorityPointer": "/lines/0/protocolLineId",
-      "authorityDigest": "20bea021e70a886112c1e3920b4f40a5c50712496786962d5dee6f1d44ee4e05",
-      "authorityValueDigest": "83f11435706a6ae5e3f1cba92a1f1dffa680cea801dbc8077efe9bdf03e70f2e",
+      "authorityDigest": "e3d91a2fe3944d1e31856df808fc3477249a6a81c995a472f095d1abec941d22",
+      "authorityValueDigest": "d2b610a001b00993b84a9374d9553414cf6ea46868f142aef003c610cb0f039e",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
-      "proofLemma": "SEC_017_evidence_identity_attribution"
+      "proofLemma": "SEC_017_endpoint_possession_authorization"
     },
     {
       "bindingId": "BIND-SEC-018-ALGORITHM-ID-1",
@@ -1379,21 +1369,21 @@
       "kind": "algorithm-id",
       "authorityPath": "spec/v1/protection/algorithms.json",
       "authorityPointer": "/primitives",
-      "authorityDigest": "18256dc027951749d0501a21fa27552e960eb1cab74317bdf0689b21dfa44cc7",
+      "authorityDigest": "a7e3bc97fa63b7038768270d9d9aea111cd60953c98096a41c8aa84c731a267c",
       "authorityValueDigest": "523edc153cf6c10e9f06bcfcad96792d394f09636f4b62511babb44e3a580d24",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
-      "proofLemma": "SEC_018_station_cannot_manufacture_endpoint_accepted"
+      "proofLemma": "SEC_018_acyclic_sibling_endpoint_authority_session_binding"
     },
     {
       "bindingId": "BIND-SEC-018-BOUND-1",
       "claimId": "SEC-018",
       "kind": "bound",
-      "authorityPath": "spec/v1/protection/bounds.json",
+      "authorityPath": "spec/v1/identity/identity.policy.json",
       "authorityPointer": "/bounds",
-      "authorityDigest": "17774552a0183911243457f727933c0db89e2144926fa56da2e1c83470927471",
-      "authorityValueDigest": "99f65101b8c6764c993597ce2e6e85e228b975b6336513970d7027122aec7ecb",
+      "authorityDigest": "6677c214343e3d33de607f7dbb6daaa5a1df797459a06b6bf4cecd05d3dc055a",
+      "authorityValueDigest": "4742737eaac7f4bf25f3a58fbcd3ace5ebd38e508c6fe3551ec139af7a068c44",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
-      "proofLemma": "SEC_018_station_cannot_manufacture_endpoint_accepted"
+      "proofLemma": "SEC_018_acyclic_sibling_endpoint_authority_session_binding"
     },
     {
       "bindingId": "BIND-SEC-018-DOMAIN-SEPARATOR-1",
@@ -1401,32 +1391,32 @@
       "kind": "domain-separator",
       "authorityPath": "spec/v1/protection/domains.json",
       "authorityPointer": "/domains",
-      "authorityDigest": "c821a8289e36b2ea7ff19378f2d525d65b1f5d6a619b0010ea354050e4aa032c",
-      "authorityValueDigest": "04259801d313f397abdb2ba617699fadb182c4d68d91399fa3d9ce9d3eea1228",
+      "authorityDigest": "6cf2329a18f571e3f00aaf62e01e8980e7700ff1e5e8403a674293fc21cb26b3",
+      "authorityValueDigest": "23b8e522d4221c0165f0fb82033d203a75aa89e0b855f5a6ffd3029afecd9cdc",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
-      "proofLemma": "SEC_018_station_cannot_manufacture_endpoint_accepted"
+      "proofLemma": "SEC_018_acyclic_sibling_endpoint_authority_session_binding"
     },
     {
       "bindingId": "BIND-SEC-018-FAILURE-ENUM-1",
       "claimId": "SEC-018",
       "kind": "failure-enum",
-      "authorityPath": "spec/v1/protection/failures.json",
-      "authorityPointer": "/failures",
-      "authorityDigest": "e4e0b70a919e056d620aa3fed552d53c25d46a2a7770c2103f4cbc25e299ef44",
-      "authorityValueDigest": "9d54769d565ee1f4ea610ecb4fe43dfd342de3949f7489821fa5352b4eeec543",
+      "authorityPath": "spec/v1/identity/identity.policy.json",
+      "authorityPointer": "/unknownPolicy",
+      "authorityDigest": "6677c214343e3d33de607f7dbb6daaa5a1df797459a06b6bf4cecd05d3dc055a",
+      "authorityValueDigest": "9d13b1bce40a105f17fefd9e747a8acda007392d70c2cdcb35e8227b1e9195a7",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
-      "proofLemma": "SEC_018_station_cannot_manufacture_endpoint_accepted"
+      "proofLemma": "SEC_018_acyclic_sibling_endpoint_authority_session_binding"
     },
     {
       "bindingId": "BIND-SEC-018-FIELD-LABEL-1",
       "claimId": "SEC-018",
       "kind": "field-label",
-      "authorityPath": "spec/v1/protection/labels.json",
-      "authorityPointer": "/ratchetHeader",
-      "authorityDigest": "3922dbd20adbbdf4cdc653d8965c3d2e18fede7cf0255c45bb354ccf51c4c604",
-      "authorityValueDigest": "db3101c2d04d732a1ef99666d74f08a9eb6ad9c2dfb04b44487dda319158078d",
+      "authorityPath": "spec/v1/identity/labels.json",
+      "authorityPointer": "/records/userAuthorityState",
+      "authorityDigest": "7821c0e9d865d88ab5d0a1793c09f1ea711b1fcb0798c917429a3c7e6a7c69ed",
+      "authorityValueDigest": "e8af67a66228c6c6a69f2ead17704518b3391fedbee7cf1bf5c744e3c01f8034",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
-      "proofLemma": "SEC_018_station_cannot_manufacture_endpoint_accepted"
+      "proofLemma": "SEC_018_acyclic_sibling_endpoint_authority_session_binding"
     },
     {
       "bindingId": "BIND-SEC-018-PROFILE-ID-1",
@@ -1434,10 +1424,10 @@
       "kind": "profile-id",
       "authorityPath": "spec/protection-profiles.json",
       "authorityPointer": "/profiles/0/profileId",
-      "authorityDigest": "086e9abe3af4a5191fcfdcca438527314763f6a81ae148b33de9e880f72f4933",
-      "authorityValueDigest": "d3113cd206d0d72a4f8155a934764ceb1f16169eea99dfe91557220b58315470",
+      "authorityDigest": "77a01bd7f8d1399b1bd59626842e297db83f250fe8d50e4fc90b3b079db56f7e",
+      "authorityValueDigest": "b0a8800a73cf45f1c97d8eb714ee501ecb602126b47e184ae39f7e1e40360873",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
-      "proofLemma": "SEC_018_station_cannot_manufacture_endpoint_accepted"
+      "proofLemma": "SEC_018_acyclic_sibling_endpoint_authority_session_binding"
     },
     {
       "bindingId": "BIND-SEC-018-PROTOCOL-LINE-ID-1",
@@ -1445,10 +1435,10 @@
       "kind": "protocol-line-id",
       "authorityPath": "spec/protocol-lines.json",
       "authorityPointer": "/lines/0/protocolLineId",
-      "authorityDigest": "20bea021e70a886112c1e3920b4f40a5c50712496786962d5dee6f1d44ee4e05",
-      "authorityValueDigest": "83f11435706a6ae5e3f1cba92a1f1dffa680cea801dbc8077efe9bdf03e70f2e",
+      "authorityDigest": "e3d91a2fe3944d1e31856df808fc3477249a6a81c995a472f095d1abec941d22",
+      "authorityValueDigest": "d2b610a001b00993b84a9374d9553414cf6ea46868f142aef003c610cb0f039e",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
-      "proofLemma": "SEC_018_station_cannot_manufacture_endpoint_accepted"
+      "proofLemma": "SEC_018_acyclic_sibling_endpoint_authority_session_binding"
     },
     {
       "bindingId": "BIND-SEC-019-ALGORITHM-ID-1",
@@ -1456,21 +1446,21 @@
       "kind": "algorithm-id",
       "authorityPath": "spec/v1/protection/algorithms.json",
       "authorityPointer": "/primitives",
-      "authorityDigest": "18256dc027951749d0501a21fa27552e960eb1cab74317bdf0689b21dfa44cc7",
+      "authorityDigest": "a7e3bc97fa63b7038768270d9d9aea111cd60953c98096a41c8aa84c731a267c",
       "authorityValueDigest": "523edc153cf6c10e9f06bcfcad96792d394f09636f4b62511babb44e3a580d24",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
-      "proofLemma": "SEC_019_station_cannot_manufacture_effect_completed"
+      "proofLemma": "SEC_019_authenticated_confirmation_finality"
     },
     {
       "bindingId": "BIND-SEC-019-BOUND-1",
       "claimId": "SEC-019",
       "kind": "bound",
-      "authorityPath": "spec/v1/protection/bounds.json",
+      "authorityPath": "spec/v1/reliable/bounds.json",
       "authorityPointer": "/bounds",
-      "authorityDigest": "17774552a0183911243457f727933c0db89e2144926fa56da2e1c83470927471",
-      "authorityValueDigest": "99f65101b8c6764c993597ce2e6e85e228b975b6336513970d7027122aec7ecb",
+      "authorityDigest": "0aaf6d80eaaa70c26b4170329171859c484b6143cf6824bdd4f7f9d8894b8999",
+      "authorityValueDigest": "d2d30ee0e7e03b5f235323190862dd455dd0b4c68eb5c7b32fd6d1bcb3ce5fe0",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
-      "proofLemma": "SEC_019_station_cannot_manufacture_effect_completed"
+      "proofLemma": "SEC_019_authenticated_confirmation_finality"
     },
     {
       "bindingId": "BIND-SEC-019-DOMAIN-SEPARATOR-1",
@@ -1478,32 +1468,32 @@
       "kind": "domain-separator",
       "authorityPath": "spec/v1/protection/domains.json",
       "authorityPointer": "/domains",
-      "authorityDigest": "c821a8289e36b2ea7ff19378f2d525d65b1f5d6a619b0010ea354050e4aa032c",
-      "authorityValueDigest": "04259801d313f397abdb2ba617699fadb182c4d68d91399fa3d9ce9d3eea1228",
+      "authorityDigest": "6cf2329a18f571e3f00aaf62e01e8980e7700ff1e5e8403a674293fc21cb26b3",
+      "authorityValueDigest": "23b8e522d4221c0165f0fb82033d203a75aa89e0b855f5a6ffd3029afecd9cdc",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
-      "proofLemma": "SEC_019_station_cannot_manufacture_effect_completed"
+      "proofLemma": "SEC_019_authenticated_confirmation_finality"
     },
     {
       "bindingId": "BIND-SEC-019-FAILURE-ENUM-1",
       "claimId": "SEC-019",
       "kind": "failure-enum",
-      "authorityPath": "spec/v1/protection/failures.json",
-      "authorityPointer": "/failures",
-      "authorityDigest": "e4e0b70a919e056d620aa3fed552d53c25d46a2a7770c2103f4cbc25e299ef44",
-      "authorityValueDigest": "9d54769d565ee1f4ea610ecb4fe43dfd342de3949f7489821fa5352b4eeec543",
+      "authorityPath": "spec/v1/reliable/registry.json",
+      "authorityPointer": "/failurePolicy",
+      "authorityDigest": "c601617bd02732c6a875a842e3110072a7c00454f6a619720ba0057010fb2b8f",
+      "authorityValueDigest": "bdad54c6f21c624ad8a13c6f5ce3ee861f0d71a556afb725b863da21adf18a4d",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
-      "proofLemma": "SEC_019_station_cannot_manufacture_effect_completed"
+      "proofLemma": "SEC_019_authenticated_confirmation_finality"
     },
     {
       "bindingId": "BIND-SEC-019-FIELD-LABEL-1",
       "claimId": "SEC-019",
       "kind": "field-label",
-      "authorityPath": "spec/v1/protection/labels.json",
-      "authorityPointer": "/ratchetHeader",
-      "authorityDigest": "3922dbd20adbbdf4cdc653d8965c3d2e18fede7cf0255c45bb354ccf51c4c604",
-      "authorityValueDigest": "db3101c2d04d732a1ef99666d74f08a9eb6ad9c2dfb04b44487dda319158078d",
+      "authorityPath": "spec/v1/reliable/labels.json",
+      "authorityPointer": "/confirmation",
+      "authorityDigest": "e1ffeefcb9dc006978fd60efdbec2fcc0e14b580791b946788bd4c832bcb1d28",
+      "authorityValueDigest": "139cfd221da26778c1ab345097436182ea19a1cde25c9f4cabf05b855dd9652f",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
-      "proofLemma": "SEC_019_station_cannot_manufacture_effect_completed"
+      "proofLemma": "SEC_019_authenticated_confirmation_finality"
     },
     {
       "bindingId": "BIND-SEC-019-PROFILE-ID-1",
@@ -1511,10 +1501,10 @@
       "kind": "profile-id",
       "authorityPath": "spec/protection-profiles.json",
       "authorityPointer": "/profiles/0/profileId",
-      "authorityDigest": "086e9abe3af4a5191fcfdcca438527314763f6a81ae148b33de9e880f72f4933",
-      "authorityValueDigest": "d3113cd206d0d72a4f8155a934764ceb1f16169eea99dfe91557220b58315470",
+      "authorityDigest": "77a01bd7f8d1399b1bd59626842e297db83f250fe8d50e4fc90b3b079db56f7e",
+      "authorityValueDigest": "b0a8800a73cf45f1c97d8eb714ee501ecb602126b47e184ae39f7e1e40360873",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
-      "proofLemma": "SEC_019_station_cannot_manufacture_effect_completed"
+      "proofLemma": "SEC_019_authenticated_confirmation_finality"
     },
     {
       "bindingId": "BIND-SEC-019-PROTOCOL-LINE-ID-1",
@@ -1522,10 +1512,10 @@
       "kind": "protocol-line-id",
       "authorityPath": "spec/protocol-lines.json",
       "authorityPointer": "/lines/0/protocolLineId",
-      "authorityDigest": "20bea021e70a886112c1e3920b4f40a5c50712496786962d5dee6f1d44ee4e05",
-      "authorityValueDigest": "83f11435706a6ae5e3f1cba92a1f1dffa680cea801dbc8077efe9bdf03e70f2e",
+      "authorityDigest": "e3d91a2fe3944d1e31856df808fc3477249a6a81c995a472f095d1abec941d22",
+      "authorityValueDigest": "d2b610a001b00993b84a9374d9553414cf6ea46868f142aef003c610cb0f039e",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
-      "proofLemma": "SEC_019_station_cannot_manufacture_effect_completed"
+      "proofLemma": "SEC_019_authenticated_confirmation_finality"
     },
     {
       "bindingId": "BIND-SEC-020-ALGORITHM-ID-1",
@@ -1533,7 +1523,7 @@
       "kind": "algorithm-id",
       "authorityPath": "spec/v1/protection/algorithms.json",
       "authorityPointer": "/primitives",
-      "authorityDigest": "18256dc027951749d0501a21fa27552e960eb1cab74317bdf0689b21dfa44cc7",
+      "authorityDigest": "a7e3bc97fa63b7038768270d9d9aea111cd60953c98096a41c8aa84c731a267c",
       "authorityValueDigest": "523edc153cf6c10e9f06bcfcad96792d394f09636f4b62511babb44e3a580d24",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_020_fail_closed_resource_bounds"
@@ -1544,8 +1534,8 @@
       "kind": "bound",
       "authorityPath": "spec/v1/protection/bounds.json",
       "authorityPointer": "/bounds",
-      "authorityDigest": "17774552a0183911243457f727933c0db89e2144926fa56da2e1c83470927471",
-      "authorityValueDigest": "99f65101b8c6764c993597ce2e6e85e228b975b6336513970d7027122aec7ecb",
+      "authorityDigest": "ce4d8fef20815ab6731a79d2c011c4f294768a1e1fd959474aa91928bb81ad27",
+      "authorityValueDigest": "7e7d2a50a6bbbf6ed347e64af8922333868acc03a89369cc9a844a7d400b049f",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_020_fail_closed_resource_bounds"
     },
@@ -1555,8 +1545,8 @@
       "kind": "domain-separator",
       "authorityPath": "spec/v1/protection/domains.json",
       "authorityPointer": "/domains",
-      "authorityDigest": "c821a8289e36b2ea7ff19378f2d525d65b1f5d6a619b0010ea354050e4aa032c",
-      "authorityValueDigest": "04259801d313f397abdb2ba617699fadb182c4d68d91399fa3d9ce9d3eea1228",
+      "authorityDigest": "6cf2329a18f571e3f00aaf62e01e8980e7700ff1e5e8403a674293fc21cb26b3",
+      "authorityValueDigest": "23b8e522d4221c0165f0fb82033d203a75aa89e0b855f5a6ffd3029afecd9cdc",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_020_fail_closed_resource_bounds"
     },
@@ -1566,8 +1556,8 @@
       "kind": "failure-enum",
       "authorityPath": "spec/v1/protection/failures.json",
       "authorityPointer": "/failures",
-      "authorityDigest": "e4e0b70a919e056d620aa3fed552d53c25d46a2a7770c2103f4cbc25e299ef44",
-      "authorityValueDigest": "9d54769d565ee1f4ea610ecb4fe43dfd342de3949f7489821fa5352b4eeec543",
+      "authorityDigest": "b1b28c20f007f0e25be7f23c635dfef39ca4ce6e50a0d210c58290c038b9bbf9",
+      "authorityValueDigest": "99aac31635d1fd604449e59e38116e237f39d776a4a28a94cb1bad4355f258ff",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_020_fail_closed_resource_bounds"
     },
@@ -1577,7 +1567,7 @@
       "kind": "field-label",
       "authorityPath": "spec/v1/protection/labels.json",
       "authorityPointer": "/ratchetHeader",
-      "authorityDigest": "3922dbd20adbbdf4cdc653d8965c3d2e18fede7cf0255c45bb354ccf51c4c604",
+      "authorityDigest": "1ff9f42d5e63b6720bc7a40af7812957d56d7dda0ec413ff17e5e53cc3595857",
       "authorityValueDigest": "db3101c2d04d732a1ef99666d74f08a9eb6ad9c2dfb04b44487dda319158078d",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_020_fail_closed_resource_bounds"
@@ -1588,8 +1578,8 @@
       "kind": "profile-id",
       "authorityPath": "spec/protection-profiles.json",
       "authorityPointer": "/profiles/0/profileId",
-      "authorityDigest": "086e9abe3af4a5191fcfdcca438527314763f6a81ae148b33de9e880f72f4933",
-      "authorityValueDigest": "d3113cd206d0d72a4f8155a934764ceb1f16169eea99dfe91557220b58315470",
+      "authorityDigest": "77a01bd7f8d1399b1bd59626842e297db83f250fe8d50e4fc90b3b079db56f7e",
+      "authorityValueDigest": "b0a8800a73cf45f1c97d8eb714ee501ecb602126b47e184ae39f7e1e40360873",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_020_fail_closed_resource_bounds"
     },
@@ -1599,8 +1589,8 @@
       "kind": "protocol-line-id",
       "authorityPath": "spec/protocol-lines.json",
       "authorityPointer": "/lines/0/protocolLineId",
-      "authorityDigest": "20bea021e70a886112c1e3920b4f40a5c50712496786962d5dee6f1d44ee4e05",
-      "authorityValueDigest": "83f11435706a6ae5e3f1cba92a1f1dffa680cea801dbc8077efe9bdf03e70f2e",
+      "authorityDigest": "e3d91a2fe3944d1e31856df808fc3477249a6a81c995a472f095d1abec941d22",
+      "authorityValueDigest": "d2b610a001b00993b84a9374d9553414cf6ea46868f142aef003c610cb0f039e",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_020_fail_closed_resource_bounds"
     },
@@ -1610,7 +1600,7 @@
       "kind": "algorithm-id",
       "authorityPath": "spec/v1/protection/algorithms.json",
       "authorityPointer": "/primitives",
-      "authorityDigest": "18256dc027951749d0501a21fa27552e960eb1cab74317bdf0689b21dfa44cc7",
+      "authorityDigest": "a7e3bc97fa63b7038768270d9d9aea111cd60953c98096a41c8aa84c731a267c",
       "authorityValueDigest": "523edc153cf6c10e9f06bcfcad96792d394f09636f4b62511babb44e3a580d24",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_021_pairwise_record_confidentiality"
@@ -1621,8 +1611,8 @@
       "kind": "bound",
       "authorityPath": "spec/v1/protection/bounds.json",
       "authorityPointer": "/bounds",
-      "authorityDigest": "17774552a0183911243457f727933c0db89e2144926fa56da2e1c83470927471",
-      "authorityValueDigest": "99f65101b8c6764c993597ce2e6e85e228b975b6336513970d7027122aec7ecb",
+      "authorityDigest": "ce4d8fef20815ab6731a79d2c011c4f294768a1e1fd959474aa91928bb81ad27",
+      "authorityValueDigest": "7e7d2a50a6bbbf6ed347e64af8922333868acc03a89369cc9a844a7d400b049f",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_021_pairwise_record_confidentiality"
     },
@@ -1632,8 +1622,8 @@
       "kind": "domain-separator",
       "authorityPath": "spec/v1/protection/domains.json",
       "authorityPointer": "/domains",
-      "authorityDigest": "c821a8289e36b2ea7ff19378f2d525d65b1f5d6a619b0010ea354050e4aa032c",
-      "authorityValueDigest": "04259801d313f397abdb2ba617699fadb182c4d68d91399fa3d9ce9d3eea1228",
+      "authorityDigest": "6cf2329a18f571e3f00aaf62e01e8980e7700ff1e5e8403a674293fc21cb26b3",
+      "authorityValueDigest": "23b8e522d4221c0165f0fb82033d203a75aa89e0b855f5a6ffd3029afecd9cdc",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_021_pairwise_record_confidentiality"
     },
@@ -1643,8 +1633,8 @@
       "kind": "failure-enum",
       "authorityPath": "spec/v1/protection/failures.json",
       "authorityPointer": "/failures",
-      "authorityDigest": "e4e0b70a919e056d620aa3fed552d53c25d46a2a7770c2103f4cbc25e299ef44",
-      "authorityValueDigest": "9d54769d565ee1f4ea610ecb4fe43dfd342de3949f7489821fa5352b4eeec543",
+      "authorityDigest": "b1b28c20f007f0e25be7f23c635dfef39ca4ce6e50a0d210c58290c038b9bbf9",
+      "authorityValueDigest": "99aac31635d1fd604449e59e38116e237f39d776a4a28a94cb1bad4355f258ff",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_021_pairwise_record_confidentiality"
     },
@@ -1654,7 +1644,7 @@
       "kind": "field-label",
       "authorityPath": "spec/v1/protection/labels.json",
       "authorityPointer": "/ratchetHeader",
-      "authorityDigest": "3922dbd20adbbdf4cdc653d8965c3d2e18fede7cf0255c45bb354ccf51c4c604",
+      "authorityDigest": "1ff9f42d5e63b6720bc7a40af7812957d56d7dda0ec413ff17e5e53cc3595857",
       "authorityValueDigest": "db3101c2d04d732a1ef99666d74f08a9eb6ad9c2dfb04b44487dda319158078d",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_021_pairwise_record_confidentiality"
@@ -1665,8 +1655,8 @@
       "kind": "profile-id",
       "authorityPath": "spec/protection-profiles.json",
       "authorityPointer": "/profiles/0/profileId",
-      "authorityDigest": "086e9abe3af4a5191fcfdcca438527314763f6a81ae148b33de9e880f72f4933",
-      "authorityValueDigest": "d3113cd206d0d72a4f8155a934764ceb1f16169eea99dfe91557220b58315470",
+      "authorityDigest": "77a01bd7f8d1399b1bd59626842e297db83f250fe8d50e4fc90b3b079db56f7e",
+      "authorityValueDigest": "b0a8800a73cf45f1c97d8eb714ee501ecb602126b47e184ae39f7e1e40360873",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_021_pairwise_record_confidentiality"
     },
@@ -1676,8 +1666,8 @@
       "kind": "protocol-line-id",
       "authorityPath": "spec/protocol-lines.json",
       "authorityPointer": "/lines/0/protocolLineId",
-      "authorityDigest": "20bea021e70a886112c1e3920b4f40a5c50712496786962d5dee6f1d44ee4e05",
-      "authorityValueDigest": "83f11435706a6ae5e3f1cba92a1f1dffa680cea801dbc8077efe9bdf03e70f2e",
+      "authorityDigest": "e3d91a2fe3944d1e31856df808fc3477249a6a81c995a472f095d1abec941d22",
+      "authorityValueDigest": "d2b610a001b00993b84a9374d9553414cf6ea46868f142aef003c610cb0f039e",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_021_pairwise_record_confidentiality"
     },
@@ -1687,7 +1677,7 @@
       "kind": "algorithm-id",
       "authorityPath": "spec/v1/protection/algorithms.json",
       "authorityPointer": "/primitives",
-      "authorityDigest": "18256dc027951749d0501a21fa27552e960eb1cab74317bdf0689b21dfa44cc7",
+      "authorityDigest": "a7e3bc97fa63b7038768270d9d9aea111cd60953c98096a41c8aa84c731a267c",
       "authorityValueDigest": "523edc153cf6c10e9f06bcfcad96792d394f09636f4b62511babb44e3a580d24",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_022_pairwise_record_authentication_and_integrity"
@@ -1698,8 +1688,8 @@
       "kind": "bound",
       "authorityPath": "spec/v1/protection/bounds.json",
       "authorityPointer": "/bounds",
-      "authorityDigest": "17774552a0183911243457f727933c0db89e2144926fa56da2e1c83470927471",
-      "authorityValueDigest": "99f65101b8c6764c993597ce2e6e85e228b975b6336513970d7027122aec7ecb",
+      "authorityDigest": "ce4d8fef20815ab6731a79d2c011c4f294768a1e1fd959474aa91928bb81ad27",
+      "authorityValueDigest": "7e7d2a50a6bbbf6ed347e64af8922333868acc03a89369cc9a844a7d400b049f",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_022_pairwise_record_authentication_and_integrity"
     },
@@ -1709,8 +1699,8 @@
       "kind": "domain-separator",
       "authorityPath": "spec/v1/protection/domains.json",
       "authorityPointer": "/domains",
-      "authorityDigest": "c821a8289e36b2ea7ff19378f2d525d65b1f5d6a619b0010ea354050e4aa032c",
-      "authorityValueDigest": "04259801d313f397abdb2ba617699fadb182c4d68d91399fa3d9ce9d3eea1228",
+      "authorityDigest": "6cf2329a18f571e3f00aaf62e01e8980e7700ff1e5e8403a674293fc21cb26b3",
+      "authorityValueDigest": "23b8e522d4221c0165f0fb82033d203a75aa89e0b855f5a6ffd3029afecd9cdc",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_022_pairwise_record_authentication_and_integrity"
     },
@@ -1720,8 +1710,8 @@
       "kind": "failure-enum",
       "authorityPath": "spec/v1/protection/failures.json",
       "authorityPointer": "/failures",
-      "authorityDigest": "e4e0b70a919e056d620aa3fed552d53c25d46a2a7770c2103f4cbc25e299ef44",
-      "authorityValueDigest": "9d54769d565ee1f4ea610ecb4fe43dfd342de3949f7489821fa5352b4eeec543",
+      "authorityDigest": "b1b28c20f007f0e25be7f23c635dfef39ca4ce6e50a0d210c58290c038b9bbf9",
+      "authorityValueDigest": "99aac31635d1fd604449e59e38116e237f39d776a4a28a94cb1bad4355f258ff",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_022_pairwise_record_authentication_and_integrity"
     },
@@ -1731,7 +1721,7 @@
       "kind": "field-label",
       "authorityPath": "spec/v1/protection/labels.json",
       "authorityPointer": "/ratchetHeader",
-      "authorityDigest": "3922dbd20adbbdf4cdc653d8965c3d2e18fede7cf0255c45bb354ccf51c4c604",
+      "authorityDigest": "1ff9f42d5e63b6720bc7a40af7812957d56d7dda0ec413ff17e5e53cc3595857",
       "authorityValueDigest": "db3101c2d04d732a1ef99666d74f08a9eb6ad9c2dfb04b44487dda319158078d",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_022_pairwise_record_authentication_and_integrity"
@@ -1742,8 +1732,8 @@
       "kind": "profile-id",
       "authorityPath": "spec/protection-profiles.json",
       "authorityPointer": "/profiles/0/profileId",
-      "authorityDigest": "086e9abe3af4a5191fcfdcca438527314763f6a81ae148b33de9e880f72f4933",
-      "authorityValueDigest": "d3113cd206d0d72a4f8155a934764ceb1f16169eea99dfe91557220b58315470",
+      "authorityDigest": "77a01bd7f8d1399b1bd59626842e297db83f250fe8d50e4fc90b3b079db56f7e",
+      "authorityValueDigest": "b0a8800a73cf45f1c97d8eb714ee501ecb602126b47e184ae39f7e1e40360873",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_022_pairwise_record_authentication_and_integrity"
     },
@@ -1753,8 +1743,8 @@
       "kind": "protocol-line-id",
       "authorityPath": "spec/protocol-lines.json",
       "authorityPointer": "/lines/0/protocolLineId",
-      "authorityDigest": "20bea021e70a886112c1e3920b4f40a5c50712496786962d5dee6f1d44ee4e05",
-      "authorityValueDigest": "83f11435706a6ae5e3f1cba92a1f1dffa680cea801dbc8077efe9bdf03e70f2e",
+      "authorityDigest": "e3d91a2fe3944d1e31856df808fc3477249a6a81c995a472f095d1abec941d22",
+      "authorityValueDigest": "d2b610a001b00993b84a9374d9553414cf6ea46868f142aef003c610cb0f039e",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_022_pairwise_record_authentication_and_integrity"
     },
@@ -1764,7 +1754,7 @@
       "kind": "algorithm-id",
       "authorityPath": "spec/v1/protection/algorithms.json",
       "authorityPointer": "/primitives",
-      "authorityDigest": "18256dc027951749d0501a21fa27552e960eb1cab74317bdf0689b21dfa44cc7",
+      "authorityDigest": "a7e3bc97fa63b7038768270d9d9aea111cd60953c98096a41c8aa84c731a267c",
       "authorityValueDigest": "523edc153cf6c10e9f06bcfcad96792d394f09636f4b62511babb44e3a580d24",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_023_sender_metadata_confidentiality"
@@ -1775,8 +1765,8 @@
       "kind": "bound",
       "authorityPath": "spec/v1/protection/bounds.json",
       "authorityPointer": "/bounds",
-      "authorityDigest": "17774552a0183911243457f727933c0db89e2144926fa56da2e1c83470927471",
-      "authorityValueDigest": "99f65101b8c6764c993597ce2e6e85e228b975b6336513970d7027122aec7ecb",
+      "authorityDigest": "ce4d8fef20815ab6731a79d2c011c4f294768a1e1fd959474aa91928bb81ad27",
+      "authorityValueDigest": "7e7d2a50a6bbbf6ed347e64af8922333868acc03a89369cc9a844a7d400b049f",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_023_sender_metadata_confidentiality"
     },
@@ -1786,8 +1776,8 @@
       "kind": "domain-separator",
       "authorityPath": "spec/v1/protection/domains.json",
       "authorityPointer": "/domains",
-      "authorityDigest": "c821a8289e36b2ea7ff19378f2d525d65b1f5d6a619b0010ea354050e4aa032c",
-      "authorityValueDigest": "04259801d313f397abdb2ba617699fadb182c4d68d91399fa3d9ce9d3eea1228",
+      "authorityDigest": "6cf2329a18f571e3f00aaf62e01e8980e7700ff1e5e8403a674293fc21cb26b3",
+      "authorityValueDigest": "23b8e522d4221c0165f0fb82033d203a75aa89e0b855f5a6ffd3029afecd9cdc",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_023_sender_metadata_confidentiality"
     },
@@ -1797,8 +1787,8 @@
       "kind": "failure-enum",
       "authorityPath": "spec/v1/protection/failures.json",
       "authorityPointer": "/failures",
-      "authorityDigest": "e4e0b70a919e056d620aa3fed552d53c25d46a2a7770c2103f4cbc25e299ef44",
-      "authorityValueDigest": "9d54769d565ee1f4ea610ecb4fe43dfd342de3949f7489821fa5352b4eeec543",
+      "authorityDigest": "b1b28c20f007f0e25be7f23c635dfef39ca4ce6e50a0d210c58290c038b9bbf9",
+      "authorityValueDigest": "99aac31635d1fd604449e59e38116e237f39d776a4a28a94cb1bad4355f258ff",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_023_sender_metadata_confidentiality"
     },
@@ -1808,7 +1798,7 @@
       "kind": "field-label",
       "authorityPath": "spec/v1/protection/labels.json",
       "authorityPointer": "/ratchetHeader",
-      "authorityDigest": "3922dbd20adbbdf4cdc653d8965c3d2e18fede7cf0255c45bb354ccf51c4c604",
+      "authorityDigest": "1ff9f42d5e63b6720bc7a40af7812957d56d7dda0ec413ff17e5e53cc3595857",
       "authorityValueDigest": "db3101c2d04d732a1ef99666d74f08a9eb6ad9c2dfb04b44487dda319158078d",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_023_sender_metadata_confidentiality"
@@ -1819,8 +1809,8 @@
       "kind": "profile-id",
       "authorityPath": "spec/protection-profiles.json",
       "authorityPointer": "/profiles/0/profileId",
-      "authorityDigest": "086e9abe3af4a5191fcfdcca438527314763f6a81ae148b33de9e880f72f4933",
-      "authorityValueDigest": "d3113cd206d0d72a4f8155a934764ceb1f16169eea99dfe91557220b58315470",
+      "authorityDigest": "77a01bd7f8d1399b1bd59626842e297db83f250fe8d50e4fc90b3b079db56f7e",
+      "authorityValueDigest": "b0a8800a73cf45f1c97d8eb714ee501ecb602126b47e184ae39f7e1e40360873",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_023_sender_metadata_confidentiality"
     },
@@ -1830,8 +1820,8 @@
       "kind": "protocol-line-id",
       "authorityPath": "spec/protocol-lines.json",
       "authorityPointer": "/lines/0/protocolLineId",
-      "authorityDigest": "20bea021e70a886112c1e3920b4f40a5c50712496786962d5dee6f1d44ee4e05",
-      "authorityValueDigest": "83f11435706a6ae5e3f1cba92a1f1dffa680cea801dbc8077efe9bdf03e70f2e",
+      "authorityDigest": "e3d91a2fe3944d1e31856df808fc3477249a6a81c995a472f095d1abec941d22",
+      "authorityValueDigest": "d2b610a001b00993b84a9374d9553414cf6ea46868f142aef003c610cb0f039e",
       "proofModel": "formal/generated/licoarc-core-v1.spthy",
       "proofLemma": "SEC_023_sender_metadata_confidentiality"
     }

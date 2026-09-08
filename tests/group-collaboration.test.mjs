@@ -5,6 +5,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
 import {
+  applyGroupMemberConfirmation,
   decodeDeterministicCbor,
   encodeDeterministicCbor
 } from "../tools/protocol/index.mjs";
@@ -264,7 +265,7 @@ test("member and operation bounds reject duplicates, unsorted data, overflow, am
   }), errorWithCode("malformed"));
 });
 
-test("one logical message projects to stable sorted Endpoint deliveries and aggregate evidence is deterministic", () => {
+test("one logical message projects to stable sorted Endpoint deliveries and aggregate confirmation is deterministic", () => {
   const store = new GroupStore();
   const state = store.acceptTransition(genesisTransition()).state;
   store.acceptTransition({
@@ -287,15 +288,15 @@ test("one logical message projects to stable sorted Endpoint deliveries and aggr
     projectionId: first.projections[0].projectionId,
     recipientEndpointRef: first.projections[0].recipientEndpointRef,
     outcome: "delivered",
-    authority: "endpoint-evidence"
-  });
+    authority: "endpoint-confirmation"
+  }, protectedConfirmation(first.projections[0], "delivered"));
   recordProjectionResult(store, {
     projectionId: first.projections[1].projectionId,
     recipientEndpointRef: first.projections[1].recipientEndpointRef,
     outcome: "failed",
     failureCode: "timeout",
-    authority: "endpoint-evidence"
-  });
+    authority: "endpoint-confirmation"
+  }, protectedConfirmation(first.projections[1], "failed", "timeout"));
   const aggregate = aggregateProjectionResults(store, first);
   assert.equal(aggregate.outcome, "partial");
   assert.deepEqual(aggregate.counts, { pending: 0, delivered: 1, rejected: 0, failed: 1 });
@@ -306,12 +307,20 @@ test("one logical message projects to stable sorted Endpoint deliveries and aggr
     outcome: "delivered",
     authority: "station"
   }), errorWithCode("station-authority"));
+  const stationOnly = protectedConfirmation(first.projections[1], "delivered");
+  stationOnly.session.authenticated = false;
   assert.throws(() => recordProjectionResult(store, {
     projectionId: first.projections[1].projectionId,
     recipientEndpointRef: first.projections[1].recipientEndpointRef,
     outcome: "delivered",
-    authority: "endpoint-evidence"
-  }), errorWithCode("conflict"));
+    authority: "endpoint-confirmation"
+  }, stationOnly), errorWithCode("confirmation-unauthenticated"));
+  assert.throws(() => recordProjectionResult(store, {
+    projectionId: first.projections[1].projectionId,
+    recipientEndpointRef: first.projections[1].recipientEndpointRef,
+    outcome: "delivered",
+    authority: "endpoint-confirmation"
+  }, protectedConfirmation(first.projections[1], "delivered")), errorWithCode("conflict"));
 });
 
 test("restart restores only bounded protocol state and converges before accepting new input", () => {
@@ -330,8 +339,8 @@ test("restart restores only bounded protocol state and converges before acceptin
     projectionId: projection.projections[0].projectionId,
     recipientEndpointRef: projection.projections[0].recipientEndpointRef,
     outcome: "delivered",
-    authority: "endpoint-evidence"
-  });
+    authority: "endpoint-confirmation"
+  }, protectedConfirmation(projection.projections[0], "delivered"));
   const snapshot = store.exportSnapshot();
   assert.equal(Object.hasOwn(snapshot, "station"), false);
   assert.equal(Object.hasOwn(snapshot, "productPermission"), false);
@@ -354,7 +363,6 @@ test("the Group profile keeps the three-entity trust boundary and excludes assoc
   const protocol = await readFile(path.join(repositoryRoot, "docs/protocols/group-collaboration-v1.md"), "utf8");
   assert.match(protocol, /Endpoint, Station, and Network remain the only core entities/);
   assert.match(protocol, /Station[^\n]+never[^\n]+authority/i);
-  assert.match(protocol, /association claim[^\n]+rejected/i);
   assert.match(protocol, /product permission[^\n]+opaque Payload/i);
   assert.doesNotMatch(protocol, /server-owned room|global membership authority/i);
 });
@@ -365,7 +373,7 @@ class GroupStore {
     this.highWaterEpoch = -1;
     this.epochDigests = new Map();
     this.transitionDigests = new Map();
-    this.predecessorEvidence = new Map();
+    this.predecessorStates = new Map();
     this.tombstones = new Map();
     this.projections = new Map();
     this.messageDigests = new Map();
@@ -420,7 +428,7 @@ class GroupStore {
       highWaterEpoch: this.highWaterEpoch,
       currentState: this.currentState ? stateToJson(this.currentState) : null,
       epochDigests: [...this.epochDigests.entries()].map(([epoch, entry]) => ({ epoch, stateDigest: toHex(entry.digest), state: stateToJson(entry.state) })),
-      predecessorEvidence: [...this.predecessorEvidence.entries()].map(([digest, state]) => ({ digest, state: stateToJson(state) })),
+      predecessorStates: [...this.predecessorStates.entries()].map(([digest, state]) => ({ digest, state: stateToJson(state) })),
       transitionDigests: [...this.transitionDigests.entries()],
       tombstones: [...this.tombstones.entries()].map(([endpointRef, removedAtEpoch]) => ({ endpointRef, removedAtEpoch })),
       projections: [...this.projections.entries()].map(([projectionId, projection]) => ({ projectionId, projection: projectionToJson(projection) })),
@@ -445,10 +453,10 @@ class GroupStore {
       if (toHex(digest) !== item.stateDigest || state.groupEpoch !== item.epoch) throw new GroupError("conflict");
       store.epochDigests.set(item.epoch, { digest, state });
     }
-    if (!Array.isArray(snapshot.predecessorEvidence) || snapshot.predecessorEvidence.length > B.MAX_GROUP_EPOCH_TOMBSTONES) throw new GroupError("over-bound");
-    for (const item of snapshot.predecessorEvidence) {
+    if (!Array.isArray(snapshot.predecessorStates) || snapshot.predecessorStates.length > B.MAX_GROUP_EPOCH_TOMBSTONES) throw new GroupError("over-bound");
+    for (const item of snapshot.predecessorStates) {
       if (!item || !/^[0-9a-f]{64}$/u.test(item.digest)) throw new GroupError("malformed");
-      store.predecessorEvidence.set(item.digest, stateFromJson(item.state));
+      store.predecessorStates.set(item.digest, stateFromJson(item.state));
     }
     for (const tombstone of snapshot.tombstones) {
       if (!/^[0-9a-f]{64}$/u.test(tombstone.endpointRef) || !Number.isSafeInteger(tombstone.removedAtEpoch)) throw new GroupError("malformed");
@@ -476,10 +484,10 @@ class GroupStore {
     const removed = this.currentState === null ? [] : memberRefs(this.currentState).filter((ref) => !memberRefs(state).includes(ref));
     if (this.tombstones.size + removed.length > B.MAX_GROUP_EPOCH_TOMBSTONES) throw new GroupError("tombstone-overflow");
     if (this.currentState !== null) {
-      this.predecessorEvidence.set(toHex(stateDigest(this.currentState)), this.currentState);
-      if (this.predecessorEvidence.size > B.MAX_GROUP_EPOCH_TOMBSTONES) {
-        const oldest = this.predecessorEvidence.keys().next().value;
-        this.predecessorEvidence.delete(oldest);
+      this.predecessorStates.set(toHex(stateDigest(this.currentState)), this.currentState);
+      if (this.predecessorStates.size > B.MAX_GROUP_EPOCH_TOMBSTONES) {
+        const oldest = this.predecessorStates.keys().next().value;
+        this.predecessorStates.delete(oldest);
       }
     }
     for (const ref of removed) this.tombstones.set(ref, state.groupEpoch);
@@ -488,7 +496,7 @@ class GroupStore {
     this.epochDigests.set(state.groupEpoch, { digest, state });
     if (this.epochDigests.size > B.MAX_GROUP_EPOCH_TOMBSTONES) this.epochDigests.delete(this.epochDigests.keys().next().value);
     if (transitionKey !== null) this.transitionDigests.set(transitionKey, toHex(transitionDigest));
-    // The current state is always the latest predecessor evidence as well.
+    // The current state is always the latest predecessor state as well.
     this.transitionDigests.set(`${state.previousGroupStateDigest ? toHex(state.previousGroupStateDigest) : "genesis"}:${state.groupEpoch}`, toHex(state.transitionDigest));
   }
 }
@@ -651,19 +659,30 @@ function projectGroupMessage(store, rawMessage, senderEndpointRef) {
   return projectionSet;
 }
 
-function recordProjectionResult(store, rawResult) {
+function recordProjectionResult(store, rawResult, protectedContext = undefined) {
   assertPlainObject(rawResult, "result");
   assertExactKeys(rawResult, ["projectionId", "recipientEndpointRef", "outcome", "failureCode", "authority"], "malformed", ["failureCode"]);
   const projectionId = requireBytes(rawResult.projectionId, 16, "malformed");
   const recipientEndpointRef = requireBytes(rawResult.recipientEndpointRef, 32, "malformed");
   if (!RESULT_OUTCOMES.has(rawResult.outcome)) throw new GroupError("malformed");
-  if (!["endpoint-evidence", "none"].includes(rawResult.authority)) throw new GroupError("station-authority");
-  if (rawResult.outcome !== "pending" && rawResult.authority !== "endpoint-evidence") throw new GroupError("station-authority");
+  if (!["endpoint-confirmation", "none"].includes(rawResult.authority)) throw new GroupError("station-authority");
+  if (rawResult.outcome !== "pending" && rawResult.authority !== "endpoint-confirmation") throw new GroupError("station-authority");
   if ((rawResult.outcome === "rejected" || rawResult.outcome === "failed") && (!rawResult.failureCode || !FAILURE_CODES.has(rawResult.failureCode) && rawResult.failureCode !== "timeout")) throw new GroupError("malformed");
   if ((rawResult.outcome === "delivered" || rawResult.outcome === "pending") && rawResult.failureCode !== undefined) throw new GroupError("malformed");
   const key = toHex(projectionId);
   const projection = store.projections.get(key);
   if (!projection || !bytesEqual(projection.recipientEndpointRef, recipientEndpointRef)) throw new GroupError("unknown-state");
+  if (rawResult.authority === "endpoint-confirmation") {
+    try {
+      applyGroupMemberConfirmation({
+        result: { projectionId: key, authority: rawResult.authority, outcome: "pending" },
+        confirmation: protectedContext?.confirmation,
+        session: protectedContext?.session
+      });
+    } catch (error) {
+      throw new GroupError(error.code ?? "station-authority");
+    }
+  }
   const result = {
     projectionId: cloneBytes(projectionId),
     recipientEndpointRef: cloneBytes(recipientEndpointRef),
@@ -677,6 +696,26 @@ function recordProjectionResult(store, rawResult) {
   }
   projection.result = result;
   return result;
+}
+
+function protectedConfirmation(projection, outcome, failureCode = undefined) {
+  const recipientEndpointRef = toHex(projection.recipientEndpointRef);
+  return {
+    confirmation: {
+      confirmationId: toHex(projection.projectionId),
+      confirmedMessageIds: [toHex(projection.projectionId)],
+      confirmationStage: "endpointAccepted",
+      confirmationOutcome: outcome === "delivered" ? "succeeded" : outcome === "rejected" ? "rejected" : "failed",
+      ...(failureCode === undefined ? {} : { failureCode: failureCodeValue(failureCode) })
+    },
+    session: {
+      sessionId: toHex(bytes16(90)),
+      senderEndpointRef: recipientEndpointRef,
+      expectedSenderEndpointRef: recipientEndpointRef,
+      authenticated: true,
+      senderAuthorized: true
+    }
+  };
 }
 
 function aggregateProjectionResults(store, projectionSet) {
@@ -741,7 +780,7 @@ function decodeMessage(bytes) {
 }
 
 function encodeAggregate(aggregate) {
-  const values = aggregate.results.map((result) => ({ 0: result.projectionId, 1: result.recipientEndpointRef, 2: result.outcome === "pending" ? 0 : result.outcome === "delivered" ? 1 : result.outcome === "rejected" ? 2 : 3, ...(result.failureCode ? { 3: failureCodeValue(result.failureCode) } : {}), 4: result.authority === "endpoint-evidence" ? 0 : 1 }));
+  const values = aggregate.results.map((result) => ({ 0: result.projectionId, 1: result.recipientEndpointRef, 2: result.outcome === "pending" ? 0 : result.outcome === "delivered" ? 1 : result.outcome === "rejected" ? 2 : 3, ...(result.failureCode ? { 3: failureCodeValue(result.failureCode) } : {}), 4: result.authority === "endpoint-confirmation" ? 0 : 1 }));
   return encodeCbor({ 0: aggregate.messageId, 1: aggregate.groupStateDigest, 2: values, 3: aggregate.outcome === "complete" ? 0 : aggregate.outcome === "partial" ? 1 : 2, 4: { 0: aggregate.counts.pending, 1: aggregate.counts.delivered, 2: aggregate.counts.rejected, 3: aggregate.counts.failed } }, B.MAX_GROUP_AGGREGATE_BYTES);
 }
 

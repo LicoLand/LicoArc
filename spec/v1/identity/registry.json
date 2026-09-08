@@ -12,13 +12,13 @@
   "sourceManifestPath": "spec/v1/identity/source-manifest.json",
   "unknownFieldPolicy": "reject-record",
   "closedRecordTypes": [
+    "userAuthorityState",
     "identityUpdate",
     "affiliationUpdate",
     "routeUpdate",
     "firstContact",
     "discoveryInput",
     "transparencyBundle",
-    "associationClaim",
     "stationDescriptor"
   ],
   "runtimeAuthority": {
@@ -53,6 +53,15 @@
   },
   "chainKinds": [
     {
+      "kind": "userAuthority",
+      "recordType": "userAuthorityState",
+      "epochField": "authorityEpoch",
+      "predecessorField": "previousUserAuthorityStateDigest",
+      "digestField": "canonicalStateDigestExcludingAuthoritySignatures",
+      "scope": "userIdentityRef",
+      "forkPolicy": "equal-parent-unequal-children-explicit-reject"
+    },
+    {
       "kind": "identity",
       "recordType": "identityUpdate",
       "epochField": "identityEpoch",
@@ -74,7 +83,9 @@
       "epochField": "routeEpoch",
       "predecessorField": "previousRouteUpdateDigest",
       "digestField": "logicalCanonicalRouteDigest",
-      "logicalDigestExcludes": ["endpointSignature"],
+      "logicalDigestExcludes": [
+        "endpointSignature"
+      ],
       "scope": "endpointIdentityRef-peerEndpointIdentityRef"
     }
   ],
@@ -92,6 +103,17 @@
     "replacement": "atomic-after-complete-validation"
   },
   "fieldGroups": {
+    "userAuthority": [
+      "userIdentityRef",
+      "authorityEpoch",
+      "previousUserAuthorityStateDigest",
+      "authorityTransitionKind",
+      "managementSigningKeys",
+      "recoverySigningKeys",
+      "authorizedDevices",
+      "possessionProof",
+      "authoritySignatures"
+    ],
     "signingKey": [
       "keyId",
       "keyPurpose",
@@ -186,6 +208,7 @@
     "expiry-resets-chain",
     "route-order-selects-global-primary",
     "station-success-sets-peer-trust",
-    "association-claim-merges-identity"
+    "endpoint-state-alone-grants-user-authority",
+    "station-selects-user-authority"
   ]
 }

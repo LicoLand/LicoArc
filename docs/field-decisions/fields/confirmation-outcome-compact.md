@@ -9,11 +9,11 @@ specification; normative field semantics come only from the Field Registry.
 | --- | --- |
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-confirmation-outcome-compact` |
-| Decision status | `DECIDED` |
-| Definition status | `SPECIFIED` |
+| Decision status | `RETIRED` |
+| Definition status | `NOT-SPECIFIED` |
 | Existing authority | [Field Registry](../../../spec/FIELD-REGISTRY.md) |
-| Predecessor or successor | Succeeds `FLD-confirmation-outcome`; no successor. |
-| Current conclusion | One `confirmationOutcome` applies to every Message in a bounded group; routine successful attachment chunks are excluded, and the complete confirmation requires Evidence Checkpoint coverage. |
+| Predecessor or successor | Succeeds `FLD-confirmation-outcome`; succeeded by `FLD-confirmation-outcome-v1`. |
+| Current conclusion | Retired: Generation 1 keeps bounded Endpoint outcomes but removes checkpoint coverage. |
 
 ## Question
 
@@ -74,4 +74,4 @@ alone, the mandatory signed statement.
 
 ## Definition evidence
 
-The definition status is `SPECIFIED`. The Canonical Field Registry and linked machine-readable authorities close this record’s exact active semantics.
+The retired definition is `NOT-SPECIFIED`; its successor owns initial V1 semantics.

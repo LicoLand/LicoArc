@@ -17,84 +17,315 @@
   },
   "request": {
     "affiliate": [
-      { "label": 0, "name": "stationDescriptorDigest", "type": "DIGEST256", "presence": "mandatory" },
-      { "label": 1, "name": "affiliationCommitment", "type": "DIGEST256", "presence": "mandatory" }
+      {
+        "label": 0,
+        "name": "stationDescriptorDigest",
+        "type": "DIGEST256",
+        "presence": "mandatory"
+      },
+      {
+        "label": 1,
+        "name": "affiliationCommitment",
+        "type": "DIGEST256",
+        "presence": "mandatory"
+      }
     ],
     "reserve": [
-      { "label": 0, "name": "stationDescriptorDigest", "type": "DIGEST256", "presence": "mandatory" },
-      { "label": 1, "name": "affiliationCommitment", "type": "DIGEST256", "presence": "mandatory" },
-      { "label": 2, "name": "transportProfileId", "type": "DIGEST256", "presence": "mandatory" },
-      { "label": 3, "name": "handleClass", "type": "uint", "presence": "mandatory" }
+      {
+        "label": 0,
+        "name": "stationDescriptorDigest",
+        "type": "DIGEST256",
+        "presence": "mandatory"
+      },
+      {
+        "label": 1,
+        "name": "affiliationCommitment",
+        "type": "DIGEST256",
+        "presence": "mandatory"
+      },
+      {
+        "label": 2,
+        "name": "transportProfileId",
+        "type": "DIGEST256",
+        "presence": "mandatory"
+      },
+      {
+        "label": 3,
+        "name": "handleClass",
+        "type": "uint",
+        "presence": "mandatory"
+      }
     ],
     "claim": [
-      { "label": 0, "name": "maxItems", "type": "uint", "presence": "mandatory" }
+      {
+        "label": 0,
+        "name": "maxItems",
+        "type": "uint",
+        "presence": "mandatory"
+      }
     ],
     "settle": [
-      { "label": 0, "name": "claimId", "type": "TOKEN256", "presence": "mandatory" },
-      { "label": 1, "name": "claimEpoch", "type": "uint64", "presence": "mandatory" },
-      { "label": 2, "name": "settlements", "type": "Settlement[1..MAX_SETTLEMENT_ITEMS]", "presence": "mandatory" }
+      {
+        "label": 0,
+        "name": "claimId",
+        "type": "TOKEN256",
+        "presence": "mandatory"
+      },
+      {
+        "label": 1,
+        "name": "claimEpoch",
+        "type": "uint64",
+        "presence": "mandatory"
+      },
+      {
+        "label": 2,
+        "name": "settlements",
+        "type": "Settlement[1..MAX_SETTLEMENT_ITEMS]",
+        "presence": "mandatory"
+      }
     ],
     "settlement": [
-      { "label": 0, "name": "itemId", "type": "TOKEN256", "presence": "mandatory" },
-      { "label": 1, "name": "settleAction", "type": "uint", "presence": "mandatory" }
+      {
+        "label": 0,
+        "name": "itemId",
+        "type": "TOKEN256",
+        "presence": "mandatory"
+      },
+      {
+        "label": 1,
+        "name": "settleAction",
+        "type": "uint",
+        "presence": "mandatory"
+      }
     ]
   },
   "response": {
     "affiliate": [
-      { "label": 0, "name": "outcome", "type": "uint", "presence": "mandatory" },
-      { "label": 1, "name": "affiliationNotAfter", "type": "uint64", "presence": "conditional-on-accepted" },
-      { "label": 2, "name": "stationAffiliationSignature", "type": "Signature", "presence": "conditional-on-accepted" },
-      { "label": 3, "name": "failureClass", "type": "uint", "presence": "conditional-on-nonaccepted" },
-      { "label": 4, "name": "retryAfterMs", "type": "uint", "presence": "conditional-on-transient" }
+      {
+        "label": 0,
+        "name": "outcome",
+        "type": "uint",
+        "presence": "mandatory"
+      },
+      {
+        "label": 1,
+        "name": "affiliationNotAfter",
+        "type": "uint64",
+        "presence": "conditional-on-accepted"
+      },
+      {
+        "label": 2,
+        "name": "stationAffiliationSignature",
+        "type": "Signature",
+        "presence": "conditional-on-accepted"
+      },
+      {
+        "label": 3,
+        "name": "failureClass",
+        "type": "uint",
+        "presence": "conditional-on-nonaccepted"
+      },
+      {
+        "label": 4,
+        "name": "retryAfterMs",
+        "type": "uint",
+        "presence": "conditional-on-transient"
+      }
     ],
     "reserve": [
-      { "label": 0, "name": "outcome", "type": "uint", "presence": "mandatory" },
-      { "label": 1, "name": "deliveryHandle", "type": "TOKEN256", "presence": "conditional-on-accepted" },
-      { "label": 2, "name": "handleClass", "type": "uint", "presence": "conditional-on-accepted" },
-      { "label": 3, "name": "serviceUntil", "type": "uint64", "presence": "conditional-on-accepted-async" },
-      { "label": 4, "name": "stationServiceSignature", "type": "Signature", "presence": "conditional-on-accepted-async" },
-      { "label": 5, "name": "failureClass", "type": "uint", "presence": "conditional-on-nonaccepted" },
-      { "label": 6, "name": "retryAfterMs", "type": "uint", "presence": "conditional-on-transient" }
+      {
+        "label": 0,
+        "name": "outcome",
+        "type": "uint",
+        "presence": "mandatory"
+      },
+      {
+        "label": 1,
+        "name": "deliveryHandle",
+        "type": "TOKEN256",
+        "presence": "conditional-on-accepted"
+      },
+      {
+        "label": 2,
+        "name": "handleClass",
+        "type": "uint",
+        "presence": "conditional-on-accepted"
+      },
+      {
+        "label": 3,
+        "name": "serviceUntil",
+        "type": "uint64",
+        "presence": "conditional-on-accepted-async"
+      },
+      {
+        "label": 4,
+        "name": "stationServiceSignature",
+        "type": "Signature",
+        "presence": "conditional-on-accepted-async"
+      },
+      {
+        "label": 5,
+        "name": "failureClass",
+        "type": "uint",
+        "presence": "conditional-on-nonaccepted"
+      },
+      {
+        "label": 6,
+        "name": "retryAfterMs",
+        "type": "uint",
+        "presence": "conditional-on-transient"
+      }
     ],
     "submit": [
-      { "label": 0, "name": "outcome", "type": "uint", "presence": "mandatory" },
-      { "label": 1, "name": "failureClass", "type": "uint", "presence": "conditional-on-nonaccepted" },
-      { "label": 2, "name": "retryAfterMs", "type": "uint", "presence": "conditional-on-transient" }
+      {
+        "label": 0,
+        "name": "outcome",
+        "type": "uint",
+        "presence": "mandatory"
+      },
+      {
+        "label": 1,
+        "name": "failureClass",
+        "type": "uint",
+        "presence": "conditional-on-nonaccepted"
+      },
+      {
+        "label": 2,
+        "name": "retryAfterMs",
+        "type": "uint",
+        "presence": "conditional-on-transient"
+      }
     ],
     "claim": [
-      { "label": 0, "name": "outcome", "type": "uint", "presence": "mandatory" },
-      { "label": 1, "name": "claimId", "type": "TOKEN256", "presence": "conditional-on-items" },
-      { "label": 2, "name": "claimEpoch", "type": "uint64", "presence": "conditional-on-items" },
-      { "label": 3, "name": "items", "type": "ClaimedItem[1..MAX_CLAIM_ITEMS]", "presence": "conditional-on-items" },
-      { "label": 4, "name": "failureClass", "type": "uint", "presence": "conditional-on-nonaccepted" },
-      { "label": 5, "name": "retryAfterMs", "type": "uint", "presence": "conditional-on-transient" }
+      {
+        "label": 0,
+        "name": "outcome",
+        "type": "uint",
+        "presence": "mandatory"
+      },
+      {
+        "label": 1,
+        "name": "claimId",
+        "type": "TOKEN256",
+        "presence": "conditional-on-items"
+      },
+      {
+        "label": 2,
+        "name": "claimEpoch",
+        "type": "uint64",
+        "presence": "conditional-on-items"
+      },
+      {
+        "label": 3,
+        "name": "items",
+        "type": "ClaimedItem[1..MAX_CLAIM_ITEMS]",
+        "presence": "conditional-on-items"
+      },
+      {
+        "label": 4,
+        "name": "failureClass",
+        "type": "uint",
+        "presence": "conditional-on-nonaccepted"
+      },
+      {
+        "label": 5,
+        "name": "retryAfterMs",
+        "type": "uint",
+        "presence": "conditional-on-transient"
+      }
     ],
     "settle": [
-      { "label": 0, "name": "outcome", "type": "uint", "presence": "mandatory" },
-      { "label": 1, "name": "settlementResults", "type": "SettlementResult[1..MAX_SETTLEMENT_ITEMS]", "presence": "conditional-on-accepted" },
-      { "label": 2, "name": "failureClass", "type": "uint", "presence": "conditional-on-nonaccepted" },
-      { "label": 3, "name": "retryAfterMs", "type": "uint", "presence": "conditional-on-transient" }
+      {
+        "label": 0,
+        "name": "outcome",
+        "type": "uint",
+        "presence": "mandatory"
+      },
+      {
+        "label": 1,
+        "name": "settlementResults",
+        "type": "SettlementResult[1..MAX_SETTLEMENT_ITEMS]",
+        "presence": "conditional-on-accepted"
+      },
+      {
+        "label": 2,
+        "name": "failureClass",
+        "type": "uint",
+        "presence": "conditional-on-nonaccepted"
+      },
+      {
+        "label": 3,
+        "name": "retryAfterMs",
+        "type": "uint",
+        "presence": "conditional-on-transient"
+      }
     ]
   },
   "nested": {
     "settlement": [
-      { "label": 0, "name": "itemId", "type": "TOKEN256", "presence": "mandatory" },
-      { "label": 1, "name": "settleAction", "type": "uint", "presence": "mandatory" }
+      {
+        "label": 0,
+        "name": "itemId",
+        "type": "TOKEN256",
+        "presence": "mandatory"
+      },
+      {
+        "label": 1,
+        "name": "settleAction",
+        "type": "uint",
+        "presence": "mandatory"
+      }
     ],
     "claimedItem": [
-      { "label": 0, "name": "itemId", "type": "TOKEN256", "presence": "mandatory" },
-      { "label": 1, "name": "protectedPacket", "type": "bstr[1..MAX_PACKET_BYTES]", "presence": "mandatory" }
+      {
+        "label": 0,
+        "name": "itemId",
+        "type": "TOKEN256",
+        "presence": "mandatory"
+      },
+      {
+        "label": 1,
+        "name": "protectedPacket",
+        "type": "bstr[1..MAX_PACKET_BYTES]",
+        "presence": "mandatory"
+      }
     ],
     "settlementResult": [
-      { "label": 0, "name": "itemId", "type": "TOKEN256", "presence": "mandatory" },
-      { "label": 1, "name": "settleOutcome", "type": "uint", "presence": "mandatory" }
+      {
+        "label": 0,
+        "name": "itemId",
+        "type": "TOKEN256",
+        "presence": "mandatory"
+      },
+      {
+        "label": 1,
+        "name": "settleOutcome",
+        "type": "uint",
+        "presence": "mandatory"
+      }
     ]
   },
   "enums": {
-    "handleClass": ["async", "firstContact"],
-    "outcome": ["accepted", "rejected", "transient", "ambiguous"],
-    "settleAction": ["complete", "release"],
-    "settleOutcome": ["completed", "released", "staleClaim", "attemptLimit"],
+    "handleClass": [
+      "async",
+      "firstContact"
+    ],
+    "outcome": [
+      "accepted",
+      "rejected",
+      "transient",
+      "ambiguous"
+    ],
+    "settleAction": [
+      "complete",
+      "release"
+    ],
+    "settleOutcome": [
+      "completed",
+      "released",
+      "staleClaim",
+      "attemptLimit"
+    ],
     "failureClass": [
       "invalidRequest",
       "unsupportedProfile",

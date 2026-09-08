@@ -4,55 +4,151 @@
   "title": "LicoArc lifecycle-generic aggregate conformance manifest",
   "type": "object",
   "additionalProperties": false,
-  "required": ["$schema", "manifestVersion", "wireId", "protocolLineId", "generation", "lifecycle", "definitionStatus", "capabilityCorpora", "definitionCorpora", "absentCorpora", "sourceClosure"],
+  "required": [
+    "$schema",
+    "manifestVersion",
+    "wireId",
+    "protocolLineId",
+    "generation",
+    "lifecycle",
+    "definitionStatus",
+    "capabilityCorpora",
+    "definitionCorpora",
+    "absentCorpora",
+    "sourceClosure"
+  ],
   "properties": {
-    "$schema": {"const": "https://licoarc.com/spec/schemas/conformance-manifest.schema.json"},
-    "manifestVersion": {"type": "string", "pattern": "^licoarc[.]conformance-manifest[.]v[1-9][0-9]*$", "maxLength": 128},
-    "wireId": {"$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/protocolLocator"},
-    "protocolLineId": {"$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/pendingDigest256"},
-    "generation": {"$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/generation"},
-    "lifecycle": {"$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/lifecycle"},
-    "definitionStatus": {"$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/definitionStatus"},
+    "$schema": {
+      "const": "https://licoarc.com/spec/schemas/conformance-manifest.schema.json"
+    },
+    "manifestVersion": {
+      "type": "string",
+      "pattern": "^licoarc[.]conformance-manifest[.]v[1-9][0-9]*$",
+      "maxLength": 128
+    },
+    "wireId": {
+      "$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/protocolLocator"
+    },
+    "protocolLineId": {
+      "$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/pendingDigest256"
+    },
+    "generation": {
+      "$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/generation"
+    },
+    "lifecycle": {
+      "$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/lifecycle"
+    },
+    "definitionStatus": {
+      "$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/definitionStatus"
+    },
     "capabilityCorpora": {
-      "type": "array", "maxItems": 64, "uniqueItems": true,
+      "type": "array",
+      "maxItems": 64,
+      "uniqueItems": true,
       "items": {
-        "type": "object", "additionalProperties": false,
-        "required": ["capabilityId", "definitionStatus", "manifestPath", "sourceDigest", "protectionProfileIds", "complete"],
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "capabilityId",
+          "definitionStatus",
+          "manifestPath",
+          "sourceDigest",
+          "protectionProfileIds",
+          "complete"
+        ],
         "properties": {
-          "capabilityId": {"$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/protocolLocator"},
-          "definitionStatus": {"$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/definitionStatus"},
-          "manifestPath": {"type": "string", "pattern": "^conformance/v1/[a-z0-9-]+/manifest\\.json$", "maxLength": 256},
-          "sourceDigest": {"$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/pendingDigest256"},
-          "protectionProfileIds": {"type": "array", "maxItems": 16, "uniqueItems": true, "items": {"$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/digest256"}},
-          "complete": {"type": "boolean"}
+          "capabilityId": {
+            "$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/protocolLocator"
+          },
+          "definitionStatus": {
+            "$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/definitionStatus"
+          },
+          "manifestPath": {
+            "type": "string",
+            "pattern": "^conformance/v1/[a-z0-9-]+/manifest\\.json$",
+            "maxLength": 256
+          },
+          "sourceDigest": {
+            "$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/pendingDigest256"
+          },
+          "protectionProfileIds": {
+            "type": "array",
+            "maxItems": 16,
+            "uniqueItems": true,
+            "items": {
+              "$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/digest256"
+            }
+          },
+          "complete": {
+            "type": "boolean"
+          }
         }
       }
     },
     "definitionCorpora": {
-      "type": "array", "maxItems": 64, "uniqueItems": true,
+      "type": "array",
+      "maxItems": 64,
+      "uniqueItems": true,
       "items": {
-        "type": "object", "additionalProperties": false,
-        "required": ["definitionId", "definitionStatus", "manifestPath", "sourceDigest", "complete"],
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "definitionId",
+          "definitionStatus",
+          "manifestPath",
+          "sourceDigest",
+          "complete"
+        ],
         "properties": {
-          "definitionId": {"type": "string", "pattern": "^[a-z][a-z0-9-]+$", "maxLength": 128},
-          "definitionStatus": {"$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/definitionStatus"},
-          "manifestPath": {"type": "string", "pattern": "^conformance/v1/[a-z0-9-]+/manifest\\.json$", "maxLength": 256},
-          "sourceDigest": {"$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/pendingDigest256"},
-          "complete": {"type": "boolean"}
+          "definitionId": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]+$",
+            "maxLength": 128
+          },
+          "definitionStatus": {
+            "$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/definitionStatus"
+          },
+          "manifestPath": {
+            "type": "string",
+            "pattern": "^conformance/v1/[a-z0-9-]+/manifest\\.json$",
+            "maxLength": 256
+          },
+          "sourceDigest": {
+            "$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/pendingDigest256"
+          },
+          "complete": {
+            "type": "boolean"
+          }
         }
       }
     },
     "absentCorpora": {
-      "type": "array", "maxItems": 64, "uniqueItems": true,
+      "type": "array",
+      "maxItems": 64,
+      "uniqueItems": true,
       "items": {
-        "type": "object", "additionalProperties": false,
-        "required": ["definitionId", "reason"],
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "definitionId",
+          "reason"
+        ],
         "properties": {
-          "definitionId": {"type": "string", "pattern": "^[a-z][a-z0-9-]+$", "maxLength": 128},
-          "reason": {"type": "string", "pattern": "^[a-z][a-z0-9-]+$", "maxLength": 128}
+          "definitionId": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]+$",
+            "maxLength": 128
+          },
+          "reason": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]+$",
+            "maxLength": 128
+          }
         }
       }
     },
-    "sourceClosure": {"const": "declared-component-source-closures"}
+    "sourceClosure": {
+      "const": "declared-component-source-closures"
+    }
   }
 }

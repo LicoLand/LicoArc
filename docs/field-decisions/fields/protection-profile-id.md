@@ -13,7 +13,7 @@
 | Observer set | Peer Endpoints; hidden from Stations in the common protected record |
 | Existing authority | [Canonical Field Registry](../../../spec/FIELD-REGISTRY.md); this record explains the decision and is not a second field specification. |
 | Predecessor or successor | Succeeded by `FLD-protection-profile-id-session-binding`. |
-| Current conclusion | Retired: the successor retains transcript-bound selection and forbids per-record repetition after establishment. |
+| Current conclusion | Retired: the successor binds the sole fixed V1 Profile identity into the handshake transcript and forbids per-record repetition after establishment. |
 
 ## Question
 
@@ -88,10 +88,10 @@ or lifecycle; every resulting decision remains wholly LicoArc-owned.
 ## Decision history
 
 The inclusion, representation, visibility, and authority decision is complete
-in the Canonical Field Registry. Candidate work must still define the complete
-profile registry, negotiation transcript, unknown-value failure, exact suite,
-vectors, and Protocol Line binding together. LicoArc review on 2026-08-03
-retired the broad placement and assigned handshake-only occurrence to
+in the Canonical Field Registry. The fixed V1 transcript binds the sole
+admitted Profile identity, exact suite, unknown-value failure, vectors, and
+Protocol Line identity together. LicoArc review on 2026-08-03 retired the
+broad placement and assigned handshake-only occurrence to
 `FLD-protection-profile-id-session-binding`.
 
 ## Definition evidence

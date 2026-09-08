@@ -151,7 +151,12 @@
     "json": "forbidden"
   },
   "outcomes": {
-    "values": ["accepted", "rejected", "transient", "ambiguous"],
+    "values": [
+      "accepted",
+      "rejected",
+      "transient",
+      "ambiguous"
+    ],
     "statusMap": {
       "accepted": {
         "affiliate": 201,
@@ -160,9 +165,21 @@
         "claim": 200,
         "settle": 200
       },
-      "rejected": [400, 404, 406, 409, 413],
-      "transient": [429, 500, 503],
-      "ambiguous": [504]
+      "rejected": [
+        400,
+        404,
+        406,
+        409,
+        413
+      ],
+      "transient": [
+        429,
+        500,
+        503
+      ],
+      "ambiguous": [
+        504
+      ]
     },
     "failureClasses": [
       "invalidRequest",
@@ -175,7 +192,7 @@
       "internalUnavailable"
     ],
     "stationAuthority": "transport-hint-only",
-    "endpointEvidence": "never-created-by-station-outcome",
+    "endpointFinalityAuthority": "none",
     "acceptedStoragePrecondition": "station-must-be-able-to-honor-fixed-window-before-accepting-submit"
   },
   "statusConsistency": {
@@ -244,7 +261,7 @@
     "peer-authentication",
     "endpoint-acceptance",
     "effect-completion",
-    "endpoint-evidence",
+    "endpoint-finality-authority",
     "anonymity",
     "unlinkability",
     "traffic-analysis-resistance",

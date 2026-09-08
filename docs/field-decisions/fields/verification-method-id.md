@@ -6,10 +6,11 @@
 | --- | --- |
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-verification-method-id` |
-| Decision status | `DECIDED` |
-| Definition status | `PARTIAL` |
+| Decision status | `RETIRED` |
+| Definition status | `NOT-SPECIFIED` |
 | Existing authority | [`FIELD-REGISTRY.md`](../../../spec/FIELD-REGISTRY.md) |
-| Current conclusion | Verification evidence requires a protocol-owned method identifier so peers interpret the evidence under one exact method contract. |
+| Predecessor or successor | Retired without successor; Generation 1 keeps peer trust local and defines no verification-evidence method. |
+| Current conclusion | No verification-method field is active. |
 
 ## Question
 
@@ -52,5 +53,4 @@ explanation here.
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. The necessity and trust boundary are
-decided, but no Protocol Line v1 method identifier or wire allocation exists.
+The definition is retired and `NOT-SPECIFIED`; this record remains history only.

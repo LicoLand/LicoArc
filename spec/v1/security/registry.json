@@ -8,7 +8,7 @@
   "adversaryModelPath": "spec/v1/security/adversary-model.json",
   "formalBindingsPath": "spec/v1/security/formal-bindings.json",
   "proofEvidencePath": "formal/evidence.json",
-  "proofEvidenceDigest": "23e39153d7a6d3167960c0ca51b556b8b49e3bdb24231c31b026bf3ae86530ee",
+  "proofEvidenceDigest": "74cf8df346a261164a097732b8fa6e03471d63104ae5001e5ccb6273b34f38e5",
   "proofDoesNotDefineProtocol": true,
   "downstreamEvidenceDoesNotAdvanceDefinition": true,
   "missingMandatoryBindingPolicy": "line-ineligible"

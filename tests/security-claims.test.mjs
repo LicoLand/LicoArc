@@ -43,7 +43,8 @@ test("security accounting is closed, source-authoritative, and lifecycle-generic
   assert.equal(registry.downstreamEvidenceDoesNotAdvanceDefinition, true);
   assert.equal(bindings.bindings.length, 161);
   assert.equal(bindings.requiredKinds.length, 7);
-  assert.ok(bindings.semanticSources.includes("spec/v1/manifest.json"));
+  assert.ok(bindings.semanticSources.includes("spec/protocol-lines.json"));
+  assert.ok(bindings.semanticSources.includes("spec/protection-profiles.json"));
 
   const ids = claims.claims.map(({ id }) => id);
   assert.equal(new Set(ids).size, ids.length);
@@ -51,9 +52,14 @@ test("security accounting is closed, source-authoritative, and lifecycle-generic
   for (const property of [
     "hybrid-ake-key-secrecy",
     "mutual-endpoint-authentication",
-    "protocol-line-downgrade-resistance",
+    "protocol-line-content-binding",
     "double-ratchet-forward-secrecy",
     "double-ratchet-post-compromise-recovery",
+    "self-certifying-user-authority",
+    "management-and-recovery-transition-authorization",
+    "endpoint-possession-authorization",
+    "acyclic-sibling-endpoint-authority-session-binding",
+    "authenticated-confirmation-finality",
     "pairwise-record-confidentiality",
     "pairwise-record-authentication-and-integrity",
     "sender-metadata-confidentiality"
@@ -97,8 +103,7 @@ test("the active Profile claim and nonclaim sets are exact and substantive", () 
     "ongoing-post-quantum-post-compromise-recovery",
     "physical-zeroization",
     "ratchet-header-confidentiality",
-    "rollback-detection-under-fully-compromised-store",
-    "transferable-session-authentication"
+    "rollback-detection-under-fully-compromised-store"
   ];
   assert.deepEqual(activeProfile.stableNonClaimIds, exactProfileNonclaims);
   assert.deepEqual([...algorithms.nonclaims].sort(), exactProfileNonclaims);
@@ -128,6 +133,8 @@ test("formal bindings, model constants, immutable runtime, and bundle proof evid
     ["--prove", "--heuristic=s", "+RTS", "-N1", "-RTS"]);
   assert.ok(proofEvidence.lemmas.some(({ name, result }) =>
     name === "executable_ratchet_evolution" && result === "verified"));
+  assert.ok(proofEvidence.lemmas.some(({ name, result }) =>
+    name === "executable_authenticated_confirmation_and_metadata" && result === "verified"));
 });
 
 test("unknown adversaries and downstream proof authority fail closed", () => {

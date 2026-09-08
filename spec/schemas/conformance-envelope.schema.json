@@ -4,17 +4,32 @@
   "title": "LicoArc conformance case envelope",
   "type": "object",
   "additionalProperties": false,
-  "required": ["$schema", "envelopeVersion", "corpusId", "cases"],
+  "required": [
+    "$schema",
+    "envelopeVersion",
+    "corpusId",
+    "cases"
+  ],
   "properties": {
-    "$schema": {"const": "https://licoarc.com/spec/schemas/conformance-envelope.schema.json"},
-    "envelopeVersion": {"const": "licoarc.conformance-envelope.v1"},
-    "corpusId": {"type": "string", "pattern": "^licoarc[.][a-z0-9-]+(?:[.][a-z0-9-]+)*[.]v[1-9][0-9]*$", "maxLength": 192},
+    "$schema": {
+      "const": "https://licoarc.com/spec/schemas/conformance-envelope.schema.json"
+    },
+    "envelopeVersion": {
+      "const": "licoarc.conformance-envelope.v1"
+    },
+    "corpusId": {
+      "type": "string",
+      "pattern": "^licoarc[.][a-z0-9-]+(?:[.][a-z0-9-]+)*[.]v[1-9][0-9]*$",
+      "maxLength": 192
+    },
     "cases": {
       "type": "array",
       "minItems": 1,
       "maxItems": 512,
       "uniqueItems": true,
-      "items": {"$ref": "https://licoarc.com/spec/schemas/conformance-case.schema.json"}
+      "items": {
+        "$ref": "https://licoarc.com/spec/schemas/conformance-case.schema.json"
+      }
     }
   }
 }

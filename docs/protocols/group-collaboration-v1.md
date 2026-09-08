@@ -21,10 +21,10 @@ membership, or fourth entity. Every independently key-holding participant is
 an Endpoint reference. Group state, roles, message context, and results are
 inside Endpoint protection; a Station carries opaque packets and has no
 membership, ordering, group-key, receipt, or state-transition authority.
-Product permissions, command catalogues, identity assertions, and association
-claims remain outside this profile. A dedicated Endpoint Association Claim is rejected
-and never becomes protocol authority; an application assertion may use ordinary namespaced opaque
-`message.payload`, which recipients treat as local-policy input only.
+Product permissions, command catalogues, and application identity assertions
+remain outside this profile. An application assertion may use ordinary
+namespaced opaque `message.payload`, which recipients treat as local-policy
+input only.
 Product permission remains an application decision carried only as opaque Payload.
 
 ## Canonical representation
@@ -105,16 +105,16 @@ first16(SHA-256("LICOARC-GROUP-PROJECTION\\0" || groupStateDigest ||
 Per-member delivery remains at-least-once. A retry reuses the same logical
 Message and projection identities; a projection with different protected
 meaning is a conflict. Station acceptance, queue possession, ordering, or
-receipt is never Endpoint evidence.
+receipt is never an Endpoint confirmation.
 
 ## Partial failure and aggregation
 
 Each projection has one bounded result: `pending`, `delivered`, `rejected`, or
 `failed`. Terminal rejection and failure carry one closed failure code. A
-result with `endpoint-evidence` authority is accepted only when it comes from
-the protected Endpoint result path; a Station result is rejected as
-`station-authority`. Duplicate identical results are idempotent and conflicting
-results fail closed.
+result with `endpoint-confirmation` authority is accepted only when the exact
+confirmation comes from the protected authorized Endpoint session; a Station
+result is rejected as `station-authority`. Duplicate identical results are
+idempotent and conflicting results fail closed.
 
 Aggregation emits one deterministic result tuple in recipient byte order.
 Missing results are represented as `pending`. The aggregate outcome is
@@ -126,7 +126,7 @@ authority.
 ## Restart and bounds
 
 The retained protocol state is limited to the current high-water state,
-bounded predecessor evidence, member tombstones, and per-member projection
+bounded predecessor state, member tombstones, and per-member projection
 results. Restart restores that state before new input; it never discovers or
 imports a retired product or legacy Group root. `MAX_PENDING_GROUP_TRANSITIONS`
 is 128, `MAX_PENDING_GROUP_RESULTS` is 256, and

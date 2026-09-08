@@ -18,8 +18,8 @@ This section is the sole authority for LicoArc's three domain entities.
 
 | Entity | Definition | Authority boundary |
 | --- | --- | --- |
-| **Endpoint** | The user-controlled origin or destination of protected communication. | Sole runtime authority for its keys, plaintext, protected state, peer acceptance, local approval, effects, and endpoint-authenticated evidence. |
-| **Station** | An independently operated intermediary that transports opaque endpoint-protected data. | Untrusted by Endpoints. It has only the transport authority explicitly granted by the pinned Protocol Line. |
+| **Endpoint** | A user-controlled origin or destination of protected communication. Every independently key-holding device or isolated runtime is a separate Endpoint. | Sole runtime authority for its own keys, sessions, plaintext, protected state, peer acceptance, local approval, effects, and authenticated confirmations. |
+| **Station** | An independently operated intermediary that transports opaque endpoint-protected data. | Untrusted by Endpoints. It has no user or device roster and only the transport authority explicitly granted by the pinned Protocol Line. |
 | **Network** | A federation interoperability context whose participants recognize communication under one pinned Protocol Line. | Provides recognition and transport context; it is not a trust root, identity authority, plaintext authority, or endpoint security authority. |
 
 ```text
@@ -41,23 +41,36 @@ The tracked source graph defines `licoarc.protocol-line.v1` as:
 | Definition status | `COMPLETE` |
 | New-session eligibility | `true` |
 | Publication eligibility | `false` |
-| Mandatory capabilities | 9, all `COMPLETE` |
+| Protocol generation | `1` (Generation 1) |
+| Mandatory capabilities | 8, all `COMPLETE` |
 | Active Protection Profile | `stable-core`, `COMPLETE` |
 
-The nine mandatory capabilities are Protocol Foundation, Identity, Pairwise
+The eight mandatory capabilities are Protocol Foundation, Identity, Pairwise
 Protection, Generic Messaging, Reliable Exchange, HTTPS Transport, Group
-Collaboration, Transferable Evidence, and Federation Governance.
+Collaboration, and Federation Governance.
+
+Identity defines a user-authorized authority chain for multiple independent
+Endpoint devices and recovery. Each device keeps its own Endpoint keys and
+sessions. Pairwise transcripts bind both Endpoint-state digests and their
+sibling user-authority-state digests without creating a digest cycle. An exact
+protected Endpoint confirmation, rather than a Station signal, advances
+reliable finality. User/device authorization and local peer trust remain
+separate decisions.
 
 `stable-core` is an indivisible hybrid construction with paired X25519 and
 ML-KEM-768 one-time prekeys, dual Ed25519 and ML-DSA-65 authentication,
-transcript-bound selection and confirmation, and a bounded X25519 Double
+fixed transcript-bound admission and confirmation, and a bounded X25519 Double
 Ratchet. Profile and Protocol Line identities are computed from named,
 non-circular semantic projections. Proof admission, security accounting, and
 the complete declared conformance corpus are part of definition admission.
 
 `sessionEligible: true` means the Candidate definition permits authenticated
-new-session selection under its machine policy. It does not mean Published,
+sessions under the fixed V1 definition (Generation 1). It does not mean Published,
 implemented, interoperable, audited, deployed, supported, or operational.
+
+`publicationEligible: false` means this Candidate is ineligible for Protocol-Line
+publication. Repository source, license, and documentation may still be published
+as repository material under Apache-2.0.
 
 Canonical current facts are in [`spec/v1/manifest.json`](spec/v1/manifest.json),
 [`spec/protocol-lines.json`](spec/protocol-lines.json),
@@ -66,11 +79,13 @@ Canonical current facts are in [`spec/v1/manifest.json`](spec/v1/manifest.json),
 
 ## Documentation
 
+The public English [documentation site](https://licoarc.com/) is an orientation
+layer; the repository sources below remain authoritative.
+
 - [Product authority and scope](PRODUCT.md)
 - [Architecture](ARCHITECTURE.md)
 - [Domain vocabulary](CONTEXT.md)
 - [Current status](docs/STATUS.md)
-- [Compatibility and lifecycle](docs/COMPATIBILITY.md)
 - [Protocol documents](docs/protocols/)
 - [Definition verification](docs/conformance/verification.md)
 - [Decision lifecycle](docs/DECISION-LIFECYCLE.md)
@@ -81,4 +96,4 @@ Run `npm run verify` for the repository-owned source-integrity checks. These
 checks validate the definition graph and generated artifact only; they do not
 claim downstream execution or delivery.
 
-License: GPL-3.0-or-later.
+License: Apache-2.0.

@@ -5,7 +5,7 @@
   "registryVersion": "licoarc.identity-policy.v1",
   "wireId": "licoarc.identity.v1",
   "lifecycle": "Candidate",
-  "scope": "endpoint-identity-discovery-affiliation-route-transparency",
+  "scope": "user-authority-endpoint-identity-discovery-affiliation-route-transparency",
   "unknownPolicy": "reject",
   "retiredPolicy": "reject",
   "downgradePolicy": "reject",
@@ -17,6 +17,9 @@
     "MAX_DELIVERY_HANDLE_BYTES": 32,
     "MAX_TEXT_BYTES": 128,
     "MAX_IDENTITY_CHAIN_RECORDS": 64,
+    "MAX_AUTHORITY_CATCH_UP_STATES": 64,
+    "MAX_AUTHORIZED_DEVICES_PER_SNAPSHOT": 16,
+    "MAX_AUTHORITY_KEYS_PER_PURPOSE": 2,
     "MAX_AFFILIATION_CHAIN_RECORDS": 64,
     "MAX_ROUTE_CHAIN_RECORDS": 64,
     "MAX_AFFILIATIONS": 4,
@@ -35,8 +38,8 @@
     "MAX_PUBLIC_KEY_BYTES": 1952,
     "MAX_SIGNATURE_BYTES": 3309,
     "MAX_PATH_DIGESTS": 64,
-    "MAX_VERIFICATION_EVIDENCE_BYTES": 3535,
-    "MAX_EPOCH": 9007199254740991
+    "MAX_EPOCH": 9007199254740991,
+    "MAX_VERIFICATION_INPUT_BYTES": 3535
   },
   "signatureProfiles": {
     "registryPath": "spec/v1/identity/signature-profiles.json",
@@ -55,6 +58,24 @@
     "threeChainHighWaterBytes": 424503
   },
   "chains": {
+    "userAuthority": {
+      "scope": "one-self-certifying-user-authority",
+      "genesisEpoch": 0,
+      "successorStep": 1,
+      "predecessor": "absent-at-genesis-required-after-genesis",
+      "digest": "domain-separated-canonical-complete-snapshot-excluding-authority-signatures",
+      "transitionKinds": [
+        "genesis",
+        "management",
+        "recovery"
+      ],
+      "managementAuthorization": "exact-predecessor-management-ed25519-plus-ml-dsa-65",
+      "managementRecoveryKeyRule": "preserve-current-recovery-key-set-exactly",
+      "recoveryAuthorization": "exact-predecessor-recovery-ed25519-plus-ml-dsa-65",
+      "recoveryReplacement": "replacement-recovery-keys-prove-possession",
+      "fork": "equal-parent-unequal-successors-remain-explicit",
+      "bounds": "per-complete-snapshot-or-catch-up-batch-never-lifetime"
+    },
     "identity": {
       "scope": "one-stable-endpoint-identity",
       "genesisEpoch": 1,
@@ -210,15 +231,16 @@
     "splitView": "surface-conflict-to-endpoint;-never-pick-arrival-or-source",
     "nonEnumeration": true
   },
-  "associationClaims": {
-    "authority": "non-authoritative-protected-input",
-    "mergesIdentities": false,
-    "provesHuman": false,
-    "provesAccount": false,
-    "provesDevice": false,
-    "provesOwnership": false,
-    "provesConsent": false,
-    "setsPeerTrust": false
+  "applicationAdmission": {
+    "authorityPayload": "independently-validated-protected-complete-user-authority-state",
+    "endpointStateInputs": "matching-protected-identity-records-or-exact-locally-accepted-states;never-a-public-directory-or-station-roster",
+    "possessionKeyResolution": "exact-signing-keys-from-the-matching-endpoint-state",
+    "sessionBinding": "sibling-endpoint-state-and-user-authority-state-digests",
+    "payloadDigestMismatch": "reject-without-application-state-mutation",
+    "unauthorizedEndpoint": "reject-without-application-state-mutation",
+    "learnedRevocation": "reject-later-application-records-even-on-an-existing-session",
+    "unchangedOfflineDevice": "retain-original-admission-epoch-possession-proof-without-resigning-successors",
+    "localPeerTrust": "unchanged-by-authority-validation"
   },
   "endpointIdentityExclusions": [
     "stationId",

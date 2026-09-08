@@ -57,7 +57,7 @@ group-result = {
   1: digest256,
   2: result-outcome,
   ? 3: uint .le 12,                   ; closed failure code
-  4: 0 / 1                            ; endpoint-evidence / none
+  4: 0 / 1                            ; endpoint-confirmation / none
 }
 
 group-aggregate = {

@@ -6,10 +6,11 @@
 | --- | --- |
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-verification-epoch` |
-| Decision status | `DECIDED` |
-| Definition status | `PARTIAL` |
+| Decision status | `RETIRED` |
+| Definition status | `NOT-SPECIFIED` |
 | Existing authority | [`FIELD-REGISTRY.md`](../../../spec/FIELD-REGISTRY.md) |
-| Current conclusion | Endpoint-authenticated peer-verification state requires an epoch to reject rollback and stale evidence replacement. |
+| Predecessor or successor | Retired without successor; user authority epochs do not encode local peer trust. |
+| Current conclusion | No peer-verification epoch field is active. |
 
 ## Question
 
@@ -51,6 +52,4 @@ any conflicting explanation here.
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. The necessity and trust boundary are
-decided, but the value is outside Protocol Line v1 until a successor authority
-closes its exact method, state, encoding, failure, and corpus semantics.
+The definition is retired and `NOT-SPECIFIED`; this record remains history only.

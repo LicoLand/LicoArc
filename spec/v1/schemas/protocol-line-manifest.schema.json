@@ -4,75 +4,271 @@
   "title": "LicoArc lifecycle-generic Protocol Line composition manifest",
   "type": "object",
   "additionalProperties": false,
-  "required": ["$schema", "manifestVersion", "wireId", "protocolLineId", "generation", "lifecycle", "definitionStatus", "sessionEligible", "publicationEligible", "protocolLineCatalog", "protectionProfileCatalog", "fieldRegistry", "capabilities", "protectionProfileIds", "stableClaimIds", "missingMandatoryCapabilities", "openDefinitions", "blockers", "sourceClosure", "handshakeBinding", "sessionLock", "translationPolicy"],
+  "required": [
+    "$schema",
+    "manifestVersion",
+    "wireId",
+    "protocolLineId",
+    "generation",
+    "lifecycle",
+    "definitionStatus",
+    "sessionEligible",
+    "publicationEligible",
+    "protocolLineCatalog",
+    "protectionProfileCatalog",
+    "fieldRegistry",
+    "capabilities",
+    "protectionProfileIds",
+    "stableClaimIds",
+    "missingMandatoryCapabilities",
+    "openDefinitions",
+    "blockers",
+    "sourceClosure",
+    "handshakeBinding",
+    "sessionLock",
+    "translationPolicy"
+  ],
   "properties": {
-    "$schema": {"const": "https://json-schema.org/draft/2020-12/schema"},
-    "manifestVersion": {"type": "string", "pattern": "^licoarc[.]protocol-line-manifest[.]v[1-9][0-9]*$", "maxLength": 128},
-    "wireId": {"$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/protocolLocator"},
-    "protocolLineId": {"$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/pendingDigest256"},
-    "generation": {"$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/generation"},
-    "lifecycle": {"$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/lifecycle"},
-    "definitionStatus": {"$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/definitionStatus"},
-    "sessionEligible": {"type": "boolean"},
-    "publicationEligible": {"type": "boolean"},
-    "protocolLineCatalog": {"const": "spec/protocol-lines.json"},
-    "protectionProfileCatalog": {"const": "spec/protection-profiles.json"},
+    "$schema": {
+      "const": "https://json-schema.org/draft/2020-12/schema"
+    },
+    "manifestVersion": {
+      "type": "string",
+      "pattern": "^licoarc[.]protocol-line-manifest[.]v[1-9][0-9]*$",
+      "maxLength": 128
+    },
+    "wireId": {
+      "$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/protocolLocator"
+    },
+    "protocolLineId": {
+      "$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/pendingDigest256"
+    },
+    "generation": {
+      "$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/generation"
+    },
+    "lifecycle": {
+      "$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/lifecycle"
+    },
+    "definitionStatus": {
+      "$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/definitionStatus"
+    },
+    "sessionEligible": {
+      "type": "boolean"
+    },
+    "publicationEligible": {
+      "type": "boolean"
+    },
+    "protocolLineCatalog": {
+      "const": "spec/protocol-lines.json"
+    },
+    "protectionProfileCatalog": {
+      "const": "spec/protection-profiles.json"
+    },
     "fieldRegistry": {
-      "type": "object", "additionalProperties": false,
-      "required": ["path", "sourceDigest", "authority"],
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "sourceDigest",
+        "authority"
+      ],
       "properties": {
-        "path": {"const": "spec/FIELD-REGISTRY.md"},
-        "sourceDigest": {"$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/pendingDigest256"},
-        "authority": {"const": "canonical-field-registry"}
+        "path": {
+          "const": "spec/FIELD-REGISTRY.md"
+        },
+        "sourceDigest": {
+          "$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/pendingDigest256"
+        },
+        "authority": {
+          "const": "canonical-field-registry"
+        }
       }
     },
     "capabilities": {
-      "type": "array", "minItems": 1, "maxItems": 64, "uniqueItems": true,
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "uniqueItems": true,
       "items": {
-        "type": "object", "additionalProperties": false,
-        "required": ["capabilityId", "version", "definitionStatus", "semanticIdentity", "sourceManifestPath", "sourceRoots", "sourcePaths", "sourceDigest"],
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "capabilityId",
+          "version",
+          "definitionStatus",
+          "semanticIdentity",
+          "sourceManifestPath",
+          "sourceRoots",
+          "sourcePaths",
+          "sourceDigest"
+        ],
         "properties": {
-          "capabilityId": {"$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/protocolLocator"},
-          "version": {"$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/generation"},
-          "definitionStatus": {"$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/definitionStatus"},
-          "semanticIdentity": {"$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/pendingDigest256"},
-          "sourceManifestPath": {"type": ["string", "null"], "pattern": "^spec/[A-Za-z0-9._/-]+\\.json$", "maxLength": 256},
-          "sourceRoots": {"type": "array", "maxItems": 16, "uniqueItems": true, "items": {"type": "string", "pattern": "^(?:spec|conformance)/[A-Za-z0-9._/-]+$", "maxLength": 256}},
-          "sourcePaths": {"type": "array", "maxItems": 512, "uniqueItems": true, "items": {"type": "string", "pattern": "^(?:spec|conformance)/[A-Za-z0-9._/-]+\\.(?:json|cddl|md)$", "maxLength": 256}},
-          "sourceDigest": {"$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/pendingDigest256"}
+          "capabilityId": {
+            "$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/protocolLocator"
+          },
+          "version": {
+            "$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/generation"
+          },
+          "definitionStatus": {
+            "$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/definitionStatus"
+          },
+          "semanticIdentity": {
+            "$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/pendingDigest256"
+          },
+          "sourceManifestPath": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^spec/[A-Za-z0-9._/-]+\\.json$",
+            "maxLength": 256
+          },
+          "sourceRoots": {
+            "type": "array",
+            "maxItems": 16,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^(?:spec|conformance)/[A-Za-z0-9._/-]+$",
+              "maxLength": 256
+            }
+          },
+          "sourcePaths": {
+            "type": "array",
+            "maxItems": 512,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^(?:spec|conformance)/[A-Za-z0-9._/-]+\\.(?:json|cddl|md)$",
+              "maxLength": 256
+            }
+          },
+          "sourceDigest": {
+            "$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/pendingDigest256"
+          }
         }
       }
     },
-    "protectionProfileIds": {"type": "array", "maxItems": 16, "uniqueItems": true, "items": {"$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/digest256"}},
-    "stableClaimIds": {"type": "array", "maxItems": 128, "uniqueItems": true, "items": {"$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/claimId"}},
-    "missingMandatoryCapabilities": {"type": "array", "maxItems": 64, "uniqueItems": true, "items": {"$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/protocolLocator"}},
+    "protectionProfileIds": {
+      "type": "array",
+      "maxItems": 16,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/digest256"
+      }
+    },
+    "stableClaimIds": {
+      "type": "array",
+      "maxItems": 128,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/claimId"
+      }
+    },
+    "missingMandatoryCapabilities": {
+      "type": "array",
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/protocolLocator"
+      }
+    },
     "openDefinitions": {
-      "type": "array", "maxItems": 64, "uniqueItems": true,
+      "type": "array",
+      "maxItems": 64,
+      "uniqueItems": true,
       "items": {
-        "type": "object", "additionalProperties": false,
-        "required": ["definitionId", "definitionStatus", "sourceManifestPath", "sourceDigest"],
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "definitionId",
+          "definitionStatus",
+          "sourceManifestPath",
+          "sourceDigest"
+        ],
         "properties": {
-          "definitionId": {"type": "string", "pattern": "^[a-z][a-z0-9-]+$", "maxLength": 128},
-          "definitionStatus": {"$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/definitionStatus"},
-          "sourceManifestPath": {"type": "string", "pattern": "^spec/v1/[A-Za-z0-9._/-]+/source-manifest\\.json$", "maxLength": 256},
-          "sourceDigest": {"$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/pendingDigest256"}
+          "definitionId": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]+$",
+            "maxLength": 128
+          },
+          "definitionStatus": {
+            "$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/definitionStatus"
+          },
+          "sourceManifestPath": {
+            "type": "string",
+            "pattern": "^spec/v1/[A-Za-z0-9._/-]+/source-manifest\\.json$",
+            "maxLength": 256
+          },
+          "sourceDigest": {
+            "$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/pendingDigest256"
+          }
         }
       }
     },
-    "blockers": {"type": "array", "maxItems": 64, "uniqueItems": true, "items": {"$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/blockerId"}},
-    "sourceClosure": {
-      "type": "object", "additionalProperties": false,
-      "required": ["roots", "additionalSources", "undeclaredFiles", "symlinks", "encoding"],
-      "properties": {
-        "roots": {"type": "array", "minItems": 1, "maxItems": 16, "uniqueItems": true, "items": {"type": "string", "pattern": "^(?:spec|conformance)(?:/[A-Za-z0-9._/-]+)?$", "maxLength": 256}},
-        "additionalSources": {"type": "array", "maxItems": 128, "uniqueItems": true, "items": {"type": "string", "pattern": "^(?:spec|conformance)/[A-Za-z0-9._/-]+\\.(?:json|cddl|md)$", "maxLength": 256}},
-        "undeclaredFiles": {"const": "reject"},
-        "symlinks": {"const": "reject"},
-        "encoding": {"const": "restricted-jcs-json-plus-canonical-utf8-cddl-and-markdown"}
+    "blockers": {
+      "type": "array",
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/blockerId"
       }
     },
-    "handshakeBinding": {"type": "string", "enum": ["pending", "protocol-line-and-profile-identities-transcript-bound"]},
-    "sessionLock": {"type": "boolean"},
-    "translationPolicy": {"const": "forbidden"}
+    "sourceClosure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "roots",
+        "additionalSources",
+        "undeclaredFiles",
+        "symlinks",
+        "encoding"
+      ],
+      "properties": {
+        "roots": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^(?:spec|conformance)(?:/[A-Za-z0-9._/-]+)?$",
+            "maxLength": 256
+          }
+        },
+        "additionalSources": {
+          "type": "array",
+          "maxItems": 128,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^(?:spec|conformance)/[A-Za-z0-9._/-]+\\.(?:json|cddl|md)$",
+            "maxLength": 256
+          }
+        },
+        "undeclaredFiles": {
+          "const": "reject"
+        },
+        "symlinks": {
+          "const": "reject"
+        },
+        "encoding": {
+          "const": "restricted-jcs-json-plus-canonical-utf8-cddl-and-markdown"
+        }
+      }
+    },
+    "handshakeBinding": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "protocol-line-and-profile-identities-transcript-bound"
+      ]
+    },
+    "sessionLock": {
+      "type": "boolean"
+    },
+    "translationPolicy": {
+      "const": "forbidden"
+    }
   }
 }

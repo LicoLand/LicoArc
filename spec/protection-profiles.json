@@ -2,21 +2,24 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://licoarc.com/spec/protection-profiles.json",
   "registryVersion": "licoarc.protection-profiles.v1",
-  "definitionStates": ["PENDING", "DRAFT", "PARTIAL", "COMPLETE"],
-  "lifecycleStates": ["Candidate", "Published", "Deprecated", "Retired"],
+  "definitionStates": [
+    "PENDING",
+    "DRAFT",
+    "PARTIAL",
+    "COMPLETE"
+  ],
+  "lifecycleStates": [
+    "Candidate"
+  ],
   "profiles": [
     {
       "profileLocator": "stable-core",
       "generation": 1,
-      "minimumGeneration": 1,
-      "profileId": "c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf",
+      "profileId": "4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17",
       "lifecycle": "Candidate",
       "definitionStatus": "COMPLETE",
       "sessionEligible": true,
       "publicationEligible": false,
-      "newSessionPolicy": "allow-authenticated",
-      "existingSessionPolicy": "terminate-on-authenticated-adoption",
-      "authenticatedEffectiveGeneration": null,
       "sourceDescriptorPath": "spec/v1/protection/profile.json",
       "requiredClaimIds": [
         "SEC-001",
@@ -41,38 +44,13 @@
         "ongoing-post-quantum-post-compromise-recovery",
         "physical-zeroization",
         "ratchet-header-confidentiality",
-        "rollback-detection-under-fully-compromised-store",
-        "transferable-session-authentication"
+        "rollback-detection-under-fully-compromised-store"
       ],
       "blockers": []
     }
   ],
   "activeProfileIds": [
-    "c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf"
-  ],
-  "reservedIdentifiers": [
-    {
-      "id": "cbc5bc838141a34aa0dd1b300022de6212f47540f95f9d7958cb1f2dcf74e42e",
-      "generation": 1,
-      "lifecycle": "Retired",
-      "status": "withdrawn-candidate",
-      "wireAllocation": "DIGEST256-profile-id-retained-as-tombstone-only",
-      "newSessionPolicy": "forbid-retired",
-      "existingSessionPolicy": "terminate-on-authenticated-adoption",
-      "authenticatedEffectiveGeneration": null,
-      "reusable": false
-    },
-    {
-      "id": "d9e09414257925eed013b7add0672277fb9f91dd34c2c4e1ee985d0b5b17a7d6",
-      "generation": 1,
-      "lifecycle": "Retired",
-      "status": "withdrawn-candidate",
-      "wireAllocation": "DIGEST256-profile-id-retained-as-tombstone-only",
-      "newSessionPolicy": "forbid-retired",
-      "existingSessionPolicy": "terminate-on-authenticated-adoption",
-      "authenticatedEffectiveGeneration": null,
-      "reusable": false
-    }
+    "4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17"
   ],
   "contentIdentity": {
     "name": "ProtectionProfileSemanticProjectionV1",
@@ -102,7 +80,6 @@
     "reducedSecurityFallback": "forbidden",
     "componentNegotiation": "forbidden",
     "unknownProfile": "terminal-unknown-profile",
-    "retiredProfile": "terminal-retired-profile",
     "identifierReuse": "forbidden",
     "stateAdvanceOnFailure": false
   }

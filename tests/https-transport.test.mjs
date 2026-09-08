@@ -131,7 +131,7 @@ test("outcomes are typed Station hints and retry never creates new authorization
   assert.throws(() => validateRetry(original, { ...original, body: Uint8Array.of(9), contentLength: 1 }), code("conflict"));
   assert.throws(() => validateRetry(original, { ...original, operationId: "1".repeat(32) }), code("new-authorization"));
   assert.equal(registry.outcomes.stationAuthority, "transport-hint-only");
-  assert.equal(registry.outcomes.endpointEvidence, "never-created-by-station-outcome");
+  assert.equal(registry.outcomes.endpointFinalityAuthority, "none");
 });
 
 test("storage, claim, settlement, and first-contact behavior have fixed lifetime bounds", () => {

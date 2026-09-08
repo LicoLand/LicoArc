@@ -25,8 +25,7 @@
     "spec/v1/protection/registry.json",
     "spec/v1/protection/runtime.cddl",
     "spec/v1/protection/session-accept.schema.json",
-    "spec/v1/protection/state.json",
-    "spec/v1/protection/support.schema.json"
+    "spec/v1/protection/state.json"
   ],
   "sorted": true,
   "semanticSourcesComplete": true,

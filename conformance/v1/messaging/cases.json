@@ -14,7 +14,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/messaging/registry.json",
-            "sha256": "ad85a8bc86ef69c381e5315be1cf9a8e79b9675656f60ba5d441d65be22de723"
+            "sha256": "77fc21133ebf29f97f343abe0dd0e7d4f8235e75e3f03ea66eeee4498bd0c30a"
           }
         ],
         "catalogs": [
@@ -143,7 +143,7 @@
                 "storage-engines",
                 "retry-scheduling",
                 "station-to-station-protocol",
-                "station-receipts-as-endpoint-evidence"
+                "station-receipts-as-endpoint-confirmations"
               ]
             }
           }
@@ -174,7 +174,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/messaging/registry.json",
-            "sha256": "ad85a8bc86ef69c381e5315be1cf9a8e79b9675656f60ba5d441d65be22de723"
+            "sha256": "77fc21133ebf29f97f343abe0dd0e7d4f8235e75e3f03ea66eeee4498bd0c30a"
           }
         ],
         "catalogs": [
@@ -303,7 +303,7 @@
                 "storage-engines",
                 "retry-scheduling",
                 "station-to-station-protocol",
-                "station-receipts-as-endpoint-evidence"
+                "station-receipts-as-endpoint-confirmations"
               ]
             }
           }
@@ -334,7 +334,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/messaging/registry.json",
-            "sha256": "ad85a8bc86ef69c381e5315be1cf9a8e79b9675656f60ba5d441d65be22de723"
+            "sha256": "77fc21133ebf29f97f343abe0dd0e7d4f8235e75e3f03ea66eeee4498bd0c30a"
           }
         ],
         "catalogs": [
@@ -463,7 +463,7 @@
                 "storage-engines",
                 "retry-scheduling",
                 "station-to-station-protocol",
-                "station-receipts-as-endpoint-evidence"
+                "station-receipts-as-endpoint-confirmations"
               ]
             }
           }
@@ -494,7 +494,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/messaging/registry.json",
-            "sha256": "ad85a8bc86ef69c381e5315be1cf9a8e79b9675656f60ba5d441d65be22de723"
+            "sha256": "77fc21133ebf29f97f343abe0dd0e7d4f8235e75e3f03ea66eeee4498bd0c30a"
           }
         ],
         "catalogs": [
@@ -623,7 +623,7 @@
                 "storage-engines",
                 "retry-scheduling",
                 "station-to-station-protocol",
-                "station-receipts-as-endpoint-evidence"
+                "station-receipts-as-endpoint-confirmations"
               ]
             }
           }
@@ -654,7 +654,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/messaging/registry.json",
-            "sha256": "ad85a8bc86ef69c381e5315be1cf9a8e79b9675656f60ba5d441d65be22de723"
+            "sha256": "77fc21133ebf29f97f343abe0dd0e7d4f8235e75e3f03ea66eeee4498bd0c30a"
           }
         ],
         "catalogs": [
@@ -783,7 +783,7 @@
                 "storage-engines",
                 "retry-scheduling",
                 "station-to-station-protocol",
-                "station-receipts-as-endpoint-evidence"
+                "station-receipts-as-endpoint-confirmations"
               ]
             }
           }
@@ -822,7 +822,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/messaging/registry.json",
-            "sha256": "ad85a8bc86ef69c381e5315be1cf9a8e79b9675656f60ba5d441d65be22de723"
+            "sha256": "77fc21133ebf29f97f343abe0dd0e7d4f8235e75e3f03ea66eeee4498bd0c30a"
           }
         ],
         "catalogs": [
@@ -951,7 +951,7 @@
                 "storage-engines",
                 "retry-scheduling",
                 "station-to-station-protocol",
-                "station-receipts-as-endpoint-evidence"
+                "station-receipts-as-endpoint-confirmations"
               ]
             }
           }
@@ -995,7 +995,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/messaging/registry.json",
-            "sha256": "ad85a8bc86ef69c381e5315be1cf9a8e79b9675656f60ba5d441d65be22de723"
+            "sha256": "77fc21133ebf29f97f343abe0dd0e7d4f8235e75e3f03ea66eeee4498bd0c30a"
           }
         ],
         "catalogs": [
@@ -1124,7 +1124,7 @@
                 "storage-engines",
                 "retry-scheduling",
                 "station-to-station-protocol",
-                "station-receipts-as-endpoint-evidence"
+                "station-receipts-as-endpoint-confirmations"
               ]
             }
           }
@@ -1155,7 +1155,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/messaging/registry.json",
-            "sha256": "ad85a8bc86ef69c381e5315be1cf9a8e79b9675656f60ba5d441d65be22de723"
+            "sha256": "77fc21133ebf29f97f343abe0dd0e7d4f8235e75e3f03ea66eeee4498bd0c30a"
           }
         ],
         "catalogs": [
@@ -1284,7 +1284,7 @@
                 "storage-engines",
                 "retry-scheduling",
                 "station-to-station-protocol",
-                "station-receipts-as-endpoint-evidence"
+                "station-receipts-as-endpoint-confirmations"
               ]
             }
           }
@@ -1321,7 +1321,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/messaging/registry.json",
-            "sha256": "ad85a8bc86ef69c381e5315be1cf9a8e79b9675656f60ba5d441d65be22de723"
+            "sha256": "77fc21133ebf29f97f343abe0dd0e7d4f8235e75e3f03ea66eeee4498bd0c30a"
           }
         ],
         "catalogs": [
@@ -1450,7 +1450,7 @@
                 "storage-engines",
                 "retry-scheduling",
                 "station-to-station-protocol",
-                "station-receipts-as-endpoint-evidence"
+                "station-receipts-as-endpoint-confirmations"
               ]
             }
           }
@@ -1487,7 +1487,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/messaging/registry.json",
-            "sha256": "ad85a8bc86ef69c381e5315be1cf9a8e79b9675656f60ba5d441d65be22de723"
+            "sha256": "77fc21133ebf29f97f343abe0dd0e7d4f8235e75e3f03ea66eeee4498bd0c30a"
           }
         ],
         "catalogs": [
@@ -1616,7 +1616,7 @@
                 "storage-engines",
                 "retry-scheduling",
                 "station-to-station-protocol",
-                "station-receipts-as-endpoint-evidence"
+                "station-receipts-as-endpoint-confirmations"
               ]
             }
           }
@@ -1652,7 +1652,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/messaging/registry.json",
-            "sha256": "ad85a8bc86ef69c381e5315be1cf9a8e79b9675656f60ba5d441d65be22de723"
+            "sha256": "77fc21133ebf29f97f343abe0dd0e7d4f8235e75e3f03ea66eeee4498bd0c30a"
           }
         ],
         "catalogs": [
@@ -1781,7 +1781,7 @@
                 "storage-engines",
                 "retry-scheduling",
                 "station-to-station-protocol",
-                "station-receipts-as-endpoint-evidence"
+                "station-receipts-as-endpoint-confirmations"
               ]
             }
           }
@@ -1812,7 +1812,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/messaging/registry.json",
-            "sha256": "ad85a8bc86ef69c381e5315be1cf9a8e79b9675656f60ba5d441d65be22de723"
+            "sha256": "77fc21133ebf29f97f343abe0dd0e7d4f8235e75e3f03ea66eeee4498bd0c30a"
           }
         ],
         "catalogs": [
@@ -1941,7 +1941,7 @@
                 "storage-engines",
                 "retry-scheduling",
                 "station-to-station-protocol",
-                "station-receipts-as-endpoint-evidence"
+                "station-receipts-as-endpoint-confirmations"
               ]
             }
           }
@@ -1972,7 +1972,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/messaging/registry.json",
-            "sha256": "ad85a8bc86ef69c381e5315be1cf9a8e79b9675656f60ba5d441d65be22de723"
+            "sha256": "77fc21133ebf29f97f343abe0dd0e7d4f8235e75e3f03ea66eeee4498bd0c30a"
           }
         ],
         "catalogs": [
@@ -2101,7 +2101,7 @@
                 "storage-engines",
                 "retry-scheduling",
                 "station-to-station-protocol",
-                "station-receipts-as-endpoint-evidence"
+                "station-receipts-as-endpoint-confirmations"
               ]
             }
           }
@@ -2137,7 +2137,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/messaging/registry.json",
-            "sha256": "ad85a8bc86ef69c381e5315be1cf9a8e79b9675656f60ba5d441d65be22de723"
+            "sha256": "77fc21133ebf29f97f343abe0dd0e7d4f8235e75e3f03ea66eeee4498bd0c30a"
           }
         ],
         "catalogs": [
@@ -2266,7 +2266,7 @@
                 "storage-engines",
                 "retry-scheduling",
                 "station-to-station-protocol",
-                "station-receipts-as-endpoint-evidence"
+                "station-receipts-as-endpoint-confirmations"
               ]
             }
           }
@@ -2297,7 +2297,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/messaging/registry.json",
-            "sha256": "ad85a8bc86ef69c381e5315be1cf9a8e79b9675656f60ba5d441d65be22de723"
+            "sha256": "77fc21133ebf29f97f343abe0dd0e7d4f8235e75e3f03ea66eeee4498bd0c30a"
           }
         ],
         "catalogs": [
@@ -2426,7 +2426,7 @@
                 "storage-engines",
                 "retry-scheduling",
                 "station-to-station-protocol",
-                "station-receipts-as-endpoint-evidence"
+                "station-receipts-as-endpoint-confirmations"
               ]
             }
           }
@@ -2457,7 +2457,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/messaging/registry.json",
-            "sha256": "ad85a8bc86ef69c381e5315be1cf9a8e79b9675656f60ba5d441d65be22de723"
+            "sha256": "77fc21133ebf29f97f343abe0dd0e7d4f8235e75e3f03ea66eeee4498bd0c30a"
           }
         ],
         "catalogs": [
@@ -2586,7 +2586,7 @@
                 "storage-engines",
                 "retry-scheduling",
                 "station-to-station-protocol",
-                "station-receipts-as-endpoint-evidence"
+                "station-receipts-as-endpoint-confirmations"
               ]
             }
           }
@@ -2623,7 +2623,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/messaging/registry.json",
-            "sha256": "ad85a8bc86ef69c381e5315be1cf9a8e79b9675656f60ba5d441d65be22de723"
+            "sha256": "77fc21133ebf29f97f343abe0dd0e7d4f8235e75e3f03ea66eeee4498bd0c30a"
           }
         ],
         "catalogs": [
@@ -2752,7 +2752,7 @@
                 "storage-engines",
                 "retry-scheduling",
                 "station-to-station-protocol",
-                "station-receipts-as-endpoint-evidence"
+                "station-receipts-as-endpoint-confirmations"
               ]
             }
           }
@@ -2791,7 +2791,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/messaging/registry.json",
-            "sha256": "ad85a8bc86ef69c381e5315be1cf9a8e79b9675656f60ba5d441d65be22de723"
+            "sha256": "77fc21133ebf29f97f343abe0dd0e7d4f8235e75e3f03ea66eeee4498bd0c30a"
           }
         ],
         "catalogs": [
@@ -2920,7 +2920,7 @@
                 "storage-engines",
                 "retry-scheduling",
                 "station-to-station-protocol",
-                "station-receipts-as-endpoint-evidence"
+                "station-receipts-as-endpoint-confirmations"
               ]
             }
           }
@@ -2957,7 +2957,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/messaging/registry.json",
-            "sha256": "ad85a8bc86ef69c381e5315be1cf9a8e79b9675656f60ba5d441d65be22de723"
+            "sha256": "77fc21133ebf29f97f343abe0dd0e7d4f8235e75e3f03ea66eeee4498bd0c30a"
           }
         ],
         "catalogs": [
@@ -3086,7 +3086,7 @@
                 "storage-engines",
                 "retry-scheduling",
                 "station-to-station-protocol",
-                "station-receipts-as-endpoint-evidence"
+                "station-receipts-as-endpoint-confirmations"
               ]
             }
           }
@@ -3117,7 +3117,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/messaging/registry.json",
-            "sha256": "ad85a8bc86ef69c381e5315be1cf9a8e79b9675656f60ba5d441d65be22de723"
+            "sha256": "77fc21133ebf29f97f343abe0dd0e7d4f8235e75e3f03ea66eeee4498bd0c30a"
           }
         ],
         "catalogs": [
@@ -3246,7 +3246,7 @@
                 "storage-engines",
                 "retry-scheduling",
                 "station-to-station-protocol",
-                "station-receipts-as-endpoint-evidence"
+                "station-receipts-as-endpoint-confirmations"
               ]
             }
           }
@@ -3277,7 +3277,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/messaging/registry.json",
-            "sha256": "ad85a8bc86ef69c381e5315be1cf9a8e79b9675656f60ba5d441d65be22de723"
+            "sha256": "77fc21133ebf29f97f343abe0dd0e7d4f8235e75e3f03ea66eeee4498bd0c30a"
           }
         ],
         "catalogs": [
@@ -3406,7 +3406,7 @@
                 "storage-engines",
                 "retry-scheduling",
                 "station-to-station-protocol",
-                "station-receipts-as-endpoint-evidence"
+                "station-receipts-as-endpoint-confirmations"
               ]
             }
           }
@@ -3437,7 +3437,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/messaging/registry.json",
-            "sha256": "ad85a8bc86ef69c381e5315be1cf9a8e79b9675656f60ba5d441d65be22de723"
+            "sha256": "77fc21133ebf29f97f343abe0dd0e7d4f8235e75e3f03ea66eeee4498bd0c30a"
           }
         ],
         "catalogs": [
@@ -3566,7 +3566,7 @@
                 "storage-engines",
                 "retry-scheduling",
                 "station-to-station-protocol",
-                "station-receipts-as-endpoint-evidence"
+                "station-receipts-as-endpoint-confirmations"
               ]
             }
           }
@@ -3603,7 +3603,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/messaging/registry.json",
-            "sha256": "ad85a8bc86ef69c381e5315be1cf9a8e79b9675656f60ba5d441d65be22de723"
+            "sha256": "77fc21133ebf29f97f343abe0dd0e7d4f8235e75e3f03ea66eeee4498bd0c30a"
           }
         ],
         "catalogs": [
@@ -3732,7 +3732,7 @@
                 "storage-engines",
                 "retry-scheduling",
                 "station-to-station-protocol",
-                "station-receipts-as-endpoint-evidence"
+                "station-receipts-as-endpoint-confirmations"
               ]
             }
           }
@@ -3763,7 +3763,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/messaging/registry.json",
-            "sha256": "ad85a8bc86ef69c381e5315be1cf9a8e79b9675656f60ba5d441d65be22de723"
+            "sha256": "77fc21133ebf29f97f343abe0dd0e7d4f8235e75e3f03ea66eeee4498bd0c30a"
           }
         ],
         "catalogs": [
@@ -3892,7 +3892,7 @@
                 "storage-engines",
                 "retry-scheduling",
                 "station-to-station-protocol",
-                "station-receipts-as-endpoint-evidence"
+                "station-receipts-as-endpoint-confirmations"
               ]
             }
           }
@@ -3923,7 +3923,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/messaging/registry.json",
-            "sha256": "ad85a8bc86ef69c381e5315be1cf9a8e79b9675656f60ba5d441d65be22de723"
+            "sha256": "77fc21133ebf29f97f343abe0dd0e7d4f8235e75e3f03ea66eeee4498bd0c30a"
           }
         ],
         "catalogs": [
@@ -4052,7 +4052,7 @@
                 "storage-engines",
                 "retry-scheduling",
                 "station-to-station-protocol",
-                "station-receipts-as-endpoint-evidence"
+                "station-receipts-as-endpoint-confirmations"
               ]
             }
           }
@@ -4083,7 +4083,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/messaging/registry.json",
-            "sha256": "ad85a8bc86ef69c381e5315be1cf9a8e79b9675656f60ba5d441d65be22de723"
+            "sha256": "77fc21133ebf29f97f343abe0dd0e7d4f8235e75e3f03ea66eeee4498bd0c30a"
           }
         ],
         "catalogs": [
@@ -4212,7 +4212,7 @@
                 "storage-engines",
                 "retry-scheduling",
                 "station-to-station-protocol",
-                "station-receipts-as-endpoint-evidence"
+                "station-receipts-as-endpoint-confirmations"
               ]
             }
           }
@@ -4258,7 +4258,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/messaging/registry.json",
-            "sha256": "ad85a8bc86ef69c381e5315be1cf9a8e79b9675656f60ba5d441d65be22de723"
+            "sha256": "77fc21133ebf29f97f343abe0dd0e7d4f8235e75e3f03ea66eeee4498bd0c30a"
           }
         ],
         "catalogs": [
@@ -4387,7 +4387,7 @@
                 "storage-engines",
                 "retry-scheduling",
                 "station-to-station-protocol",
-                "station-receipts-as-endpoint-evidence"
+                "station-receipts-as-endpoint-confirmations"
               ]
             }
           }
@@ -4418,7 +4418,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/messaging/registry.json",
-            "sha256": "ad85a8bc86ef69c381e5315be1cf9a8e79b9675656f60ba5d441d65be22de723"
+            "sha256": "77fc21133ebf29f97f343abe0dd0e7d4f8235e75e3f03ea66eeee4498bd0c30a"
           }
         ],
         "catalogs": [
@@ -4547,7 +4547,7 @@
                 "storage-engines",
                 "retry-scheduling",
                 "station-to-station-protocol",
-                "station-receipts-as-endpoint-evidence"
+                "station-receipts-as-endpoint-confirmations"
               ]
             }
           }
@@ -4578,7 +4578,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/messaging/registry.json",
-            "sha256": "ad85a8bc86ef69c381e5315be1cf9a8e79b9675656f60ba5d441d65be22de723"
+            "sha256": "77fc21133ebf29f97f343abe0dd0e7d4f8235e75e3f03ea66eeee4498bd0c30a"
           }
         ],
         "catalogs": [
@@ -4707,7 +4707,7 @@
                 "storage-engines",
                 "retry-scheduling",
                 "station-to-station-protocol",
-                "station-receipts-as-endpoint-evidence"
+                "station-receipts-as-endpoint-confirmations"
               ]
             }
           }
@@ -4738,7 +4738,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/messaging/registry.json",
-            "sha256": "ad85a8bc86ef69c381e5315be1cf9a8e79b9675656f60ba5d441d65be22de723"
+            "sha256": "77fc21133ebf29f97f343abe0dd0e7d4f8235e75e3f03ea66eeee4498bd0c30a"
           }
         ],
         "catalogs": [
@@ -4867,7 +4867,7 @@
                 "storage-engines",
                 "retry-scheduling",
                 "station-to-station-protocol",
-                "station-receipts-as-endpoint-evidence"
+                "station-receipts-as-endpoint-confirmations"
               ]
             }
           }
@@ -4898,7 +4898,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/messaging/registry.json",
-            "sha256": "ad85a8bc86ef69c381e5315be1cf9a8e79b9675656f60ba5d441d65be22de723"
+            "sha256": "77fc21133ebf29f97f343abe0dd0e7d4f8235e75e3f03ea66eeee4498bd0c30a"
           }
         ],
         "catalogs": [
@@ -5027,7 +5027,7 @@
                 "storage-engines",
                 "retry-scheduling",
                 "station-to-station-protocol",
-                "station-receipts-as-endpoint-evidence"
+                "station-receipts-as-endpoint-confirmations"
               ]
             }
           }
@@ -5060,7 +5060,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/messaging/registry.json",
-            "sha256": "ad85a8bc86ef69c381e5315be1cf9a8e79b9675656f60ba5d441d65be22de723"
+            "sha256": "77fc21133ebf29f97f343abe0dd0e7d4f8235e75e3f03ea66eeee4498bd0c30a"
           }
         ],
         "catalogs": [
@@ -5189,7 +5189,7 @@
                 "storage-engines",
                 "retry-scheduling",
                 "station-to-station-protocol",
-                "station-receipts-as-endpoint-evidence"
+                "station-receipts-as-endpoint-confirmations"
               ]
             }
           }

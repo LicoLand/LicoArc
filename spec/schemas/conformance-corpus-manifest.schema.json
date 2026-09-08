@@ -4,25 +4,52 @@
   "title": "LicoArc closed conformance corpus manifest",
   "type": "object",
   "additionalProperties": false,
-  "required": ["$schema", "manifestVersion", "corpusId", "caseCount", "operationIds", "envelopePaths"],
+  "required": [
+    "$schema",
+    "manifestVersion",
+    "corpusId",
+    "caseCount",
+    "operationIds",
+    "envelopePaths"
+  ],
   "properties": {
-    "$schema": {"const": "https://licoarc.com/spec/schemas/conformance-corpus-manifest.schema.json"},
-    "manifestVersion": {"const": "licoarc.conformance-corpus-manifest.v1"},
-    "corpusId": {"type": "string", "pattern": "^licoarc[.][a-z0-9-]+(?:[.][a-z0-9-]+)*[.]v[1-9][0-9]*$", "maxLength": 192},
-    "caseCount": {"type": "integer", "minimum": 1, "maximum": 4096},
+    "$schema": {
+      "const": "https://licoarc.com/spec/schemas/conformance-corpus-manifest.schema.json"
+    },
+    "manifestVersion": {
+      "const": "licoarc.conformance-corpus-manifest.v1"
+    },
+    "corpusId": {
+      "type": "string",
+      "pattern": "^licoarc[.][a-z0-9-]+(?:[.][a-z0-9-]+)*[.]v[1-9][0-9]*$",
+      "maxLength": 192
+    },
+    "caseCount": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 4096
+    },
     "operationIds": {
       "type": "array",
       "minItems": 1,
       "maxItems": 256,
       "uniqueItems": true,
-      "items": {"type": "string", "pattern": "^licoarc[.][a-z0-9-]+(?:[.][a-z0-9-]+)*[.]v[1-9][0-9]*$", "maxLength": 192}
+      "items": {
+        "type": "string",
+        "pattern": "^licoarc[.][a-z0-9-]+(?:[.][a-z0-9-]+)*[.]v[1-9][0-9]*$",
+        "maxLength": 192
+      }
     },
     "envelopePaths": {
       "type": "array",
       "minItems": 1,
       "maxItems": 64,
       "uniqueItems": true,
-      "items": {"type": "string", "pattern": "^conformance/v1/[a-z0-9-]+/[A-Za-z0-9._-]+[.]json$", "maxLength": 256}
+      "items": {
+        "type": "string",
+        "pattern": "^conformance/v1/[a-z0-9-]+/[A-Za-z0-9._-]+[.]json$",
+        "maxLength": 256
+      }
     }
   }
 }

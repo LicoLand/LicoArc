@@ -3,7 +3,7 @@ import { validateClosedSchema } from "./schema.mjs";
 const REQUIRED_PROPERTIES = new Set([
   "hybrid-ake-key-secrecy",
   "mutual-endpoint-authentication",
-  "protocol-line-downgrade-resistance",
+  "protocol-line-content-binding",
   "double-ratchet-forward-secrecy",
   "double-ratchet-post-compromise-recovery",
   "pairwise-record-confidentiality",

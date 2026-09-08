@@ -16,9 +16,10 @@ const provedClaims = [...new Map(bindings.bindings.map((binding) => [binding.cla
 const lemmaNames = [
   'executable_honest_handshake',
   'executable_ratchet_evolution',
-  'executable_identity_and_route',
-  'executable_evidence',
-  'executable_reliable_and_metadata',
+  'executable_user_authority_and_route',
+  'executable_authority_transitions_and_possession',
+  'executable_sibling_session_binding',
+  'executable_authenticated_confirmation_and_metadata',
   'executable_resource_bounds',
   ...provedClaims.map(([, lemma]) => lemma),
 ];
@@ -68,7 +69,8 @@ if (generatedFooter < 0 || generatedClose < 0 ||
     rawProvedTheory.slice(generatedClose + '\n*/\n\nend'.length).trim() !== '') {
   throw new Error('FORMAL_PROVED_THEORY_FOOTER_INVALID');
 }
-const canonicalProvedTheory = `${rawProvedTheory.slice(0, generatedFooter)}\nend\n`;
+const canonicalProvedTheory = `${rawProvedTheory.slice(0, generatedFooter)
+  .replace(/[ \t]+$/gmu, '')}\nend\n`;
 await writeFile(resolve(root, provedPath), canonicalProvedTheory, 'utf8');
 const replay = run('tools/formal/runtime.mjs', ['replay', engine, `--input=${provedPath}`]);
 const provedTheory = await readFile(resolve(root, provedPath), 'utf8');

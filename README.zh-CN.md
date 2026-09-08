@@ -15,8 +15,8 @@ Lico Arc Protocol 是 LicoLand 的实现中立**协议层（Protocol Layer）**�
 
 | 实体 | 定义 | 权威边界 |
 | --- | --- | --- |
-| **Endpoint（端点）** | 用户控制的受保护通信起点或终点。 | 其密钥、明文、受保护状态、对端接受、本地审批、效果及端点认证证据的唯一运行时权威。 |
-| **Station（通讯站）** | 独立运营、负责传输端点保护不透明数据的中间实体。 | Endpoint 始终不信任它；它只有固定 Protocol Line 明确授予的传输权限。 |
+| **Endpoint（端点）** | 用户控制的受保护通信起点或终点；每个独立持有密钥的设备或隔离运行时都是独立 Endpoint。 | 仅对自身密钥、session、明文、受保护状态、对端接受、本地审批、效果及认证确认拥有运行时权威。 |
+| **Station（通讯站）** | 独立运营、负责传输端点保护不透明数据的中间实体。 | Endpoint 始终不信任它；它没有用户或设备名单，只有固定 Protocol Line 明确授予的传输权限。 |
 | **Network（网络）** | 参与方在同一固定 Protocol Line 下互认通信的联邦互操作上下文。 | 只提供互认与传输上下文；不是信任根、身份权威、明文权威或端点安全权威。 |
 
 ```text
@@ -37,21 +37,28 @@ Endpoint A ── 端点保护的 LicoArc 通信 ──▶
 | 定义状态 | `COMPLETE` |
 | 新 session 资格 | `true` |
 | 发布资格 | `false` |
-| 强制能力 | 9 项，全部 `COMPLETE` |
+| 协议 generation | `1`（Generation 1） |
+| 强制能力 | 8 项，全部 `COMPLETE` |
 | 活动 Protection Profile | `stable-core`，`COMPLETE` |
 
-九项强制能力是 Protocol Foundation、Identity、Pairwise Protection、Generic
+八项强制能力是 Protocol Foundation、Identity、Pairwise Protection、Generic
 Messaging、Reliable Exchange、HTTPS Transport、Group Collaboration、
-Transferable Evidence 和 Federation Governance。
+Federation Governance。
+
+Identity 为多个相互独立的 Endpoint 设备和恢复定义用户授权的权威链。每台设备
+保有自己的 Endpoint 密钥与 session。Pairwise transcript 同时绑定双方的
+Endpoint 状态摘要及其同级用户权威状态摘要，并避免形成摘要环。只有精确匹配的
+受保护 Endpoint 确认可以推进可靠终态，Station 信号不能。用户/设备授权与本地
+对端信任始终是两个独立决定。
 
 `stable-core` 是不可拆分的混合构造：成对使用 X25519 与 ML-KEM-768 一次性
-prekey，以 Ed25519 与 ML-DSA-65 双重认证，将选择与确认绑定到 transcript，
+prekey，以 Ed25519 与 ML-DSA-65 双重认证，将固定协议身份与确认绑定到 transcript，
 并使用有界 X25519 Double Ratchet。Profile 与 Protocol Line 身份来自有名称、
 无循环依赖的语义投影。证明准入、安全核算及完整声明的一致性语料都是定义准入
 的一部分。
 
-`sessionEligible: true` 仅表示 Candidate 定义按机器策略允许认证的新 session
-选择；不表示它已发布、已实现、完成互操作、已审计、已部署、受支持或正在运营。
+`sessionEligible: true` 仅表示固定 V1 / Generation 1 Candidate 定义允许建立新 session；不表示它已发布、已实现、完成互操作、已审计、已部署、受支持或正在运营。
+`publicationEligible: false` 表示该 Candidate 不具备 Protocol-Line 发布资格。源代码、许可证和文档仍可作为 Apache-2.0 仓库材料发布。
 
 当前规范事实见 [`spec/v1/manifest.json`](spec/v1/manifest.json)、
 [`spec/protocol-lines.json`](spec/protocol-lines.json)、
@@ -60,11 +67,12 @@ prekey，以 Ed25519 与 ML-DSA-65 双重认证，将选择与确认绑定到 tr
 
 ## 文档
 
+英文公开[文档网站](https://licoarc.com/)仅提供导读；下列仓库源文件仍是权威来源。
+
 - [产品权威与范围](PRODUCT.md)
 - [架构](ARCHITECTURE.md)
 - [领域词汇](CONTEXT.md)
 - [当前状态](docs/STATUS.md)
-- [兼容性与生命周期](docs/COMPATIBILITY.md)
 - [协议文档](docs/protocols/)
 - [定义验证](docs/conformance/verification.md)
 - [决策生命周期](docs/DECISION-LIFECYCLE.md)
@@ -74,4 +82,4 @@ prekey，以 Ed25519 与 ML-DSA-65 双重认证，将选择与确认绑定到 tr
 运行 `npm run verify` 执行仓库拥有的源完整性检查。这些检查只验证定义图及生成
 产物，不声明任何下游执行或交付状态。
 
-许可证：GPL-3.0-or-later。
+许可证：Apache-2.0。

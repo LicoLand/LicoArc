@@ -6,10 +6,11 @@
 | --- | --- |
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-verification-evidence` |
-| Decision status | `DECIDED` |
-| Definition status | `PARTIAL` |
+| Decision status | `RETIRED` |
+| Definition status | `NOT-SPECIFIED` |
 | Existing authority | [`FIELD-REGISTRY.md`](../../../spec/FIELD-REGISTRY.md) |
-| Current conclusion | A protected, method-bound evidence value is required for interoperable peer-verification transitions, without carrying local trust policy or private UI state. |
+| Predecessor or successor | Retired without successor; Generation 1 defines user authority and leaves peer trust local. |
+| Current conclusion | No verification-evidence field is active. |
 
 ## Question
 
@@ -52,5 +53,4 @@ semantics authority and wins over any conflicting explanation here.
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. The necessity and trust boundary are
-decided, but no Protocol Line v1 evidence bytes or wire allocation exists.
+The definition is retired and `NOT-SPECIFIED`; this record remains history only.

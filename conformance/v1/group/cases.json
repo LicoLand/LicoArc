@@ -14,7 +14,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/group/registry.json",
-            "sha256": "16ffd081e940adcbd441c97263abc9043816eb1cb0040dd6d5ff45b69c3cef9b"
+            "sha256": "df0495fcd9f84e5b5847ac1bc039f4efed24edc77dc47af7f3249f2513c12b48"
           }
         ],
         "catalogs": [
@@ -65,7 +65,7 @@
               },
               "authority": {
                 "stateAndTransition": "owning-group-capability-and-endpoint-protection",
-                "perMemberProjection": "owning-group-capability-and-endpoint-evidence",
+                "perMemberProjection": "owning-group-capability-and-endpoint-confirmation",
                 "endpointAdmission": "endpoint-local",
                 "crossCapabilityTotals": "bounded-by-protocol-line",
                 "inheritance": "forbidden"
@@ -94,7 +94,7 @@
                 "stationOrder": "never-authority",
                 "productPermissions": "never-authority",
                 "arrivalOrder": "never-authority",
-                "evidence": "the-Endpoint-protection-and-Endpoint-evidence-context-authenticate-the-transition"
+                "authentication": "the-Endpoint-protection-context-authenticates-the-transition"
               },
               "forkPolicy": {
                 "samePredecessorAndEpochSameDigest": "idempotent-duplicate",
@@ -109,7 +109,7 @@
                 "maxRecipients": "MAX_GROUP_PROJECTIONS",
                 "projectionId": "first-16-bytes-SHA-256(domain=LICOARC-GROUP-PROJECTION\\0, stateDigest, messageId, recipient)",
                 "retry": "per-member-at-least-once-with-stable-projection-id",
-                "stationReceipt": "never-endpoint-evidence"
+                "stationReceipt": "never-endpoint-confirmation"
               },
               "aggregationPolicy": {
                 "resultOrder": "recipient-endpoint-reference-byte-order",
@@ -117,10 +117,10 @@
                 "allDelivered": "complete",
                 "noDeliveredAndAllTerminalFailure": "failed",
                 "otherwise": "partial",
-                "authority": "endpoint-evidence-or-none-only"
+                "authority": "endpoint-confirmation-or-none-only"
               },
               "persistencePolicy": {
-                "restart": "restore-high-water-predecessor-evidence-current-members-tombstones-and-per-member-projections-before-accepting-input",
+                "restart": "restore-high-water-predecessor-state-current-members-tombstones-and-per-member-projections-before-accepting-input",
                 "bounded": true,
                 "persistedStationState": false,
                 "persistedProductPermission": false,
@@ -142,7 +142,7 @@
                 "transition": "validate-complete-predecessor-and-protected-operation-then-commit-successor-once",
                 "projection": "register-one-stable-projection-per-canonical-recipient-or-commit-none",
                 "result": "same-projection-and-identical-result-replays-without-reapplying-state",
-                "restart": "restore-current-state-predecessor-evidence-tombstones-and-projections-before-input",
+                "restart": "restore-current-state-predecessor-state-tombstones-and-projections-before-input",
                 "failure": "malformed-gap-fork-stale-unauthorized-or-over-bound-input-leaves-byte-identical-pre-state"
               },
               "outOfScope": [
@@ -184,7 +184,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/group/registry.json",
-            "sha256": "16ffd081e940adcbd441c97263abc9043816eb1cb0040dd6d5ff45b69c3cef9b"
+            "sha256": "df0495fcd9f84e5b5847ac1bc039f4efed24edc77dc47af7f3249f2513c12b48"
           }
         ],
         "catalogs": [
@@ -235,7 +235,7 @@
               },
               "authority": {
                 "stateAndTransition": "owning-group-capability-and-endpoint-protection",
-                "perMemberProjection": "owning-group-capability-and-endpoint-evidence",
+                "perMemberProjection": "owning-group-capability-and-endpoint-confirmation",
                 "endpointAdmission": "endpoint-local",
                 "crossCapabilityTotals": "bounded-by-protocol-line",
                 "inheritance": "forbidden"
@@ -264,7 +264,7 @@
                 "stationOrder": "never-authority",
                 "productPermissions": "never-authority",
                 "arrivalOrder": "never-authority",
-                "evidence": "the-Endpoint-protection-and-Endpoint-evidence-context-authenticate-the-transition"
+                "authentication": "the-Endpoint-protection-context-authenticates-the-transition"
               },
               "forkPolicy": {
                 "samePredecessorAndEpochSameDigest": "idempotent-duplicate",
@@ -279,7 +279,7 @@
                 "maxRecipients": "MAX_GROUP_PROJECTIONS",
                 "projectionId": "first-16-bytes-SHA-256(domain=LICOARC-GROUP-PROJECTION\\0, stateDigest, messageId, recipient)",
                 "retry": "per-member-at-least-once-with-stable-projection-id",
-                "stationReceipt": "never-endpoint-evidence"
+                "stationReceipt": "never-endpoint-confirmation"
               },
               "aggregationPolicy": {
                 "resultOrder": "recipient-endpoint-reference-byte-order",
@@ -287,10 +287,10 @@
                 "allDelivered": "complete",
                 "noDeliveredAndAllTerminalFailure": "failed",
                 "otherwise": "partial",
-                "authority": "endpoint-evidence-or-none-only"
+                "authority": "endpoint-confirmation-or-none-only"
               },
               "persistencePolicy": {
-                "restart": "restore-high-water-predecessor-evidence-current-members-tombstones-and-per-member-projections-before-accepting-input",
+                "restart": "restore-high-water-predecessor-state-current-members-tombstones-and-per-member-projections-before-accepting-input",
                 "bounded": true,
                 "persistedStationState": false,
                 "persistedProductPermission": false,
@@ -312,7 +312,7 @@
                 "transition": "validate-complete-predecessor-and-protected-operation-then-commit-successor-once",
                 "projection": "register-one-stable-projection-per-canonical-recipient-or-commit-none",
                 "result": "same-projection-and-identical-result-replays-without-reapplying-state",
-                "restart": "restore-current-state-predecessor-evidence-tombstones-and-projections-before-input",
+                "restart": "restore-current-state-predecessor-state-tombstones-and-projections-before-input",
                 "failure": "malformed-gap-fork-stale-unauthorized-or-over-bound-input-leaves-byte-identical-pre-state"
               },
               "outOfScope": [
@@ -354,7 +354,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/group/registry.json",
-            "sha256": "16ffd081e940adcbd441c97263abc9043816eb1cb0040dd6d5ff45b69c3cef9b"
+            "sha256": "df0495fcd9f84e5b5847ac1bc039f4efed24edc77dc47af7f3249f2513c12b48"
           }
         ],
         "catalogs": [
@@ -405,7 +405,7 @@
               },
               "authority": {
                 "stateAndTransition": "owning-group-capability-and-endpoint-protection",
-                "perMemberProjection": "owning-group-capability-and-endpoint-evidence",
+                "perMemberProjection": "owning-group-capability-and-endpoint-confirmation",
                 "endpointAdmission": "endpoint-local",
                 "crossCapabilityTotals": "bounded-by-protocol-line",
                 "inheritance": "forbidden"
@@ -434,7 +434,7 @@
                 "stationOrder": "never-authority",
                 "productPermissions": "never-authority",
                 "arrivalOrder": "never-authority",
-                "evidence": "the-Endpoint-protection-and-Endpoint-evidence-context-authenticate-the-transition"
+                "authentication": "the-Endpoint-protection-context-authenticates-the-transition"
               },
               "forkPolicy": {
                 "samePredecessorAndEpochSameDigest": "idempotent-duplicate",
@@ -449,7 +449,7 @@
                 "maxRecipients": "MAX_GROUP_PROJECTIONS",
                 "projectionId": "first-16-bytes-SHA-256(domain=LICOARC-GROUP-PROJECTION\\0, stateDigest, messageId, recipient)",
                 "retry": "per-member-at-least-once-with-stable-projection-id",
-                "stationReceipt": "never-endpoint-evidence"
+                "stationReceipt": "never-endpoint-confirmation"
               },
               "aggregationPolicy": {
                 "resultOrder": "recipient-endpoint-reference-byte-order",
@@ -457,10 +457,10 @@
                 "allDelivered": "complete",
                 "noDeliveredAndAllTerminalFailure": "failed",
                 "otherwise": "partial",
-                "authority": "endpoint-evidence-or-none-only"
+                "authority": "endpoint-confirmation-or-none-only"
               },
               "persistencePolicy": {
-                "restart": "restore-high-water-predecessor-evidence-current-members-tombstones-and-per-member-projections-before-accepting-input",
+                "restart": "restore-high-water-predecessor-state-current-members-tombstones-and-per-member-projections-before-accepting-input",
                 "bounded": true,
                 "persistedStationState": false,
                 "persistedProductPermission": false,
@@ -482,7 +482,7 @@
                 "transition": "validate-complete-predecessor-and-protected-operation-then-commit-successor-once",
                 "projection": "register-one-stable-projection-per-canonical-recipient-or-commit-none",
                 "result": "same-projection-and-identical-result-replays-without-reapplying-state",
-                "restart": "restore-current-state-predecessor-evidence-tombstones-and-projections-before-input",
+                "restart": "restore-current-state-predecessor-state-tombstones-and-projections-before-input",
                 "failure": "malformed-gap-fork-stale-unauthorized-or-over-bound-input-leaves-byte-identical-pre-state"
               },
               "outOfScope": [
@@ -524,7 +524,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/group/registry.json",
-            "sha256": "16ffd081e940adcbd441c97263abc9043816eb1cb0040dd6d5ff45b69c3cef9b"
+            "sha256": "df0495fcd9f84e5b5847ac1bc039f4efed24edc77dc47af7f3249f2513c12b48"
           }
         ],
         "catalogs": [
@@ -575,7 +575,7 @@
               },
               "authority": {
                 "stateAndTransition": "owning-group-capability-and-endpoint-protection",
-                "perMemberProjection": "owning-group-capability-and-endpoint-evidence",
+                "perMemberProjection": "owning-group-capability-and-endpoint-confirmation",
                 "endpointAdmission": "endpoint-local",
                 "crossCapabilityTotals": "bounded-by-protocol-line",
                 "inheritance": "forbidden"
@@ -604,7 +604,7 @@
                 "stationOrder": "never-authority",
                 "productPermissions": "never-authority",
                 "arrivalOrder": "never-authority",
-                "evidence": "the-Endpoint-protection-and-Endpoint-evidence-context-authenticate-the-transition"
+                "authentication": "the-Endpoint-protection-context-authenticates-the-transition"
               },
               "forkPolicy": {
                 "samePredecessorAndEpochSameDigest": "idempotent-duplicate",
@@ -619,7 +619,7 @@
                 "maxRecipients": "MAX_GROUP_PROJECTIONS",
                 "projectionId": "first-16-bytes-SHA-256(domain=LICOARC-GROUP-PROJECTION\\0, stateDigest, messageId, recipient)",
                 "retry": "per-member-at-least-once-with-stable-projection-id",
-                "stationReceipt": "never-endpoint-evidence"
+                "stationReceipt": "never-endpoint-confirmation"
               },
               "aggregationPolicy": {
                 "resultOrder": "recipient-endpoint-reference-byte-order",
@@ -627,10 +627,10 @@
                 "allDelivered": "complete",
                 "noDeliveredAndAllTerminalFailure": "failed",
                 "otherwise": "partial",
-                "authority": "endpoint-evidence-or-none-only"
+                "authority": "endpoint-confirmation-or-none-only"
               },
               "persistencePolicy": {
-                "restart": "restore-high-water-predecessor-evidence-current-members-tombstones-and-per-member-projections-before-accepting-input",
+                "restart": "restore-high-water-predecessor-state-current-members-tombstones-and-per-member-projections-before-accepting-input",
                 "bounded": true,
                 "persistedStationState": false,
                 "persistedProductPermission": false,
@@ -652,7 +652,7 @@
                 "transition": "validate-complete-predecessor-and-protected-operation-then-commit-successor-once",
                 "projection": "register-one-stable-projection-per-canonical-recipient-or-commit-none",
                 "result": "same-projection-and-identical-result-replays-without-reapplying-state",
-                "restart": "restore-current-state-predecessor-evidence-tombstones-and-projections-before-input",
+                "restart": "restore-current-state-predecessor-state-tombstones-and-projections-before-input",
                 "failure": "malformed-gap-fork-stale-unauthorized-or-over-bound-input-leaves-byte-identical-pre-state"
               },
               "outOfScope": [
@@ -694,7 +694,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/group/registry.json",
-            "sha256": "16ffd081e940adcbd441c97263abc9043816eb1cb0040dd6d5ff45b69c3cef9b"
+            "sha256": "df0495fcd9f84e5b5847ac1bc039f4efed24edc77dc47af7f3249f2513c12b48"
           }
         ],
         "catalogs": [
@@ -745,7 +745,7 @@
               },
               "authority": {
                 "stateAndTransition": "owning-group-capability-and-endpoint-protection",
-                "perMemberProjection": "owning-group-capability-and-endpoint-evidence",
+                "perMemberProjection": "owning-group-capability-and-endpoint-confirmation",
                 "endpointAdmission": "endpoint-local",
                 "crossCapabilityTotals": "bounded-by-protocol-line",
                 "inheritance": "forbidden"
@@ -774,7 +774,7 @@
                 "stationOrder": "never-authority",
                 "productPermissions": "never-authority",
                 "arrivalOrder": "never-authority",
-                "evidence": "the-Endpoint-protection-and-Endpoint-evidence-context-authenticate-the-transition"
+                "authentication": "the-Endpoint-protection-context-authenticates-the-transition"
               },
               "forkPolicy": {
                 "samePredecessorAndEpochSameDigest": "idempotent-duplicate",
@@ -789,7 +789,7 @@
                 "maxRecipients": "MAX_GROUP_PROJECTIONS",
                 "projectionId": "first-16-bytes-SHA-256(domain=LICOARC-GROUP-PROJECTION\\0, stateDigest, messageId, recipient)",
                 "retry": "per-member-at-least-once-with-stable-projection-id",
-                "stationReceipt": "never-endpoint-evidence"
+                "stationReceipt": "never-endpoint-confirmation"
               },
               "aggregationPolicy": {
                 "resultOrder": "recipient-endpoint-reference-byte-order",
@@ -797,10 +797,10 @@
                 "allDelivered": "complete",
                 "noDeliveredAndAllTerminalFailure": "failed",
                 "otherwise": "partial",
-                "authority": "endpoint-evidence-or-none-only"
+                "authority": "endpoint-confirmation-or-none-only"
               },
               "persistencePolicy": {
-                "restart": "restore-high-water-predecessor-evidence-current-members-tombstones-and-per-member-projections-before-accepting-input",
+                "restart": "restore-high-water-predecessor-state-current-members-tombstones-and-per-member-projections-before-accepting-input",
                 "bounded": true,
                 "persistedStationState": false,
                 "persistedProductPermission": false,
@@ -822,7 +822,7 @@
                 "transition": "validate-complete-predecessor-and-protected-operation-then-commit-successor-once",
                 "projection": "register-one-stable-projection-per-canonical-recipient-or-commit-none",
                 "result": "same-projection-and-identical-result-replays-without-reapplying-state",
-                "restart": "restore-current-state-predecessor-evidence-tombstones-and-projections-before-input",
+                "restart": "restore-current-state-predecessor-state-tombstones-and-projections-before-input",
                 "failure": "malformed-gap-fork-stale-unauthorized-or-over-bound-input-leaves-byte-identical-pre-state"
               },
               "outOfScope": [
@@ -864,7 +864,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/group/registry.json",
-            "sha256": "16ffd081e940adcbd441c97263abc9043816eb1cb0040dd6d5ff45b69c3cef9b"
+            "sha256": "df0495fcd9f84e5b5847ac1bc039f4efed24edc77dc47af7f3249f2513c12b48"
           }
         ],
         "catalogs": [
@@ -915,7 +915,7 @@
               },
               "authority": {
                 "stateAndTransition": "owning-group-capability-and-endpoint-protection",
-                "perMemberProjection": "owning-group-capability-and-endpoint-evidence",
+                "perMemberProjection": "owning-group-capability-and-endpoint-confirmation",
                 "endpointAdmission": "endpoint-local",
                 "crossCapabilityTotals": "bounded-by-protocol-line",
                 "inheritance": "forbidden"
@@ -944,7 +944,7 @@
                 "stationOrder": "never-authority",
                 "productPermissions": "never-authority",
                 "arrivalOrder": "never-authority",
-                "evidence": "the-Endpoint-protection-and-Endpoint-evidence-context-authenticate-the-transition"
+                "authentication": "the-Endpoint-protection-context-authenticates-the-transition"
               },
               "forkPolicy": {
                 "samePredecessorAndEpochSameDigest": "idempotent-duplicate",
@@ -959,7 +959,7 @@
                 "maxRecipients": "MAX_GROUP_PROJECTIONS",
                 "projectionId": "first-16-bytes-SHA-256(domain=LICOARC-GROUP-PROJECTION\\0, stateDigest, messageId, recipient)",
                 "retry": "per-member-at-least-once-with-stable-projection-id",
-                "stationReceipt": "never-endpoint-evidence"
+                "stationReceipt": "never-endpoint-confirmation"
               },
               "aggregationPolicy": {
                 "resultOrder": "recipient-endpoint-reference-byte-order",
@@ -967,10 +967,10 @@
                 "allDelivered": "complete",
                 "noDeliveredAndAllTerminalFailure": "failed",
                 "otherwise": "partial",
-                "authority": "endpoint-evidence-or-none-only"
+                "authority": "endpoint-confirmation-or-none-only"
               },
               "persistencePolicy": {
-                "restart": "restore-high-water-predecessor-evidence-current-members-tombstones-and-per-member-projections-before-accepting-input",
+                "restart": "restore-high-water-predecessor-state-current-members-tombstones-and-per-member-projections-before-accepting-input",
                 "bounded": true,
                 "persistedStationState": false,
                 "persistedProductPermission": false,
@@ -992,7 +992,7 @@
                 "transition": "validate-complete-predecessor-and-protected-operation-then-commit-successor-once",
                 "projection": "register-one-stable-projection-per-canonical-recipient-or-commit-none",
                 "result": "same-projection-and-identical-result-replays-without-reapplying-state",
-                "restart": "restore-current-state-predecessor-evidence-tombstones-and-projections-before-input",
+                "restart": "restore-current-state-predecessor-state-tombstones-and-projections-before-input",
                 "failure": "malformed-gap-fork-stale-unauthorized-or-over-bound-input-leaves-byte-identical-pre-state"
               },
               "outOfScope": [
@@ -1034,7 +1034,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/group/registry.json",
-            "sha256": "16ffd081e940adcbd441c97263abc9043816eb1cb0040dd6d5ff45b69c3cef9b"
+            "sha256": "df0495fcd9f84e5b5847ac1bc039f4efed24edc77dc47af7f3249f2513c12b48"
           }
         ],
         "catalogs": [
@@ -1085,7 +1085,7 @@
               },
               "authority": {
                 "stateAndTransition": "owning-group-capability-and-endpoint-protection",
-                "perMemberProjection": "owning-group-capability-and-endpoint-evidence",
+                "perMemberProjection": "owning-group-capability-and-endpoint-confirmation",
                 "endpointAdmission": "endpoint-local",
                 "crossCapabilityTotals": "bounded-by-protocol-line",
                 "inheritance": "forbidden"
@@ -1114,7 +1114,7 @@
                 "stationOrder": "never-authority",
                 "productPermissions": "never-authority",
                 "arrivalOrder": "never-authority",
-                "evidence": "the-Endpoint-protection-and-Endpoint-evidence-context-authenticate-the-transition"
+                "authentication": "the-Endpoint-protection-context-authenticates-the-transition"
               },
               "forkPolicy": {
                 "samePredecessorAndEpochSameDigest": "idempotent-duplicate",
@@ -1129,7 +1129,7 @@
                 "maxRecipients": "MAX_GROUP_PROJECTIONS",
                 "projectionId": "first-16-bytes-SHA-256(domain=LICOARC-GROUP-PROJECTION\\0, stateDigest, messageId, recipient)",
                 "retry": "per-member-at-least-once-with-stable-projection-id",
-                "stationReceipt": "never-endpoint-evidence"
+                "stationReceipt": "never-endpoint-confirmation"
               },
               "aggregationPolicy": {
                 "resultOrder": "recipient-endpoint-reference-byte-order",
@@ -1137,10 +1137,10 @@
                 "allDelivered": "complete",
                 "noDeliveredAndAllTerminalFailure": "failed",
                 "otherwise": "partial",
-                "authority": "endpoint-evidence-or-none-only"
+                "authority": "endpoint-confirmation-or-none-only"
               },
               "persistencePolicy": {
-                "restart": "restore-high-water-predecessor-evidence-current-members-tombstones-and-per-member-projections-before-accepting-input",
+                "restart": "restore-high-water-predecessor-state-current-members-tombstones-and-per-member-projections-before-accepting-input",
                 "bounded": true,
                 "persistedStationState": false,
                 "persistedProductPermission": false,
@@ -1162,7 +1162,7 @@
                 "transition": "validate-complete-predecessor-and-protected-operation-then-commit-successor-once",
                 "projection": "register-one-stable-projection-per-canonical-recipient-or-commit-none",
                 "result": "same-projection-and-identical-result-replays-without-reapplying-state",
-                "restart": "restore-current-state-predecessor-evidence-tombstones-and-projections-before-input",
+                "restart": "restore-current-state-predecessor-state-tombstones-and-projections-before-input",
                 "failure": "malformed-gap-fork-stale-unauthorized-or-over-bound-input-leaves-byte-identical-pre-state"
               },
               "outOfScope": [
@@ -1204,7 +1204,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/group/registry.json",
-            "sha256": "16ffd081e940adcbd441c97263abc9043816eb1cb0040dd6d5ff45b69c3cef9b"
+            "sha256": "df0495fcd9f84e5b5847ac1bc039f4efed24edc77dc47af7f3249f2513c12b48"
           }
         ],
         "catalogs": [
@@ -1255,7 +1255,7 @@
               },
               "authority": {
                 "stateAndTransition": "owning-group-capability-and-endpoint-protection",
-                "perMemberProjection": "owning-group-capability-and-endpoint-evidence",
+                "perMemberProjection": "owning-group-capability-and-endpoint-confirmation",
                 "endpointAdmission": "endpoint-local",
                 "crossCapabilityTotals": "bounded-by-protocol-line",
                 "inheritance": "forbidden"
@@ -1284,7 +1284,7 @@
                 "stationOrder": "never-authority",
                 "productPermissions": "never-authority",
                 "arrivalOrder": "never-authority",
-                "evidence": "the-Endpoint-protection-and-Endpoint-evidence-context-authenticate-the-transition"
+                "authentication": "the-Endpoint-protection-context-authenticates-the-transition"
               },
               "forkPolicy": {
                 "samePredecessorAndEpochSameDigest": "idempotent-duplicate",
@@ -1299,7 +1299,7 @@
                 "maxRecipients": "MAX_GROUP_PROJECTIONS",
                 "projectionId": "first-16-bytes-SHA-256(domain=LICOARC-GROUP-PROJECTION\\0, stateDigest, messageId, recipient)",
                 "retry": "per-member-at-least-once-with-stable-projection-id",
-                "stationReceipt": "never-endpoint-evidence"
+                "stationReceipt": "never-endpoint-confirmation"
               },
               "aggregationPolicy": {
                 "resultOrder": "recipient-endpoint-reference-byte-order",
@@ -1307,10 +1307,10 @@
                 "allDelivered": "complete",
                 "noDeliveredAndAllTerminalFailure": "failed",
                 "otherwise": "partial",
-                "authority": "endpoint-evidence-or-none-only"
+                "authority": "endpoint-confirmation-or-none-only"
               },
               "persistencePolicy": {
-                "restart": "restore-high-water-predecessor-evidence-current-members-tombstones-and-per-member-projections-before-accepting-input",
+                "restart": "restore-high-water-predecessor-state-current-members-tombstones-and-per-member-projections-before-accepting-input",
                 "bounded": true,
                 "persistedStationState": false,
                 "persistedProductPermission": false,
@@ -1332,7 +1332,7 @@
                 "transition": "validate-complete-predecessor-and-protected-operation-then-commit-successor-once",
                 "projection": "register-one-stable-projection-per-canonical-recipient-or-commit-none",
                 "result": "same-projection-and-identical-result-replays-without-reapplying-state",
-                "restart": "restore-current-state-predecessor-evidence-tombstones-and-projections-before-input",
+                "restart": "restore-current-state-predecessor-state-tombstones-and-projections-before-input",
                 "failure": "malformed-gap-fork-stale-unauthorized-or-over-bound-input-leaves-byte-identical-pre-state"
               },
               "outOfScope": [
@@ -1374,7 +1374,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/group/registry.json",
-            "sha256": "16ffd081e940adcbd441c97263abc9043816eb1cb0040dd6d5ff45b69c3cef9b"
+            "sha256": "df0495fcd9f84e5b5847ac1bc039f4efed24edc77dc47af7f3249f2513c12b48"
           }
         ],
         "catalogs": [
@@ -1425,7 +1425,7 @@
               },
               "authority": {
                 "stateAndTransition": "owning-group-capability-and-endpoint-protection",
-                "perMemberProjection": "owning-group-capability-and-endpoint-evidence",
+                "perMemberProjection": "owning-group-capability-and-endpoint-confirmation",
                 "endpointAdmission": "endpoint-local",
                 "crossCapabilityTotals": "bounded-by-protocol-line",
                 "inheritance": "forbidden"
@@ -1454,7 +1454,7 @@
                 "stationOrder": "never-authority",
                 "productPermissions": "never-authority",
                 "arrivalOrder": "never-authority",
-                "evidence": "the-Endpoint-protection-and-Endpoint-evidence-context-authenticate-the-transition"
+                "authentication": "the-Endpoint-protection-context-authenticates-the-transition"
               },
               "forkPolicy": {
                 "samePredecessorAndEpochSameDigest": "idempotent-duplicate",
@@ -1469,7 +1469,7 @@
                 "maxRecipients": "MAX_GROUP_PROJECTIONS",
                 "projectionId": "first-16-bytes-SHA-256(domain=LICOARC-GROUP-PROJECTION\\0, stateDigest, messageId, recipient)",
                 "retry": "per-member-at-least-once-with-stable-projection-id",
-                "stationReceipt": "never-endpoint-evidence"
+                "stationReceipt": "never-endpoint-confirmation"
               },
               "aggregationPolicy": {
                 "resultOrder": "recipient-endpoint-reference-byte-order",
@@ -1477,10 +1477,10 @@
                 "allDelivered": "complete",
                 "noDeliveredAndAllTerminalFailure": "failed",
                 "otherwise": "partial",
-                "authority": "endpoint-evidence-or-none-only"
+                "authority": "endpoint-confirmation-or-none-only"
               },
               "persistencePolicy": {
-                "restart": "restore-high-water-predecessor-evidence-current-members-tombstones-and-per-member-projections-before-accepting-input",
+                "restart": "restore-high-water-predecessor-state-current-members-tombstones-and-per-member-projections-before-accepting-input",
                 "bounded": true,
                 "persistedStationState": false,
                 "persistedProductPermission": false,
@@ -1502,7 +1502,7 @@
                 "transition": "validate-complete-predecessor-and-protected-operation-then-commit-successor-once",
                 "projection": "register-one-stable-projection-per-canonical-recipient-or-commit-none",
                 "result": "same-projection-and-identical-result-replays-without-reapplying-state",
-                "restart": "restore-current-state-predecessor-evidence-tombstones-and-projections-before-input",
+                "restart": "restore-current-state-predecessor-state-tombstones-and-projections-before-input",
                 "failure": "malformed-gap-fork-stale-unauthorized-or-over-bound-input-leaves-byte-identical-pre-state"
               },
               "outOfScope": [
@@ -1544,7 +1544,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/group/registry.json",
-            "sha256": "16ffd081e940adcbd441c97263abc9043816eb1cb0040dd6d5ff45b69c3cef9b"
+            "sha256": "df0495fcd9f84e5b5847ac1bc039f4efed24edc77dc47af7f3249f2513c12b48"
           }
         ],
         "catalogs": [
@@ -1595,7 +1595,7 @@
               },
               "authority": {
                 "stateAndTransition": "owning-group-capability-and-endpoint-protection",
-                "perMemberProjection": "owning-group-capability-and-endpoint-evidence",
+                "perMemberProjection": "owning-group-capability-and-endpoint-confirmation",
                 "endpointAdmission": "endpoint-local",
                 "crossCapabilityTotals": "bounded-by-protocol-line",
                 "inheritance": "forbidden"
@@ -1624,7 +1624,7 @@
                 "stationOrder": "never-authority",
                 "productPermissions": "never-authority",
                 "arrivalOrder": "never-authority",
-                "evidence": "the-Endpoint-protection-and-Endpoint-evidence-context-authenticate-the-transition"
+                "authentication": "the-Endpoint-protection-context-authenticates-the-transition"
               },
               "forkPolicy": {
                 "samePredecessorAndEpochSameDigest": "idempotent-duplicate",
@@ -1639,7 +1639,7 @@
                 "maxRecipients": "MAX_GROUP_PROJECTIONS",
                 "projectionId": "first-16-bytes-SHA-256(domain=LICOARC-GROUP-PROJECTION\\0, stateDigest, messageId, recipient)",
                 "retry": "per-member-at-least-once-with-stable-projection-id",
-                "stationReceipt": "never-endpoint-evidence"
+                "stationReceipt": "never-endpoint-confirmation"
               },
               "aggregationPolicy": {
                 "resultOrder": "recipient-endpoint-reference-byte-order",
@@ -1647,10 +1647,10 @@
                 "allDelivered": "complete",
                 "noDeliveredAndAllTerminalFailure": "failed",
                 "otherwise": "partial",
-                "authority": "endpoint-evidence-or-none-only"
+                "authority": "endpoint-confirmation-or-none-only"
               },
               "persistencePolicy": {
-                "restart": "restore-high-water-predecessor-evidence-current-members-tombstones-and-per-member-projections-before-accepting-input",
+                "restart": "restore-high-water-predecessor-state-current-members-tombstones-and-per-member-projections-before-accepting-input",
                 "bounded": true,
                 "persistedStationState": false,
                 "persistedProductPermission": false,
@@ -1672,7 +1672,7 @@
                 "transition": "validate-complete-predecessor-and-protected-operation-then-commit-successor-once",
                 "projection": "register-one-stable-projection-per-canonical-recipient-or-commit-none",
                 "result": "same-projection-and-identical-result-replays-without-reapplying-state",
-                "restart": "restore-current-state-predecessor-evidence-tombstones-and-projections-before-input",
+                "restart": "restore-current-state-predecessor-state-tombstones-and-projections-before-input",
                 "failure": "malformed-gap-fork-stale-unauthorized-or-over-bound-input-leaves-byte-identical-pre-state"
               },
               "outOfScope": [
@@ -1714,7 +1714,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/group/registry.json",
-            "sha256": "16ffd081e940adcbd441c97263abc9043816eb1cb0040dd6d5ff45b69c3cef9b"
+            "sha256": "df0495fcd9f84e5b5847ac1bc039f4efed24edc77dc47af7f3249f2513c12b48"
           }
         ],
         "catalogs": [
@@ -1765,7 +1765,7 @@
               },
               "authority": {
                 "stateAndTransition": "owning-group-capability-and-endpoint-protection",
-                "perMemberProjection": "owning-group-capability-and-endpoint-evidence",
+                "perMemberProjection": "owning-group-capability-and-endpoint-confirmation",
                 "endpointAdmission": "endpoint-local",
                 "crossCapabilityTotals": "bounded-by-protocol-line",
                 "inheritance": "forbidden"
@@ -1794,7 +1794,7 @@
                 "stationOrder": "never-authority",
                 "productPermissions": "never-authority",
                 "arrivalOrder": "never-authority",
-                "evidence": "the-Endpoint-protection-and-Endpoint-evidence-context-authenticate-the-transition"
+                "authentication": "the-Endpoint-protection-context-authenticates-the-transition"
               },
               "forkPolicy": {
                 "samePredecessorAndEpochSameDigest": "idempotent-duplicate",
@@ -1809,7 +1809,7 @@
                 "maxRecipients": "MAX_GROUP_PROJECTIONS",
                 "projectionId": "first-16-bytes-SHA-256(domain=LICOARC-GROUP-PROJECTION\\0, stateDigest, messageId, recipient)",
                 "retry": "per-member-at-least-once-with-stable-projection-id",
-                "stationReceipt": "never-endpoint-evidence"
+                "stationReceipt": "never-endpoint-confirmation"
               },
               "aggregationPolicy": {
                 "resultOrder": "recipient-endpoint-reference-byte-order",
@@ -1817,10 +1817,10 @@
                 "allDelivered": "complete",
                 "noDeliveredAndAllTerminalFailure": "failed",
                 "otherwise": "partial",
-                "authority": "endpoint-evidence-or-none-only"
+                "authority": "endpoint-confirmation-or-none-only"
               },
               "persistencePolicy": {
-                "restart": "restore-high-water-predecessor-evidence-current-members-tombstones-and-per-member-projections-before-accepting-input",
+                "restart": "restore-high-water-predecessor-state-current-members-tombstones-and-per-member-projections-before-accepting-input",
                 "bounded": true,
                 "persistedStationState": false,
                 "persistedProductPermission": false,
@@ -1842,7 +1842,7 @@
                 "transition": "validate-complete-predecessor-and-protected-operation-then-commit-successor-once",
                 "projection": "register-one-stable-projection-per-canonical-recipient-or-commit-none",
                 "result": "same-projection-and-identical-result-replays-without-reapplying-state",
-                "restart": "restore-current-state-predecessor-evidence-tombstones-and-projections-before-input",
+                "restart": "restore-current-state-predecessor-state-tombstones-and-projections-before-input",
                 "failure": "malformed-gap-fork-stale-unauthorized-or-over-bound-input-leaves-byte-identical-pre-state"
               },
               "outOfScope": [
@@ -1884,7 +1884,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/group/registry.json",
-            "sha256": "16ffd081e940adcbd441c97263abc9043816eb1cb0040dd6d5ff45b69c3cef9b"
+            "sha256": "df0495fcd9f84e5b5847ac1bc039f4efed24edc77dc47af7f3249f2513c12b48"
           }
         ],
         "catalogs": [
@@ -1935,7 +1935,7 @@
               },
               "authority": {
                 "stateAndTransition": "owning-group-capability-and-endpoint-protection",
-                "perMemberProjection": "owning-group-capability-and-endpoint-evidence",
+                "perMemberProjection": "owning-group-capability-and-endpoint-confirmation",
                 "endpointAdmission": "endpoint-local",
                 "crossCapabilityTotals": "bounded-by-protocol-line",
                 "inheritance": "forbidden"
@@ -1964,7 +1964,7 @@
                 "stationOrder": "never-authority",
                 "productPermissions": "never-authority",
                 "arrivalOrder": "never-authority",
-                "evidence": "the-Endpoint-protection-and-Endpoint-evidence-context-authenticate-the-transition"
+                "authentication": "the-Endpoint-protection-context-authenticates-the-transition"
               },
               "forkPolicy": {
                 "samePredecessorAndEpochSameDigest": "idempotent-duplicate",
@@ -1979,7 +1979,7 @@
                 "maxRecipients": "MAX_GROUP_PROJECTIONS",
                 "projectionId": "first-16-bytes-SHA-256(domain=LICOARC-GROUP-PROJECTION\\0, stateDigest, messageId, recipient)",
                 "retry": "per-member-at-least-once-with-stable-projection-id",
-                "stationReceipt": "never-endpoint-evidence"
+                "stationReceipt": "never-endpoint-confirmation"
               },
               "aggregationPolicy": {
                 "resultOrder": "recipient-endpoint-reference-byte-order",
@@ -1987,10 +1987,10 @@
                 "allDelivered": "complete",
                 "noDeliveredAndAllTerminalFailure": "failed",
                 "otherwise": "partial",
-                "authority": "endpoint-evidence-or-none-only"
+                "authority": "endpoint-confirmation-or-none-only"
               },
               "persistencePolicy": {
-                "restart": "restore-high-water-predecessor-evidence-current-members-tombstones-and-per-member-projections-before-accepting-input",
+                "restart": "restore-high-water-predecessor-state-current-members-tombstones-and-per-member-projections-before-accepting-input",
                 "bounded": true,
                 "persistedStationState": false,
                 "persistedProductPermission": false,
@@ -2012,7 +2012,7 @@
                 "transition": "validate-complete-predecessor-and-protected-operation-then-commit-successor-once",
                 "projection": "register-one-stable-projection-per-canonical-recipient-or-commit-none",
                 "result": "same-projection-and-identical-result-replays-without-reapplying-state",
-                "restart": "restore-current-state-predecessor-evidence-tombstones-and-projections-before-input",
+                "restart": "restore-current-state-predecessor-state-tombstones-and-projections-before-input",
                 "failure": "malformed-gap-fork-stale-unauthorized-or-over-bound-input-leaves-byte-identical-pre-state"
               },
               "outOfScope": [
@@ -2054,7 +2054,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/group/registry.json",
-            "sha256": "16ffd081e940adcbd441c97263abc9043816eb1cb0040dd6d5ff45b69c3cef9b"
+            "sha256": "df0495fcd9f84e5b5847ac1bc039f4efed24edc77dc47af7f3249f2513c12b48"
           }
         ],
         "catalogs": [
@@ -2105,7 +2105,7 @@
               },
               "authority": {
                 "stateAndTransition": "owning-group-capability-and-endpoint-protection",
-                "perMemberProjection": "owning-group-capability-and-endpoint-evidence",
+                "perMemberProjection": "owning-group-capability-and-endpoint-confirmation",
                 "endpointAdmission": "endpoint-local",
                 "crossCapabilityTotals": "bounded-by-protocol-line",
                 "inheritance": "forbidden"
@@ -2134,7 +2134,7 @@
                 "stationOrder": "never-authority",
                 "productPermissions": "never-authority",
                 "arrivalOrder": "never-authority",
-                "evidence": "the-Endpoint-protection-and-Endpoint-evidence-context-authenticate-the-transition"
+                "authentication": "the-Endpoint-protection-context-authenticates-the-transition"
               },
               "forkPolicy": {
                 "samePredecessorAndEpochSameDigest": "idempotent-duplicate",
@@ -2149,7 +2149,7 @@
                 "maxRecipients": "MAX_GROUP_PROJECTIONS",
                 "projectionId": "first-16-bytes-SHA-256(domain=LICOARC-GROUP-PROJECTION\\0, stateDigest, messageId, recipient)",
                 "retry": "per-member-at-least-once-with-stable-projection-id",
-                "stationReceipt": "never-endpoint-evidence"
+                "stationReceipt": "never-endpoint-confirmation"
               },
               "aggregationPolicy": {
                 "resultOrder": "recipient-endpoint-reference-byte-order",
@@ -2157,10 +2157,10 @@
                 "allDelivered": "complete",
                 "noDeliveredAndAllTerminalFailure": "failed",
                 "otherwise": "partial",
-                "authority": "endpoint-evidence-or-none-only"
+                "authority": "endpoint-confirmation-or-none-only"
               },
               "persistencePolicy": {
-                "restart": "restore-high-water-predecessor-evidence-current-members-tombstones-and-per-member-projections-before-accepting-input",
+                "restart": "restore-high-water-predecessor-state-current-members-tombstones-and-per-member-projections-before-accepting-input",
                 "bounded": true,
                 "persistedStationState": false,
                 "persistedProductPermission": false,
@@ -2182,7 +2182,7 @@
                 "transition": "validate-complete-predecessor-and-protected-operation-then-commit-successor-once",
                 "projection": "register-one-stable-projection-per-canonical-recipient-or-commit-none",
                 "result": "same-projection-and-identical-result-replays-without-reapplying-state",
-                "restart": "restore-current-state-predecessor-evidence-tombstones-and-projections-before-input",
+                "restart": "restore-current-state-predecessor-state-tombstones-and-projections-before-input",
                 "failure": "malformed-gap-fork-stale-unauthorized-or-over-bound-input-leaves-byte-identical-pre-state"
               },
               "outOfScope": [
@@ -2210,6 +2210,106 @@
       "expected": {
         "result": {
           "canonical": "{\"input\":{\"authorEndpointRef\":\"02030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f2021\",\"base\":\"genesis\",\"groupId\":\"0a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20212223242526272829\",\"nextGroupEpoch\":1,\"operation\":{\"kind\":\"add\",\"targetEndpointRef\":\"030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122\",\"targetRole\":\"member\"}},\"kind\":\"transition\"}"
+        }
+      }
+    },
+    {
+      "$schema": "https://licoarc.com/spec/schemas/conformance-case.schema.json",
+      "caseVersion": "licoarc.conformance-case.v1",
+      "id": "group-member-confirmation-valid",
+      "target": {
+        "operationId": "licoarc.group.apply-member-confirmation.v1"
+      },
+      "context": {
+        "sourceBindings": [
+          {
+            "sourcePath": "spec/v1/group/registry.json",
+            "sha256": "df0495fcd9f84e5b5847ac1bc039f4efed24edc77dc47af7f3249f2513c12b48"
+          }
+        ],
+        "catalogs": [],
+        "publicMaterial": [],
+        "clock": {},
+        "state": {},
+        "transport": {},
+        "storage": {}
+      },
+      "input": {
+        "result": {
+          "projectionId": "01010101010101010101010101010101",
+          "authority": "endpoint-confirmation",
+          "outcome": "pending"
+        },
+        "confirmation": {
+          "confirmationId": "05050505050505050505050505050505",
+          "confirmedMessageIds": [
+            "01010101010101010101010101010101"
+          ],
+          "confirmationStage": "endpointAccepted",
+          "confirmationOutcome": "succeeded"
+        },
+        "session": {
+          "sessionId": "03030303030303030303030303030303",
+          "senderEndpointRef": "0202020202020202020202020202020202020202020202020202020202020202",
+          "expectedSenderEndpointRef": "0202020202020202020202020202020202020202020202020202020202020202",
+          "authenticated": true,
+          "senderAuthorized": true
+        }
+      },
+      "expected": {
+        "result": {
+          "status": "advanced",
+          "finalityState": "accepted",
+          "stateMutation": true
+        }
+      }
+    },
+    {
+      "$schema": "https://licoarc.com/spec/schemas/conformance-case.schema.json",
+      "caseVersion": "licoarc.conformance-case.v1",
+      "id": "group-member-confirmation-station-only",
+      "target": {
+        "operationId": "licoarc.group.apply-member-confirmation.v1"
+      },
+      "context": {
+        "sourceBindings": [
+          {
+            "sourcePath": "spec/v1/group/registry.json",
+            "sha256": "df0495fcd9f84e5b5847ac1bc039f4efed24edc77dc47af7f3249f2513c12b48"
+          }
+        ],
+        "catalogs": [],
+        "publicMaterial": [],
+        "clock": {},
+        "state": {},
+        "transport": {},
+        "storage": {}
+      },
+      "input": {
+        "result": {
+          "projectionId": "01010101010101010101010101010101",
+          "authority": "endpoint-confirmation",
+          "outcome": "pending"
+        },
+        "confirmation": {
+          "confirmationId": "05050505050505050505050505050505",
+          "confirmedMessageIds": [
+            "01010101010101010101010101010101"
+          ],
+          "confirmationStage": "endpointAccepted",
+          "confirmationOutcome": "succeeded"
+        },
+        "session": {
+          "sessionId": "03030303030303030303030303030303",
+          "senderEndpointRef": "0202020202020202020202020202020202020202020202020202020202020202",
+          "expectedSenderEndpointRef": "0202020202020202020202020202020202020202020202020202020202020202",
+          "authenticated": false,
+          "senderAuthorized": true
+        }
+      },
+      "expected": {
+        "error": {
+          "code": "confirmation-unauthenticated"
         }
       }
     }

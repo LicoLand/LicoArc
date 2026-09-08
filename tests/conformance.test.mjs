@@ -19,7 +19,7 @@ test("Candidate artifact binds the exact lifecycle-generic definition and source
     "generation", "lifecycle", "publicationEligible", "sessionEligible",
     "sources", "wireId"
   ]);
-  assert.equal(artifact.artifactVersion, "licoarc.bundle.v2");
+  assert.equal(artifact.artifactVersion, "licoarc.bundle.v1");
   assert.equal(artifact.wireId, "licoarc.protocol-line.v1");
   assert.ok(["PARTIAL", "COMPLETE"].includes(artifact.definitionStatus));
   assert.equal(artifact.publicationEligible, false);

@@ -6,10 +6,16 @@
   "semanticSourceStatus": "COMPLETE",
   "definitionStatus": "COMPLETE",
   "admissionStatus": "complete-content-bound-candidate",
-  "contentIdentity": "c79674646025916c801a78fed1d3aa5adf83775602d8a9dea06ad615e19273cf",
+  "contentIdentity": "4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17",
   "indivisible": true,
   "componentNegotiation": false,
   "fallback": "forbidden",
+  "authorityBinding": {
+    "transcript": "initiator-and-responder-endpoint-state-digests-with-sibling-user-authority-state-digests",
+    "authorityStateAcyclicity": "authority-snapshots-never-contain-peer-authority-digests",
+    "applicationAdmission": "matching-independently-validated-protected-authority-payload-required",
+    "localPeerTrust": "unchanged"
+  },
   "semanticSources": {
     "algorithms": "spec/v1/protection/algorithms.json",
     "domains": "spec/v1/protection/domains.json",
@@ -18,7 +24,6 @@
     "state": "spec/v1/protection/state.json",
     "failures": "spec/v1/protection/failures.json",
     "runtimeGrammar": "spec/v1/protection/runtime.cddl",
-    "supportSchema": "spec/v1/protection/support.schema.json",
     "prekeySchema": "spec/v1/protection/prekey-bundle.schema.json",
     "handshakeSchema": "spec/v1/protection/handshake.schema.json",
     "sessionAcceptSchema": "spec/v1/protection/session-accept.schema.json",
@@ -26,8 +31,27 @@
     "authorityVectors": "conformance/v1/protection/cases.json"
   },
   "contentIdentityProjection": {
-    "include": ["profileSemanticVersion", "indivisible", "componentNegotiation", "fallback", "canonical semantic bytes of every semanticSources member except authority vectors", "stable claim identifiers", "stable nonclaim identifiers"],
-    "exclude": ["contentIdentity", "profile catalogs", "Protocol Line catalogs", "lifecycle", "publication state", "admissionStatus", "proof results", "formal bindings", "artifact or source digests", "external tool metadata"],
+    "include": [
+      "profileSemanticVersion",
+      "indivisible",
+      "componentNegotiation",
+      "fallback",
+      "canonical semantic bytes of every semanticSources member except authority vectors",
+      "stable claim identifiers",
+      "stable nonclaim identifiers"
+    ],
+    "exclude": [
+      "contentIdentity",
+      "profile catalogs",
+      "Protocol Line catalogs",
+      "lifecycle",
+      "publication state",
+      "admissionStatus",
+      "proof results",
+      "formal bindings",
+      "artifact or source digests",
+      "external tool metadata"
+    ],
     "algorithm": "SHA-256 over deterministic CBOR of the projection",
     "computationOwner": "final-authority-join"
   }

@@ -20,8 +20,7 @@ alone cannot identify those semantics.
 - `artifacts/v1/licoarc.bundle.json` is generated deterministically from the
   declared tracked graph and binds its exact embedded sources.
 - Candidate source changes require identity recomputation and artifact
-  regeneration. A later Published definition, if independently authorized,
-  is immutable; a semantic change receives a new identity and generation.
+  regeneration under the sole initial V1 / Generation 1 definition.
 
 Publication is a separate channel action and cannot change or complete the
 definition.
@@ -42,5 +41,3 @@ definition.
 - A wire locator without the matching content identity is insufficient.
 - Source-integrity checks prove agreement within this repository's definition
   graph, not downstream implementation or delivery.
-- The two withdrawn Profile identifiers retained by the registry are
-  non-reusable allocation tombstones only; they retain no executable behavior.
