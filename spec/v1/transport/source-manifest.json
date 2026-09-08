@@ -6,11 +6,13 @@
   "lifecycle": "Candidate",
   "representation": "restricted-jcs-json-plus-deterministic-cbor-control-and-raw-packet",
   "digestAlgorithm": "sha256",
-  "sourceRoots": ["conformance/v1/transport", "spec/v1/transport"],
+  "sourceRoots": [
+    "conformance/v1/transport",
+    "spec/v1/transport"
+  ],
   "sources": [
-    "conformance/v1/transport/invalid.json",
+    "conformance/v1/transport/cases.json",
     "conformance/v1/transport/manifest.json",
-    "conformance/v1/transport/valid.json",
     "spec/v1/transport/bounds.json",
     "spec/v1/transport/labels.json",
     "spec/v1/transport/registry.json",

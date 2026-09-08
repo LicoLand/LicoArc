@@ -7,7 +7,7 @@
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-confirmation-stage` |
 | Decision status | `RETIRED` |
-| Definition status | `PARTIAL` |
+| Definition status | `NOT-SPECIFIED` |
 | Candidate spellings | Station Received, Endpoint Accepted, Effect Completed, confirmation kind |
 | Candidate layer | Transport Profile for Station Received; Reliable Exchange for Endpoint stages |
 | Observer set | Sender Endpoint, Station for its own signal, receiving Endpoint |
@@ -105,4 +105,4 @@ adding a third stage and assigned current grouped semantics to
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. Only the scope recorded by this decision and its linked normative authorities is defined; any remaining normative ambiguity requires a successor decision before entering the protocol definition.
+The definition status is `NOT-SPECIFIED`. This historical record supplies no active normative definition; any successor or replacement owns its complete definition independently.

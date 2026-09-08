@@ -7,12 +7,12 @@
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-nonce` |
 | Decision status | `DECIDED` |
-| Definition status | `PARTIAL` |
+| Definition status | `SPECIFIED` |
 | Candidate spellings | nonce, IV, partial IV, derived sequence nonce |
 | Candidate layer | Pairwise Protection |
 | Observer set | Endpoints; may be visible without being security-authoritative |
-| Existing authority | [Canonical Field Registry](../../../spec/FIELD-REGISTRY.md); this record explains a profile-owned disposition and is not a second field specification. |
-| Current conclusion | Correct nonce handling is mandatory for the chosen construction; transmission as a generic field is not. |
+| Existing authority | [Canonical Field Registry](../../../spec/FIELD-REGISTRY.md), `spec/v1/protection/domains.json`, `spec/v1/protection/runtime.cddl`, and `spec/v1/protection/state.json`; this record is not a second field specification. |
+| Current conclusion | The stable-core Profile derives each record nonce from the direction chain and `N`; no nonce or IV field is transmitted. |
 
 ## Question
 
@@ -57,9 +57,12 @@ machine.
 
 ## Value model
 
-There is no profile-neutral range. Byte width, uniqueness requirement,
-randomness requirement, counter construction, partial-IV grammar, overflow,
-rollback persistence, and visibility are algorithm-specific.
+The stable-core Profile derives one nonce per direction chain and `N` under
+the exact `LICOARC-V1/RATCHET/NONCE\0` domain. The established record repeats
+neither nonce nor session or Profile identifiers. `N` is bounded by
+`MAX_RATCHET_COUNTER`; retry emits the identical committed ciphertext rather
+than re-encrypting; counter overflow, rollback, or nonce reuse fails closed.
+No profile-neutral nonce range or compatibility representation exists.
 
 ## Alternatives
 
@@ -92,11 +95,12 @@ or lifecycle; every resulting decision remains wholly LicoArc-owned.
 
 The original review remained open because nonce uniqueness is mandatory but
 transmission is construction-specific. The canonical registry resolved the
-common-layer question: no common `nonce` or `IV` field exists. Each admitted
-Protection Profile must own its exact derived or transmitted construction,
-authentication, uniqueness or misuse-resistance proof, bounds, rollback and
-crash behavior, and invalid-input handling in its closed frame schema.
+common-layer question, and the stable-core Profile now closes its derived
+nonce construction, domain separation, counter bound, retry, rollback,
+persistence, and failure behavior.
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. Only the scope recorded by this decision and its linked normative authorities is defined; any remaining normative ambiguity requires a successor decision before entering the protocol definition.
+The definition status is `SPECIFIED`. The active Profile's closed construction
+derives every nonce and admits no transmitted nonce, IV, partial IV, or
+fallback field.

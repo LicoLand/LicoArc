@@ -12,10 +12,8 @@
     "spec/v1/schemas"
   ],
   "sources": [
-    "conformance/v1/foundation/invalid.json",
+    "conformance/v1/foundation/cases.json",
     "conformance/v1/foundation/manifest.json",
-    "conformance/v1/foundation/selection.json",
-    "conformance/v1/foundation/valid.json",
     "spec/v1/foundation/bounds.json",
     "spec/v1/foundation/identifiers.json",
     "spec/v1/foundation/labels.json",

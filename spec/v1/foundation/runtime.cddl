@@ -8,6 +8,7 @@ foundation-runtime-record = {
   ? 2 => uint
 }
 
-; 0 is a closed record-kind label.  1 is bounded raw protected-packet bytes.
-; 2 is a bounded unsigned sequence coordinate.  Text map labels, tags,
+; 0 is a closed fixture-kind label.  1 is bounded opaque fixture bytes.
+; 2 is a bounded unsigned fixture coordinate.  These labels and the Foundation
+; bounds do not apply to capability records.  Text map labels, tags,
 ; floating-point values, duplicate labels, and indefinite lengths are invalid.

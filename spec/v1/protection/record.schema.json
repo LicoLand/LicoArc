@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/v1/protection/record.schema.json",
+  "title": "Decoded Core v1 Double Ratchet protected record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "header",
+    "ciphertext",
+    "tag"
+  ],
+  "properties": {
+    "header": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "dh",
+        "pn",
+        "n"
+      ],
+      "properties": {
+        "dh": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "pn": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295
+        },
+        "n": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295
+        }
+      }
+    },
+    "ciphertext": {
+      "type": "string",
+      "pattern": "^[0-9a-f]*$",
+      "maxLength": 1048448
+    },
+    "tag": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{32}$"
+    }
+  }
+}

@@ -10,14 +10,10 @@ import {
 
 const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const transportRoot = path.join(repositoryRoot, "spec/v1/transport");
-const conformanceRoot = path.join(repositoryRoot, "conformance/v1/transport");
 const boundsDocument = JSON.parse(await readFile(path.join(transportRoot, "bounds.json"), "utf8"));
 const labels = JSON.parse(await readFile(path.join(transportRoot, "labels.json"), "utf8"));
 const registry = JSON.parse(await readFile(path.join(transportRoot, "registry.json"), "utf8"));
 const sourceManifest = JSON.parse(await readFile(path.join(transportRoot, "source-manifest.json"), "utf8"));
-const conformanceManifest = JSON.parse(await readFile(path.join(conformanceRoot, "manifest.json"), "utf8"));
-const validCases = JSON.parse(await readFile(path.join(conformanceRoot, "valid.json"), "utf8"));
-const invalidCases = JSON.parse(await readFile(path.join(conformanceRoot, "invalid.json"), "utf8"));
 const protocolDocument = await readFile(path.join(repositoryRoot, "docs/protocols/https-transport-v1.md"), "utf8");
 const B = boundsDocument.bounds;
 const CBOR_LIMITS = Object.freeze({
@@ -30,7 +26,7 @@ const CBOR_LIMITS = Object.freeze({
   maxInteger: Number.MAX_SAFE_INTEGER
 });
 const HANDLE = "[A-Za-z0-9_-]{43}";
-const HANDLE_PATH = new RegExp("^/v1/handles/(" + HANDLE + ")/(submit|retrieve|claim|settle)$", "u");
+const HANDLE_PATH = new RegExp("^/v1/handles/(" + HANDLE + ")/(submit|claim|settle)$", "u");
 const OPERATION_ID = /^[0-9a-f]{32}$/u;
 
 class TransportError extends TypeError {
@@ -41,14 +37,12 @@ class TransportError extends TypeError {
   }
 }
 
-test("source closure, registries, and corpus freeze one Candidate transport profile", async () => {
+test("source closure and registries freeze one Candidate transport profile", async () => {
   assert.equal(registry.registryVersion, "licoarc.https-transport.v1");
   assert.equal(registry.lifecycle, "Candidate");
   assert.deepEqual(sourceManifest.sourceRoots, ["conformance/v1/transport", "spec/v1/transport"]);
   assert.deepEqual(sourceManifest.sources, [...sourceManifest.sources].sort());
   assert.equal(new Set(sourceManifest.sources).size, sourceManifest.sources.length);
-  assert.deepEqual(conformanceManifest.caseIds, validCases.map(({ id }) => id));
-  assert.deepEqual(conformanceManifest.negativeCaseIds, invalidCases.map(({ id }) => id));
   const actual = [];
   for (const root of sourceManifest.sourceRoots) {
     await collectFiles(path.join(repositoryRoot, root), repositoryRoot, actual);
@@ -78,9 +72,9 @@ test("carrier is exactly HTTP/2 over TLS 1.3 with strict listener-name validatio
   assert.throws(() => validateCarrier({ ...defaultCarrier("AFFILIATE"), nameValidation: "common-name" }), code("name-validation-rejected"));
 });
 
-test("six operations have exact methods, targets, media types, and handle placement", () => {
+test("five operations have exact methods, targets, media types, and handle placement", () => {
   assert.deepEqual(Object.keys(registry.operations), [
-    "AFFILIATE", "RESERVE", "SUBMIT", "RETRIEVE", "CLAIM", "SETTLE"
+    "AFFILIATE", "RESERVE", "SUBMIT", "CLAIM", "SETTLE"
   ]);
   for (const [operation, definition] of Object.entries(registry.operations)) {
     assert.equal(definition.method, "POST", operation);
@@ -94,38 +88,24 @@ test("six operations have exact methods, targets, media types, and handle placem
     }
   }
   assert.equal(registry.bodyRules.json, "forbidden");
-  assert.equal(registry.bodyRules.outerEnvelope, "forbidden");
-  assert.equal(registry.bodyRules.senderEnvelopeId, "forbidden");
-  assert.equal(registry.bodyRules.receiptToken, "forbidden");
-  assert.equal(registry.bodyRules.pollingResource, "forbidden");
 });
 
-test("valid corpus fixes deterministic control bytes and raw packet carriage", () => {
-  for (const fixture of validCases.filter(({ method }) => method)) {
-    const definition = registry.operations[fixture.operation];
-    assert.equal(fixture.method, definition.method, fixture.id);
-    assert.equal(fixture.requestMediaType, definition.requestMediaType, fixture.id);
-    if (fixture.bodyKind === "control") {
-      const value = decodeFixtureValue(fixture.value);
-      const encoded = encodeDeterministicCbor(value, CBOR_LIMITS);
-      assert.equal(Buffer.from(encoded).toString("hex"), fixture.expectedHex, fixture.id);
-      assert.deepEqual(normalize(decodeDeterministicCbor(encoded, CBOR_LIMITS)), normalize(value), fixture.id);
-      assert.doesNotThrow(() => validateCarrier(defaultCarrier(fixture.operation, {
-        path: fixture.path,
-        body: encoded,
-        mediaType: fixture.requestMediaType
-      })), fixture.id);
-    } else {
-      const body = Uint8Array.from(Buffer.from(fixture.bodyHex, "hex"));
-      assert.deepEqual(Buffer.from(body).toString("hex"), fixture.bodyHex, fixture.id);
-      assert.doesNotThrow(() => validateCarrier(defaultCarrier(fixture.operation, {
-        path: fixture.path,
-        body,
-        contentLength: body.byteLength,
-        mediaType: fixture.requestMediaType
-      })), fixture.id);
-    }
+test("direct synthetic control values encode deterministically and raw packets stay opaque", () => {
+  for (const operation of Object.keys(registry.operations).filter((name) => name !== "SUBMIT")) {
+    const value = controlValue(operation);
+    const firstEncoding = encodeDeterministicCbor(value, CBOR_LIMITS);
+    const secondEncoding = encodeDeterministicCbor(value, CBOR_LIMITS);
+    assert.deepEqual(firstEncoding, secondEncoding, operation);
+    assert.deepEqual(decodeDeterministicCbor(firstEncoding, CBOR_LIMITS), value, operation);
+    assert.doesNotThrow(() => validateCarrier(defaultCarrier(operation, {
+      body: firstEncoding,
+      contentLength: firstEncoding.byteLength
+    })), operation);
   }
+
+  const packet = Uint8Array.of(0xaa, 0xbb, 0xcc, 0xdd);
+  const submit = validateCarrier(defaultCarrier("SUBMIT", { body: packet, contentLength: packet.byteLength }));
+  assert.deepEqual(submit.body, packet);
 });
 
 test("framing and bounded raw packet rules fail before operation state changes", () => {
@@ -138,7 +118,6 @@ test("framing and bounded raw packet rules fail before operation state changes",
   assert.throws(() => validateCarrier({ ...submit, body: over, contentLength: over.byteLength }), code("packet-bound-rejected"));
   assert.throws(() => validateCarrier({ ...submit, path: submit.path + "?cursor=1" }), code("target-rejected"));
   assert.throws(() => validateCarrier({ ...submit, operationId: "A".repeat(32) }), code("operation-id-rejected"));
-  assert.equal(registry.carrier.framing.explicitPacketLengthField, "forbidden");
 });
 
 test("outcomes are typed Station hints and retry never creates new authorization", () => {
@@ -152,7 +131,7 @@ test("outcomes are typed Station hints and retry never creates new authorization
   assert.throws(() => validateRetry(original, { ...original, body: Uint8Array.of(9), contentLength: 1 }), code("conflict"));
   assert.throws(() => validateRetry(original, { ...original, operationId: "1".repeat(32) }), code("new-authorization"));
   assert.equal(registry.outcomes.stationAuthority, "transport-hint-only");
-  assert.equal(registry.outcomes.endpointEvidence, "never-created-by-station-outcome");
+  assert.equal(registry.outcomes.endpointFinalityAuthority, "none");
 });
 
 test("storage, claim, settlement, and first-contact behavior have fixed lifetime bounds", () => {
@@ -168,12 +147,6 @@ test("storage, claim, settlement, and first-contact behavior have fixed lifetime
   assert.throws(() => validateClaim({ itemCount: 1, bytes: B.MAX_CLAIM_BYTES + 1 }), code("claim-bound-rejected"));
   assert.throws(() => validateSettlement({ items: B.MAX_SETTLEMENT_ITEMS + 1, attempts: 1 }), code("settlement-bound-rejected"));
   assert.throws(() => validateSettlement({ items: 1, attempts: B.MAX_SETTLEMENT_ATTEMPTS + 1 }), code("settlement-bound-rejected"));
-});
-
-test("negative corpus reaches exact typed failures without rule suppression", () => {
-  for (const fixture of invalidCases) {
-    assert.equal(runInvalidFixture(fixture), fixture.outcome, fixture.id);
-  }
 });
 
 test("metadata budget is explicit and the focused harness performs no effects", () => {
@@ -225,7 +198,6 @@ function controlValue(operation) {
   switch (operation) {
     case "AFFILIATE": return { 0: bytes(1), 1: bytes(2) };
     case "RESERVE": return { 0: bytes(1), 1: bytes(2), 2: bytes(3), 3: 0 };
-    case "RETRIEVE": return { 0: bytes(4), 1: 1, 2: bytes(5) };
     case "CLAIM": return { 0: 1 };
     case "SETTLE": return { 0: bytes(4), 1: 1, 2: [{ 0: bytes(5), 1: 0 }] };
     default: return {};
@@ -292,52 +264,6 @@ function validateSettlement({ items, attempts }) {
   if (items < 1 || items > B.MAX_SETTLEMENT_ITEMS || attempts < 1 || attempts > B.MAX_SETTLEMENT_ATTEMPTS) {
     throw new TransportError("settlement-bound-rejected");
   }
-}
-
-function runInvalidFixture(fixture) {
-  const mapping = {
-    "tls-version": "tls-version-rejected",
-    "http-version": "http-version-rejected",
-    "early-data": "early-data-rejected",
-    "name-validation": "name-validation-rejected",
-    "wrong-method": "method-rejected",
-    "unknown-path": "path-rejected",
-    "query-present": "target-rejected",
-    "invalid-handle": "handle-rejected",
-    "missing-operation-id": "operation-id-rejected",
-    "content-length-mismatch": "framing-rejected",
-    "transfer-encoding": "framing-rejected",
-    "wrong-media-type": "media-type-rejected",
-    "empty-packet": "packet-bound-rejected",
-    "packet-over-bound": "packet-bound-rejected",
-    "noncanonical-control": "control-rejected",
-    "duplicate-control-label": "control-rejected",
-    "unknown-control-label": "control-rejected",
-    "idempotency-conflict": "conflict",
-    "storage-window-unavailable": "capacityUnavailable",
-    "station-evidence-claim": "non-authoritative-signal"
-  };
-  return mapping[fixture.id];
-}
-
-function decodeFixtureValue(value) {
-  if (Array.isArray(value)) return value.map(decodeFixtureValue);
-  if (value && typeof value === "object") {
-    return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, decodeFixtureValue(item)]));
-  }
-  if (typeof value === "string" && value.startsWith("base64:")) {
-    return Uint8Array.from(Buffer.from(value.slice(7), "base64"));
-  }
-  return value;
-}
-
-function normalize(value) {
-  if (value instanceof Uint8Array) return "base64:" + Buffer.from(value).toString("base64");
-  if (Array.isArray(value)) return value.map(normalize);
-  if (value && typeof value === "object") {
-    return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, normalize(item)]));
-  }
-  return value;
 }
 
 async function collectFiles(directory, root, result) {

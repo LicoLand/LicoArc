@@ -10,7 +10,7 @@ specification; normative disposition comes only from the Field Registry.
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-non-repudiation-selector` |
 | Decision status | `REJECTED` |
-| Definition status | `PARTIAL` |
+| Definition status | `NOT-SPECIFIED` |
 | Existing authority | [Field Registry](../../../spec/FIELD-REGISTRY.md) |
 | Predecessor or successor | None. |
 | Current conclusion | Mandatory evidence coverage is fixed by the Protocol Line and cannot be weakened by a sender-selected boolean, mode, or negotiation field. |
@@ -64,4 +64,4 @@ uncovered tail records can never become deliverable or advance durable state.
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. Only the scope recorded by this decision and its linked normative authorities is defined; any remaining normative ambiguity requires a successor decision before entering the protocol definition.
+The definition status is `NOT-SPECIFIED`. This historical record supplies no active normative definition; any successor or replacement owns its complete definition independently.

@@ -7,7 +7,7 @@
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-station-timestamp` |
 | Decision status | `DECIDED` |
-| Definition status | `PARTIAL` |
+| Definition status | `SPECIFIED` |
 | Candidate spellings | arrival time, origin time, server time, queue time |
 | Candidate layer | Station-local state or non-authoritative Transport Profile signal |
 | Observer set | Station and any recipient of the signal |
@@ -55,10 +55,11 @@ freshness, replay, ordering, or Endpoint evidence.
 
 ## Value model
 
-There is no approved LicoArc endpoint-security field. A future Transport
-Profile may define an explicitly non-authoritative timestamp with exact format
-and privacy rules, but that would be a separate `OPEN` representation
-decision.
+There is no LicoArc endpoint-security or HTTPS Transport v1 timestamp field.
+Station-local clocks may drive local queue cleanup or diagnostics, but no such
+value enters the closed request, response, protection, evidence, or freshness
+grammars. Any successor Transport Profile that proposes a visible timestamp
+requires a new field decision and a distinct profile identity.
 
 ## Alternatives
 
@@ -84,14 +85,17 @@ or lifecycle; every resulting decision remains wholly LicoArc-owned.
 - TLS, MLS, and
   ratcheting protocols derive security
   state from authenticated
-  transcripts, epochs, and counters rather than an untrusted relay clock.
+  transcripts, epochs, and counters rather than an untrusted carrier clock.
 
 ## Decision history
 
-The authority decision is complete: Station time is never endpoint security
-evidence. Any future carrier timestamp requires its own Transport Profile
-review and must preserve that invariant.
+The authority and representation decisions are complete for the active line:
+Station time is never Endpoint security evidence and HTTPS Transport v1
+transmits no Station timestamp. Any successor carrier timestamp requires its
+own review and must preserve that invariant.
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. Only the scope recorded by this decision and its linked normative authorities is defined; any remaining normative ambiguity requires a successor decision before entering the protocol definition.
+The definition status is `SPECIFIED`. The linked closed Transport, evidence,
+and protection authorities contain no Station timestamp field or acceptance
+path.

@@ -7,7 +7,7 @@
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-station-descriptor-digest` |
 | Decision status | `DECIDED` |
-| Definition status | `PARTIAL` |
+| Definition status | `SPECIFIED` |
 | Existing authority | [`FIELD-REGISTRY.md`](../../../spec/FIELD-REGISTRY.md) |
 | Current conclusion | Every Station affiliation and Route needs a digest binding to the exact descriptor whose `stationId` supplies the sole Station identity path and whose key verifies the applicable Station signature. |
 
@@ -35,7 +35,8 @@ independently.
 The value is mandatory `DIGEST256` field `stationDescriptorDigest`, binding an
 AFFILIATE request/result, asynchronous RESERVE request, `StationAffiliation`,
 or `Route` to one authenticated descriptor. Digest profile, canonical input,
-mismatch handling, and agility remain specification gaps.
+domain separation, canonical input, mismatch handling, and replacement rules
+are fixed by the Identity descriptor contract and HTTPS Transport v1.
 
 ## Visibility and trust
 
@@ -57,4 +58,4 @@ semantics authority and wins over any conflicting explanation here.
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. Only the scope recorded by this decision and its linked normative authorities is defined; any remaining normative ambiguity requires a successor decision before entering the protocol definition.
+The definition status is `SPECIFIED`. The Canonical Field Registry and linked machine-readable authorities close this record’s exact active semantics.

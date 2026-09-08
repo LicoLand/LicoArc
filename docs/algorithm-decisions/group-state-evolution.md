@@ -76,13 +76,14 @@ The closed LicoArc Algorithm Prototype is:
 | Dimension | Group bound |
 | --- | --- |
 | Member set | `MAX_GROUP_MEMBERS = 64`; sorted unique Endpoint references |
-| Epoch and operation | exactly one successor epoch; `MAX_GROUP_OPERATION_BYTES = 4096` |
+| Epoch and operation | exactly one successor epoch through `MAX_GROUP_EPOCH = 9,007,199,254,740,991`; `MAX_GROUP_OPERATION_BYTES = 2512` |
 | Pending transitions/results | `MAX_PENDING_GROUP_TRANSITIONS = 128`; `MAX_PENDING_GROUP_RESULTS = 256` |
 | Tombstones | `MAX_GROUP_EPOCH_TOMBSTONES = 1024` per Group |
 | Persistent state | ≤ 4 MiB per Group including state, predecessor chain, and tombstones |
 | Memory and stack | The normative state and allocation bounds are frozen. |
 | Unauthenticated work | ≤ 16 KiB parse and ≤ 64 member entries before Endpoint authorization |
-| Group Message wire expansion | ≤ 8192 bytes control/context overhead excluding opaque User Payload |
+| Group Message control | `MAX_GROUP_MESSAGE_CONTROL_BYTES = 60` excluding opaque User Payload |
+| Aggregate result | `MAX_GROUP_AGGREGATE_BYTES = 3913` for the complete canonical result |
 
 ## Necessity and alternatives
 
@@ -122,7 +123,7 @@ genesis; valid add/remove/role change; exact duplicate; stale epoch; missing
 predecessor; gap; fork; concurrent successor; removed-member replay; duplicate
 or unsorted member; maximum and over-maximum membership; unauthorized role;
 recipient projection; partial delivery; aggregation; restart; tombstone
-expiry; and attacker-selected fan-out.  Expected digest and outcome classes
+capacity exhaustion; and attacker-selected fan-out.  Expected digest and outcome classes
 are defined by the Prototype and listed in
 `source-vectors.md`, never by a
 Provider output.

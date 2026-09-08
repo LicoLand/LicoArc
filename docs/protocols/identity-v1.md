@@ -4,26 +4,117 @@ Status: Candidate specification. This document projects the machine-readable
 contract in [`spec/v1/identity/identity.schema.json`](../../spec/v1/identity/identity.schema.json),
 the bounds and observer policy in
 [`identity.policy.json`](../../spec/v1/identity/identity.policy.json), and the
+numeric runtime authority in
+[`labels.json`](../../spec/v1/identity/labels.json). The closed source set is
+owned by
+[`source-manifest.json`](../../spec/v1/identity/source-manifest.json), with the
 focused corpus in [`conformance/v1/identity/`](../../conformance/v1/identity/).
 It does not claim an Endpoint runtime, private-key custody, local trust policy,
 user-interface behavior, hosted directory, or publication of a Published
 Protocol Line.
 
-## Boundary and stable identity
+## User authority and stable Endpoint identity
 
-The only identity authority in this capability is the Endpoint. An
-`endpointIdentityRef` is a stable, opaque 32-byte identity reference. It is
+User authority is held by user-controlled signing material and exercised only
+through valid authority-state transitions. Infrastructure cannot hold or
+select it. A self-certifying `userIdentityRef` is derived by domain-separated
+SHA-256 over canonical genesis management and recovery public-key material. A
+caller label or display name cannot substitute for this derivation, which
+gives cryptographic uniqueness rather than one-human or legal identity.
+
+Every `userAuthorityState` contains the line identity, user reference,
+authority epoch, optional exact predecessor digest, transition kind,
+management and recovery signing keys, a bounded set of authorized devices,
+and authority signatures. Its canonical digest excludes those authority
+signatures. Genesis is epoch 0 with no predecessor. Every successor advances
+exactly once, preserves the user reference, and names its exact predecessor.
+Equal-parent unequal successors remain explicit forks.
+
+Management transitions require both predecessor management signatures.
+Recovery transitions require both predecessor recovery signatures and proof
+of possession for replacement authority material. Recovery may atomically
+revoke compromised Endpoints and admit replacements. Each device entry binds
+one independent Endpoint reference and state digest, status, admission and
+optional revocation epochs, and possession proof. Authorization never merges
+Endpoint keys or sessions and never changes local peer trust.
+
+Possession validation resolves the exact authenticated Endpoint state named by
+the device entry and accepts only that state's exact signing-key set. A fresh
+peer obtains a newly admitted device's Endpoint state from matching protected
+identity records carried with the authority exchange; an exact locally
+accepted state may satisfy the same input. A global key map, public directory,
+or Station roster cannot supply this authority. An unchanged device retains its
+original admission-epoch possession proof across later management rotations or
+other-device changes, so an offline device need not sign every successor and a
+lost device need not sign its own revocation.
+
+Once a newer accepted snapshot revokes or removes an Endpoint, later
+application records from that Endpoint reject even if its protected session
+was already established. This affects future admission after the snapshot is
+learned; it does not erase previously accepted plaintext or promise delivery of
+the revocation state.
+
+An `endpointIdentityRef` is a stable, opaque 32-byte identity reference. It is
 authenticated during Endpoint establishment and continuity processing, then
 retained by the Endpoint and its peer relationships. It is never constructed
 from, or qualified by, a Station, Station descriptor, domain, Provider,
-account, device, listener, listener location, Network, directory, or Delivery
+account, listener, listener location, Network, directory, or Delivery
 Handle. Those values are either lower-layer transport inputs or protected
 protocol context and cannot become an identity alias.
 
 This contract describes public references and authorization state, not private
-keys or their custody. A `keyDigest` and key purpose identify an authorized
-state without carrying private material. Key generation, storage, deletion,
-Provider choice, and local approval remain outside the Protocol Layer.
+keys or their custody. Each signing-key record carries a scoped 32-byte
+`keyId`, a 32-byte content-addressed `keyProfileId`, its purpose and state, and
+the exact raw public verification bytes. The Profile registry fixes Ed25519 at
+32 public-key bytes and 64 signature bytes, and ML-DSA-65 at 1,952 public-key
+bytes and 3,309 signature bytes. A digest-only key, algorithm name, variable
+length encoding, private seed, private key, or Provider-native object is not a
+signing key. Key generation, private storage, deletion, Provider choice, and
+local approval remain outside the Protocol Layer.
+
+Runtime records use only the compact unsigned labels and enums in
+`labels.json`. Text field names, transition names, purpose names, key-state
+names, and algorithm names are governance projections and are forbidden as
+runtime wire values. Unknown or duplicate numeric labels and unknown enum
+values reject the complete record without mutation.
+
+## Station descriptor identity and lineage
+
+A `stationDescriptor` is the sole machine-defined Station discovery object.
+Its `stationId` is
+`SHA-256("LICOARC-V1/STATION-ID\0" || stationIdentitySeed)`, where the seed is
+32 unpredictable bytes generated once, never transmitted, and never derived
+from a host, URI, Provider, Endpoint, or signing key. A Station key identifier
+is `SHA-256("LICOARC-V1/STATION-KEY-ID\0" || stationId || keyProfileId ||
+publicKey)`. These derivations keep Station identity stable while listeners,
+operators, and admitted signing keys change.
+
+The descriptor contains one to four listeners, one to four signing keys, zero
+to four certification references, and one to four signatures. All four
+collections are strictly ordered by their deterministic-CBOR encodings and
+reject duplicates. A listener contains one exact Transport Profile content
+identity and one canonical ASCII HTTPS absolute URI of at most 128 UTF-8
+octets. The URI has a lowercase scheme and DNS host (or canonical IP literal),
+and no user information, query, fragment, port, or dot segment. It is a
+location only and never contributes to `stationId`.
+
+Descriptor sequence `1` is genesis and omits `previousDescriptorDigest`.
+Every later descriptor keeps the same `stationId`, has a sequence strictly
+above the retained high-water value, and names the complete predecessor digest.
+Lower sequence is rollback; equal sequence with unequal content is a fork;
+equal sequence with equal content is replay. None mutates retained state.
+Expiry can stop descriptor use but never lowers the retained high-water mark.
+
+The descriptor content digest is
+`SHA-256("LICOARC-V1/STATION-DESCRIPTOR\0" || deterministicCBOR(descriptor))`,
+including `signatures`. Each signature instead covers
+`"LICOARC-V1/STATION-DESCRIPTOR/SIGN\0" || deterministicCBOR(descriptor
+without signatures)` and has exact purpose `station-descriptor`. Genesis must
+have a signature from a listed key; a successor must have at least one
+signature from a predecessor-authorized key. Closed-schema, canonical order,
+validity, key/profile, and signature validation all complete before atomic
+replacement. Certification references remain bounded local-policy inputs and
+never become a mandatory federation root.
 
 ## Three independent chains
 
@@ -40,11 +131,13 @@ the immediate logical predecessor. Every chain retains its own scope:
 
 The exact closed record grammar, including transition fields and observer
 inputs, is in the schema and CDDL. State is bounded by the policy registry:
-64 records per chain, four Stations in an affiliation snapshot, four Route
-candidates, and at most eight inputs in each transparency category. A parser
-also rejects records larger than `MAX_RECORD_BYTES`, evidence larger than
-`MAX_VERIFICATION_EVIDENCE_BYTES`, and values beyond the declared epoch and
-byte bounds. No bound is extended by a sender-selected value.
+64 records per chain, four signing keys, four Stations in an affiliation
+snapshot, four Route candidates, and at most eight inputs in each transparency
+category. A parser also rejects records larger than `MAX_RECORD_BYTES`, one
+verification input larger than its declared verification-input bound, public
+keys or signatures beyond their exact Profile size, and values beyond the
+declared epoch and byte bounds. No Foundation limit or sender-selected value
+extends a capability bound.
 
 ### Validation and atomic replacement
 
@@ -53,7 +146,7 @@ record, scope, identity, epoch, predecessor digest, canonical logical digest,
 continuity proof, transition-specific rules, cross-chain references, and all
 bounds. Only after every check succeeds does it replace the retained
 high-water state in one atomic operation. A failed candidate cannot partially
-replace keys, affiliation entries, Routes, or evidence state.
+replace keys, affiliation entries, Routes, or retained state.
 
 The following outcomes are deterministic and do not depend on delivery order:
 
@@ -80,12 +173,21 @@ validated in order before one atomic commit.
 
 An identity successor keeps the same `endpointIdentityRef` and increments the
 identity chain. `rotation` introduces an authorized replacement key state;
-`revocation` marks the affected key digest unusable for its declared purpose;
+`revocation` marks the affected key identifier unusable for its declared purpose;
 and `recovery` is an explicit, predecessor-bound transition with bounded
-witness inputs. A recovery never resets the epoch or rewrites old evidence.
+witness inputs. A recovery never resets the epoch or rewrites accepted state.
 The Endpoint resolves which keys and purposes are acceptable. An old key,
 revoked key, Station signature, or directory observation cannot authorize a
 new identity state on its own.
+
+Signature verification first resolves the exact continuity state, then the
+`keyId` within that state. It requires the field-specific key purpose, an
+acceptable active state, equality of the signature and key `keyProfileId`, the
+Profile's exact public-key and signature lengths, canonical Profile encodings,
+and finally cryptographic verification. This order prevents length guessing,
+trial parsing, Provider algorithm selection, or a key from another state or
+purpose from becoming authority. Every failure leaves the retained chain and
+key state unchanged.
 
 Continuity-preserving rotation leaves the Endpoint identity, affiliation
 high-water, Route high-water, protected sessions where their profile permits,
@@ -139,7 +241,7 @@ Each asynchronous Route contains the exact Station descriptor digest,
 affiliation commitment, Transport Profile identifier, opaque 32-byte
 `deliveryHandle`, finite Station `serviceUntil`, and a
 `stationServiceSignature`. The signature covers the descriptor, commitment,
-profile, handle, and service bound. It is evidence of one finite Station-issued
+profile, handle, and service bound. It authenticates one finite Station-issued
 capability only. A `firstContact` Handle is never eligible in a Route and
 never receives a Route service signature.
 
@@ -161,11 +263,13 @@ invitation context, including its purpose and audience; a Station-visible
 Handle does not authenticate either Endpoint or the invitation.
 
 The first protected relationship begins with Endpoint-local
-`peerVerificationState` `unverified`. Verification Records and evidence are
-protected, replay-resistant inputs to the receiving Endpoint's local decision;
-no received field, Station receipt, directory result, witness, or handshake
-success directly sets local trust. A replayed first-contact submission fails
-single-use validation and must not upgrade or downgrade local verification.
+`peerVerificationState` `unverified`. Protocol Line v1 allocates no
+Verification Record fields or method registry. A transparency bundle may carry
+a bounded authenticated digest input tagged `verificationRecord`, but v1 does
+not parse it or change local peer trust from it. No received field, Station
+receipt, directory result, witness, or handshake success directly sets local
+trust. A replayed first-contact submission fails single-use validation and
+must not upgrade or downgrade local verification.
 
 ## Discovery and transparency
 
@@ -182,11 +286,6 @@ accepts a fully validated successor or retains the current state. It never
 chooses the first, newest-by-arrival, highest Station timestamp, directory
 answer, or majority source as a substitute for Endpoint continuity.
 
-An `associationClaim` is a protected, bounded, non-authoritative statement
-from one Endpoint about other Endpoint references. It cannot merge identities
-or prove a person, account, device, ownership, consent, peer trust, or Group
-membership. Such a claim remains an input to recipient-local policy.
-
 ## Conformance closure
 
 The identity corpus is split into positive records and adversarial cases. It
@@ -194,13 +293,17 @@ covers schema closure and bounds; genesis and exact successor transitions;
 restart; gap, fork, replay, rollback, and split-view handling; continuity
 preserving rotation; explicit revocation and recovery; Station migration with
 an unavailable old Station; first-contact single-use and unverified state;
-Station-visible observer limits; and non-authoritative discovery,
-transparency, and association inputs. The focused executable evidence is:
+Station-visible observer limits; non-authoritative discovery and transparency
+inputs; user-authority genesis and successors; management and recovery
+authorization; exact Endpoint-state possession-key binding, protected bootstrap
+input, unchanged offline-device succession, post-revocation existing-session
+rejection, device replacement, and sibling fork rejection.
+The focused executable command is:
 
 ```text
 node --test tests/identity.test.mjs
 ```
 
-Passing this focused suite is conformance evidence for these Candidate source
+Passing this focused suite verifies these Candidate source
 paths only. It does not claim a runtime implementation, private-key custody,
 local policy, service operation, or Published Protocol Line.

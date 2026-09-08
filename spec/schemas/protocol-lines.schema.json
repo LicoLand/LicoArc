@@ -1,110 +1,186 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://licoarc.com/spec/schemas/protocol-lines.schema.json",
-  "title": "LicoArc Protocol Line lifecycle and selection registry",
+  "title": "LicoArc initial V1 Protocol Line catalog",
   "type": "object",
   "additionalProperties": false,
-  "required": ["$schema", "$id", "registryVersion", "definitionStates", "lifecycleStates", "lines", "selection", "immutability", "retirement"],
+  "required": [
+    "$schema",
+    "$id",
+    "registryVersion",
+    "definitionStates",
+    "lifecycleStates",
+    "lines",
+    "contentIdentity",
+    "immutability"
+  ],
   "properties": {
-    "$schema": {"const": "https://json-schema.org/draft/2020-12/schema"},
-    "$id": {"const": "https://licoarc.com/spec/protocol-lines.json"},
-    "registryVersion": {"const": "licoarc.protocol-lines.v1"},
-    "definitionStates": {"const": ["DRAFT", "PARTIAL", "COMPLETE"]},
-    "lifecycleStates": {"const": ["Candidate", "Published", "Deprecated", "Retired"]},
+    "$schema": {
+      "const": "https://json-schema.org/draft/2020-12/schema"
+    },
+    "$id": {
+      "const": "https://licoarc.com/spec/protocol-lines.json"
+    },
+    "registryVersion": {
+      "const": "licoarc.protocol-lines.v1"
+    },
+    "definitionStates": {
+      "const": [
+        "DRAFT",
+        "PARTIAL",
+        "COMPLETE"
+      ]
+    },
+    "lifecycleStates": {
+      "const": [
+        "Candidate"
+      ]
+    },
     "lines": {
       "type": "array",
       "minItems": 1,
-      "maxItems": 64,
+      "maxItems": 1,
       "uniqueItems": true,
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["wireId", "generation", "minimumGeneration", "contentDigest", "lifecycle", "definitionStatus", "sessionEligible", "publicationEligible", "newSessionPolicy", "existingSessionPolicy", "authenticatedEffectiveGeneration", "mandatoryCapabilities", "definedCapabilities", "protectionProfileIds", "blockers"],
+        "required": [
+          "wireId",
+          "generation",
+          "protocolLineId",
+          "lifecycle",
+          "definitionStatus",
+          "sessionEligible",
+          "publicationEligible",
+          "mandatoryCapabilities",
+          "definedCapabilities",
+          "protectionProfileIds",
+          "stableClaimIds",
+          "blockers"
+        ],
         "properties": {
-          "wireId": {"type": "string", "pattern": "^licoarc\\.[a-z][a-z0-9-]*(?:\\.[a-z][a-z0-9-]*)?\\.v[1-9][0-9]*$", "maxLength": 128},
-          "generation": {"type": "integer", "minimum": 1, "maximum": 9007199254740991},
-          "minimumGeneration": {"type": "integer", "minimum": 1, "maximum": 9007199254740991},
-          "contentDigest": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$", "maxLength": 64},
-          "lifecycle": {"type": "string", "enum": ["Candidate", "Published", "Deprecated", "Retired"]},
-          "definitionStatus": {"type": "string", "enum": ["DRAFT", "PARTIAL", "COMPLETE"]},
-          "sessionEligible": {"type": "boolean"},
-          "publicationEligible": {"type": "boolean"},
-          "newSessionPolicy": {"type": "string", "enum": ["allow-authenticated", "forbid-incomplete", "forbid-deprecated", "forbid-retired"]},
-          "existingSessionPolicy": {"type": "string", "enum": ["continue-authenticated", "terminate-on-authenticated-adoption", "terminate-at-authenticated-generation"]},
-          "authenticatedEffectiveGeneration": {"type": ["integer", "null"], "minimum": 1, "maximum": 9007199254740991},
+          "wireId": {
+            "const": "licoarc.protocol-line.v1"
+          },
+          "generation": {
+            "$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/generation"
+          },
+          "protocolLineId": {
+            "$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/pendingDigest256"
+          },
+          "lifecycle": {
+            "$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/lifecycle"
+          },
+          "definitionStatus": {
+            "$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/definitionStatus"
+          },
+          "sessionEligible": {
+            "type": "boolean"
+          },
+          "publicationEligible": {
+            "type": "boolean"
+          },
           "mandatoryCapabilities": {
             "type": "array",
             "minItems": 1,
             "maxItems": 64,
             "uniqueItems": true,
-            "items": {"type": "string", "pattern": "^licoarc\\.[a-z][a-z0-9-]*(?:\\.[a-z][a-z0-9-]*)?\\.v[1-9][0-9]*$", "maxLength": 128}
+            "items": {
+              "$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/protocolLocator"
+            }
           },
           "definedCapabilities": {
             "type": "array",
             "minItems": 1,
             "maxItems": 64,
             "uniqueItems": true,
-            "items": {"type": "string", "pattern": "^licoarc\\.[a-z][a-z0-9-]*(?:\\.[a-z][a-z0-9-]*)?\\.v[1-9][0-9]*$", "maxLength": 128}
+            "items": {
+              "$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/protocolLocator"
+            }
           },
           "protectionProfileIds": {
             "type": "array",
             "maxItems": 16,
             "uniqueItems": true,
-            "items": {"type": "string", "pattern": "^[0-9a-f]{64}$", "maxLength": 64}
+            "items": {
+              "$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/digest256"
+            }
+          },
+          "stableClaimIds": {
+            "type": "array",
+            "maxItems": 128,
+            "uniqueItems": true,
+            "items": {
+              "$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/claimId"
+            }
           },
           "blockers": {
             "type": "array",
             "maxItems": 64,
             "uniqueItems": true,
-            "items": {"type": "string", "pattern": "^(?:ALG|FLD|SEC)-[a-z0-9-]+$", "maxLength": 128}
+            "items": {
+              "$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/blockerId"
+            }
           }
         }
       }
     },
-    "selection": {
+    "contentIdentity": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["supportStatementAuthority", "supportEntry", "minimumGeneration", "filterOrder", "choice", "success", "zeroResult", "ambiguousHighest", "unknown", "contentIdentityMismatch", "unauthenticatedSupport", "fallback", "componentNegotiation", "translation", "stateAdvanceOnFailure"],
+      "required": [
+        "name",
+        "algorithm",
+        "include",
+        "exclude"
+      ],
       "properties": {
-        "supportStatementAuthority": {"const": "endpoint-authenticated"},
-        "supportEntry": {"const": "wire-id-generation-and-content-digest"},
-        "minimumGeneration": {"const": "endpoint-authenticated-monotonic-floor"},
-        "filterOrder": {"const": ["known-exact-content-identity", "complete-definition", "new-session-policy-allows", "session-eligible", "meets-both-minimum-generations", "all-mandatory-capabilities-defined", "all-protection-profiles-complete-and-eligible"]},
-        "choice": {"const": "unique-highest-common-generation"},
-        "success": {"const": "selected-pending-future-transcript-authentication"},
-        "zeroResult": {"const": "terminal-no-common-line"},
-        "ambiguousHighest": {"const": "terminal-ambiguous-generation"},
-        "unknown": {"const": "terminal-unknown-line"},
-        "contentIdentityMismatch": {"const": "terminal-content-identity-mismatch"},
-        "unauthenticatedSupport": {"const": "terminal-unauthenticated-support"},
-        "fallback": {"const": "forbidden"},
-        "componentNegotiation": {"const": "forbidden"},
-        "translation": {"const": "forbidden"},
-        "stateAdvanceOnFailure": {"const": false}
+        "name": {
+          "const": "ProtocolLineSemanticProjectionV1"
+        },
+        "algorithm": {
+          "const": "SHA-256-over-domain-and-deterministic-CBOR"
+        },
+        "include": {
+          "const": [
+            "generation",
+            "mandatory-capability-semantic-identities",
+            "active-protection-profile-identities",
+            "stable-positive-claim-identifiers",
+            "session-rules"
+          ]
+        },
+        "exclude": {
+          "const": [
+            "protocolLineId",
+            "wireId",
+            "catalogs-containing-identities",
+            "lifecycle-and-publication",
+            "proof-results-and-tools",
+            "formal-bindings",
+            "source-and-artifact-digests"
+          ]
+        }
       }
     },
     "immutability": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["publishedBytes", "lifecycleRecord", "semanticChange", "identifierReuse"],
+      "required": [
+        "publishedBytes",
+        "lifecycleRecord",
+        "identifierReuse"
+      ],
       "properties": {
-        "publishedBytes": {"const": "content-digest-bound-and-immutable"},
-        "lifecycleRecord": {"const": "may-change-without-changing-content-digest"},
-        "semanticChange": {"const": "new-complete-line-and-generation"},
-        "identifierReuse": {"const": "forbidden"}
-      }
-    },
-    "retirement": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["retiredNewSessions", "existingSessionPolicyOwner", "effectiveBoundOwner", "implementationChoice", "silentMigration", "successorRebinding"],
-      "properties": {
-        "retiredNewSessions": {"const": "forbid-retired"},
-        "existingSessionPolicyOwner": {"const": "authenticated-protocol-line-registry"},
-        "effectiveBoundOwner": {"const": "authenticated-protocol-line-registry"},
-        "implementationChoice": {"const": "forbidden"},
-        "silentMigration": {"const": "forbidden"},
-        "successorRebinding": {"const": "fresh-complete-authenticated-handshake-only"}
+        "publishedBytes": {
+          "const": "protocol-line-id-bound-and-immutable"
+        },
+        "lifecycleRecord": {
+          "const": "may-change-without-changing-protocol-line-id"
+        },
+        "identifierReuse": {
+          "const": "forbidden"
+        }
       }
     }
   }

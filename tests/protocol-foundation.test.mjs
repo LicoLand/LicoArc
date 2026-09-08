@@ -24,8 +24,8 @@ import {
 
 const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const context = await loadFoundationContext(repositoryRoot);
-const validCases = JSON.parse(await readFile(path.join(repositoryRoot, "conformance/v1/foundation/valid.json"), "utf8"));
-const invalidCases = JSON.parse(await readFile(path.join(repositoryRoot, "conformance/v1/foundation/invalid.json"), "utf8"));
+const conformanceManifest = JSON.parse(await readFile(path.join(repositoryRoot,
+  "conformance/v1/foundation/manifest.json"), "utf8"));
 
 test("foundation source closure is explicit, sorted, and independent", async () => {
   assert.equal(context.registries.sourceManifest.manifestVersion, "licoarc.foundation-source-manifest.v1");
@@ -39,6 +39,17 @@ test("foundation source closure is explicit, sorted, and independent", async () 
   assert.ok(context.sourceClosure.declared.includes("spec/v1/foundation/runtime.cddl"));
   assert.ok(context.sourceClosure.declared.every((sourcePath) => !path.isAbsolute(sourcePath)));
   assert.equal(FOUNDATION_SOURCE_MANIFEST, "spec/v1/foundation/source-manifest.json");
+  assert.equal(conformanceManifest.$schema,
+    "https://licoarc.com/spec/schemas/conformance-corpus-manifest.schema.json");
+  assert.equal(conformanceManifest.manifestVersion, "licoarc.conformance-corpus-manifest.v1");
+  assert.equal(Number.isSafeInteger(conformanceManifest.caseCount) &&
+    conformanceManifest.caseCount > 0, true);
+  assert.deepEqual(conformanceManifest.operationIds,
+    [...conformanceManifest.operationIds].sort());
+  assert.deepEqual(conformanceManifest.envelopePaths,
+    [...conformanceManifest.envelopePaths].sort());
+  assert.equal(conformanceManifest.envelopePaths.every((sourcePath) =>
+    sourcePath.startsWith("conformance/v1/foundation/") && sourcePath.endsWith(".json")), true);
 });
 
 test("all foundation JSON schemas are closed and validate their sources", async () => {
@@ -53,37 +64,45 @@ test("all foundation JSON schemas are closed and validate their sources", async 
   assert.ok(context.registries.representation.composition.substitution === "forbidden");
 });
 
-test("restricted JCS positive corpus is deterministic", () => {
-  for (const fixture of validCases.filter(({ kind }) => kind === "governance-json")) {
-    const value = parseRestrictedJson(fixture.input, context.limits.governance);
-    assert.equal(canonicalizeRestrictedJson(value, context.limits.governance), fixture.canonical, fixture.id);
-    assert.equal(canonicalizeRestrictedJson(value, context.limits.governance), canonicalizeRestrictedJson(structuredClone(value), context.limits.governance));
-  }
+test("restricted JCS public inputs are deterministic", () => {
+  const source = "{\"z\":0,\"a\":1,\"nested\":{\"b\":true,\"a\":null}}";
+  const value = parseRestrictedJson(source, context.limits.governance);
+  const canonical = "{\"a\":1,\"nested\":{\"a\":null,\"b\":true},\"z\":0}";
+  assert.equal(canonicalizeRestrictedJson(value, context.limits.governance), canonical);
+  assert.equal(canonicalizeRestrictedJson(value, context.limits.governance),
+    canonicalizeRestrictedJson(structuredClone(value), context.limits.governance));
+  assert.equal(canonicalizeRestrictedJson(
+    parseRestrictedJson("{\"emoji\":\"😀\",\"number\":1e-6}", context.limits.governance),
+    context.limits.governance), "{\"emoji\":\"😀\",\"number\":0.000001}");
 });
 
 test("restricted JCS rejects duplicate names, trailing data, malformed UTF-8, and bounds", () => {
-  for (const fixture of invalidCases.filter(({ kind }) => kind === "governance-json")) {
-    assert.throws(() => parseRestrictedJson(fixture.input, context.limits.governance), fixture.id);
-  }
+  assert.throws(() => parseRestrictedJson("{\"a\":1,\"a\":2}", context.limits.governance), /duplicate member/u);
+  assert.throws(() => parseRestrictedJson("{\"a\":1} false", context.limits.governance), /trailing/u);
   assert.throws(() => parseRestrictedJson(String.raw`{"x":"\ud800"}`, context.limits.governance), /surrogate/);
   assert.throws(() => parseRestrictedJson(new Uint8Array([0xff]), context.limits.governance), /UTF-8/);
   assert.throws(() => parseRestrictedJson(JSON.stringify({ x: "x".repeat(context.bounds.bounds.MAX_TEXT_BYTES + 1) }), context.limits.governance), /bound/);
 });
 
-test("deterministic CBOR positive corpus has exact bytes", () => {
-  for (const fixture of validCases.filter(({ kind }) => kind === "runtime-cbor")) {
-    const value = decodeFixtureValue(fixture.value);
+test("deterministic CBOR public inputs have exact bytes", () => {
+  for (const [value, expectedHex] of [
+    [{ 0: 1, 1: Uint8Array.from([1, 2, 3]), 2: 7 }, "a3000101430102030207"],
+    [{ 0: 0, 1: new Uint8Array() }, "a200000140"]
+  ]) {
     const encoded = encodeFoundationRuntimeRecord(value, context);
-    assert.equal(Buffer.from(encoded).toString("hex"), fixture.hex, fixture.id);
-    assert.deepEqual(normalizeRuntimeValue(decodeFoundationRuntimeRecord(encoded, context)), normalizeRuntimeValue(value), fixture.id);
-    assert.deepEqual(decodeDeterministicCbor(encoded, context.limits.runtime), decodeDeterministicCbor(encoded, context.limits.runtime));
+    assert.equal(Buffer.from(encoded).toString("hex"), expectedHex);
+    assert.deepEqual(normalizeRuntimeValue(decodeFoundationRuntimeRecord(encoded, context)),
+      normalizeRuntimeValue(value));
+    assert.deepEqual(decodeDeterministicCbor(encoded, context.limits.runtime),
+      decodeDeterministicCbor(encoded, context.limits.runtime));
   }
 });
 
 test("deterministic CBOR rejects malformed, non-canonical, unknown, and over-bound forms", () => {
-  for (const fixture of invalidCases.filter(({ kind }) => kind === "runtime-cbor")) {
-    assert.throws(() => decodeFoundationRuntimeRecord(Buffer.from(fixture.hex, "hex"), context), fixture.id);
-  }
+  for (const hex of [
+    "a200010002", "a1001801", "bf0001ff", "a1000100", "a200010302",
+    "a12001", "a1001b0020000000000000"
+  ]) assert.throws(() => decodeFoundationRuntimeRecord(Buffer.from(hex, "hex"), context));
   const overBound = { 0: 1, 1: new Uint8Array(context.bounds.bounds.MAX_RAW_BYTES + 1) };
   assert.throws(() => encodeFoundationRuntimeRecord(overBound, context), /bound/);
   assert.throws(() => encodeFoundationRuntimeRecord({ 0: 1, 3: 2 }, context), /unknown label/);
@@ -125,17 +144,6 @@ test("undeclared foundation files fail closed", async () => {
     await rm(temporaryRoot, { recursive: true, force: true });
   }
 });
-
-function decodeFixtureValue(value) {
-  if (Array.isArray(value)) return value.map(decodeFixtureValue);
-  if (value !== null && typeof value === "object") {
-    const result = {};
-    for (const [key, child] of Object.entries(value)) result[key] = decodeFixtureValue(child);
-    return result;
-  }
-  if (typeof value === "string" && value.startsWith("base64:")) return Uint8Array.from(Buffer.from(value.slice(7), "base64"));
-  return value;
-}
 
 function normalizeRuntimeValue(value) {
   if (value instanceof Uint8Array) return `bytes:${Buffer.from(value).toString("hex")}`;

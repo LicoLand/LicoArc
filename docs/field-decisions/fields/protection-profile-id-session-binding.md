@@ -9,19 +9,21 @@
 | Decision status | `RETIRED` |
 | Definition status | `NOT-SPECIFIED` |
 | Existing authority | [Canonical Field Registry](../../../spec/FIELD-REGISTRY.md) |
-| Predecessor or successor | Candidate placement withdrawn; any future exact binding belongs to open `FLD-handshake-transcript-v1`. |
-| Current conclusion | No Profile field or independent Profile selection is active. |
+| Predecessor or successor | Candidate placement withdrawn; the specified `FLD-handshake-transcript-v1` binds active Profile membership without preserving predecessor bytes. |
+| Current conclusion | No independent Profile field or component negotiation is active; the complete Protocol Line fixes one stable-core Profile and its content identity is transcript-bound. |
 
 ## Preserved requirement
 
-A future complete Protocol Line owns its complete Profile membership. If the
-decided AKE needs an explicit transcript value, its exact identity and
-placement must be decided with that construction.
+The complete Protocol Line owns its exact Profile membership. The specified
+AKE binds the selected Profile content identity in its transcript without
+permitting independent component selection.
 
 ## Retirement rationale
 
 The Candidate field enabled composition before line/Profile content identity
-and proof binding were closed. No identifier encoding or placement survives.
+and proof binding were closed. The active line and transcript now close those
+bindings; no predecessor field, identifier encoding, placement, or fallback
+survives.
 
 ## Definition evidence
 

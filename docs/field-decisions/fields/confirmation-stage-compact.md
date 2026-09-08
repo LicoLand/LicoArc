@@ -9,11 +9,11 @@ specification; normative field semantics come only from the Field Registry.
 | --- | --- |
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-confirmation-stage-compact` |
-| Decision status | `DECIDED` |
-| Definition status | `PARTIAL` |
+| Decision status | `RETIRED` |
+| Definition status | `NOT-SPECIFIED` |
 | Existing authority | [Field Registry](../../../spec/FIELD-REGISTRY.md) |
-| Predecessor or successor | Succeeds `FLD-confirmation-stage`; no successor. |
-| Current conclusion | One `confirmationStage` applies to every identity in a bounded confirmation group; routine attachment chunk success is excluded, and the confirmation requires Evidence Checkpoint coverage before transition. |
+| Predecessor or successor | Succeeds `FLD-confirmation-stage`; succeeded by `FLD-confirmation-stage-v1`. |
+| Current conclusion | Retired: Generation 1 keeps the two Endpoint stages but removes checkpoint-before-transition semantics. |
 
 ## Question
 
@@ -76,4 +76,4 @@ obligation rather than repeating signatures in this field.
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. Only the scope recorded by this decision and its linked normative authorities is defined; any remaining normative ambiguity requires a successor decision before entering the protocol definition.
+The retired definition is `NOT-SPECIFIED`; its successor owns initial V1 semantics.

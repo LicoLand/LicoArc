@@ -11,12 +11,12 @@ specification. Normative field semantics come only from the
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-previous-route-update-digest` |
 | Decision status | `DECIDED` |
-| Definition status | `PARTIAL` |
+| Definition status | `SPECIFIED` |
 | Candidate spellings | previous route, prior station, migration source, route parent |
 | Candidate layer | Identity/Discovery and Reliable Exchange |
 | Observer set | Peer Endpoints; hidden from Stations |
 | Existing authority | [Canonical Field Registry](../../../spec/FIELD-REGISTRY.md) |
-| Authority targets | Canonical Field Registry; future Route Update schema and conformance corpus |
+| Authority targets | Canonical Field Registry, Identity Route Update schema, grammar, policy, and conformance corpus |
 | Predecessor or successor | None |
 | Current conclusion | Every non-initial relationship Route Update needs one digest of its immediate logical predecessor so private Handle replacement is a verifiable succession under an exact global affiliation state. |
 
@@ -128,10 +128,10 @@ old-Station approval, and predecessor digest were reviewed. LicoArc review
 selected the digest because it is the least exposed value that proves exact
 succession for a private Route snapshot. Later threat review moved the global
 primary Station fact into `stationAffiliations`; this field now owns only the
-relationship Route chain. The decision updates the Canonical Field Registry;
-numeric bounds, digest-profile selection, bounded offline catch-up, and exact
-typed failure codes remain future specification work.
+relationship Route chain. The Canonical Field Registry, Identity policy and
+schema now close safe-integer bounds, SHA-256 logical digests, bounded retained
+chain state, and fail-closed gap, fork, replay, rollback, and overflow rules.
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. Only the scope recorded by this decision and its linked normative authorities is defined; any remaining normative ambiguity requires a successor decision before entering the protocol definition.
+The definition status is `SPECIFIED`. The Canonical Field Registry and linked machine-readable authorities close this record’s exact active semantics.

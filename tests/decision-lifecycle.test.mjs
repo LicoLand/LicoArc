@@ -24,8 +24,18 @@ test("decision lifecycle has exactly two definition tracks", async () => {
 });
 
 test("field decisions expose approval and definition state only", async () => {
-  const files = await markdownFiles("docs/field-decisions/fields/");
+  const [files, registry, manifest] = await Promise.all([
+    markdownFiles("docs/field-decisions/fields/"),
+    read("spec/FIELD-REGISTRY.md"),
+    read("spec/v1/manifest.json").then(JSON.parse)
+  ]);
   assert.ok(files.length > 0);
+  const activeSection = registry
+    .split("## Active fields\n", 2)[1]
+    .split("## Excluded, replaced, and profile-owned values\n", 1)[0];
+  const activeRecords = new Set([...activeSection.matchAll(
+    /\(\.\.\/docs\/field-decisions\/fields\/([a-z0-9-]+\.md)\)/gu
+  )].map((match) => match[1]));
 
   for (const file of files) {
     const record = await read(`docs/field-decisions/fields/${file}`);
@@ -33,6 +43,18 @@ test("field decisions expose approval and definition state only", async () => {
     assert.match(record, /\| Decision status \| `(?:OPEN|READY|DECIDED|REJECTED|RETIRED)` \|/);
     assert.match(record, /\| Definition status \| `(?:NOT-SPECIFIED|PARTIAL|SPECIFIED)` \|/);
     assert.match(record, /^## Definition evidence$/m);
+    const decisionStatus = record.match(/\| Decision status \| `([^`]+)` \|/u)[1];
+    const definitionStatus = record.match(/\| Definition status \| `([^`]+)` \|/u)[1];
+    if (["REJECTED", "RETIRED"].includes(decisionStatus)) {
+      assert.equal(definitionStatus, "NOT-SPECIFIED", file);
+    }
+    if (definitionStatus === "SPECIFIED") {
+      assert.equal(decisionStatus, "DECIDED", file);
+    }
+    if (manifest.definitionStatus === "COMPLETE" && activeRecords.has(file)) {
+      assert.equal(decisionStatus, "DECIDED", file);
+      assert.equal(definitionStatus, "SPECIFIED", file);
+    }
   }
 });
 

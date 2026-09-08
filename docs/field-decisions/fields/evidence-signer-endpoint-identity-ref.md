@@ -9,11 +9,11 @@ specification; normative field semantics come only from the Field Registry.
 | --- | --- |
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-evidence-signer-endpoint-identity-ref` |
-| Decision status | `DECIDED` |
-| Definition status | `PARTIAL` |
+| Decision status | `RETIRED` |
+| Definition status | `NOT-SPECIFIED` |
 | Existing authority | [Field Registry](../../../spec/FIELD-REGISTRY.md) |
-| Predecessor or successor | None. |
-| Current conclusion | Every checkpoint explicitly identifies the stable Endpoint identity whose authorized evidence key signed it. |
+| Predecessor or successor | Retired without successor; Generation 1 binds the sending authorized Endpoint in the protected session. |
+| Current conclusion | No evidence signer identity field is active. |
 
 ## Question
 
@@ -70,4 +70,4 @@ back to a session, Route, or Station directory.
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. Only the scope recorded by this decision and its linked normative authorities is defined; any remaining normative ambiguity requires a successor decision before entering the protocol definition.
+The definition is retired and `NOT-SPECIFIED`; this record remains history only.

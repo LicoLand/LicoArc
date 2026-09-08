@@ -4,23 +4,66 @@
   "title": "LicoArc runtime record encoding declaration",
   "type": "object",
   "additionalProperties": false,
-  "required": ["representation", "schemaLanguage", "cddlPath", "labelRegistryPath", "parser"],
+  "required": [
+    "representation",
+    "schemaLanguage",
+    "cddlPath",
+    "labelRegistryPath",
+    "parser"
+  ],
   "properties": {
-    "representation": { "type": "string", "const": "deterministic-cbor" },
-    "schemaLanguage": { "type": "string", "const": "closed-cddl" },
-    "cddlPath": { "type": "string", "const": "spec/v1/foundation/runtime.cddl" },
-    "labelRegistryPath": { "type": "string", "const": "spec/v1/foundation/labels.json" },
+    "representation": {
+      "type": "string",
+      "const": "deterministic-cbor"
+    },
+    "schemaLanguage": {
+      "type": "string",
+      "const": "closed-cddl"
+    },
+    "cddlPath": {
+      "type": "string",
+      "const": "spec/v1/foundation/runtime.cddl"
+    },
+    "labelRegistryPath": {
+      "type": "string",
+      "const": "spec/v1/foundation/labels.json"
+    },
     "parser": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["mapKeyType", "lengths", "tags", "floats", "trailingBytes", "rawByteBound"],
+      "required": [
+        "mapKeyType",
+        "lengths",
+        "tags",
+        "floats",
+        "trailingBytes",
+        "rawByteBound"
+      ],
       "properties": {
-        "mapKeyType": { "type": "string", "const": "unsigned-integer" },
-        "lengths": { "type": "string", "const": "definite-only" },
-        "tags": { "type": "string", "const": "reject" },
-        "floats": { "type": "string", "const": "reject" },
-        "trailingBytes": { "type": "string", "const": "reject" },
-        "rawByteBound": { "type": "string", "const": "MAX_RAW_BYTES" }
+        "mapKeyType": {
+          "type": "string",
+          "const": "unsigned-integer"
+        },
+        "lengths": {
+          "type": "string",
+          "const": "definite-only"
+        },
+        "tags": {
+          "type": "string",
+          "const": "reject"
+        },
+        "floats": {
+          "type": "string",
+          "const": "reject"
+        },
+        "trailingBytes": {
+          "type": "string",
+          "const": "reject"
+        },
+        "rawByteBound": {
+          "type": "string",
+          "const": "MAX_RAW_BYTES"
+        }
       }
     }
   }

@@ -10,7 +10,7 @@ specification; normative field semantics come only from the Field Registry.
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-signing-keys` |
 | Decision status | `DECIDED` |
-| Definition status | `PARTIAL` |
+| Definition status | `SPECIFIED` |
 | Existing authority | [`FIELD-REGISTRY.md`](../../../spec/FIELD-REGISTRY.md) |
 | Current conclusion | `StationDescriptor.signingKeys` is a mandatory bounded `SigningKey[1..MAX_KEYS]`; each entry binds a key-profile identifier, key identifier, and public verification bytes. |
 
@@ -33,8 +33,9 @@ can rotate keys without losing deterministic validation.
 
 The collection is non-empty and bounded. Each entry contains exactly
 `keyProfileId`, `keyId`, and `publicKey` as separate registry-owned fields;
-their final versioned schema, concrete bounds, and admitted profile registry
-remain specification work.
+the Identity schema fixes exact key shapes, the policy fixes collection and
+byte bounds, and the content-addressed signature Profile registry fixes the
+admitted Ed25519 and ML-DSA-65 public encodings.
 
 ## Visibility and trust
 
@@ -51,4 +52,4 @@ only from `FIELD-REGISTRY.md`.
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. Only the scope recorded by this decision and its linked normative authorities is defined; any remaining normative ambiguity requires a successor decision before entering the protocol definition.
+The definition status is `SPECIFIED`. The Canonical Field Registry and linked machine-readable authorities close this record’s exact active semantics.

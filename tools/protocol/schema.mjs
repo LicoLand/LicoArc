@@ -1,11 +1,12 @@
 /** Minimal, fail-closed Draft 2020-12 JSON Schema subset. */
 
 const SCHEMA_KEYWORDS = new Set([
-  "$id", "$schema", "$ref", "title", "description", "type", "const", "enum", "format",
+  "$id", "$schema", "$ref", "$defs", "$comment", "title", "description", "type", "const", "enum", "format",
   "required", "properties", "additionalProperties", "items", "prefixItems",
   "minItems", "maxItems", "uniqueItems", "minProperties", "maxProperties",
   "minLength", "maxLength", "pattern", "minimum", "maximum",
-  "exclusiveMinimum", "exclusiveMaximum", "allOf", "anyOf", "oneOf", "not"
+  "exclusiveMinimum", "exclusiveMaximum", "allOf", "anyOf", "oneOf", "not",
+  "if", "then", "else"
 ]);
 
 export class SchemaError extends TypeError {
@@ -20,7 +21,8 @@ export class SchemaError extends TypeError {
  * Assert that a schema only uses the closed vocabulary accepted by the
  * foundation.  Object schemas must explicitly set additionalProperties:false.
  */
-export function assertClosedJsonSchema(schema, path = "$") {
+export function assertClosedJsonSchema(schema, path = "$", allowPartialObject = false) {
+  if (typeof schema === "boolean") return true;
   if (!isPlainObject(schema)) throw new SchemaError(`schema must be an object at ${path}`);
   for (const key of Object.keys(schema)) {
     if (!SCHEMA_KEYWORDS.has(key)) throw new SchemaError(`unknown JSON Schema keyword ${key} at ${path}`);
@@ -34,18 +36,27 @@ export function assertClosedJsonSchema(schema, path = "$") {
       throw new SchemaError(`object schema must close additionalProperties at ${path}`);
     }
   }
-  if (schema.$ref !== undefined && (typeof schema.$ref !== "string" || !schema.$ref.startsWith("#"))) {
-    throw new SchemaError(`schema reference must be a local JSON Pointer at ${path}`);
+  if (schema.$ref !== undefined && (typeof schema.$ref !== "string" ||
+      (!schema.$ref.startsWith("#") && !schema.$ref.startsWith("https://licoarc.com/")))) {
+    throw new SchemaError(`schema reference must be local or a LicoArc schema identifier at ${path}`);
+  }
+  if (schema.$defs !== undefined) {
+    if (!isPlainObject(schema.$defs)) throw new SchemaError(`schema definitions must be an object at ${path}`);
+    for (const [key, child] of Object.entries(schema.$defs)) {
+      assertClosedJsonSchema(child, `${path}.$defs.${key}`);
+    }
   }
   if (schema.format !== undefined && (typeof schema.format !== "string" || !["date-time", "uri", "uri-reference", "uuid", "regex"].includes(schema.format))) {
     throw new SchemaError(`schema format is outside the closed vocabulary at ${path}`);
   }
   if (schema.properties !== undefined) {
     if (!isPlainObject(schema.properties)) throw new SchemaError(`schema properties must be an object at ${path}`);
-    if (schema.additionalProperties !== false) {
+    if (!allowPartialObject && schema.additionalProperties !== false) {
       throw new SchemaError(`object schema must close additionalProperties at ${path}`);
     }
-    for (const [key, child] of Object.entries(schema.properties)) assertClosedJsonSchema(child, `${path}.properties.${key}`);
+    for (const [key, child] of Object.entries(schema.properties)) {
+      assertClosedJsonSchema(child, `${path}.properties.${key}`, allowPartialObject);
+    }
   } else if (schema.additionalProperties !== undefined && schema.additionalProperties !== false) {
     throw new SchemaError(`additionalProperties must be false at ${path}`);
   }
@@ -60,15 +71,21 @@ export function assertClosedJsonSchema(schema, path = "$") {
   for (const keyword of ["allOf", "anyOf", "oneOf"]) {
     if (schema[keyword] !== undefined) {
       if (!Array.isArray(schema[keyword]) || schema[keyword].length === 0) throw new SchemaError(`${keyword} must be a non-empty array at ${path}`);
-      schema[keyword].forEach((child, index) => assertClosedJsonSchema(child, `${path}.${keyword}[${index}]`));
+      schema[keyword].forEach((child, index) => assertClosedJsonSchema(child, `${path}.${keyword}[${index}]`, true));
     }
   }
-  if (schema.not !== undefined) assertClosedJsonSchema(schema.not, `${path}.not`);
+  if (schema.not !== undefined) assertClosedJsonSchema(schema.not, `${path}.not`, true);
+  for (const keyword of ["if", "then", "else"]) {
+    if (schema[keyword] !== undefined) assertClosedJsonSchema(schema[keyword], `${path}.${keyword}`, true);
+  }
+  if ((schema.then !== undefined || schema.else !== undefined) && schema.if === undefined) {
+    throw new SchemaError(`then and else require if at ${path}`);
+  }
   if (schema.required !== undefined) {
     if (!Array.isArray(schema.required) || schema.required.some((key) => typeof key !== "string") || new Set(schema.required).size !== schema.required.length) {
       throw new SchemaError(`required must be a unique string array at ${path}`);
     }
-    if (schema.properties !== undefined && schema.required.some((key) => !(key in schema.properties))) {
+    if (!allowPartialObject && schema.properties !== undefined && schema.required.some((key) => !(key in schema.properties))) {
       throw new SchemaError(`required names must be declared properties at ${path}`);
     }
   }
@@ -82,23 +99,31 @@ export function assertClosedJsonSchema(schema, path = "$") {
 }
 
 /** Return deterministic validation messages for a JSON value. */
-export function validateClosedSchema(value, schema) {
+export function validateClosedSchema(value, schema, options = {}) {
   assertClosedJsonSchema(schema);
+  const registry = buildSchemaRegistry(schema, options.schemas ?? []);
   const errors = [];
-  validate(value, schema, "$", errors, schema);
+  validate(value, schema, "$", errors, schema, registry, []);
   return errors;
 }
 
-export function assertValidAgainstClosedSchema(value, schema) {
-  const errors = validateClosedSchema(value, schema);
+export function assertValidAgainstClosedSchema(value, schema, options = {}) {
+  const errors = validateClosedSchema(value, schema, options);
   if (errors.length > 0) throw new SchemaError(`value does not satisfy closed schema: ${errors.join("; ")}`, errors);
   return value;
 }
 
-function validate(value, schema, path, errors, rootSchema) {
+function validate(value, schema, path, errors, rootSchema, registry, refStack) {
+  if (typeof schema === "boolean") {
+    if (!schema) errors.push(`${path} is forbidden by boolean schema`);
+    return;
+  }
   if (schema.$ref !== undefined) {
-    const target = resolveLocalRef(rootSchema, schema.$ref);
-    validate(value, target, path, errors, rootSchema);
+    const { target, root, identity } = resolveRef(rootSchema, schema.$ref, registry);
+    if (refStack.includes(identity) || refStack.length >= 64) {
+      throw new SchemaError(`schema reference cycle or depth overflow at ${path}`);
+    }
+    validate(value, target, path, errors, root, registry, [...refStack, identity]);
     return;
   }
   if (schema.const !== undefined && !deepEqual(value, schema.const)) errors.push(`${path} must equal const`);
@@ -131,9 +156,15 @@ function validate(value, schema, path, errors, rootSchema) {
     if (schema.maxItems !== undefined && value.length > schema.maxItems) errors.push(`${path} has more than maxItems`);
     if (schema.uniqueItems && value.some((item, index) => value.slice(0, index).some((prior) => deepEqual(prior, item)))) errors.push(`${path} contains duplicate items`);
     if (schema.prefixItems !== undefined) schema.prefixItems.forEach((child, index) => {
-      if (index < value.length) validate(value[index], child, `${path}[${index}]`, errors, rootSchema);
+      if (index < value.length) validate(value[index], child, `${path}[${index}]`, errors, rootSchema, registry, refStack);
     });
-    if (schema.items !== undefined) value.forEach((item, index) => validate(item, schema.items, `${path}[${index}]`, errors, rootSchema));
+    if (schema.items !== undefined) {
+      const itemStart = schema.prefixItems?.length ?? 0;
+      value.slice(itemStart).forEach((item, offset) => {
+        const index = itemStart + offset;
+        validate(item, schema.items, `${path}[${index}]`, errors, rootSchema, registry, refStack);
+      });
+    }
   }
   if (isPlainObject(value)) {
     const keys = Object.keys(value);
@@ -145,23 +176,55 @@ function validate(value, schema, path, errors, rootSchema) {
       if (!(key in properties)) {
         if (schema.additionalProperties === false) errors.push(`${path} has unknown property ${key}`);
       } else {
-        validate(value[key], properties[key], `${path}.${key}`, errors, rootSchema);
+        validate(value[key], properties[key], `${path}.${key}`, errors, rootSchema, registry, refStack);
       }
     }
   }
-  for (const child of schema.allOf ?? []) validate(value, child, path, errors, rootSchema);
-  if (schema.anyOf !== undefined && !schema.anyOf.some((child) => validateToBoolean(value, child, rootSchema))) errors.push(`${path} does not satisfy anyOf`);
-  if (schema.oneOf !== undefined && schema.oneOf.filter((child) => validateToBoolean(value, child, rootSchema)).length !== 1) errors.push(`${path} does not satisfy exactly one oneOf branch`);
-  if (schema.not !== undefined && validateToBoolean(value, schema.not, rootSchema)) errors.push(`${path} satisfies forbidden schema`);
+  for (const child of schema.allOf ?? []) validate(value, child, path, errors, rootSchema, registry, refStack);
+  if (schema.anyOf !== undefined && !schema.anyOf.some((child) => validateToBoolean(value, child, rootSchema, registry, refStack))) errors.push(`${path} does not satisfy anyOf`);
+  if (schema.oneOf !== undefined && schema.oneOf.filter((child) => validateToBoolean(value, child, rootSchema, registry, refStack)).length !== 1) errors.push(`${path} does not satisfy exactly one oneOf branch`);
+  if (schema.not !== undefined && validateToBoolean(value, schema.not, rootSchema, registry, refStack)) errors.push(`${path} satisfies forbidden schema`);
+  if (schema.if !== undefined) {
+    const branch = validateToBoolean(value, schema.if, rootSchema, registry, refStack) ? schema.then : schema.else;
+    if (branch !== undefined) validate(value, branch, path, errors, rootSchema, registry, refStack);
+  }
 }
 
-function validateToBoolean(value, schema, rootSchema) {
+function validateToBoolean(value, schema, rootSchema, registry, refStack) {
   const errors = [];
-  validate(value, schema, "$", errors, rootSchema);
+  validate(value, schema, "$", errors, rootSchema, registry, refStack);
   return errors.length === 0;
 }
 
-function resolveLocalRef(rootSchema, reference) {
+function buildSchemaRegistry(rootSchema, schemas) {
+  if (!Array.isArray(schemas) || schemas.length > 64) throw new SchemaError("schema registry must be a bounded array");
+  const registry = new Map();
+  for (const candidate of [rootSchema, ...schemas]) {
+    assertClosedJsonSchema(candidate);
+    if (candidate.$id !== undefined) {
+      if (typeof candidate.$id !== "string" || registry.has(candidate.$id)) {
+        throw new SchemaError("schema registry identifiers must be unique strings");
+      }
+      registry.set(candidate.$id, candidate);
+    }
+  }
+  return registry;
+}
+
+function resolveRef(rootSchema, reference, registry) {
+  const hashIndex = reference.indexOf("#");
+  const documentId = hashIndex < 0 ? reference : reference.slice(0, hashIndex);
+  const fragment = hashIndex < 0 ? "#" : reference.slice(hashIndex);
+  const root = documentId === "" ? rootSchema : registry.get(documentId);
+  if (!root) throw new SchemaError(`unregistered schema reference ${documentId}`);
+  return {
+    target: resolvePointer(root, fragment),
+    root,
+    identity: `${root.$id ?? "<root>"}${fragment}`
+  };
+}
+
+function resolvePointer(rootSchema, reference) {
   if (reference === "#") return rootSchema;
   if (!reference.startsWith("#/")) throw new SchemaError(`unsupported schema reference ${reference}`);
   let value = rootSchema;

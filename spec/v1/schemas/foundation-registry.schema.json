@@ -4,46 +4,139 @@
   "title": "LicoArc foundation registry",
   "type": "object",
   "additionalProperties": false,
-  "required": ["$schema", "$id", "registryVersion", "lifecycle", "scope", "boundsPath", "identifiersPath", "lifecyclePath", "labelsPath", "representationPath", "governanceSchemaPath", "runtimeCddlPath", "parserPolicy", "sourceClosure"],
+  "required": [
+    "$schema",
+    "$id",
+    "registryVersion",
+    "lifecycle",
+    "scope",
+    "boundsPath",
+    "identifiersPath",
+    "lifecyclePath",
+    "labelsPath",
+    "representationPath",
+    "governanceSchemaPath",
+    "runtimeCddlPath",
+    "parserPolicy",
+    "sourceClosure"
+  ],
   "properties": {
-    "$schema": { "type": "string", "const": "https://json-schema.org/draft/2020-12/schema" },
-    "$id": { "type": "string", "const": "https://licoarc.com/spec/v1/schemas/foundation-registry.schema.json" },
-    "registryVersion": { "type": "string", "const": "licoarc.foundation-registry.v1" },
-    "lifecycle": { "type": "string", "enum": ["Candidate", "Published", "Retired"] },
-    "scope": { "type": "string", "const": "representation-lifecycle-identifier-bound-foundation" },
-    "boundsPath": { "type": "string", "const": "spec/v1/foundation/bounds.json" },
-    "identifiersPath": { "type": "string", "const": "spec/v1/foundation/identifiers.json" },
-    "lifecyclePath": { "type": "string", "const": "spec/v1/foundation/lifecycle.json" },
-    "labelsPath": { "type": "string", "const": "spec/v1/foundation/labels.json" },
-    "representationPath": { "type": "string", "const": "spec/v1/foundation/representation.json" },
-    "governanceSchemaPath": { "type": "string", "const": "spec/v1/schemas/protocol-line-manifest.schema.json" },
-    "runtimeCddlPath": { "type": "string", "const": "spec/v1/foundation/runtime.cddl" },
+    "$schema": {
+      "type": "string",
+      "const": "https://json-schema.org/draft/2020-12/schema"
+    },
+    "$id": {
+      "type": "string",
+      "const": "https://licoarc.com/spec/v1/schemas/foundation-registry.schema.json"
+    },
+    "registryVersion": {
+      "type": "string",
+      "const": "licoarc.foundation-registry.v1"
+    },
+    "lifecycle": {
+      "type": "string",
+      "enum": [
+        "Candidate",
+        "Published",
+        "Retired"
+      ]
+    },
+    "scope": {
+      "type": "string",
+      "const": "representation-lifecycle-identifier-bound-foundation"
+    },
+    "boundsPath": {
+      "type": "string",
+      "const": "spec/v1/foundation/bounds.json"
+    },
+    "identifiersPath": {
+      "type": "string",
+      "const": "spec/v1/foundation/identifiers.json"
+    },
+    "lifecyclePath": {
+      "type": "string",
+      "const": "spec/v1/foundation/lifecycle.json"
+    },
+    "labelsPath": {
+      "type": "string",
+      "const": "spec/v1/foundation/labels.json"
+    },
+    "representationPath": {
+      "type": "string",
+      "const": "spec/v1/foundation/representation.json"
+    },
+    "governanceSchemaPath": {
+      "type": "string",
+      "const": "spec/v1/schemas/protocol-line-manifest.schema.json"
+    },
+    "runtimeCddlPath": {
+      "type": "string",
+      "const": "spec/v1/foundation/runtime.cddl"
+    },
     "parserPolicy": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["governance", "runtime", "failClosed"],
+      "required": [
+        "governance",
+        "runtime",
+        "failClosed"
+      ],
       "properties": {
-        "governance": { "type": "string", "const": "restricted-jcs-and-closed-json-schema" },
-        "runtime": { "type": "string", "const": "deterministic-cbor-and-closed-cddl" },
-        "failClosed": { "type": "boolean", "const": true }
+        "governance": {
+          "type": "string",
+          "const": "restricted-jcs-and-closed-json-schema"
+        },
+        "runtime": {
+          "type": "string",
+          "const": "deterministic-cbor-and-closed-cddl"
+        },
+        "failClosed": {
+          "type": "boolean",
+          "const": true
+        }
       }
     },
     "sourceClosure": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["manifestPath", "roots", "undeclaredFiles", "symlinks", "sortedPaths"],
+      "required": [
+        "manifestPath",
+        "roots",
+        "undeclaredFiles",
+        "symlinks",
+        "sortedPaths"
+      ],
       "properties": {
-        "manifestPath": { "type": "string", "const": "spec/v1/foundation/source-manifest.json" },
+        "manifestPath": {
+          "type": "string",
+          "const": "spec/v1/foundation/source-manifest.json"
+        },
         "roots": {
           "type": "array",
           "minItems": 3,
           "maxItems": 3,
           "uniqueItems": true,
-          "items": { "type": "string", "enum": ["spec/v1/foundation", "spec/v1/schemas", "conformance/v1/foundation"] }
+          "items": {
+            "type": "string",
+            "enum": [
+              "spec/v1/foundation",
+              "spec/v1/schemas",
+              "conformance/v1/foundation"
+            ]
+          }
         },
-        "undeclaredFiles": { "type": "string", "const": "reject" },
-        "symlinks": { "type": "string", "const": "reject" },
-        "sortedPaths": { "type": "string", "const": "required" }
+        "undeclaredFiles": {
+          "type": "string",
+          "const": "reject"
+        },
+        "symlinks": {
+          "type": "string",
+          "const": "reject"
+        },
+        "sortedPaths": {
+          "type": "string",
+          "const": "required"
+        }
       }
     }
   }

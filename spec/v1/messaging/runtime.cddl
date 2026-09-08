@@ -3,38 +3,38 @@
 ; The comments are normative where CDDL cannot express cross-field arithmetic.
 
 generic-message = {
-  0 => bstr,                         ; messageId, exactly 16 octets
-  1 => uint,                         ; kind, 0..5
-  ? 2 => bstr,                       ; relatesTo, exactly 16 octets when present
-  3 => uint,                         ; contentType, uint32
-  4 => bstr,                         ; payload, 0..MAX_PAYLOAD_BYTES octets
-  ? 5 => { * uint => bstr },         ; extensions, bounded application namespace
-  ? 6 => [* uint],                   ; critical, bounded and closed in v1
-  ? 7 => uint,                       ; chunkIndex, streamChunk only
+  0 => bstr .size 16,                ; messageId
+  1 => uint .le 5,                   ; kind
+  ? 2 => bstr .size 16,              ; relatesTo when present
+  3 => uint .le 4294967295,          ; contentType, uint32
+  4 => bstr .size (0..262144),       ; payload
+  ? 5 => { 0*16 (65536..2147483647) => bstr .size (0..4096) },
+  ? 6 => [0*16 uint .le 4294967295], ; critical, sorted unique and closed in v1
+  ? 7 => uint .le 9007199254740991,  ; chunkIndex, streamChunk only
   ? 8 => bool,                       ; chunkFinal, non-attachment stream only
-  ? 9 => bstr,                       ; attachmentId, attachment streamChunk only
-  ? 10 => [* attachment-descriptor]
+  ? 9 => bstr .size 16,              ; attachmentId, attachment streamChunk only
+  ? 10 => [0*8 attachment-descriptor]
 }
 
 attachment-descriptor = {
-  0 => bstr,                         ; attachmentId, exactly 16 octets
-  1 => uint,                         ; mediaType, uint32
-  2 => uint,                         ; byteLength, 0..MAX_ATTACHMENT_BYTES
-  3 => bstr                          ; contentDigest, exactly 32 octets
+  0 => bstr .size 16,                ; attachmentId
+  1 => uint .le 4294967295,          ; mediaType, uint32
+  2 => uint .le 8388608,             ; byteLength
+  3 => bstr .size 32                 ; contentDigest
 }
 
 chunk-range = {
-  0 => uint,                         ; inclusive startChunkIndex
-  1 => uint                          ; exclusive endChunkIndexExclusive
+  0 => uint .le 128,                 ; inclusive startChunkIndex
+  1 => uint .le 128                  ; exclusive endChunkIndexExclusive
 }
 
 attachment-receive-state = {
-  0 => bstr,                         ; attachmentId, exactly 16 octets
-  1 => [* chunk-range],              ; 0..MAX_REQUEST_RANGES, bounded coverage
-  2 => uint,                         ; stateUpdate, starts at zero
-  3 => uint,                         ; outcome, 0 pending, 1 complete, 2 cancelled, 3 failed
-  ? 4 => uint,                       ; failureCode, required for cancelled/failed
-  5 => uint                          ; recoveryRound, starts at zero
+  0 => bstr .size 16,                ; attachmentId
+  1 => [0*32 chunk-range],           ; bounded, canonical and <=128 indexes
+  2 => uint .le 64,                  ; stateUpdate, starts at zero
+  3 => uint .le 3,                   ; outcome, 0 pending, 1 complete, 2 cancelled, 3 failed
+  ? 4 => uint .le 14,                ; failureCode, required for cancelled/failed
+  5 => uint .le 32                   ; recoveryRound, starts at zero
 }
 
 ; Generic Message class values:

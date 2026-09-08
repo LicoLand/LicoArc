@@ -1,0 +1,149 @@
+{
+  "evidenceVersion": "licoarc.tamarin-proof-evidence.v1",
+  "prover": "tamarin-prover-1.12.0",
+  "sourceCommit": "82780bbaf3328a45f624ddb41e51bf75425f851c",
+  "platform": "linux/amd64",
+  "imageDigest": "sha256:bd9b8170e061a092d06ed20fa61ed53bf7af9e9495fc9672324c259d017fe8d2",
+  "baseImageDigest": "sha256:5ae3c39ebd15e229dcedd5cee596b2497182493d41ff162e824ba13fc1b2b867",
+  "runtimeContractDigest": "9ae49fc24302791f3b42d74cadba1eec33725741b4071adc5a385060326c7431",
+  "generatedTheoryDigest": "c38e42d13b3b6bbed8542b224b8ae98fe48e1998f0496468a0433686acc3b2c7",
+  "provedTheoryDigest": "b774342d5becb3d9b6cd36b86776d83fe36b263b219a13f8bfb58d8c57cab61b",
+  "formalBindingsDigest": "490d3dca1f4200589018966beae81ff6a75705f00135a13970cc549e708089a3",
+  "semanticSourceDigest": "de14dc7ceb33da6ae41283268684da78c3a5448d74058752050761ded6904adc",
+  "execution": {
+    "locale": "C.UTF-8",
+    "heuristic": "s",
+    "threads": 1,
+    "network": "none",
+    "arguments": [
+      "--prove",
+      "--heuristic=s",
+      "+RTS",
+      "-N1",
+      "-RTS"
+    ]
+  },
+  "replay": "verified",
+  "lemmas": [
+    {
+      "name": "executable_honest_handshake",
+      "result": "verified"
+    },
+    {
+      "name": "executable_ratchet_evolution",
+      "result": "verified"
+    },
+    {
+      "name": "executable_user_authority_and_route",
+      "result": "verified"
+    },
+    {
+      "name": "executable_authority_transitions_and_possession",
+      "result": "verified"
+    },
+    {
+      "name": "executable_sibling_session_binding",
+      "result": "verified"
+    },
+    {
+      "name": "executable_authenticated_confirmation_and_metadata",
+      "result": "verified"
+    },
+    {
+      "name": "executable_resource_bounds",
+      "result": "verified"
+    },
+    {
+      "name": "SEC_001_hybrid_ake_key_secrecy",
+      "result": "verified"
+    },
+    {
+      "name": "SEC_002_mutual_endpoint_authentication",
+      "result": "verified"
+    },
+    {
+      "name": "SEC_003_classical_pq_hybrid_robustness",
+      "result": "verified"
+    },
+    {
+      "name": "SEC_004_unknown_key_share_resistance",
+      "result": "verified"
+    },
+    {
+      "name": "SEC_005_key_compromise_impersonation_boundary",
+      "result": "verified"
+    },
+    {
+      "name": "SEC_006_protocol_line_content_binding",
+      "result": "verified"
+    },
+    {
+      "name": "SEC_007_protection_profile_content_binding",
+      "result": "verified"
+    },
+    {
+      "name": "SEC_008_session_independence",
+      "result": "verified"
+    },
+    {
+      "name": "SEC_009_initial_forward_secrecy",
+      "result": "verified"
+    },
+    {
+      "name": "SEC_010_double_ratchet_forward_secrecy",
+      "result": "verified"
+    },
+    {
+      "name": "SEC_011_double_ratchet_post_compromise_recovery",
+      "result": "verified"
+    },
+    {
+      "name": "SEC_012_replay_resistance",
+      "result": "verified"
+    },
+    {
+      "name": "SEC_013_state_rollback_resistance",
+      "result": "verified"
+    },
+    {
+      "name": "SEC_014_self_certifying_user_authority",
+      "result": "verified"
+    },
+    {
+      "name": "SEC_015_route_migration_safety",
+      "result": "verified"
+    },
+    {
+      "name": "SEC_016_management_and_recovery_transition_authorization",
+      "result": "verified"
+    },
+    {
+      "name": "SEC_017_endpoint_possession_authorization",
+      "result": "verified"
+    },
+    {
+      "name": "SEC_018_acyclic_sibling_endpoint_authority_session_binding",
+      "result": "verified"
+    },
+    {
+      "name": "SEC_019_authenticated_confirmation_finality",
+      "result": "verified"
+    },
+    {
+      "name": "SEC_020_fail_closed_resource_bounds",
+      "result": "verified"
+    },
+    {
+      "name": "SEC_021_pairwise_record_confidentiality",
+      "result": "verified"
+    },
+    {
+      "name": "SEC_022_pairwise_record_authentication_and_integrity",
+      "result": "verified"
+    },
+    {
+      "name": "SEC_023_sender_metadata_confidentiality",
+      "result": "verified"
+    }
+  ]
+}

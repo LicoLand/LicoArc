@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/v1/identity/signature-profiles.json",
+  "registryVersion": "licoarc.identity-signature-profiles.v1",
+  "lifecycle": "Candidate",
+  "profileIdConstruction": {
+    "digest": "SHA-256",
+    "domain": "LP-SIGNATURE-PROFILE\u0000",
+    "projection": "restricted-jcs of semanticDefinition",
+    "excluded": [
+      "profileId",
+      "registryVersion",
+      "lifecycle",
+      "source paths",
+      "implementation Provider data"
+    ]
+  },
+  "profiles": [
+    {
+      "name": "Ed25519",
+      "profileId": "176b912b9547ca9c47ace10f881457ab63fcd493ef953616f5859e76b830fd60",
+      "semanticDefinition": {
+        "canonicalPublicKeyEncoding": "raw-rfc8032-32-octet-compressed-edwards-y-with-x-sign-bit",
+        "canonicalSignatureEncoding": "raw-rfc8032-R-32-octets-followed-by-canonical-S-32-octets",
+        "name": "Ed25519",
+        "publicKeyBytes": 32,
+        "signatureBytes": 64,
+        "verification": "strict-rfc8032-plain-ed25519-sha512"
+      },
+      "canonicalValidation": [
+        "public-key-length-exactly-32",
+        "signature-length-exactly-64",
+        "public-key-and-R-encodings-canonical",
+        "S-less-than-group-order",
+        "reject-small-order-or-invalid-points",
+        "reject-ed25519ctx-ed25519ph-or-alternate-encoding"
+      ]
+    },
+    {
+      "name": "ML-DSA-65",
+      "profileId": "427e788bb9aed076acc2fb5a94715d14e694ec5fbc846ac52c8c7e118a6b1b8f",
+      "semanticDefinition": {
+        "canonicalPublicKeyEncoding": "raw-fips-204-ml-dsa-65-encoded-public-key",
+        "canonicalSignatureEncoding": "raw-fips-204-ml-dsa-65-encoded-signature",
+        "name": "ML-DSA-65",
+        "publicKeyBytes": 1952,
+        "signatureBytes": 3309,
+        "verification": "fips-204-ml-dsa-65-pure-no-prehash"
+      },
+      "canonicalValidation": [
+        "public-key-length-exactly-1952",
+        "signature-length-exactly-3309",
+        "fips-204-ml-dsa-65-decoding-and-coefficient-bounds",
+        "reject-dilithium-alias-prehash-or-alternate-encoding"
+      ]
+    }
+  ],
+  "unknownProfilePolicy": "reject-before-parsing-key-or-signature",
+  "privateMaterial": "forbidden"
+}

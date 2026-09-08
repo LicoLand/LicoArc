@@ -10,7 +10,7 @@ specification; normative field semantics come only from the Field Registry.
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-station-id` |
 | Decision status | `DECIDED` |
-| Definition status | `PARTIAL` |
+| Definition status | `SPECIFIED` |
 | Existing authority | [`FIELD-REGISTRY.md`](../../../spec/FIELD-REGISTRY.md) |
 | Current conclusion | `StationDescriptor.stationId` is a mandatory `DIGEST256`, derived from Station identity material and independent of host, URI, Provider, and every Endpoint; both StationAffiliation and Route resolve it through `stationDescriptorDigest` instead of duplicating it. |
 
@@ -35,9 +35,10 @@ without coupling Endpoint identity to a location or Provider.
 
 ## Field model and trade-offs
 
-The value is exactly the mandatory 32-octet content digest defined by the
-registry. Its derivation input and canonical processing remain specification
-work; this page does not add either.
+The value is exactly the mandatory 32-octet identity digest defined by the
+registry. The Identity descriptor contract fixes its domain-separated random
+identity-seed derivation and immutable processing; this page does not add a
+second rule.
 
 ## Visibility and trust
 
@@ -57,4 +58,4 @@ specification. Normative semantics come only from `FIELD-REGISTRY.md`.
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. Only the scope recorded by this decision and its linked normative authorities is defined; any remaining normative ambiguity requires a successor decision before entering the protocol definition.
+The definition status is `SPECIFIED`. The Canonical Field Registry and linked machine-readable authorities close this record’s exact active semantics.

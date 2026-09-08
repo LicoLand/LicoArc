@@ -10,12 +10,12 @@ This record preserves decision history. Normative semantics come only from the
 | Decision track | `MESSAGE-FIELD` |
 | Decision ID | `FLD-station-affiliation-signature` |
 | Decision status | `DECIDED` |
-| Definition status | `PARTIAL` |
+| Definition status | `SPECIFIED` |
 | Candidate spellings | guarantor signature, affiliation attestation, home Station proof |
 | Candidate layer | AFFILIATE result and protected StationAffiliation |
 | Observer set | Affiliating Endpoint and Station; peer Endpoints under protection |
 | Existing authority | [Canonical Field Registry](../../../spec/FIELD-REGISTRY.md) |
-| Authority targets | Future AFFILIATE and affiliation schemas, signature profile, and corpus |
+| Authority targets | The HTTPS Transport AFFILIATE schema, Identity affiliation schema, signature profiles, and conformance corpora |
 | Predecessor or successor | None |
 | Current conclusion | A Station signs only an opaque identity-bound commitment, exact descriptor, and finite affiliation expiry; it never signs or owns Endpoint identity state. |
 
@@ -108,4 +108,4 @@ Old-Station approval remains forbidden so A cannot veto migration to B.
 
 ## Definition evidence
 
-The definition status is `PARTIAL`. Only the scope recorded by this decision and its linked normative authorities is defined; any remaining normative ambiguity requires a successor decision before entering the protocol definition.
+The definition status is `SPECIFIED`. The Canonical Field Registry and linked machine-readable authorities close this record’s exact active semantics.

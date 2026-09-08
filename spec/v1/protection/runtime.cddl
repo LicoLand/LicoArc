@@ -1,0 +1,66 @@
+; Lico Arc Core v1 Pairwise Protection runtime grammar.
+; Every map is deterministic, definite-length CBOR with shortest integers.
+; Unknown/duplicate labels, indefinite lengths, non-shortest integers and
+; trailing bytes are terminal invalid-encoding.
+
+prekey-bundle = {
+  0 => bstr .size 32,                ; Protocol Line content identity
+  1 => bstr .size 32,                ; Protection Profile content identity
+  2 => bstr .size 32,                ; responder identity-state digest
+  3 => bstr .size 32,                ; Ed25519 identity key reference
+  4 => bstr .size 32,                ; ML-DSA-65 identity key reference
+  5 => 1..9007199254740991,          ; globally monotonic pair sequence
+  6 => bstr .size 32,                ; raw X25519 one-time public key
+  7 => bstr .size 1184,              ; final ML-KEM-768 encapsulation key
+  8 => 0..9007199254740991,          ; Unix-second validFrom, inclusive
+  9 => 1..9007199254740991,          ; Unix-second validUntil, exclusive
+  10 => bstr .size 64,               ; strict plain Ed25519 signature
+  11 => bstr .size 3309              ; exact ML-DSA-65 signature
+}
+
+first-packet = {
+  0 => bstr .size 32,                ; fixed Protocol Line identity
+  1 => bstr .size 32,                ; fixed Profile identity
+  2 => bstr .size 32,                ; initiator identity-state digest
+  3 => bstr .size 32,                ; initiator user-authority-state digest
+  4 => bstr .size 32,                ; responder identity-state digest
+  5 => bstr .size 32,                ; responder user-authority-state digest
+  6 => prekey-bundle,
+  7 => bstr .size 32,                ; fresh raw X25519 initiator public key
+  8 => bstr .size 1088,             ; final ML-KEM-768 ciphertext
+  9 => bstr .size 32,               ; initiator Ed25519 key reference
+  10 => bstr .size 32,               ; initiator ML-DSA-65 key reference
+  11 => bstr .size 64,               ; strict plain Ed25519 signature
+  12 => bstr .size 3309,             ; exact ML-DSA-65 signature
+  13 => bstr .size 36,               ; encrypted fixed client-confirm bytes
+  14 => bstr .size 16                ; ChaCha20-Poly1305 tag
+}
+
+session-accept = {
+  0 => bstr .size 32,                ; complete first-packet transcript digest
+  1 => bstr .size 32,                ; committed session-context digest
+  2 => bstr .size 32,                ; initiator user-authority-state digest
+  3 => bstr .size 32,                ; responder identity-state digest
+  4 => bstr .size 32,                ; responder user-authority-state digest
+  5 => 1..9007199254740991,          ; redeemed pair sequence
+  6 => bstr .size 32                 ; full HMAC-SHA-256, never truncated
+}
+
+ratchet-header = {
+  0 => bstr .size 32,                ; current raw X25519 ratchet public key
+  1 => 0..4294967295,                ; PN, previous sending-chain length
+  2 => 0..4294967295                 ; N, current message number
+}
+
+protected-record = (
+  ratchet-header-bytes: bstr .size (40..48),
+  ciphertext: bstr .size (0..524224),
+  tag: bstr .size 16
+)
+
+; On the wire, protected-record is the complete canonical ratchet-header CBOR
+; bytes followed directly by ciphertext and the 16-byte tag; the tuple above
+; describes framing components rather than an enclosing CBOR array.
+; AAD is the exact record-AAD domain, 32-byte session-context digest, and the
+; complete ratchet-header bytes. A Profile selector, session ID, nonce or
+; algorithm choice is never repeated in an established record.

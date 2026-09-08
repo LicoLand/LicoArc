@@ -4,9 +4,35 @@
   "manifestVersion": "licoarc.protection-source-manifest.v1",
   "contractVersion": "licoarc.pairwise-protection.v1",
   "lifecycle": "Candidate",
-  "definitionStatus": "PARTIAL",
+  "definitionStatus": "COMPLETE",
   "sessionEligible": false,
-  "sources": ["spec/protection-profiles.json", "spec/v1/protection/registry.json", "spec/v1/protection/source-manifest.json"],
+  "sourceRoots": [
+    "conformance/v1/protection",
+    "spec/v1/protection"
+  ],
+  "sources": [
+    "conformance/v1/protection/cases.json",
+    "conformance/v1/protection/manifest.json",
+    "spec/v1/protection/algorithms.json",
+    "spec/v1/protection/bounds.json",
+    "spec/v1/protection/domains.json",
+    "spec/v1/protection/failures.json",
+    "spec/v1/protection/handshake.schema.json",
+    "spec/v1/protection/labels.json",
+    "spec/v1/protection/prekey-bundle.schema.json",
+    "spec/v1/protection/profile.json",
+    "spec/v1/protection/record.schema.json",
+    "spec/v1/protection/registry.json",
+    "spec/v1/protection/runtime.cddl",
+    "spec/v1/protection/session-accept.schema.json",
+    "spec/v1/protection/state.json"
+  ],
+  "sorted": true,
+  "semanticSourcesComplete": true,
+  "aggregateAdmissionPending": true,
   "undeclaredFiles": "reject",
-  "symlinks": "reject"
+  "symlinks": "reject",
+  "additionalSources": [
+    "spec/protection-profiles.json"
+  ]
 }

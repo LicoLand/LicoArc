@@ -28,17 +28,22 @@ The Protected Intent digest covers the stable logical Message identity,
 application idempotency input, exact User Payload bytes, content type, and
 peer-visible meaning (plus any complete attachment or Group projection
 commitment). A retry with the same Route reuses the exact protected packet
-bytes. A Route change may re-protect the same Protected Intent and produces a
-new transport packet, but it cannot create a second authorization or effect.
-Restart restores the serializable snapshot before processing new input; it
-never discovers a retired state root and never resets a retry, Route,
-confirmation, attachment, or evidence lifetime bound.
+bytes retained in the committed outbox snapshot. A Route change may re-protect
+the same Protected Intent and produces a new transport packet, but it cannot
+create a second authorization or effect. Send atomically commits the advanced
+snapshot and exact retry packet before emission. Restart restores that
+complete monotonic snapshot before processing new input; a lower generation
+is `state-rollback` and emits no packet or effect. Restart never discovers a
+retired state root and never resets a retry, Route, confirmation, attachment,
+or retained-state bound.
 
-Each event is validated against the complete immutable current snapshot before
-one atomic new snapshot is committed. The tagged states are data, not a class
+Each metadata-only event names the expected snapshot generation and is
+validated against the complete immutable current snapshot before one atomic
+compare-and-commit. An event never embeds protected packet bytes. The tagged
+states are data, not a class
 hierarchy: outbox states are `created`, `in-flight`, `ambiguous`, `accepted`,
 `completed`, `cancelled`, and `failed`; inbox states additionally include
-`new`, `pending-evidence`, and `effect-pending`. A same-identity, same-bytes
+`new`, `accepted`, and `effect-pending`. A same-identity, same-bytes
 replay is idempotent. The same identity with a different protected meaning is
 `intent-conflict` and cannot mutate state.
 
@@ -49,6 +54,14 @@ replacement, Station migration, and replay do not refresh any fixed counter
 or window. Bounds include retry transmissions, Route migrations, transitions,
 pending messages, terminal tombstones, and persisted snapshot bytes.
 
+Accounting is disjoint and exact: a canonical Protected Intent is at most
+262,558 octets; event metadata is at most 4,294 octets; one retained protected
+packet is at most 524,288 octets; and snapshot metadata is at most 4,589
+octets, for a total snapshot maximum of 528,877 octets. A confirmation is at
+most 607 octets. Bounded counters, high-water values, and tombstones replace
+event histories. Rejected, stale, conflicting, replayed, or over-bound input
+returns the byte-identical pre-state and emits no packet or application effect.
+
 ## Endpoint confirmation and effects
 
 One Endpoint confirmation has one stage, one outcome, one optional failure
@@ -58,13 +71,16 @@ confirmation identities. A duplicate confirmation is accepted only when its
 canonical bytes match. A different result for one confirmation identity is a
 terminal `confirmation-conflict`.
 
-The stages remain distinct:
+The closed confirmation stages are exactly:
 
-1. Station Received is a non-authoritative hint.
-2. Endpoint Accepted is a checkpoint-covered Endpoint statement that the
-   protected record was durably accepted and deduplicated.
-3. Effect Completed is a checkpoint-covered Endpoint statement that the
-   caller-owned local effect completed.
+1. Endpoint Accepted: the exact protected authorized Endpoint confirmation
+   reports that the record was accepted and deduplicated.
+2. Effect Completed: the exact protected authorized Endpoint confirmation has
+   outcome `succeeded` and binds the caller-owned local result digest.
+
+The closed confirmation outcomes are `succeeded`, `rejected`, and `failed`.
+Pending work and transport ambiguity are local/transport states, never Endpoint
+confirmation values. Station Received remains only a non-authoritative hint.
 
 Endpoint Accepted and Effect Completed cannot be advanced from a Station
 receipt, queue possession, lease, timestamp, or Station signature. The
@@ -76,20 +92,21 @@ it supplies the idempotency input and records the Endpoint result.
 Attachment recovery reuses Generic Messaging's fixed chunk grid and bounded
 Receive State. A non-empty range request is selective recovery feedback; a
 successful chunk does not generate a routine confirmation. Empty ranges are
-valid only after exact length and whole-content digest verification, and the
-final empty verified state requires an Evidence Checkpoint before attachment
-completion advances. Completion, cancellation, and failure are absorbing.
+valid only after exact length and whole-content digest verification. Attachment
+completion additionally requires the matching authenticated Endpoint
+confirmation. Completion, cancellation, and failure are absorbing.
 
 Group delivery keeps one stable projection identity per recipient. Results are
 sorted by recipient Endpoint reference and are independently `pending`,
 `delivered`, `rejected`, or `failed`. The aggregate is `complete` only when all
 members are delivered, `failed` only when every member is terminal and none is
-delivered, and `partial` otherwise. Station results cannot supply a member's
-Endpoint evidence or change the aggregate.
+delivered, and `partial` otherwise. A member result is authorized only by the
+matching protected Endpoint confirmation; Station results cannot change the
+aggregate.
 
 ## Conformance and privacy
 
-The focused suite [`tests/reliable-evidence.test.mjs`](../../tests/reliable-evidence.test.mjs)
+The focused suite [`tests/reliable-confirmations.test.mjs`](../../tests/reliable-confirmations.test.mjs)
 checks deterministic CBOR, exact stable intent and packet retry behavior,
 Route migration, application idempotency conflict, confirmations, attachment
 recovery, Group partial failure, restart snapshots, typed terminal outcomes,
