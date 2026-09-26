@@ -1,0 +1,52 @@
+name: Definition check
+
+on:
+  push:
+    branches: ["feature/nostr-layered-v1-20260926", "nightly"]
+  pull_request:
+    branches: ["nightly"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: definition-check-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  definition:
+    name: Definition and artifact consistency
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: "24.15.0"
+      - name: Record exact review source
+        run: |
+          mkdir -p /tmp/licoarc-review
+          git rev-parse HEAD > /tmp/licoarc-review/commit.txt
+          git archive --format=tar HEAD > /tmp/licoarc-review/source.tar
+          sha256sum /tmp/licoarc-review/source.tar > /tmp/licoarc-review/source.sha256
+      - name: Retain review source
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: definition-source
+          path: /tmp/licoarc-review/
+          retention-days: 7
+      - name: Verify definition and generated artifact
+        run: |
+          set -o pipefail
+          npm run verify 2>&1 | tee /tmp/definition-check.log
+      - name: Retain verification log
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: definition-check-log
+          path: /tmp/definition-check.log
+          if-no-files-found: ignore
+          retention-days: 7
