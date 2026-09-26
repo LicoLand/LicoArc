@@ -10,3 +10,6 @@ docs/reports/
 docs/references/
 docs/field-decisions/industry-facts.md
 cache/
+
+# Pinned website renderer checkout and generated previews
+.docs-renderer/
