@@ -22,7 +22,8 @@
     "verify": "npm run artifacts:check && npm test && npm run conformance:check",
     "test:interop": "node --test tests/nostr-interoperability.test.mjs",
     "definition:refresh": "node tools/refresh-definition.mjs && npm run artifacts:generate",
-    "test:continuity": "node --test tests/durable-continuity.test.mjs tests/live-capabilities.test.mjs tests/confirmation-continuity.test.mjs"
+    "test:continuity": "node --test tests/durable-continuity.test.mjs tests/live-capabilities.test.mjs tests/confirmation-continuity.test.mjs",
+    "docs:check": "node tools/check-docs.mjs"
   },
   "engines": {
     "node": ">=24.15.0 <25"

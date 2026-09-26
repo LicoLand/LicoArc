@@ -8,7 +8,7 @@
 | Decision ID | `FLD-prekey-bundle-v1` |
 | Decision status | `DECIDED` |
 | Definition status | `SPECIFIED` |
-| Existing authority | [Pairwise Protection architecture](../../../ARCHITECTURE.md#3-pairwise-protection) and the [Canonical Field Registry](../../../spec/FIELD-REGISTRY.md) |
+| Existing authority | [Pairwise Protection architecture](../../../ARCHITECTURE.md#identity-and-security) and the [Canonical Field Registry](../../../spec/FIELD-REGISTRY.md) |
 | Authority targets | `spec/FIELD-REGISTRY.md`, `spec/v1/protection/`, `spec/v1/protection/registry.json`, `formal/`, `conformance/v1/protection/`, and `spec/v1/manifest.json` |
 | Predecessor or successor | Supersedes the withdrawn Candidate bundle scope; no retired bundle bytes or fallback are preserved. |
 | Current conclusion | One canonical responder bundle carries one paired X25519 and ML-KEM-768 one-time prekey under the exact line/Profile and dual identity-signing bindings. Both prekeys are redeemed atomically with the session; no component or reusable-prekey fallback exists. |

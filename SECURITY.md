@@ -66,4 +66,4 @@ or compatibility copy is permitted. Nostr keys do not become native Endpoint
 keys; capabilities do not authorize execution. Native ideal-model proofs do
 not establish the new Nostr parser, framing or account binding. Definition
 conformance is not real-client interoperability or a composite security audit.
-See [the binding threat boundary](spec/interop/v1/protocol.md#8-security-and-evidence-boundary).
+See [the binding threat boundary](spec/interop/v1/protocol.md#6-path-selection-and-evidence).

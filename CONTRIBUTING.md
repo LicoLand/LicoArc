@@ -46,6 +46,15 @@ reviewable, and privacy-safe standards.
   cost for unpublished bytes do not justify retention; if necessity is not
   demonstrated, decide removal through the field lifecycle.
 
+## Documentation-only changes
+
+For a typo, explanation, navigation or rendering correction, edit the owning source
+and follow [Documentation maintenance](docs/maintainers/documentation.md).
+No algorithm/field decision is required unless protocol meaning actually changes.
+Public chapters are generated from this repository; do not hand-edit website HTML.
+Run `npm run docs:check` and inspect the documentation preview. Design review does
+not require an implementation or a deployment.
+
 ## Workflow
 
 1. Create a branch with a meaningful prefix such as `feature/` or `fix/`.

@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased — documentation publishing
+
+- Organize reading paths, normative references and maintainer/decision history.
+- Generate the public website from tracked Markdown and specification sources.
+- Centralize navigation and remove duplicated website lifecycle claims.
+- Keep protocol bytes, V1 identifiers and package version unchanged in this editorial change.
+
 ## Unreleased — V1 continuity revision
 
 - Separate core, adapters, durable work and live capability state. No protocol TTL for accepted work.
