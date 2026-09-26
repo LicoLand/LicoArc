@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/interop/v1/collaboration.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "conversation",
+    "capability",
+    "payload"
+  ],
+  "properties": {
+    "capability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "definition"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9.-]{0,126}[a-z0-9]$",
+          "minLength": 2,
+          "maxLength": 128
+        },
+        "definition": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "payload": {
+      "type": "string",
+      "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$",
+      "maxLength": 349528
+    },
+    "conversation": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{32}$"
+    }
+  }
+}

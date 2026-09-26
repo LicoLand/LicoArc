@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+import test from 'node:test';
+import { validateCatalogue } from '../tools/check-docs.mjs';
+const root=resolve(import.meta.dirname,'..');
+const read=()=>JSON.parse(readFileSync(resolve(root,'docs/catalog.json'),'utf8'));
+test('documentation catalogue resolves source and generated references',()=>assert.ok(validateCatalogue(read(),root).length>20));
+test('duplicate navigation cannot silently shadow a source',()=>{const c=read();c.navigation.push({'Duplicate':'README.md'});assert.throws(()=>validateCatalogue(c,root),/duplicate/);});
+test('catalogue paths cannot escape the source repository',()=>{const c=read();c.navigation.push({'Escape':'../private.md'});assert.throws(()=>validateCatalogue(c,root),/unsafe/);});
+test('redirects must target a published navigation entry',()=>{const c=read();c.redirects['/old/']='missing.md';assert.throws(()=>validateCatalogue(c,root),/redirect/);});
+test('editorial source index does not hardcode current maturity',()=>{const s=readFileSync(resolve(root,'spec/README.md'),'utf8');assert.doesNotMatch(s,/definition status is `COMPLETE`/);assert.match(s,/renders the same values automatically/);});

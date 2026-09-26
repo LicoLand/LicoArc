@@ -30,14 +30,15 @@ evidence.
 
 The former baseline and custom high-assurance protection constructions are
 retired. The Core v1 Hybrid AKE and classic Double Ratchet decisions are
-decided and specified through their exact Profile, formal bindings,
-conformance corpus, and Candidate Protocol Line authority.
+decided, with revised source semantics and formal admission reopened.
+Prior proofs retain their original source identity and are not current evidence.
 
 | Decision ID | Question | Decision status | Definition | Record |
 | --- | --- | --- | --- | --- |
+| `ALG-durable-continuity-live-capabilities` | Durable offline work and live capabilities | `DECIDED` | `SPECIFIED` | [durable-continuity-live-capabilities.md](durable-continuity-live-capabilities.md) |
 | `ALG-baseline-pairwise-protection-suite` | Which complete mandatory composition satisfies the normative resource contract? | `RETIRED` | `NOT-SPECIFIED` | [baseline-pairwise-protection-suite.md](baseline-pairwise-protection-suite.md) |
-| `ALG-core-v1-double-ratchet` | Which exact Double Ratchet construction closes Core v1? | `DECIDED` | `SPECIFIED` | [core-v1-double-ratchet.md](core-v1-double-ratchet.md) |
-| `ALG-core-v1-hybrid-ake` | Which exact Hybrid AKE construction closes Core v1? | `DECIDED` | `SPECIFIED` | [core-v1-hybrid-ake.md](core-v1-hybrid-ake.md) |
+| `ALG-core-v1-double-ratchet` | Which exact Double Ratchet construction closes Core v1? | `DECIDED` | `PARTIAL` | [core-v1-double-ratchet.md](core-v1-double-ratchet.md) |
+| `ALG-core-v1-hybrid-ake` | Which exact Hybrid AKE construction closes Core v1? | `DECIDED` | `PARTIAL` | [core-v1-hybrid-ake.md](core-v1-hybrid-ake.md) |
 | `ALG-high-assurance-pairwise-protection-suite` | Which complete high-assurance composition satisfies its normative resource contract? | `RETIRED` | `NOT-SPECIFIED` | [high-assurance-pairwise-protection-suite.md](high-assurance-pairwise-protection-suite.md) |
 | `ALG-protocol-line-admission` | How is the sole initial V1 content authenticated without version policy? | `DECIDED` | `SPECIFIED` | [protocol-line-admission.md](protocol-line-admission.md) |
 | `ALG-protected-size-bucket-schedule` | Should a mandatory profile add a deterministic size-bucket schedule? | `REJECTED` | `NOT-SPECIFIED` | [protected-size-bucket-schedule.md](protected-size-bucket-schedule.md) |
@@ -45,3 +46,5 @@ conformance corpus, and Candidate Protocol Line authority.
 | `ALG-user-authority-state` | How does one user-authorized, recoverable Endpoint authority chain evolve without infrastructure authority? | `DECIDED` | `SPECIFIED` | [user-authority-state.md](user-authority-state.md) |
 | `ALG-confirmation-driven-finality` | Which authenticated Endpoint confirmation advances reliable finality without transferable checkpoints? | `DECIDED` | `SPECIFIED` | [confirmation-driven-finality.md](confirmation-driven-finality.md) |
 | `ALG-group-state-evolution` | Which bounded deterministic procedure evolves protected Group membership state? | `DECIDED` | `SPECIFIED` | [group-state-evolution.md](group-state-evolution.md) |
+
+| `ALG-nostr-layered-interoperability` | How can standard Nostr clients interoperate while open enhancements retain native Endpoint authority? | `DECIDED` | `SPECIFIED` | [nostr-layered-interoperability.md](nostr-layered-interoperability.md) |

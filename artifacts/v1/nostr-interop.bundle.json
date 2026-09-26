@@ -1,0 +1,1475 @@
+{
+  "artifactVersion": "licoarc.nostr-interop.bundle.v1",
+  "generation": 1,
+  "bindingId": "ca1d16a9edaa934abdf91e92dc3e0ee970f813b664e4519eb90d3eb0ca49606a",
+  "sources": {
+    "conformance/interop/v1/cases.json": {
+      "version": "licoarc.nostr-cases.v1",
+      "cases": [
+        {
+          "id": "classify-text",
+          "operation": "classify",
+          "requirement": "classification",
+          "input": {
+            "rumor": {
+              "pubkey": "1111111111111111111111111111111111111111111111111111111111111111",
+              "kind": 14,
+              "tags": [
+                [
+                  "p",
+                  "2222222222222222222222222222222222222222222222222222222222222222"
+                ]
+              ],
+              "content": "{\"command\":\"never execute chat\"}"
+            },
+            "context": {
+              "outerAuthenticated": true,
+              "sender": "1111111111111111111111111111111111111111111111111111111111111111",
+              "recipient": "2222222222222222222222222222222222222222222222222222222222222222"
+            }
+          },
+          "expected": "standard-text"
+        },
+        {
+          "id": "classify-extension",
+          "operation": "classify",
+          "requirement": "classification",
+          "input": {
+            "rumor": {
+              "pubkey": "1111111111111111111111111111111111111111111111111111111111111111",
+              "kind": 44900,
+              "tags": [
+                [
+                  "t",
+                  "licoarc.v1"
+                ],
+                [
+                  "p",
+                  "2222222222222222222222222222222222222222222222222222222222222222"
+                ]
+              ],
+              "content": "{\"command\":\"never execute chat\"}"
+            },
+            "context": {
+              "outerAuthenticated": true,
+              "sender": "1111111111111111111111111111111111111111111111111111111111111111",
+              "recipient": "2222222222222222222222222222222222222222222222222222222222222222"
+            }
+          },
+          "expected": "enhanced-carrier"
+        },
+        {
+          "id": "classify-unknown-kind",
+          "operation": "classify",
+          "requirement": "classification",
+          "input": {
+            "rumor": {
+              "pubkey": "1111111111111111111111111111111111111111111111111111111111111111",
+              "kind": 30078,
+              "tags": [
+                [
+                  "t",
+                  "licoarc.v1"
+                ],
+                [
+                  "p",
+                  "2222222222222222222222222222222222222222222222222222222222222222"
+                ]
+              ],
+              "content": "{\"command\":\"never execute chat\"}"
+            },
+            "context": {
+              "outerAuthenticated": true,
+              "sender": "1111111111111111111111111111111111111111111111111111111111111111",
+              "recipient": "2222222222222222222222222222222222222222222222222222222222222222"
+            }
+          },
+          "expected": "unsupported"
+        },
+        {
+          "id": "classify-wrong-namespace",
+          "operation": "classify",
+          "requirement": "classification",
+          "input": {
+            "rumor": {
+              "pubkey": "1111111111111111111111111111111111111111111111111111111111111111",
+              "kind": 44900,
+              "tags": [
+                [
+                  "t",
+                  "other.v1"
+                ],
+                [
+                  "p",
+                  "2222222222222222222222222222222222222222222222222222222222222222"
+                ]
+              ],
+              "content": "{\"command\":\"never execute chat\"}"
+            },
+            "context": {
+              "outerAuthenticated": true,
+              "sender": "1111111111111111111111111111111111111111111111111111111111111111",
+              "recipient": "2222222222222222222222222222222222222222222222222222222222222222"
+            }
+          },
+          "expected": "unsupported"
+        },
+        {
+          "id": "classify-extra-tag",
+          "operation": "classify",
+          "requirement": "classification",
+          "input": {
+            "rumor": {
+              "pubkey": "1111111111111111111111111111111111111111111111111111111111111111",
+              "kind": 44900,
+              "tags": [
+                [
+                  "t",
+                  "licoarc.v1"
+                ],
+                [
+                  "p",
+                  "2222222222222222222222222222222222222222222222222222222222222222"
+                ],
+                [
+                  "x",
+                  "unexpected"
+                ]
+              ],
+              "content": "{\"command\":\"never execute chat\"}"
+            },
+            "context": {
+              "outerAuthenticated": true,
+              "sender": "1111111111111111111111111111111111111111111111111111111111111111",
+              "recipient": "2222222222222222222222222222222222222222222222222222222222222222"
+            }
+          },
+          "expected": "unsupported"
+        },
+        {
+          "id": "classify-author-substitution",
+          "operation": "classify",
+          "requirement": "classification",
+          "input": {
+            "rumor": {
+              "pubkey": "4444444444444444444444444444444444444444444444444444444444444444",
+              "kind": 44900,
+              "tags": [
+                [
+                  "t",
+                  "licoarc.v1"
+                ],
+                [
+                  "p",
+                  "2222222222222222222222222222222222222222222222222222222222222222"
+                ]
+              ],
+              "content": "{\"command\":\"never execute chat\"}"
+            },
+            "context": {
+              "outerAuthenticated": true,
+              "sender": "1111111111111111111111111111111111111111111111111111111111111111",
+              "recipient": "2222222222222222222222222222222222222222222222222222222222222222"
+            }
+          },
+          "expected": "seal-rumor-author-mismatch"
+        },
+        {
+          "id": "classify-recipient-substitution",
+          "operation": "classify",
+          "requirement": "classification",
+          "input": {
+            "rumor": {
+              "pubkey": "1111111111111111111111111111111111111111111111111111111111111111",
+              "kind": 44900,
+              "tags": [
+                [
+                  "t",
+                  "licoarc.v1"
+                ],
+                [
+                  "p",
+                  "4444444444444444444444444444444444444444444444444444444444444444"
+                ]
+              ],
+              "content": "{\"command\":\"never execute chat\"}"
+            },
+            "context": {
+              "outerAuthenticated": true,
+              "sender": "1111111111111111111111111111111111111111111111111111111111111111",
+              "recipient": "2222222222222222222222222222222222222222222222222222222222222222"
+            }
+          },
+          "expected": "recipient-mismatch"
+        },
+        {
+          "id": "classify-unverified-outer",
+          "operation": "classify",
+          "requirement": "classification",
+          "input": {
+            "rumor": {
+              "pubkey": "1111111111111111111111111111111111111111111111111111111111111111",
+              "kind": 44900,
+              "tags": [
+                [
+                  "t",
+                  "licoarc.v1"
+                ],
+                [
+                  "p",
+                  "2222222222222222222222222222222222222222222222222222222222222222"
+                ]
+              ],
+              "content": "{\"command\":\"never execute chat\"}"
+            },
+            "context": {
+              "outerAuthenticated": false,
+              "sender": "1111111111111111111111111111111111111111111111111111111111111111",
+              "recipient": "2222222222222222222222222222222222222222222222222222222222222222"
+            }
+          },
+          "expected": "outer-authentication-required"
+        },
+        {
+          "id": "route-plain",
+          "operation": "route",
+          "requirement": "explicit-path",
+          "input": {
+            "requirement": "standard-chat",
+            "readiness": {
+              "sendApproved": true,
+              "inboxAvailable": true,
+              "enhancedSession": false,
+              "bindingReady": false,
+              "common": [
+                {
+                  "id": "org.example.review",
+                  "definition": "4444444444444444444444444444444444444444444444444444444444444444"
+                }
+              ]
+            },
+            "capability": null
+          },
+          "expected": "nostr-dm"
+        },
+        {
+          "id": "route-enhanced",
+          "operation": "route",
+          "requirement": "explicit-path",
+          "input": {
+            "requirement": "enhanced-message",
+            "readiness": {
+              "sendApproved": true,
+              "inboxAvailable": true,
+              "enhancedSession": true,
+              "bindingReady": true,
+              "common": [
+                {
+                  "id": "org.example.review",
+                  "definition": "4444444444444444444444444444444444444444444444444444444444444444"
+                }
+              ]
+            },
+            "capability": null
+          },
+          "expected": "licoarc-enhanced"
+        },
+        {
+          "id": "route-collaboration",
+          "operation": "route",
+          "requirement": "explicit-path",
+          "input": {
+            "requirement": "enhanced-collaboration",
+            "readiness": {
+              "sendApproved": true,
+              "inboxAvailable": true,
+              "enhancedSession": true,
+              "bindingReady": true,
+              "common": [
+                {
+                  "id": "org.example.review",
+                  "definition": "4444444444444444444444444444444444444444444444444444444444444444"
+                }
+              ]
+            },
+            "capability": {
+              "id": "org.example.review",
+              "definition": "4444444444444444444444444444444444444444444444444444444444444444"
+            }
+          },
+          "expected": "licoarc-enhanced"
+        },
+        {
+          "id": "route-no-inbox",
+          "operation": "route",
+          "requirement": "explicit-path",
+          "input": {
+            "requirement": "standard-chat",
+            "readiness": {
+              "sendApproved": true,
+              "inboxAvailable": false,
+              "enhancedSession": true,
+              "bindingReady": true,
+              "common": [
+                {
+                  "id": "org.example.review",
+                  "definition": "4444444444444444444444444444444444444444444444444444444444444444"
+                }
+              ]
+            },
+            "capability": null
+          },
+          "expected": "recipient-inbox-unavailable"
+        },
+        {
+          "id": "route-no-session",
+          "operation": "route",
+          "requirement": "explicit-path",
+          "input": {
+            "requirement": "enhanced-message",
+            "readiness": {
+              "sendApproved": true,
+              "inboxAvailable": true,
+              "enhancedSession": false,
+              "bindingReady": true,
+              "common": [
+                {
+                  "id": "org.example.review",
+                  "definition": "4444444444444444444444444444444444444444444444444444444444444444"
+                }
+              ]
+            },
+            "capability": null
+          },
+          "expected": "enhanced-unavailable"
+        },
+        {
+          "id": "route-no-binding",
+          "operation": "route",
+          "requirement": "explicit-path",
+          "input": {
+            "requirement": "enhanced-message",
+            "readiness": {
+              "sendApproved": true,
+              "inboxAvailable": true,
+              "enhancedSession": true,
+              "bindingReady": false,
+              "common": [
+                {
+                  "id": "org.example.review",
+                  "definition": "4444444444444444444444444444444444444444444444444444444444444444"
+                }
+              ]
+            },
+            "capability": null
+          },
+          "expected": "binding-required"
+        },
+        {
+          "id": "route-no-capability",
+          "operation": "route",
+          "requirement": "explicit-path",
+          "input": {
+            "requirement": "enhanced-collaboration",
+            "readiness": {
+              "sendApproved": true,
+              "inboxAvailable": true,
+              "enhancedSession": true,
+              "bindingReady": true,
+              "common": []
+            },
+            "capability": {
+              "id": "org.example.review",
+              "definition": "4444444444444444444444444444444444444444444444444444444444444444"
+            }
+          },
+          "expected": "capability-unavailable"
+        },
+        {
+          "id": "route-definition-mismatch",
+          "operation": "route",
+          "requirement": "explicit-path",
+          "input": {
+            "requirement": "enhanced-collaboration",
+            "readiness": {
+              "sendApproved": true,
+              "inboxAvailable": true,
+              "enhancedSession": true,
+              "bindingReady": true,
+              "common": [
+                {
+                  "id": "org.example.review",
+                  "definition": "4444444444444444444444444444444444444444444444444444444444444444"
+                }
+              ]
+            },
+            "capability": {
+              "id": "org.example.review",
+              "definition": "5555555555555555555555555555555555555555555555555555555555555555"
+            }
+          },
+          "expected": "capability-unavailable"
+        },
+        {
+          "id": "route-no-send-consent",
+          "operation": "route",
+          "requirement": "explicit-path",
+          "input": {
+            "requirement": "standard-chat",
+            "readiness": {
+              "sendApproved": false,
+              "inboxAvailable": true,
+              "enhancedSession": true,
+              "bindingReady": true,
+              "common": [
+                {
+                  "id": "org.example.review",
+                  "definition": "4444444444444444444444444444444444444444444444444444444444444444"
+                }
+              ]
+            },
+            "capability": null
+          },
+          "expected": "send-approval-required"
+        },
+        {
+          "id": "route-unknown",
+          "operation": "route",
+          "requirement": "explicit-path",
+          "input": {
+            "requirement": "auto",
+            "readiness": {
+              "sendApproved": true,
+              "inboxAvailable": true,
+              "enhancedSession": true,
+              "bindingReady": true,
+              "common": [
+                {
+                  "id": "org.example.review",
+                  "definition": "4444444444444444444444444444444444444444444444444444444444444444"
+                }
+              ]
+            },
+            "capability": null
+          },
+          "expected": "unknown-requirement"
+        },
+        {
+          "id": "route-relay-receipt",
+          "operation": "route",
+          "requirement": "explicit-path",
+          "input": {
+            "requirement": "enhanced-message",
+            "readiness": {
+              "sendApproved": true,
+              "inboxAvailable": true,
+              "enhancedSession": false,
+              "bindingReady": true,
+              "common": [
+                {
+                  "id": "org.example.review",
+                  "definition": "4444444444444444444444444444444444444444444444444444444444444444"
+                }
+              ],
+              "relayOK": true
+            },
+            "capability": null
+          },
+          "expected": "enhanced-unavailable"
+        },
+        {
+          "id": "binding-match",
+          "operation": "binding",
+          "requirement": "account-binding",
+          "input": {
+            "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"channel\":\"33333333333333333333333333333333\",\"conversation\":\"88888888888888888888888888888888\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
+            "expectedContext": {
+              "binding": "4444444444444444444444444444444444444444444444444444444444444444",
+              "channel": "33333333333333333333333333333333",
+              "initiator": "1111111111111111111111111111111111111111111111111111111111111111",
+              "responder": "2222222222222222222222222222222222222222222222222222222222222222",
+              "session": "6666666666666666666666666666666666666666666666666666666666666666",
+              "outerAuthenticated": true,
+              "sender": "1111111111111111111111111111111111111111111111111111111111111111",
+              "recipient": "2222222222222222222222222222222222222222222222222222222222222222",
+              "role": "initiator",
+              "nativeAuthenticated": true,
+              "authorityAdmitted": true,
+              "peerApproved": true,
+              "deviceRevoked": false,
+              "conversation": "88888888888888888888888888888888"
+            }
+          },
+          "expected": "valid"
+        },
+        {
+          "id": "binding-wrong-binding",
+          "operation": "binding",
+          "requirement": "account-binding",
+          "input": {
+            "text": "{\"binding\":\"9999999999999999999999999999999999999999999999999999999999999999\",\"channel\":\"33333333333333333333333333333333\",\"conversation\":\"88888888888888888888888888888888\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
+            "expectedContext": {
+              "binding": "4444444444444444444444444444444444444444444444444444444444444444",
+              "channel": "33333333333333333333333333333333",
+              "initiator": "1111111111111111111111111111111111111111111111111111111111111111",
+              "responder": "2222222222222222222222222222222222222222222222222222222222222222",
+              "session": "6666666666666666666666666666666666666666666666666666666666666666",
+              "outerAuthenticated": true,
+              "sender": "1111111111111111111111111111111111111111111111111111111111111111",
+              "recipient": "2222222222222222222222222222222222222222222222222222222222222222",
+              "role": "initiator",
+              "nativeAuthenticated": true,
+              "authorityAdmitted": true,
+              "peerApproved": true,
+              "deviceRevoked": false,
+              "conversation": "88888888888888888888888888888888"
+            }
+          },
+          "expected": "binding-binding-mismatch"
+        },
+        {
+          "id": "binding-wrong-channel",
+          "operation": "binding",
+          "requirement": "account-binding",
+          "input": {
+            "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"channel\":\"99999999999999999999999999999999\",\"conversation\":\"88888888888888888888888888888888\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
+            "expectedContext": {
+              "binding": "4444444444444444444444444444444444444444444444444444444444444444",
+              "channel": "33333333333333333333333333333333",
+              "initiator": "1111111111111111111111111111111111111111111111111111111111111111",
+              "responder": "2222222222222222222222222222222222222222222222222222222222222222",
+              "session": "6666666666666666666666666666666666666666666666666666666666666666",
+              "outerAuthenticated": true,
+              "sender": "1111111111111111111111111111111111111111111111111111111111111111",
+              "recipient": "2222222222222222222222222222222222222222222222222222222222222222",
+              "role": "initiator",
+              "nativeAuthenticated": true,
+              "authorityAdmitted": true,
+              "peerApproved": true,
+              "deviceRevoked": false,
+              "conversation": "88888888888888888888888888888888"
+            }
+          },
+          "expected": "binding-channel-mismatch"
+        },
+        {
+          "id": "binding-wrong-initiator",
+          "operation": "binding",
+          "requirement": "account-binding",
+          "input": {
+            "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"channel\":\"33333333333333333333333333333333\",\"conversation\":\"88888888888888888888888888888888\",\"initiator\":\"9999999999999999999999999999999999999999999999999999999999999999\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
+            "expectedContext": {
+              "binding": "4444444444444444444444444444444444444444444444444444444444444444",
+              "channel": "33333333333333333333333333333333",
+              "initiator": "1111111111111111111111111111111111111111111111111111111111111111",
+              "responder": "2222222222222222222222222222222222222222222222222222222222222222",
+              "session": "6666666666666666666666666666666666666666666666666666666666666666",
+              "outerAuthenticated": true,
+              "sender": "1111111111111111111111111111111111111111111111111111111111111111",
+              "recipient": "2222222222222222222222222222222222222222222222222222222222222222",
+              "role": "initiator",
+              "nativeAuthenticated": true,
+              "authorityAdmitted": true,
+              "peerApproved": true,
+              "deviceRevoked": false,
+              "conversation": "88888888888888888888888888888888"
+            }
+          },
+          "expected": "binding-initiator-mismatch"
+        },
+        {
+          "id": "binding-wrong-responder",
+          "operation": "binding",
+          "requirement": "account-binding",
+          "input": {
+            "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"channel\":\"33333333333333333333333333333333\",\"conversation\":\"88888888888888888888888888888888\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"9999999999999999999999999999999999999999999999999999999999999999\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
+            "expectedContext": {
+              "binding": "4444444444444444444444444444444444444444444444444444444444444444",
+              "channel": "33333333333333333333333333333333",
+              "initiator": "1111111111111111111111111111111111111111111111111111111111111111",
+              "responder": "2222222222222222222222222222222222222222222222222222222222222222",
+              "session": "6666666666666666666666666666666666666666666666666666666666666666",
+              "outerAuthenticated": true,
+              "sender": "1111111111111111111111111111111111111111111111111111111111111111",
+              "recipient": "2222222222222222222222222222222222222222222222222222222222222222",
+              "role": "initiator",
+              "nativeAuthenticated": true,
+              "authorityAdmitted": true,
+              "peerApproved": true,
+              "deviceRevoked": false,
+              "conversation": "88888888888888888888888888888888"
+            }
+          },
+          "expected": "binding-responder-mismatch"
+        },
+        {
+          "id": "binding-wrong-session",
+          "operation": "binding",
+          "requirement": "account-binding",
+          "input": {
+            "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"channel\":\"33333333333333333333333333333333\",\"conversation\":\"88888888888888888888888888888888\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"9999999999999999999999999999999999999999999999999999999999999999\"}",
+            "expectedContext": {
+              "binding": "4444444444444444444444444444444444444444444444444444444444444444",
+              "channel": "33333333333333333333333333333333",
+              "initiator": "1111111111111111111111111111111111111111111111111111111111111111",
+              "responder": "2222222222222222222222222222222222222222222222222222222222222222",
+              "session": "6666666666666666666666666666666666666666666666666666666666666666",
+              "outerAuthenticated": true,
+              "sender": "1111111111111111111111111111111111111111111111111111111111111111",
+              "recipient": "2222222222222222222222222222222222222222222222222222222222222222",
+              "role": "initiator",
+              "nativeAuthenticated": true,
+              "authorityAdmitted": true,
+              "peerApproved": true,
+              "deviceRevoked": false,
+              "conversation": "88888888888888888888888888888888"
+            }
+          },
+          "expected": "binding-session-mismatch"
+        },
+        {
+          "id": "binding-no-native",
+          "operation": "binding",
+          "requirement": "account-binding",
+          "input": {
+            "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"channel\":\"33333333333333333333333333333333\",\"conversation\":\"88888888888888888888888888888888\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
+            "expectedContext": {
+              "binding": "4444444444444444444444444444444444444444444444444444444444444444",
+              "channel": "33333333333333333333333333333333",
+              "initiator": "1111111111111111111111111111111111111111111111111111111111111111",
+              "responder": "2222222222222222222222222222222222222222222222222222222222222222",
+              "session": "6666666666666666666666666666666666666666666666666666666666666666",
+              "outerAuthenticated": true,
+              "sender": "1111111111111111111111111111111111111111111111111111111111111111",
+              "recipient": "2222222222222222222222222222222222222222222222222222222222222222",
+              "role": "initiator",
+              "nativeAuthenticated": false,
+              "authorityAdmitted": true,
+              "peerApproved": true,
+              "deviceRevoked": false,
+              "conversation": "88888888888888888888888888888888"
+            }
+          },
+          "expected": "native-admission-required"
+        },
+        {
+          "id": "binding-no-authority",
+          "operation": "binding",
+          "requirement": "account-binding",
+          "input": {
+            "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"channel\":\"33333333333333333333333333333333\",\"conversation\":\"88888888888888888888888888888888\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
+            "expectedContext": {
+              "binding": "4444444444444444444444444444444444444444444444444444444444444444",
+              "channel": "33333333333333333333333333333333",
+              "initiator": "1111111111111111111111111111111111111111111111111111111111111111",
+              "responder": "2222222222222222222222222222222222222222222222222222222222222222",
+              "session": "6666666666666666666666666666666666666666666666666666666666666666",
+              "outerAuthenticated": true,
+              "sender": "1111111111111111111111111111111111111111111111111111111111111111",
+              "recipient": "2222222222222222222222222222222222222222222222222222222222222222",
+              "role": "initiator",
+              "nativeAuthenticated": true,
+              "authorityAdmitted": false,
+              "peerApproved": true,
+              "deviceRevoked": false,
+              "conversation": "88888888888888888888888888888888"
+            }
+          },
+          "expected": "native-admission-required"
+        },
+        {
+          "id": "binding-no-trust",
+          "operation": "binding",
+          "requirement": "account-binding",
+          "input": {
+            "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"channel\":\"33333333333333333333333333333333\",\"conversation\":\"88888888888888888888888888888888\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
+            "expectedContext": {
+              "binding": "4444444444444444444444444444444444444444444444444444444444444444",
+              "channel": "33333333333333333333333333333333",
+              "initiator": "1111111111111111111111111111111111111111111111111111111111111111",
+              "responder": "2222222222222222222222222222222222222222222222222222222222222222",
+              "session": "6666666666666666666666666666666666666666666666666666666666666666",
+              "outerAuthenticated": true,
+              "sender": "1111111111111111111111111111111111111111111111111111111111111111",
+              "recipient": "2222222222222222222222222222222222222222222222222222222222222222",
+              "role": "initiator",
+              "nativeAuthenticated": true,
+              "authorityAdmitted": true,
+              "peerApproved": false,
+              "deviceRevoked": false,
+              "conversation": "88888888888888888888888888888888"
+            }
+          },
+          "expected": "peer-authorization-required"
+        },
+        {
+          "id": "binding-revoked",
+          "operation": "binding",
+          "requirement": "account-binding",
+          "input": {
+            "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"channel\":\"33333333333333333333333333333333\",\"conversation\":\"88888888888888888888888888888888\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
+            "expectedContext": {
+              "binding": "4444444444444444444444444444444444444444444444444444444444444444",
+              "channel": "33333333333333333333333333333333",
+              "initiator": "1111111111111111111111111111111111111111111111111111111111111111",
+              "responder": "2222222222222222222222222222222222222222222222222222222222222222",
+              "session": "6666666666666666666666666666666666666666666666666666666666666666",
+              "outerAuthenticated": true,
+              "sender": "1111111111111111111111111111111111111111111111111111111111111111",
+              "recipient": "2222222222222222222222222222222222222222222222222222222222222222",
+              "role": "initiator",
+              "nativeAuthenticated": true,
+              "authorityAdmitted": true,
+              "peerApproved": true,
+              "deviceRevoked": true,
+              "conversation": "88888888888888888888888888888888"
+            }
+          },
+          "expected": "peer-authorization-required"
+        },
+        {
+          "id": "binding-role-mismatch",
+          "operation": "binding",
+          "requirement": "account-binding",
+          "input": {
+            "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"channel\":\"33333333333333333333333333333333\",\"conversation\":\"88888888888888888888888888888888\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
+            "expectedContext": {
+              "binding": "4444444444444444444444444444444444444444444444444444444444444444",
+              "channel": "33333333333333333333333333333333",
+              "initiator": "1111111111111111111111111111111111111111111111111111111111111111",
+              "responder": "2222222222222222222222222222222222222222222222222222222222222222",
+              "session": "6666666666666666666666666666666666666666666666666666666666666666",
+              "outerAuthenticated": true,
+              "sender": "1111111111111111111111111111111111111111111111111111111111111111",
+              "recipient": "2222222222222222222222222222222222222222222222222222222222222222",
+              "role": "responder",
+              "nativeAuthenticated": true,
+              "authorityAdmitted": true,
+              "peerApproved": true,
+              "deviceRevoked": false,
+              "conversation": "88888888888888888888888888888888"
+            }
+          },
+          "expected": "binding-account-role-mismatch"
+        },
+        {
+          "id": "binding-duplicate-cap-id",
+          "operation": "intersection",
+          "requirement": "capabilities",
+          "input": {
+            "left": [
+              {
+                "id": "org.example.review",
+                "definition": "4444444444444444444444444444444444444444444444444444444444444444"
+              },
+              {
+                "id": "org.example.review",
+                "definition": "4444444444444444444444444444444444444444444444444444444444444444"
+              }
+            ],
+            "right": []
+          },
+          "expected": "capability-order-or-duplicate"
+        },
+        {
+          "id": "envelope-valid",
+          "operation": "envelope",
+          "requirement": "framing",
+          "input": {
+            "text": "{\"channel\":\"33333333333333333333333333333333\",\"data\":\"YQ==\",\"digest\":\"ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb\",\"index\":0,\"length\":1,\"type\":\"protected-record\"}"
+          },
+          "expected": "valid"
+        },
+        {
+          "id": "envelope-noncanonical",
+          "operation": "envelope",
+          "requirement": "framing",
+          "input": {
+            "text": "{\n  \"channel\": \"33333333333333333333333333333333\",\n  \"type\": \"protected-record\",\n  \"digest\": \"ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb\",\n  \"length\": 1,\n  \"index\": 0,\n  \"data\": \"YQ==\"\n}"
+          },
+          "expected": "noncanonical-json"
+        },
+        {
+          "id": "envelope-pad-bits",
+          "operation": "envelope",
+          "requirement": "framing",
+          "input": {
+            "text": "{\"channel\":\"33333333333333333333333333333333\",\"data\":\"YR==\",\"digest\":\"ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb\",\"index\":0,\"length\":1,\"type\":\"protected-record\"}"
+          },
+          "expected": "noncanonical-base64"
+        },
+        {
+          "id": "envelope-bad-index",
+          "operation": "envelope",
+          "requirement": "framing",
+          "input": {
+            "text": "{\"channel\":\"33333333333333333333333333333333\",\"data\":\"YQ==\",\"digest\":\"ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb\",\"index\":1,\"length\":1,\"type\":\"protected-record\"}"
+          },
+          "expected": "fragment-index"
+        },
+        {
+          "id": "envelope-geometry",
+          "operation": "envelope",
+          "requirement": "framing",
+          "input": {
+            "text": "{\"channel\":\"33333333333333333333333333333333\",\"data\":\"YQ==\",\"digest\":\"ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb\",\"index\":0,\"length\":2,\"type\":\"protected-record\"}"
+          },
+          "expected": "fragment-geometry"
+        },
+        {
+          "id": "capabilities-exact",
+          "operation": "intersection",
+          "requirement": "capabilities",
+          "input": {
+            "left": [
+              {
+                "id": "org.example.review",
+                "definition": "4444444444444444444444444444444444444444444444444444444444444444"
+              }
+            ],
+            "right": [
+              {
+                "id": "org.example.review",
+                "definition": "4444444444444444444444444444444444444444444444444444444444444444"
+              }
+            ]
+          },
+          "expected": [
+            {
+              "id": "org.example.review",
+              "definition": "4444444444444444444444444444444444444444444444444444444444444444"
+            }
+          ]
+        },
+        {
+          "id": "capabilities-not-brand",
+          "operation": "intersection",
+          "requirement": "capabilities",
+          "input": {
+            "left": [
+              {
+                "id": "org.example.review",
+                "definition": "4444444444444444444444444444444444444444444444444444444444444444"
+              }
+            ],
+            "right": [
+              {
+                "id": "org.example.review",
+                "definition": "7777777777777777777777777777777777777777777777777777777777777777"
+              }
+            ]
+          },
+          "expected": []
+        },
+        {
+          "id": "capabilities-empty",
+          "operation": "intersection",
+          "requirement": "capabilities",
+          "input": {
+            "left": [],
+            "right": [
+              {
+                "id": "org.example.review",
+                "definition": "4444444444444444444444444444444444444444444444444444444444444444"
+              }
+            ]
+          },
+          "expected": []
+        },
+        {
+          "id": "collaboration-valid",
+          "operation": "collaboration",
+          "requirement": "execution",
+          "input": {
+            "text": "{\"capability\":{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"},\"conversation\":\"88888888888888888888888888888888\",\"payload\":\"aGVsbG8=\"}",
+            "context": {
+              "bindingReady": true,
+              "common": [
+                {
+                  "id": "org.example.review",
+                  "definition": "4444444444444444444444444444444444444444444444444444444444444444"
+                }
+              ],
+              "executionApproved": true,
+              "conversation": "88888888888888888888888888888888",
+              "nativeAuthenticated": true,
+              "audienceApproved": true
+            }
+          },
+          "expected": "68656c6c6f"
+        },
+        {
+          "id": "collaboration-no-approval",
+          "operation": "collaboration",
+          "requirement": "execution",
+          "input": {
+            "text": "{\"capability\":{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"},\"conversation\":\"88888888888888888888888888888888\",\"payload\":\"aGVsbG8=\"}",
+            "context": {
+              "bindingReady": true,
+              "common": [
+                {
+                  "id": "org.example.review",
+                  "definition": "4444444444444444444444444444444444444444444444444444444444444444"
+                }
+              ],
+              "executionApproved": false,
+              "conversation": "88888888888888888888888888888888",
+              "nativeAuthenticated": true,
+              "audienceApproved": true
+            }
+          },
+          "expected": "68656c6c6f"
+        },
+        {
+          "id": "collaboration-no-binding",
+          "operation": "collaboration",
+          "requirement": "execution",
+          "input": {
+            "text": "{\"capability\":{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"},\"conversation\":\"88888888888888888888888888888888\",\"payload\":\"aGVsbG8=\"}",
+            "context": {
+              "bindingReady": false,
+              "common": [
+                {
+                  "id": "org.example.review",
+                  "definition": "4444444444444444444444444444444444444444444444444444444444444444"
+                }
+              ],
+              "executionApproved": true,
+              "conversation": "88888888888888888888888888888888",
+              "nativeAuthenticated": true,
+              "audienceApproved": true
+            }
+          },
+          "expected": "binding-required"
+        },
+        {
+          "id": "collaboration-wrong-agreement",
+          "operation": "collaboration",
+          "requirement": "execution",
+          "input": {
+            "text": "{\"capability\":{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"},\"conversation\":\"88888888888888888888888888888888\",\"payload\":\"aGVsbG8=\"}",
+            "context": {
+              "bindingReady": true,
+              "common": [
+                {
+                  "id": "org.example.review",
+                  "definition": "4444444444444444444444444444444444444444444444444444444444444444"
+                }
+              ],
+              "executionApproved": true,
+              "conversation": "77777777777777777777777777777777",
+              "nativeAuthenticated": true,
+              "audienceApproved": true
+            }
+          },
+          "expected": "conversation-mismatch"
+        },
+        {
+          "id": "collaboration-unknown-capability",
+          "operation": "collaboration",
+          "requirement": "execution",
+          "input": {
+            "text": "{\"capability\":{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"},\"conversation\":\"88888888888888888888888888888888\",\"payload\":\"aGVsbG8=\"}",
+            "context": {
+              "bindingReady": true,
+              "common": [],
+              "executionApproved": true,
+              "conversation": "88888888888888888888888888888888",
+              "nativeAuthenticated": true,
+              "audienceApproved": true
+            }
+          },
+          "expected": "68656c6c6f"
+        },
+        {
+          "id": "roundtrip-1",
+          "operation": "roundtrip",
+          "requirement": "reassembly",
+          "input": {
+            "length": 1,
+            "byte": 53,
+            "channel": "33333333333333333333333333333333",
+            "type": "protected-record",
+            "context": {
+              "outerAuthenticated": true,
+              "sender": "1111111111111111111111111111111111111111111111111111111111111111",
+              "recipient": "2222222222222222222222222222222222222222222222222222222222222222"
+            }
+          },
+          "expected": "complete"
+        },
+        {
+          "id": "roundtrip-8192",
+          "operation": "roundtrip",
+          "requirement": "reassembly",
+          "input": {
+            "length": 8192,
+            "byte": 53,
+            "channel": "33333333333333333333333333333333",
+            "type": "protected-record",
+            "context": {
+              "outerAuthenticated": true,
+              "sender": "1111111111111111111111111111111111111111111111111111111111111111",
+              "recipient": "2222222222222222222222222222222222222222222222222222222222222222"
+            }
+          },
+          "expected": "complete"
+        },
+        {
+          "id": "roundtrip-8193",
+          "operation": "roundtrip",
+          "requirement": "reassembly",
+          "input": {
+            "length": 8193,
+            "byte": 53,
+            "channel": "33333333333333333333333333333333",
+            "type": "protected-record",
+            "context": {
+              "outerAuthenticated": true,
+              "sender": "1111111111111111111111111111111111111111111111111111111111111111",
+              "recipient": "2222222222222222222222222222222222222222222222222222222222222222"
+            }
+          },
+          "expected": "complete"
+        },
+        {
+          "id": "roundtrip-524288",
+          "operation": "roundtrip",
+          "requirement": "reassembly",
+          "input": {
+            "length": 524288,
+            "byte": 53,
+            "channel": "33333333333333333333333333333333",
+            "type": "protected-record",
+            "context": {
+              "outerAuthenticated": true,
+              "sender": "1111111111111111111111111111111111111111111111111111111111111111",
+              "recipient": "2222222222222222222222222222222222222222222222222222222222222222"
+            }
+          },
+          "expected": "complete"
+        }
+      ]
+    },
+    "conformance/interop/v1/manifest.json": {
+      "version": "licoarc.nostr-conformance.v1",
+      "casesPath": "conformance/interop/v1/cases.json",
+      "nativeCryptoExecution": false,
+      "realClientExecution": false,
+      "caseIds": [
+        "binding-duplicate-cap-id",
+        "binding-match",
+        "binding-no-authority",
+        "binding-no-native",
+        "binding-no-trust",
+        "binding-revoked",
+        "binding-role-mismatch",
+        "binding-wrong-binding",
+        "binding-wrong-channel",
+        "binding-wrong-initiator",
+        "binding-wrong-responder",
+        "binding-wrong-session",
+        "capabilities-empty",
+        "capabilities-exact",
+        "capabilities-not-brand",
+        "classify-author-substitution",
+        "classify-extension",
+        "classify-extra-tag",
+        "classify-recipient-substitution",
+        "classify-text",
+        "classify-unknown-kind",
+        "classify-unverified-outer",
+        "classify-wrong-namespace",
+        "collaboration-no-approval",
+        "collaboration-no-binding",
+        "collaboration-unknown-capability",
+        "collaboration-valid",
+        "collaboration-wrong-agreement",
+        "envelope-bad-index",
+        "envelope-geometry",
+        "envelope-noncanonical",
+        "envelope-pad-bits",
+        "envelope-valid",
+        "roundtrip-1",
+        "roundtrip-524288",
+        "roundtrip-8192",
+        "roundtrip-8193",
+        "route-collaboration",
+        "route-definition-mismatch",
+        "route-enhanced",
+        "route-no-binding",
+        "route-no-capability",
+        "route-no-inbox",
+        "route-no-send-consent",
+        "route-no-session",
+        "route-plain",
+        "route-relay-receipt",
+        "route-unknown"
+      ],
+      "requirements": {
+        "classification": [
+          "classify-text",
+          "classify-extension",
+          "classify-unknown-kind",
+          "classify-wrong-namespace",
+          "classify-extra-tag",
+          "classify-author-substitution",
+          "classify-recipient-substitution",
+          "classify-unverified-outer"
+        ],
+        "explicit-path": [
+          "route-plain",
+          "route-enhanced",
+          "route-collaboration",
+          "route-no-inbox",
+          "route-no-session",
+          "route-no-binding",
+          "route-no-capability",
+          "route-definition-mismatch",
+          "route-no-send-consent",
+          "route-unknown",
+          "route-relay-receipt"
+        ],
+        "account-binding": [
+          "binding-match",
+          "binding-wrong-binding",
+          "binding-wrong-channel",
+          "binding-wrong-initiator",
+          "binding-wrong-responder",
+          "binding-wrong-session",
+          "binding-no-native",
+          "binding-no-authority",
+          "binding-no-trust",
+          "binding-revoked",
+          "binding-role-mismatch"
+        ],
+        "capabilities": [
+          "binding-duplicate-cap-id",
+          "capabilities-exact",
+          "capabilities-not-brand",
+          "capabilities-empty"
+        ],
+        "framing": [
+          "envelope-valid",
+          "envelope-noncanonical",
+          "envelope-pad-bits",
+          "envelope-bad-index",
+          "envelope-geometry"
+        ],
+        "execution": [
+          "collaboration-valid",
+          "collaboration-no-approval",
+          "collaboration-no-binding",
+          "collaboration-wrong-agreement",
+          "collaboration-unknown-capability"
+        ],
+        "reassembly": [
+          "roundtrip-1",
+          "roundtrip-8192",
+          "roundtrip-8193",
+          "roundtrip-524288"
+        ]
+      }
+    },
+    "spec/interop/v1/binding.schema.json": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://licoarc.com/spec/interop/v1/binding.schema.json",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "binding",
+        "channel",
+        "initiator",
+        "responder",
+        "session",
+        "conversation"
+      ],
+      "properties": {
+        "binding": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "channel": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{32}$"
+        },
+        "initiator": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "responder": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "session": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "conversation": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{32}$"
+        }
+      }
+    },
+    "spec/interop/v1/carrier.schema.json": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://licoarc.com/spec/interop/v1/carrier.schema.json",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "channel",
+        "type",
+        "digest",
+        "length",
+        "index",
+        "data"
+      ],
+      "properties": {
+        "channel": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{32}$"
+        },
+        "type": {
+          "enum": [
+            "endpoint-identity",
+            "user-authority",
+            "prekey-bundle",
+            "first-packet",
+            "session-accept",
+            "protected-record"
+          ]
+        },
+        "digest": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "length": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 524288
+        },
+        "index": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 63
+        },
+        "data": {
+          "type": "string",
+          "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$",
+          "maxLength": 10924
+        }
+      }
+    },
+    "spec/interop/v1/collaboration.schema.json": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://licoarc.com/spec/interop/v1/collaboration.schema.json",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "conversation",
+        "capability",
+        "payload"
+      ],
+      "properties": {
+        "capability": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "definition"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9.-]{0,126}[a-z0-9]$",
+              "minLength": 2,
+              "maxLength": 128
+            },
+            "definition": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          }
+        },
+        "payload": {
+          "type": "string",
+          "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$",
+          "maxLength": 349528
+        },
+        "conversation": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{32}$"
+        }
+      }
+    },
+    "spec/interop/v1/fields.md": "# V1 interoperability fields\n\nThis table is incorporated by the Canonical Field Registry. It covers only\nthe Nostr outer binding and ordinary protected application payloads. It adds\nno native cryptographic header, handshake field, algorithm selector, Station\nroster or native identity alias. The linked schemas and protocol.md supply\nexact encoding, validation, direction and failure semantics.\n\n| Scope / value | Necessity and placement | Definition decision |\n| --- | --- | --- |\n| Carrier `channel` | Private pending-attempt/session lookup; cannot be derived before a native session exists; not an authenticator. | FLD-nostr-carrier-envelope |\n| Carrier `type` | Select one existing native validator before untrusted bytes are parsed; no algorithm negotiation. | FLD-nostr-carrier-envelope |\n| Carrier `digest` | Identify the complete unchanged native object across ordered or reordered fragments and wrappers; not a business id. | FLD-nostr-carrier-envelope |\n| Carrier `length` | Reserve bounded reassembly memory and derive count/final fragment length; outer event length cannot describe the full object. | FLD-nostr-carrier-envelope |\n| Carrier `index` | Restore order independently of relay order/timestamps; fragment count is derived and omitted. | FLD-nostr-carrier-envelope |\n| Carrier `data` | Transport exact native octets through the required Nostr JSON string boundary. | FLD-nostr-carrier-envelope |\n| Binding `binding` | Bind the exact non-circular interoperability semantic identity; version labels alone are insufficient. | FLD-nostr-session-binding |\n| Binding `channel` | Authenticate the selected outer association inside native protection. | FLD-nostr-session-binding |\n| Binding `initiator`, `responder` | Bind both role-ordered Nostr accounts to the native session; no cross-curve key alias. | FLD-nostr-session-binding |\n| Binding `session` | Reject cross-session reassociation; the exact native context is the authenticated source. | FLD-nostr-session-binding |\n| Binding `conversation` | Associates the established peer scope with a persistent dialogue; tools are not part of identity binding. | FLD-continuity-and-capability-records |\n| Collaboration `conversation` | Keeps business payload meaning independent of session renewal and capability updates. | FLD-continuity-and-capability-records |\n| Collaboration `capability` (`id`, `definition`) | Select only an exact mutually supported definition without inferring semantics from a brand or version label. | FLD-nostr-collaboration-payload |\n| Collaboration `payload` | Preserve opaque application bytes; native message kind/id/relatesTo already supply request semantics. | FLD-nostr-collaboration-payload |\n\nThe namespace tag and dedicated kind are fixed binding constants, not an\nupstream allocation. Upstream event fields, seals, gift wraps, Nostr key types,\nand standard-chat fields are inherited unchanged from the pinned NIPs and\nare not redefined by this registry. External wire names never become native\nCBOR labels. All carrier values are inside NIP-59 protection; all binding and\ncollaboration values are additionally inside native protection. A parser\nrejects unknown fields, duplicates, invalid bounds or noncanonical strings\nwithout state advance. No product-command catalogue is allocated here.\n",
+    "spec/interop/v1/manifest.json": {
+      "manifestVersion": "licoarc.nostr-interoperability.v1",
+      "generation": 1,
+      "lifecycle": "Candidate",
+      "definitionStatus": "SPECIFIED",
+      "implementationStatus": "not-claimed",
+      "scope": "standard-nostr-private-messaging-and-open-licoarc-enhancements",
+      "upstream": {
+        "repository": "https://github.com/nostr-protocol/nips",
+        "commit": "b82211e96c6dad616ed2ea43034c1c621256b745",
+        "baselineNips": [
+          "01",
+          "17",
+          "44",
+          "59"
+        ],
+        "conditionalNips": [
+          "42"
+        ],
+        "optionalNips": [
+          "11",
+          "19",
+          "21"
+        ],
+        "encryptionVersion": 2,
+        "unassignedExtensionKind": 44900,
+        "upstreamAllocation": "not-claimed"
+      },
+      "paths": {
+        "nostr-dm": {
+          "requirements": [
+            "NIP-01",
+            "NIP-17",
+            "NIP-44-v2",
+            "NIP-59"
+          ],
+          "requiresLicoArc": false,
+          "requiresLicoUp": false,
+          "requiresFederationMembership": false,
+          "chatRumorKind": 14,
+          "inboxRelayListKind": 10050,
+          "wrapperKind": 1059,
+          "sealKind": 13
+        },
+        "licoarc-enhanced": {
+          "requirements": [
+            "nostr-carrier",
+            "licoarc.nostr-interoperability.v1",
+            "licoarc.endpoint-core.v1"
+          ],
+          "requiresLicoUp": false,
+          "requiresFederationMembership": false,
+          "nativeProtocolLineId": "4cb15568e99396ef2789aec1828ad9dc4878f1cd1a04e28fe3feaac4dc753f4c",
+          "nativeManifest": "spec/v1/manifest.json",
+          "innerRumorKind": 44900,
+          "namespaceTag": [
+            "t",
+            "licoarc.v1"
+          ],
+          "wrapperKind": 1059,
+          "sealKind": 13,
+          "requiresStandardChat": false
+        },
+        "nostr-carrier": {
+          "requirements": [
+            "NIP-01",
+            "NIP-44-v2",
+            "NIP-59"
+          ],
+          "requiresLicoUp": false,
+          "requiresFederationMembership": false
+        }
+      },
+      "carrier": {
+        "json": "restricted-canonical-json",
+        "payload": "padded-standard-base64",
+        "chunkBytes": 8192,
+        "objectTypes": [
+          "endpoint-identity",
+          "user-authority",
+          "prekey-bundle",
+          "first-packet",
+          "session-accept",
+          "protected-record"
+        ],
+        "kind14ControlDispatch": "forbidden",
+        "nip78Carrier": "forbidden",
+        "publicExtensionPublish": "forbidden",
+        "outerAuthentication": "nostr-only-not-endpoint-authority",
+        "innerAuthentication": "native-licoarc-only",
+        "retry": "same-attempt-identical-wraps; later-attempt-fresh-wrap-same-native-object-and-logical-intent",
+        "relayReceipt": "transport-hint-only",
+        "earlyApplication": "durable-native-inbox-until-binding-without-TTL"
+      },
+      "bounds": {
+        "MAX_OBJECT_BYTES": 524288,
+        "MAX_FRAGMENT_BYTES": 8192,
+        "MAX_FRAGMENTS": 64,
+        "MAX_ENVELOPE_BYTES": 16384,
+        "MAX_EVENT_BYTES": 65536,
+        "MAX_PENDING_OBJECTS_PER_PEER": 4,
+        "MAX_PENDING_OBJECTS": 16,
+        "MAX_REASSEMBLY_BYTES": 8388608,
+        "MAX_PENDING_CHANNELS": 32,
+        "MAX_ACTIVE_CHANNELS": 256,
+        "MAX_CAPABILITIES": 64,
+        "MAX_CAPABILITY_ID_BYTES": 128,
+        "MAX_BINDING_BYTES": 16384,
+        "MAX_APPLICATION_BYTES": 262144,
+        "MAX_PREBINDING_MESSAGES_PER_CHANNEL": 4,
+        "MAX_PREBINDING_MESSAGES": 16,
+        "MAX_PREBINDING_BYTES": 8388608
+      },
+      "applicationContentTypes": {
+        "sessionBinding": 1279328257,
+        "collaboration": 1279328258,
+        "capabilityState": 1279328259,
+        "capabilityPage": 1279328260
+      },
+      "routing": {
+        "selection": "per-message-explicit-security-requirement",
+        "automaticDowngrade": false,
+        "compatibilityCopy": false,
+        "discoveryProvesCapability": false,
+        "capabilityPlacement": "independent-live-protected-state; never-identity-binding",
+        "algorithmNegotiation": false,
+        "sameNostrKeyImpliesSameEndpoint": false,
+        "capabilitiesImplyApproval": false,
+        "requiresNostrForCore": false,
+        "capabilityUpdateRebind": false,
+        "messageTTL": null
+      },
+      "securityBoundary": {
+        "inheritsNativeProofs": false,
+        "nostrForwardSecrecyClaim": false,
+        "nostrPostQuantumClaim": false,
+        "maliciousRelayDeletionClaim": false,
+        "crossClientRuntimeInteropClaim": false
+      },
+      "semanticSources": [
+        "spec/interop/v1/binding.schema.json",
+        "spec/interop/v1/carrier.schema.json",
+        "spec/interop/v1/collaboration.schema.json",
+        "spec/interop/v1/fields.md",
+        "spec/interop/v1/manifest.json",
+        "spec/interop/v1/protocol.md"
+      ]
+    },
+    "spec/interop/v1/protocol.md": "# Nostr interoperability and LicoArc extensions — V1\n\n## 1. Authority and independent conformance targets\n\nThis is the unreleased initial V1 / Generation 1. Nostr is an optional transport\nand ecosystem adapter. A LicoArc core Endpoint MUST work without Nostr using another\napproved carrier. The durable contract in `spec/v1/reliable/continuity.md` and live\ncapability contract in `spec/v1/messaging/capabilities.md` are native, not Nostr-owned.\nThe manifest's `nativeProtocolLineId` identifies the current core definition; a\nsemantic change recomputes it instead of preserving unpublished obsolete bytes.\n\n`nostr-dm` provides unmodified common NIP-17 private text interoperability.\n`nostr-carrier` provides NIP-01/44-v2/59 event carriage and inbox discovery without\nrequiring a chat UI or kind-14 authoring. `licoarc-enhanced` uses that carrier plus\nLicoArc endpoint core and this binding. Enhanced-service implementations need not\nalso implement standard-chat behavior. A complete user-facing compatible chat client\nimplements both. Each support claim names the actual target and optional features.\n\nNo official client, LicoUp workflow runtime, official relay, client allowlist or\nfederation membership is needed. Group collaboration, native HTTPS Station operations\nand federation governance are independently scoped capabilities, not requirements on\nstandard Nostr relays. Nostr upstream owns its existing formats at the pinned revision.\nThe LicoArc binding owns only its extensions. Event carriage alone is not chat interop.\n\n## 2. Standard private-message path\n\nUse NIP-01 event verification and relay interaction, NIP-17 private messages, NIP-44\nversion 2 and NIP-59. Text is a kind 14 unsigned rumor, sealed as kind 13, gift-wrapped\nas kind 1059 separately for each recipient and the sender. Preserve upstream reply,\nroom and timestamp-randomization behavior without LicoArc-required fields.\nVerify signatures, ids, MACs, intended recipient and matching seal/rumor authors before\ndisplay; a random wrapper key is not the sender. Deduplicate by authenticated sender\nand rumor id. Kind 14 content is plain text, never an executable control packet.\n\nRetrieve the recipient's authenticated kind 10050 inbox-relay list using upstream\nreplacement ordering. Use user-selected/previously known discovery relays and cached\nsigned lists to find it; do not publish private data to discovery relays or to unrelated\nNIP-65 read/write relays. Refresh on reconnection and delivery failure; absence or\nconflicting/unverifiable information is inbox-unavailable, not a guessed broadcast.\nSupport NIP-42 on selected relays when required. A relay's limits/receipts do not prove\nsecurity, custody or delivery. NIP-11 limits inform resource admission; NIP-19/21 are\noptional presentation conveniences. Keep one fetch cursor per source and an unresolved\nmessage inventory. Creation-time-only fetching cannot establish complete catch-up.\n\nOptional files, reactions, edits, deletion and disappearing messages need independent\nimplementation claims. No NIP-04 fallback is defined. Standard NIP-44 is not claimed to\nprovide forward secrecy, post-compromise recovery or post-quantum protection. A\nuser-selected business expiry/deletion is not evidence that every remote copy disappeared.\n\n## 3. Enhanced framing\n\nPublish only kind 1059 gift wraps for durable enhanced work. The authenticated inner\nrumor is application kind 44900 with exactly `[[\"t\",\"licoarc.v1\"],[\"p\",recipientPubkey]]`\nand canonical JSON carrier content. Kind 44900 is experimental and unallocated upstream,\nNOT an approved NIP. Require kind and exact namespace; unknown values are unsupported,\nnot chat or instructions. NIP-78 is private app storage, not this interchange. Do not\npublish a bare extension rumor or seal. Outer tags never expose channel, capabilities,\nEndpoint identity or protected content. Enhanced data is wrapped only for the authorized\nremote account; device history synchronization needs its own authorization.\n\nThe envelope has exactly `channel`, `type`, `digest`, `length`, `index`, `data`.\n`channel` is a fresh 128-bit pairing/transport reference, not a conversation or an\nauthenticator. `type` selects the native deterministic-CBOR endpoint-identity,\nuser-authority, prekey-bundle, first-packet, session-accept or raw protected-record\nheader-CBOR || ciphertext || tag. Native type-specific bounds still apply.\n\nHash the complete original bytes with SHA-256, split into consecutive 8192-byte\nfragments, and encode each fragment in canonical padded standard Base64. Derive\nfragment count from length; all non-final fragments are full-sized, the last has the\nexact remainder. Preserve original protected bytes; a matching hash is not authentication.\nThe event must fit the local maximum and selected relay's smaller limit. Refusal cannot\nauthorize weaker encryption, unrelated relays or another recipient.\n\nReassembly keys include authenticated seal author, recipient, channel, type and digest.\nAccept any part order; identical parts coalesce, conflicting parts reject without\naltering accepted parts. Reserve declared bytes against quotas before allocation.\nHot reassembly bounds limit one working set, not logical lifetime. Persist accepted\nparts/spool references or guarantee retained recovery custody before reclaiming hot\nstate. There is no age-based assembly failure or pairing expiry. Native authentication,\nrevocation, consumed-prekey and replay checks remain mandatory on complete objects.\n\nSame-attempt retry uses the stored native packet and Gift Wraps. A later attempt may\nmake fresh outer wraps of the SAME protected object for late-upload/relay compatibility.\nNo fresh native nonce is required merely to rewrap; fresh native reprotection, when\nneeded, follows core continuity and keeps the exact logical intent. Rewrapping never\ncreates a new authorization or business request. Ephemeral 21059 is not used for\naccepted durable tasks; another explicitly declared transient capability can use it.\n\n## 4. Asynchronous pairing and identity-only binding\n\nNostr accounts and LicoArc user/Endpoint keys are distinct namespaces. Never reinterpret\nor silently derive one from the other. One account shared by devices is not a device\nroster, legal identity or execution authority. Every Endpoint retains independent keys.\n\nPersist a user/standing-policy-approved pairing with fixed initiator and responder\naccounts. Exchange identity and user-authority records, including missing predecessors,\nthen an exact signed active prekey pair. Validate native continuity, possession, peer\ntrust and signatures. Both parties may be offline between ANY steps without cancelling\nthis intent. Persist exact answers before transmission, replay them after restart.\nLocal quota pressure pauses new work, not already accepted pairing state. Responding\nto unsolicited pairing requires local policy. Public discovery materials contain no\napplication request; they do not acquire post-quantum metadata confidentiality.\n\nFollow native atomic paired-prekey redemption, first-packet and SessionAccept rules.\nClock-based prekey expiration is not part of this revised Candidate. Consumed/revoked\nmaterial is never reused; acquire fresh material when necessary without losing the\nconversation/request. Only after native confirmation and protected authority admission\nmay identity binding and live capability messages be accepted as control.\n\nAn identity binding is a protected Generic Message event, contentType 1279328257, with\ncanonical JSON per binding.schema.json: binding semantic id, channel, fixed accounts,\nnative session-context digest and persistent `conversation`. The conversation reference\nis agreed within an already approved peer/Group scope; it grants no new membership.\nVerify exact values against the authenticated native session, outer account context\nand local association. Binding mismatch affects that association, not unrelated work.\n\nThe binding contains NO capability list. Its immutable identity fields may not be\nrewritten inside a session. Tool changes, capability availability and permission\nchanges use independent protected live updates and NEVER trigger rebinding. A key or\naccount replacement is a different security event requiring approved continuity and a\nsafe session; the existing user-visible conversation and logical work survive it.\n\nIdentity binding acknowledgment can use the digest of role-ordered identity records\nunder `LICOARC-NOSTR-V1/AGREEMENT\\0`. This is a session-control fact, not a field in the\nbusiness request identity. It cannot force a new request when a session changes.\n\nApplication packets received before binding remain in a durable native inbox with\n`binding-pending` disposition and no execution. Commit retained payload/disposition\nwith native replay/ratchet state; never consume a key and lose the only payload.\nThere is no expiry of this accepted work. Quota refusal happens before native commit,\nretaining ciphertext custody. When binding succeeds, list candidates and apply normal\nreceipt/authorization rules; remove pending custody only in a successful durable handoff.\n\n## 5. Live capabilities and collaboration\n\nUse the native live capability record/page messages on existing sessions. Each authorized\nconversation gets relevant updates; roles distinguish a requester who understands the\ninterface from a provider with the tool. Offline repair, removal records, exact interface\ndigests, generation/revision ordering and scoped disclosure follow capabilities.md.\nNo global frozen intersection is part of the cryptographic or identity handshake.\n\nA protected Generic Message with contentType 1279328258 carries canonical JSON\n`{conversation,capability,payload}`; payload is Base64 application bytes, capability is\nid+definition. The protected intent contains this stable content, not a session-specific\nagreement. Generic kind, messageId, relatesTo, attachment and group identities keep their\nmeaning. Target/authorization and actual body/result grammar belong to the independently\npublished application contract; any client implementing it can participate.\n\nReceive validation checks authenticated scope, closed structure and payload bounds.\nIt does NOT require permission to execute. Durably store a request as waiting-approval or\nunsupported when appropriate; store responses, progress and cancellation facts against\ntheir existing request. The action boundary separately checks current invocation/provider\ncompatibility, target and authorization. A stale advertisement cannot authorize an effect.\nUnknown capabilities never dispatch to a tool, but need not destroy the whole conversation.\n\n## 6. Path selection and evidence\n\nEvery send has a locally authorized requirement: standard-chat, enhanced-message or\nenhanced-collaboration. The adapter may report unavailable; the core queues accepted\nintent for a later approved path. Never silently copy an enhanced task into kind 14,\nNIP-04, plaintext, another recipient or an unrelated relay. Switching equally protective,\nauthorized carriers is not downgrade and does not create new work.\n\nNIP-59 does not hide all recipient routing, IP/authentication, traffic, size or timing.\nNo relay deletion, unconditional availability, honest-client-code or automatic historical\nkey recovery guarantee is made. Standards and the native cryptographic primitive choices\nare reused, not reinvented. New composition/continuity semantics require their own proof\nreview and real-client qualification. Synthetic tests and deterministic models are not\nproduction crypto, storage or interoperability evidence. V1 revision changes must update\ncontent identities, source-closed artifacts and website pins together.\n",
+    "spec/interop/v1/source-manifest.json": {
+      "version": "licoarc.nostr-source-manifest.v1",
+      "sourceRoots": [
+        "conformance/interop/v1",
+        "spec/interop/v1"
+      ],
+      "sources": [
+        "conformance/interop/v1/cases.json",
+        "conformance/interop/v1/manifest.json",
+        "spec/interop/v1/binding.schema.json",
+        "spec/interop/v1/carrier.schema.json",
+        "spec/interop/v1/collaboration.schema.json",
+        "spec/interop/v1/fields.md",
+        "spec/interop/v1/manifest.json",
+        "spec/interop/v1/protocol.md",
+        "spec/interop/v1/source-manifest.json"
+      ]
+    }
+  },
+  "digest": "c2596ddb12b6c54bf9d0d209cccb526e753068b09e60fdafda082f14512da1ff"
+}

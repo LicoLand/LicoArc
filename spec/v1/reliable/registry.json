@@ -14,7 +14,8 @@
     "stateSchema": "spec/v1/reliable/state.schema.json",
     "runtime": "spec/v1/reliable/runtime.cddl",
     "sourceManifest": "spec/v1/reliable/source-manifest.json",
-    "conformanceManifest": "conformance/v1/reliable/manifest.json"
+    "conformanceManifest": "conformance/v1/reliable/manifest.json",
+    "continuity": "spec/v1/reliable/continuity.md"
   },
   "representation": {
     "governance": "restricted-jcs-json",
@@ -38,7 +39,7 @@
   },
   "delivery": {
     "semantics": "at-least-once-when-a-conforming-path-is-available",
-    "sameRouteRetry": "same-protected-intent-and-exact-protected-bytes",
+    "sameRouteRetry": "same-protected-intent; same-attempt-exact-bytes; later-authorized-reprotection-never-reuses-nonce",
     "routeChange": "may-reprotect-same-intent-without-reauthorizing-effect",
     "restart": "restore-serializable-snapshot-before-processing-input",
     "stationReceipt": "non-authoritative-hint",
@@ -82,7 +83,7 @@
     "packet": "MAX_PROTECTED_PACKET_BYTES-counts-exact-retained-or-emitted-protected-octets",
     "snapshotMetadata": "MAX_RELIABLE_SNAPSHOT_METADATA_BYTES-counts-the-complete-snapshot-CBOR-excluding-protected-packet-octets",
     "snapshotTotal": "MAX_RELIABLE_SNAPSHOT_BYTES-equals-snapshot-metadata-plus-one-retained-protected-packet",
-    "histories": "forbidden-use-bounded-counters-high-water-values-and-tombstones"
+    "histories": "durable-semantic-facts-and-replay-frontiers; bounded-hot-pages; no-TTL-for-unresolved-work"
   },
   "atomicity": {
     "receive": "validate-and-authenticate-against-one-tentative-complete-snapshot-then-compare-and-commit-once",
@@ -93,9 +94,9 @@
     "failure": "every-error-returns-the-byte-identical-pre-state-and-no-packet-or-effect"
   },
   "confirmation": {
-    "identity": "one-confirmation-id-per-result",
+    "identity": "first16-SHA256-domain-and-canonical-confirmation-meaning-with-senderEndpointRef-excluding-confirmationId-and-sessionId",
     "authentication": "exact-protected-authorized-sending-Endpoint-session",
-    "binding": "confirmation-id-message-ids-sender-session-stage-outcome-failure-and-result",
+    "binding": "confirmation-id-message-ids-authorized-sender-endpoint-stage-outcome-failure-and-result; session-only-authenticates-current-carriage",
     "stages": [
       "endpointAccepted",
       "effectCompleted"
@@ -105,16 +106,17 @@
       "rejected",
       "failed"
     ],
-    "pendingAndAmbiguous": "transport-or-local-state-only-never-an-endpoint-confirmation",
+    "pendingAndAmbiguous": "durable-local-work-disposition; never-fabricate-an-endpoint-outcome",
     "grouping": "sorted-unique-message-ids-with-one-stage-outcome-and-failure",
-    "conflict": "same-confirmation-id-with-different-canonical-result-is-terminal",
-    "stationResults": "never-advance-endpoint-stage"
+    "conflict": "retain-conflicting-authenticated-facts-and-quarantine-effect-reexecution; not-arrival-order-choice",
+    "stationResults": "never-advance-endpoint-stage",
+    "ordering": "authenticated-effect-completion-implies-acceptance; late-acceptance-cannot-regress"
   },
   "attachment": {
     "normalFeedback": "bounded-attachment-receive-state",
     "routineChunkConfirmation": "forbidden",
     "finality": "complete-authenticated-chunks-content-digest-and-exact-endpoint-confirmation",
-    "windowReset": "forbidden-on-retry-restart-session-renewal-route-change-station-migration-replay"
+    "windowReset": "per-turn-control-budgets-reset; received-chunks-and-intent-never-reset"
   },
   "group": {
     "projectionIdentity": "stable-per-member-logical-message-projection",
@@ -122,10 +124,10 @@
     "aggregate": "deterministic-recipient-order-and-absorbing-member-results"
   },
   "failurePolicy": {
-    "invalid": "reject-without-state-advance",
+    "invalid": "reject-input-without-business-state-advance",
     "ambiguous": "retain-intent-and-retry-without-new-authorization",
-    "terminal": "absorbing-until-tombstone-retention-ends",
-    "bounds": "typed-terminal-failure"
+    "terminal": "terminal-execution-does-not-block-late-evidence; explicit-conflicts-remain-visible",
+    "bounds": "pause-or-backpressure-this-turn; preserve-durable-intent"
   },
   "outOfScope": [
     "exactly-once-local-effects",

@@ -7,8 +7,8 @@
 | Decision track | `ALGORITHM` |
 | Decision ID | `ALG-core-v1-hybrid-ake` |
 | Decision status | `DECIDED` |
-| Definition status | `SPECIFIED` |
-| Existing authority | [Final Protocol Vision](../../PRODUCT.md#final-protocol-vision) and [Pairwise Protection architecture](../../ARCHITECTURE.md#3-pairwise-protection) |
+| Definition status | `PARTIAL` |
+| Existing authority | [Final Protocol Vision](../../PRODUCT.md#final-protocol-vision) and [Pairwise Protection architecture](../../ARCHITECTURE.md#identity-and-security) |
 | Authority targets | `spec/v1/protection/`, `spec/v1/protection/registry.json`, `spec/FIELD-REGISTRY.md`, `formal/`, `conformance/v1/protection/`, `spec/v1/manifest.json`, and `spec/protocol-lines.json` |
 | Predecessor or successor | Supersedes the ratchet-establishment scope of `ALG-baseline-pairwise-protection-suite`; the retired high-assurance construction has no active successor. |
 
@@ -151,3 +151,5 @@ the selected algorithmic construction without making a downstream claim.
 RFC-7748, RFC-8032, RFC-8439, RFC-5869, FIPS 203, and FIPS 204 inform
 primitive lineage and known risks only. They cannot define LicoArc fields,
 roles, trust, transcript, state, or Protocol Line meaning.
+
+Current V1 continuity revision reopens formal admission. See [the continuity decision](durable-continuity-live-capabilities.md). Prior proof output is not evidence for the revised transcript or admission.

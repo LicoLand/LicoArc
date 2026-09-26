@@ -1,5 +1,29 @@
 # Changelog
 
+## Unreleased — documentation publishing
+
+- Organize reading paths, normative references and maintainer/decision history.
+- Generate the public website from tracked Markdown and specification sources.
+- Centralize navigation and remove duplicated website lifecycle claims.
+- Keep protocol bytes, V1 identifiers and package version unchanged in this editorial change.
+
+## Unreleased — V1 continuity revision
+
+- Separate core, adapters, durable work and live capability state. No protocol TTL for accepted work.
+- Update capabilities without rebinding; preserve approvals, late facts and duplicate execution guards.
+- Revise prekey admission, confirmation fact identity, Group repair and custody policies.
+- Recompute semantic identities without a version bump. Reopen current formal admission; retained previous proofs remain historical.
+
+
+## Unreleased — V1 Nostr interoperability
+
+- Separate standard NIP-17/44/59 private messaging from open LicoArc enhancements.
+- Define byte-preserving Nostr carriage, bounded fragments, native account/session
+  binding, exact application capabilities and no implicit downgrade.
+- Keep native V1 / Generation 1, its cryptographic Profile and package version;
+  give the independent binding its own schemas, corpus and deterministic artifact.
+- Add definition CI; distinguish source checks from implementation and audit claims.
+
 All notable definition-source changes are recorded here. A changelog entry is
 not publication, implementation, interoperability, audit, deployment, support,
 or operation evidence.

@@ -46,6 +46,15 @@ reviewable, and privacy-safe standards.
   cost for unpublished bytes do not justify retention; if necessity is not
   demonstrated, decide removal through the field lifecycle.
 
+## Documentation-only changes
+
+For a typo, explanation, navigation or rendering correction, edit the owning source
+and follow [Documentation maintenance](docs/maintainers/documentation.md).
+No algorithm/field decision is required unless protocol meaning actually changes.
+Public chapters are generated from this repository; do not hand-edit website HTML.
+Run `npm run docs:check` and inspect the documentation preview. Design review does
+not require an implementation or a deployment.
+
 ## Workflow
 
 1. Create a branch with a meaningful prefix such as `feature/` or `fix/`.
@@ -60,7 +69,10 @@ reviewable, and privacy-safe standards.
    `conformance/` directory. Update the version manifest when adding or
    removing a canonical source.
 5. Regenerate the bundle with `npm run artifacts:generate`.
-6. Run `npm run verify` and make sure the artifact check and all tests pass.
+6. Run `npm run verify` and make sure both native and interoperability
+   artifact checks and all tests pass. Nostr interoperability sources live in
+   `spec/interop/v1/` and `conformance/interop/v1/`; their independent closure
+   must not be inserted into native cryptographic proof claims.
 7. Update each decision record's definition evidence and the formal
    documentation that owns the changed fact in the same change, and add a
    [CHANGELOG.md](CHANGELOG.md) entry.

@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/interop/v1/binding.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "binding",
+    "channel",
+    "initiator",
+    "responder",
+    "session",
+    "conversation"
+  ],
+  "properties": {
+    "binding": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "channel": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{32}$"
+    },
+    "initiator": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "responder": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "session": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "conversation": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{32}$"
+    }
+  }
+}

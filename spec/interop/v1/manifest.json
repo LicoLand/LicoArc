@@ -1,0 +1,148 @@
+{
+  "manifestVersion": "licoarc.nostr-interoperability.v1",
+  "generation": 1,
+  "lifecycle": "Candidate",
+  "definitionStatus": "SPECIFIED",
+  "implementationStatus": "not-claimed",
+  "scope": "standard-nostr-private-messaging-and-open-licoarc-enhancements",
+  "upstream": {
+    "repository": "https://github.com/nostr-protocol/nips",
+    "commit": "b82211e96c6dad616ed2ea43034c1c621256b745",
+    "baselineNips": [
+      "01",
+      "17",
+      "44",
+      "59"
+    ],
+    "conditionalNips": [
+      "42"
+    ],
+    "optionalNips": [
+      "11",
+      "19",
+      "21"
+    ],
+    "encryptionVersion": 2,
+    "unassignedExtensionKind": 44900,
+    "upstreamAllocation": "not-claimed"
+  },
+  "paths": {
+    "nostr-dm": {
+      "requirements": [
+        "NIP-01",
+        "NIP-17",
+        "NIP-44-v2",
+        "NIP-59"
+      ],
+      "requiresLicoArc": false,
+      "requiresLicoUp": false,
+      "requiresFederationMembership": false,
+      "chatRumorKind": 14,
+      "inboxRelayListKind": 10050,
+      "wrapperKind": 1059,
+      "sealKind": 13
+    },
+    "licoarc-enhanced": {
+      "requirements": [
+        "nostr-carrier",
+        "licoarc.nostr-interoperability.v1",
+        "licoarc.endpoint-core.v1"
+      ],
+      "requiresLicoUp": false,
+      "requiresFederationMembership": false,
+      "nativeProtocolLineId": "4cb15568e99396ef2789aec1828ad9dc4878f1cd1a04e28fe3feaac4dc753f4c",
+      "nativeManifest": "spec/v1/manifest.json",
+      "innerRumorKind": 44900,
+      "namespaceTag": [
+        "t",
+        "licoarc.v1"
+      ],
+      "wrapperKind": 1059,
+      "sealKind": 13,
+      "requiresStandardChat": false
+    },
+    "nostr-carrier": {
+      "requirements": [
+        "NIP-01",
+        "NIP-44-v2",
+        "NIP-59"
+      ],
+      "requiresLicoUp": false,
+      "requiresFederationMembership": false
+    }
+  },
+  "carrier": {
+    "json": "restricted-canonical-json",
+    "payload": "padded-standard-base64",
+    "chunkBytes": 8192,
+    "objectTypes": [
+      "endpoint-identity",
+      "user-authority",
+      "prekey-bundle",
+      "first-packet",
+      "session-accept",
+      "protected-record"
+    ],
+    "kind14ControlDispatch": "forbidden",
+    "nip78Carrier": "forbidden",
+    "publicExtensionPublish": "forbidden",
+    "outerAuthentication": "nostr-only-not-endpoint-authority",
+    "innerAuthentication": "native-licoarc-only",
+    "retry": "same-attempt-identical-wraps; later-attempt-fresh-wrap-same-native-object-and-logical-intent",
+    "relayReceipt": "transport-hint-only",
+    "earlyApplication": "durable-native-inbox-until-binding-without-TTL"
+  },
+  "bounds": {
+    "MAX_OBJECT_BYTES": 524288,
+    "MAX_FRAGMENT_BYTES": 8192,
+    "MAX_FRAGMENTS": 64,
+    "MAX_ENVELOPE_BYTES": 16384,
+    "MAX_EVENT_BYTES": 65536,
+    "MAX_PENDING_OBJECTS_PER_PEER": 4,
+    "MAX_PENDING_OBJECTS": 16,
+    "MAX_REASSEMBLY_BYTES": 8388608,
+    "MAX_PENDING_CHANNELS": 32,
+    "MAX_ACTIVE_CHANNELS": 256,
+    "MAX_CAPABILITIES": 64,
+    "MAX_CAPABILITY_ID_BYTES": 128,
+    "MAX_BINDING_BYTES": 16384,
+    "MAX_APPLICATION_BYTES": 262144,
+    "MAX_PREBINDING_MESSAGES_PER_CHANNEL": 4,
+    "MAX_PREBINDING_MESSAGES": 16,
+    "MAX_PREBINDING_BYTES": 8388608
+  },
+  "applicationContentTypes": {
+    "sessionBinding": 1279328257,
+    "collaboration": 1279328258,
+    "capabilityState": 1279328259,
+    "capabilityPage": 1279328260
+  },
+  "routing": {
+    "selection": "per-message-explicit-security-requirement",
+    "automaticDowngrade": false,
+    "compatibilityCopy": false,
+    "discoveryProvesCapability": false,
+    "capabilityPlacement": "independent-live-protected-state; never-identity-binding",
+    "algorithmNegotiation": false,
+    "sameNostrKeyImpliesSameEndpoint": false,
+    "capabilitiesImplyApproval": false,
+    "requiresNostrForCore": false,
+    "capabilityUpdateRebind": false,
+    "messageTTL": null
+  },
+  "securityBoundary": {
+    "inheritsNativeProofs": false,
+    "nostrForwardSecrecyClaim": false,
+    "nostrPostQuantumClaim": false,
+    "maliciousRelayDeletionClaim": false,
+    "crossClientRuntimeInteropClaim": false
+  },
+  "semanticSources": [
+    "spec/interop/v1/binding.schema.json",
+    "spec/interop/v1/carrier.schema.json",
+    "spec/interop/v1/collaboration.schema.json",
+    "spec/interop/v1/fields.md",
+    "spec/interop/v1/manifest.json",
+    "spec/interop/v1/protocol.md"
+  ]
+}

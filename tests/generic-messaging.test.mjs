@@ -216,13 +216,9 @@ test("streaming digest accounting never requires a full attachment copy", async 
   }), errorWithCode("invalid-length"));
 });
 
-test("lifetime maxima cannot be reset by retries or transport changes", () => {
-  assert.throws(() => enforceLifetime({ controlBytes: B.MAX_ATTACHMENT_CONTROL_BYTES + 1 }), errorWithCode("lifetime-bound-exceeded"));
-  assert.throws(() => enforceLifetime({ stateUpdates: B.MAX_ATTACHMENT_STATE_UPDATES + 1 }), errorWithCode("lifetime-bound-exceeded"));
-  assert.throws(() => enforceLifetime({ recoveryRounds: B.MAX_ATTACHMENT_RECOVERY_ROUNDS + 1 }), errorWithCode("lifetime-bound-exceeded"));
-  assert.throws(() => enforceLifetime({ retransmittedChunks: B.MAX_ATTACHMENT_RETRANSMITTED_CHUNKS + 1 }), errorWithCode("lifetime-bound-exceeded"));
-  assert.throws(() => enforceLifetime({ stateUpdates: 0, event: "route-change", previous: B.MAX_ATTACHMENT_STATE_UPDATES }), errorWithCode("lifetime-bound-exceeded"));
-  assert.equal(B.ATTACHMENT_RECOVERY_WINDOW, 86400);
+test("attachment processing budgets do not impose a recovery lifetime", () => {
+  assert.equal(Object.hasOwn(B, "ATTACHMENT_RECOVERY_WINDOW"), false);
+  for (const key of ["MAX_ATTACHMENT_CONTROL_BYTES", "MAX_ATTACHMENT_STATE_UPDATES", "MAX_ATTACHMENT_RECOVERY_ROUNDS", "MAX_ATTACHMENT_RETRANSMITTED_CHUNKS"]) assert.ok(B[key] > 0);
 });
 
 function encode(value) {

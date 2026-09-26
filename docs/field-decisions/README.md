@@ -48,7 +48,7 @@ semantic value, authority, trust, failure behavior, or lifecycle.
 Every field record uses the shared decision statuses `OPEN`, `READY`,
 `DECIDED`, `REJECTED`, or `RETIRED` and reports its independent definition
 status. The exact gates are defined only by the
-[Decision Lifecycle](../DECISION-LIFECYCLE.md#decision-status).
+[Decision Lifecycle](../DECISION-LIFECYCLE.md#record-identity-and-definition-state).
 
 A field record has ID `FLD-<file-name-without-extension>`. Its decision status
 applies only to its explicitly bounded scope. If inclusion is decided while
@@ -224,3 +224,12 @@ schema or CDDL, registry entry, positive and negative definition-level corpus
 cases, and artifact source closure.
 
 This workspace never substitutes for those authorities.
+
+## Nostr outer-binding and application composites
+
+These records review their individual component values in the incorporated
+interoperability field table; they add no native cryptographic field.
+
+- [nostr-carrier-envelope.md](fields/nostr-carrier-envelope.md)
+- [nostr-session-binding.md](fields/nostr-session-binding.md)
+- [nostr-collaboration-payload.md](fields/nostr-collaboration-payload.md)

@@ -65,7 +65,7 @@ state-snapshot = {
   ? 6 => digest256,
   ? 7 => uint .le 32,
   ? 8 => uint .le 16,
-  9 => uint .le 256,                  ; immutable lifetime transition count
+  9 => uint .le 256,                  ; bounded active-turn transition count
   ? 10 => uint .le 13,
   ? 11 => digest256,
   ? 13 => id128,
@@ -90,9 +90,9 @@ bytes = bstr
 ; Send commits the advanced snapshot and exact retry packet before emission;
 ; restart restores the complete monotonic snapshot before accepting input.
 ; Same logical identity plus different meaning is terminal conflict. Retry,
-; restart, session renewal, Route change, Station migration, and replay do not
-; reset transition, retry, confirmation, or recovery bounds. Every rejection
+; processing-turn budgets may reset, never cryptographic/replay/intent identities. Every rejection
 ; returns the byte-identical pre-state and emits no packet or application effect.
 ; A Station outcome is never enough to cross Endpoint Accepted or Effect
-; Completed. A terminal state accepts only an identical replay/ack and rejects
-; all reopen attempts.
+; Completed. Terminal execution forbids reexecution, not recording late facts.
+; Durable fact/cancellation state is independent of this bounded working snapshot.
+; See continuity.md for complete persistence and recovery obligations.

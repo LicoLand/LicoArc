@@ -53,7 +53,8 @@
     "RELIABLE_STATE_WINDOW = MAX_STATE_TRANSITIONS",
     "CONFIRMATION_WINDOW = MAX_CONFIRMATION_RECORDS"
   ],
-  "resetPolicy": "retry-reconnect-session-renewal-route-change-station-migration-replay-never-reset-or-extend-a-bound",
-  "lifetimeStart": "logical-message-intent-creation",
-  "exactlyOnceEffects": "not-provided"
+  "resetPolicy": "attempt-budgets-reset-on-new-scheduling-turn; intent-replay-effect-and-cryptographic-counters-never-reset",
+  "lifetimeStart": "no-protocol-lifetime-budget",
+  "exactlyOnceEffects": "not-provided",
+  "budgetScope": "bounded-active-processing-turn-or-atomic-batch; persist-all-accepted-work-outside-hot-working-set"
 }

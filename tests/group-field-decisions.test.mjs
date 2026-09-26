@@ -183,13 +183,10 @@ test("Group field inventory is closed and the Candidate Group schema is admitted
   assert.match(index, /No Group field proposal remains open/);
   assert.doesNotMatch(index, /\| Decision status \| `OPEN` \|/);
 
-  assert.match(status, /\| Lifecycle \| `Candidate` \|/);
-  assert.match(status, /\| Definition status \| `COMPLETE` \|/);
-  assert.match(
-    status,
-    /\| Mandatory capability closure \| 8 of 8 `COMPLETE` \|/
-  );
-  assert.match(status, /The eight capabilities are[\s\S]*Group Collaboration/);
+  assert.match(status, /Candidate/);
+  assert.match(status, /PARTIAL/);
+  assert.match(status, /five mandatory capabilities/);
+  assert.match(status, /Group Collaboration[\s\S]*optional scopes/);
   assert.equal(groupRegistry.lifecycle, "Candidate");
   assert.equal(groupRegistry.capabilityId, "licoarc.group-collaboration.v1");
   assert.equal(groupBounds.bounds.MAX_GROUP_EPOCH, Number.MAX_SAFE_INTEGER);

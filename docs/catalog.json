@@ -1,0 +1,208 @@
+{
+  "format": "licoarc.documentation-catalog.v1",
+  "siteName": "Lico Arc Protocol",
+  "description": "Open communication contracts for durable conversations, live capabilities and independent networks.",
+  "language": "en",
+  "include": [
+    "*.md",
+    "docs/**/*.md",
+    "spec/**/*.md",
+    "spec/**/*.json",
+    "spec/**/*.cddl",
+    "formal/requalification.json",
+    "LICENSE",
+    "docs/catalog.json"
+  ],
+  "exclude": [
+    "docs/plans/**",
+    "docs/reports/**",
+    "docs/references/**",
+    "docs/field-decisions/industry-facts.md"
+  ],
+  "navigation": [
+    {
+      "Start here": [
+        {
+          "Overview": "README.md"
+        },
+        {
+          "Documentation": "docs/README.md"
+        },
+        {
+          "Concepts": "CONTEXT.md"
+        },
+        {
+          "Product": "PRODUCT.md"
+        },
+        {
+          "Architecture": "ARCHITECTURE.md"
+        },
+        {
+          "Current definition": "reference/status.md"
+        }
+      ]
+    },
+    {
+      "Guides": [
+        {
+          "Implementer guide": "docs/guides/implementer-start.md"
+        },
+        {
+          "Message journey": "docs/guides/message-journey.md"
+        }
+      ]
+    },
+    {
+      "Protocol reference": [
+        {
+          "Source index": "spec/README.md"
+        },
+        {
+          "Foundation": "docs/protocols/foundation-v1.md"
+        },
+        {
+          "Identity": "docs/protocols/identity-v1.md"
+        },
+        {
+          "Pairwise protection": "docs/protocols/pairwise-protection-v1.md"
+        },
+        {
+          "Messages and attachments": "docs/protocols/generic-messaging-v1.md"
+        },
+        {
+          "Reliable exchange": "docs/protocols/reliable-exchange-v1.md"
+        },
+        {
+          "Durable continuity": "spec/v1/reliable/continuity.md"
+        },
+        {
+          "Live capabilities": "spec/v1/messaging/capabilities.md"
+        },
+        {
+          "Groups": "docs/protocols/group-collaboration-v1.md"
+        },
+        {
+          "Group continuity": "spec/v1/group/continuity.md"
+        },
+        {
+          "HTTPS transport": "docs/protocols/https-transport-v1.md"
+        },
+        {
+          "Federation": "docs/protocols/federation-governance-v1.md"
+        },
+        {
+          "Nostr binding": "spec/interop/v1/protocol.md"
+        },
+        {
+          "Field registry": "spec/FIELD-REGISTRY.md"
+        },
+        {
+          "Machine-readable sources": "reference/sources.md"
+        }
+      ]
+    },
+    {
+      "Contribute": [
+        {
+          "Contributing": "CONTRIBUTING.md"
+        },
+        {
+          "Documentation maintenance": "docs/maintainers/documentation.md"
+        },
+        {
+          "Publishing": "docs/maintainers/publishing.md"
+        },
+        {
+          "Definition checks": "docs/conformance/verification.md"
+        },
+        {
+          "Decision lifecycle": "docs/DECISION-LIFECYCLE.md"
+        },
+        {
+          "Algorithm decisions": "docs/algorithm-decisions/README.md"
+        },
+        {
+          "Field decisions": "docs/field-decisions/README.md"
+        },
+        {
+          "Architecture decisions": "docs/adrs/README.md"
+        },
+        {
+          "Changelog": "CHANGELOG.md"
+        },
+        {
+          "Security": "SECURITY.md"
+        },
+        {
+          "Code of conduct": "CODE_OF_CONDUCT.md"
+        },
+        {
+          "License": "reference/license.md"
+        }
+      ]
+    },
+    {
+      "Languages": [
+        {
+          "简体中文概览": "README.zh-CN.md"
+        }
+      ]
+    }
+  ],
+  "generated": [
+    "reference/status.md",
+    "reference/sources.md",
+    "reference/license.md"
+  ],
+  "redirects": {
+    "/docs/nostr-interoperability/": "spec/interop/v1/protocol.md",
+    "/docs/concepts/": "CONTEXT.md",
+    "/docs/protocol-line/": "spec/README.md",
+    "/docs/foundation/": "docs/protocols/foundation-v1.md",
+    "/docs/identity/": "docs/protocols/identity-v1.md",
+    "/docs/protection/": "docs/protocols/pairwise-protection-v1.md",
+    "/docs/messaging-reliable/": "docs/protocols/reliable-exchange-v1.md",
+    "/docs/transport/": "docs/protocols/https-transport-v1.md",
+    "/docs/group-federation/": "docs/protocols/group-collaboration-v1.md",
+    "/docs/verification/": "docs/conformance/verification.md",
+    "/docs/governance/": "docs/maintainers/publishing.md"
+  },
+  "classification": [
+    {
+      "pattern": "README.md",
+      "kind": "Overview; Core Domain Model is authoritative"
+    },
+    {
+      "pattern": "README.zh-CN.md",
+      "kind": "Localized overview"
+    },
+    {
+      "pattern": "spec/README.md",
+      "kind": "Reference index"
+    },
+    {
+      "pattern": "spec/**",
+      "kind": "Normative reference"
+    },
+    {
+      "pattern": "docs/field-decisions/**",
+      "kind": "Decision history — not current wire authority"
+    },
+    {
+      "pattern": "docs/algorithm-decisions/**",
+      "kind": "Decision history — not current wire authority"
+    },
+    {
+      "pattern": "docs/adrs/**",
+      "kind": "Decision history — not current wire authority"
+    },
+    {
+      "pattern": "docs/maintainers/**",
+      "kind": "Maintainer guide"
+    },
+    {
+      "pattern": "*",
+      "kind": "Explanatory documentation"
+    }
+  ]
+}

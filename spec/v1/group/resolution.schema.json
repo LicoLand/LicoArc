@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/v1/group/resolution.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "group",
+    "base",
+    "forks",
+    "proposal"
+  ],
+  "properties": {
+    "group": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{32}$"
+    },
+    "base": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "forks": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{64}$"
+      }
+    },
+    "proposal": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  }
+}

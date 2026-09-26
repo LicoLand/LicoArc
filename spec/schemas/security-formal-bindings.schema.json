@@ -32,9 +32,8 @@
       "const": "Candidate"
     },
     "status": {
-      "type": "string",
       "enum": [
-        "incomplete",
+        "partial",
         "complete"
       ]
     },

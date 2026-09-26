@@ -78,9 +78,9 @@ closed before state advance.
 
 Two transitions with the same predecessor digest and next epoch are handled
 without arrival-order selection. An identical canonical transition is an
-idempotent duplicate and returns the original state digest. A different
-transition is a fork and is rejected. A missing immediate predecessor is a
-gap; an old epoch is stale. A removed Endpoint cannot replay a transition or a
+idempotent duplicate and returns the original state digest. A different transition is quarantined as a fork; protected resolution follows
+`spec/v1/group/continuity.md`. A missing immediate predecessor requests catch-up
+without expiry. Older authenticated history is not a current authority update. A removed Endpoint cannot replay a transition or a
 Group Message to reopen a terminal removal.
 
 ## Group Messages and projection
@@ -89,8 +89,9 @@ A Group Message contains the existing protected logical `messageId`, one
 mandatory `groupStateDigest`, and opaque Payload bytes. It does not repeat
 `groupId`, epoch, members, roles, Station handles, or product permission. The
 sender Endpoint supplies the authenticated session context; a receiver
-resolves the exact retained state digest and rejects unknown, stale, forked,
-cross-Group, or sender-ineligible context.
+resolves the exact historical state digest and buffers missing ancestry.
+Cross-Group or unauthorized senders are rejected. Historical message custody
+does not grant current execution permission; forked state cannot authorize effects.
 
 One logical message produces one projection per canonical member other than
 the sender. Projection recipients are sorted by Endpoint-reference bytes and
@@ -130,8 +131,8 @@ bounded predecessor state, member tombstones, and per-member projection
 results. Restart restores that state before new input; it never discovers or
 imports a retired product or legacy Group root. `MAX_PENDING_GROUP_TRANSITIONS`
 is 128, `MAX_PENDING_GROUP_RESULTS` is 256, and
-`MAX_GROUP_EPOCH_TOMBSTONES` is 1024. Retry, reconnect, Route or Station
-change, and restart never reset or extend any bound. A parser rejects
+`MAX_GROUP_EPOCH_TOMBSTONES` is 1024. Retry processing turns may resume; membership, replay and execution frontiers
+never reset. Working-set limits do not expire durable Group history or results. A parser rejects
 attacker-selected arrays, maps, raw bytes, and operation records before an
 unbounded allocation. Group-owned record and per-member bounds are separate
 from Protocol Line cross-capability totals; a rejected or duplicate input
@@ -147,3 +148,11 @@ It binds genesis, add/remove/role transitions, predecessor authorization,
 duplicate/fork/gap/stale/replay handling, removal, maximum and malformed
 inputs, stable projection, partial failure, aggregation, restart convergence,
 canonical CBOR, and the three-entity trust boundary to the profile and corpus.
+
+## Durable continuity and current admission
+
+The current V1 lifecycle contract is [durable continuity](../../spec/v1/reliable/continuity.md).
+[Live capabilities](../../spec/v1/messaging/capabilities.md) update existing conversations
+without rebind. [Group continuity](../../spec/v1/group/continuity.md) separates history,
+effects and fork recovery. The revised Candidate is PARTIAL pending formal requalification;
+retained earlier proof output is not current evidence.

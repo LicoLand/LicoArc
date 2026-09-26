@@ -72,8 +72,12 @@ Before `READY`, a record must:
 
 Local research and external standards may inform a review, but local reference
 material is untracked and never becomes a normative input, link target,
-fixture, or closure condition. A self-contained LicoArc decision needs no
-external precedent.
+fixture, or closure condition. A self-contained native LicoArc decision needs no
+external precedent. An interoperability binding may instead explicitly adopt
+an existing standard at an immutable revision, keeping its upstream fields
+and meanings unchanged. Such a binding must close its own selections,
+extensions, source identity, bounds and conformance independently; it cannot
+quietly redefine the upstream standard or rely on a moving branch.
 
 An explicit repository review moves a `READY` record to `DECIDED` only in the
 same bounded change that updates or links its durable authority. An objective

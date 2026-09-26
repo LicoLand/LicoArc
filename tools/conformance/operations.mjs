@@ -1,3 +1,8 @@
+import {emptyDurableMailbox,storeDurableItem,claimDurableItem,releaseExpiredClaims,advanceDelivery,admitAsynchronousPrekey,selectApprovedCarrier} from '../protocol/continuity.mjs';
+import {emptyCapabilityState,applyCapabilityUpdate,canInvoke} from '../protocol/capabilities.mjs';
+import {classifyGroupHistory} from '../protocol/group-continuity.mjs';
+import { readFileSync } from 'node:fs';
+const protectionBounds=JSON.parse(readFileSync(new URL('../../spec/v1/protection/bounds.json',import.meta.url))).bounds;
 import { createCipheriv, createHash, createHmac, createPublicKey, hkdfSync, verify } from "node:crypto";
 import {
   assertValidProtocolCatalogs,
@@ -28,6 +33,28 @@ export class ConformanceOperationError extends TypeError {
 }
 
 const operations = {
+  "licoarc.reliable.preserve-work.v1": typed("invalid-continuity-input", ({input}) => {
+    let state=input.work;
+    for(const event of input.events)state=advanceDelivery(state,event,{durableCommit:input.durableCommit});
+    return {messageId:state.messageId,intentDigest:state.intentDigest,delivery:state.delivery,cancelRequested:state.cancelRequested??false};
+  }),
+  "licoarc.transport.durable-custody.v1": typed("invalid-custody-input", ({input}) => {
+    let state=emptyDurableMailbox(),acknowledged=false,status;
+    for(const item of input.items){const out=storeDurableItem(state,item,input.custody);state=out.state;status=out.status;acknowledged=out.acknowledged;}
+    if(input.claim && Object.keys(state.items).length)state=claimDurableItem(state,input.items[0].id,input.claim).state;
+    state=releaseExpiredClaims(JSON.parse(JSON.stringify(state)),input.resumeAt);
+    return {status,acknowledged,retainedIds:Object.keys(state.items).sort(),liveClaims:Object.keys(state.claims).length};
+  }),
+  "licoarc.protection.active-prekey-admission.v1": typed("invalid-prekey-input", ({input}) => admitAsynchronousPrekey(input.admission)),
+  "licoarc.foundation.choose-carrier.v1": typed("invalid-carrier-input", ({input}) => selectApprovedCarrier(input.intent,input.carriers)),
+  "licoarc.messaging.live-capabilities.v1": typed("invalid-capability-input", ({input}) => {
+    let state=emptyCapabilityState(),out;
+    for(const update of input.updates){out=applyCapabilityUpdate(state,update,input.authorization);state=out.state;}
+    return {status:out.status,records:Object.values(state.records),conversationRebind:out.conversationRebind,sessionRestart:out.sessionRestart};
+  }),
+  "licoarc.messaging.match-capability-roles.v1": typed("invalid-capability-role-input", ({input}) => ({canInvoke:canInvoke(input.caller,input.provider,input.capability)})),
+  "licoarc.group.classify-delayed-history.v1": typed("invalid-group-history", ({input}) => classifyGroupHistory(input)) ,
+
   "licoarc.catalog.validate.v1": typed("invalid-protocol-catalog", ({ input }) => {
     const value = decodeTaggedJson(input);
     assertValidProtocolCatalogs(value.protocolLines, value.protectionProfiles, value.schemas);
@@ -132,8 +159,10 @@ const operations = {
     if (input.aeadAuthentication === false) {
       return { error: "record-authentication", committedSkippedKeys: 0, plaintextReleased: false };
     }
+    for (const n of [input.incomingN,input.currentN,input.retainedSkippedKeys]) if(!Number.isSafeInteger(n)||n<0) throw new ConformanceOperationError('invalid-record-counter');
     const skipped = input.incomingN - input.currentN;
-    if (skipped > 256 || input.skippedKeyCount + skipped > 2048) {
+    if(skipped<0) return {error:'replay-or-missing-skipped-key',stateMutation:false};
+    if (skipped > protectionBounds.MAX_SKIP_PER_RECORD || input.retainedSkippedKeys + skipped > protectionBounds.MAX_SKIPPED_KEYS) {
       return { error: "skip-bound", stateMutation: false };
     }
     return {
@@ -194,7 +223,7 @@ const operations = {
 function verifyHandshakeAuthentication(input, context) {
   try {
     const decoded = decodeDeterministicCbor(hexToBytes(input.firstPacketCanonicalHex), {
-      maxBytes: 9655, maxMapEntries: 15, maxArrayItems: 0, maxTextBytes: 0,
+      maxBytes: protectionBounds.MAX_FIRST_PACKET_BYTES, maxMapEntries: 15, maxArrayItems: 0, maxTextBytes: 0,
     });
     const map = value => new Map(Object.entries(value).map(([key,item]) => [Number(key),item]));
     const packet = map(decoded);
@@ -203,13 +232,13 @@ function verifyHandshakeAuthentication(input, context) {
     const bytes = (value, length) => value instanceof Uint8Array && value.length === length;
     if (!fixedMap(packet, 15)) throw new TypeError();
     const prekey = map(packet.get(6));
-    if (!fixedMap(prekey, 12)) throw new TypeError();
+    if (prekey.size !== 10 || ![0,1,2,3,4,5,6,7,10,11].every(label => prekey.has(label))) throw new TypeError();
     for (const [label, length] of [[0,32],[1,32],[2,32],[3,32],[4,32],[5,32],[7,32],[8,1088],[9,32],[10,32],[11,64],[12,3309],[13,36],[14,16]])
       if (!bytes(packet.get(label), length)) throw new TypeError();
     for (const [label, length] of [[0,32],[1,32],[2,32],[3,32],[4,32],[6,32],[7,1184],[10,64],[11,3309]])
       if (!bytes(prekey.get(label), length)) throw new TypeError();
-    for (const label of [5,8,9]) if (!Number.isSafeInteger(prekey.get(label)) || prekey.get(label) < 0) throw new TypeError();
-    if (prekey.get(5) < 1 || prekey.get(9) <= prekey.get(8)) throw new TypeError();
+    for (const label of [5]) if (!Number.isSafeInteger(prekey.get(label)) || prekey.get(label) < 0) throw new TypeError();
+    if (prekey.get(5) < 1) throw new TypeError();
     const equal = (a, b) => Buffer.from(a).equals(Buffer.from(b));
     const line = context.catalogs.find(({ name }) => name === "protocol-lines").value.lines[0];
     const profile = context.catalogs.find(({ name }) => name === "protection-profiles").value.profiles[0];

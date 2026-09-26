@@ -32,7 +32,8 @@ test("Candidate artifact binds the exact lifecycle-generic definition and source
     assert.deepEqual(conformance.absentCorpora, []);
   } else {
     assert.equal(artifact.sessionEligible, false);
-    assert.ok(conformance.absentCorpora.length > 0);
+    assert.ok(manifest.openDefinitions.length > 0);
+    assert.ok(manifest.blockers.includes("SEC-proof-requalification"));
   }
   assert.ok(Object.hasOwn(artifact.sources, "spec/protocol-lines.json"));
   assert.ok(Object.hasOwn(artifact.sources, "spec/v1/security/claims.json"));

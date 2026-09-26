@@ -4,7 +4,7 @@
   "manifestVersion": "licoarc.protection-source-manifest.v1",
   "contractVersion": "licoarc.pairwise-protection.v1",
   "lifecycle": "Candidate",
-  "definitionStatus": "COMPLETE",
+  "definitionStatus": "PARTIAL",
   "sessionEligible": false,
   "sourceRoots": [
     "conformance/v1/protection",

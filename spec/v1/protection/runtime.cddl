@@ -12,8 +12,6 @@ prekey-bundle = {
   5 => 1..9007199254740991,          ; globally monotonic pair sequence
   6 => bstr .size 32,                ; raw X25519 one-time public key
   7 => bstr .size 1184,              ; final ML-KEM-768 encapsulation key
-  8 => 0..9007199254740991,          ; Unix-second validFrom, inclusive
-  9 => 1..9007199254740991,          ; Unix-second validUntil, exclusive
   10 => bstr .size 64,               ; strict plain Ed25519 signature
   11 => bstr .size 3309              ; exact ML-DSA-65 signature
 }

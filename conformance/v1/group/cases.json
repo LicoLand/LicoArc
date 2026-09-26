@@ -14,7 +14,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/group/registry.json",
-            "sha256": "df0495fcd9f84e5b5847ac1bc039f4efed24edc77dc47af7f3249f2513c12b48"
+            "sha256": "7d31df4eda86e63531b8b0d6e02fa3727f0971bbd85f96e245c675fc01600ec6"
           }
         ],
         "catalogs": [
@@ -42,7 +42,9 @@
                 "resultSchema": "spec/v1/group/result.schema.json",
                 "fieldRegistry": "spec/v1/group/field-registry.json",
                 "sourceManifest": "spec/v1/group/source-manifest.json",
-                "conformanceManifest": "conformance/v1/group/manifest.json"
+                "conformanceManifest": "conformance/v1/group/manifest.json",
+                "continuity": "spec/v1/group/continuity.md",
+                "resolutionSchema": "spec/v1/group/resolution.schema.json"
               },
               "representation": {
                 "governance": "restricted-jcs-json",
@@ -98,9 +100,9 @@
               },
               "forkPolicy": {
                 "samePredecessorAndEpochSameDigest": "idempotent-duplicate",
-                "samePredecessorAndEpochDifferentDigest": "reject-fork",
-                "missingPredecessor": "reject-gap",
-                "staleEpoch": "reject-stale",
+                "samePredecessorAndEpochDifferentDigest": "quarantine-affected-mutations-and-collect-unanimous-base-authority-resolution",
+                "missingPredecessor": "durable-catch-up-pending",
+                "staleEpoch": "historical-context-not-current-execution-authority",
                 "crossGroup": "reject-cross-group",
                 "terminalRemovalReplay": "reject-removed-member"
               },
@@ -120,7 +122,7 @@
                 "authority": "endpoint-confirmation-or-none-only"
               },
               "persistencePolicy": {
-                "restart": "restore-high-water-predecessor-state-current-members-tombstones-and-per-member-projections-before-accepting-input",
+                "restart": "restore-high-water-checkpoints-and-durable-pending-history-before-new-input",
                 "bounded": true,
                 "persistedStationState": false,
                 "persistedProductPermission": false,
@@ -134,9 +136,9 @@
                 "payload": "MAX_GROUP_PAYLOAD_BYTES-is-opaque-payload-octets",
                 "projectionResults": "MAX_GROUP_RESULTS-equals-MAX_GROUP_PROJECTIONS-one-result-per-recipient",
                 "aggregate": "MAX_GROUP_AGGREGATE_BYTES-is-the-complete-canonical-result-CBOR",
-                "persisted": "MAX_GROUP_PERSISTED_BYTES-is-the-complete-bounded-retained-group-state",
+                "persisted": "bounded-hot-working-set; durable-pages-and-checkpoints-have-admission-quotas-not-lifetime-maximum",
                 "rejectedOrDuplicateInput": "no-budget-consumption-and-no-state-mutation",
-                "retryReset": "forbidden"
+                "retryReset": "processing-turn-only; never-reset-membership-or-replay-frontiers"
               },
               "atomicity": {
                 "transition": "validate-complete-predecessor-and-protected-operation-then-commit-successor-once",
@@ -154,7 +156,13 @@
                 "application-payload-interpretation",
                 "unbounded-broadcast",
                 "compatibility-translator-or-alternate-wire"
-              ]
+              ],
+              "resolution": {
+                "contentType": 1279328261,
+                "approval": "all-state-authorities-at-exact-uncontested-base",
+                "expiry": "none",
+                "liveness": "wait-for-authorized-resolution; do-not-infer-by-timeout"
+              }
             }
           }
         ],
@@ -184,7 +192,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/group/registry.json",
-            "sha256": "df0495fcd9f84e5b5847ac1bc039f4efed24edc77dc47af7f3249f2513c12b48"
+            "sha256": "7d31df4eda86e63531b8b0d6e02fa3727f0971bbd85f96e245c675fc01600ec6"
           }
         ],
         "catalogs": [
@@ -212,7 +220,9 @@
                 "resultSchema": "spec/v1/group/result.schema.json",
                 "fieldRegistry": "spec/v1/group/field-registry.json",
                 "sourceManifest": "spec/v1/group/source-manifest.json",
-                "conformanceManifest": "conformance/v1/group/manifest.json"
+                "conformanceManifest": "conformance/v1/group/manifest.json",
+                "continuity": "spec/v1/group/continuity.md",
+                "resolutionSchema": "spec/v1/group/resolution.schema.json"
               },
               "representation": {
                 "governance": "restricted-jcs-json",
@@ -268,9 +278,9 @@
               },
               "forkPolicy": {
                 "samePredecessorAndEpochSameDigest": "idempotent-duplicate",
-                "samePredecessorAndEpochDifferentDigest": "reject-fork",
-                "missingPredecessor": "reject-gap",
-                "staleEpoch": "reject-stale",
+                "samePredecessorAndEpochDifferentDigest": "quarantine-affected-mutations-and-collect-unanimous-base-authority-resolution",
+                "missingPredecessor": "durable-catch-up-pending",
+                "staleEpoch": "historical-context-not-current-execution-authority",
                 "crossGroup": "reject-cross-group",
                 "terminalRemovalReplay": "reject-removed-member"
               },
@@ -290,7 +300,7 @@
                 "authority": "endpoint-confirmation-or-none-only"
               },
               "persistencePolicy": {
-                "restart": "restore-high-water-predecessor-state-current-members-tombstones-and-per-member-projections-before-accepting-input",
+                "restart": "restore-high-water-checkpoints-and-durable-pending-history-before-new-input",
                 "bounded": true,
                 "persistedStationState": false,
                 "persistedProductPermission": false,
@@ -304,9 +314,9 @@
                 "payload": "MAX_GROUP_PAYLOAD_BYTES-is-opaque-payload-octets",
                 "projectionResults": "MAX_GROUP_RESULTS-equals-MAX_GROUP_PROJECTIONS-one-result-per-recipient",
                 "aggregate": "MAX_GROUP_AGGREGATE_BYTES-is-the-complete-canonical-result-CBOR",
-                "persisted": "MAX_GROUP_PERSISTED_BYTES-is-the-complete-bounded-retained-group-state",
+                "persisted": "bounded-hot-working-set; durable-pages-and-checkpoints-have-admission-quotas-not-lifetime-maximum",
                 "rejectedOrDuplicateInput": "no-budget-consumption-and-no-state-mutation",
-                "retryReset": "forbidden"
+                "retryReset": "processing-turn-only; never-reset-membership-or-replay-frontiers"
               },
               "atomicity": {
                 "transition": "validate-complete-predecessor-and-protected-operation-then-commit-successor-once",
@@ -324,7 +334,13 @@
                 "application-payload-interpretation",
                 "unbounded-broadcast",
                 "compatibility-translator-or-alternate-wire"
-              ]
+              ],
+              "resolution": {
+                "contentType": 1279328261,
+                "approval": "all-state-authorities-at-exact-uncontested-base",
+                "expiry": "none",
+                "liveness": "wait-for-authorized-resolution; do-not-infer-by-timeout"
+              }
             }
           }
         ],
@@ -354,7 +370,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/group/registry.json",
-            "sha256": "df0495fcd9f84e5b5847ac1bc039f4efed24edc77dc47af7f3249f2513c12b48"
+            "sha256": "7d31df4eda86e63531b8b0d6e02fa3727f0971bbd85f96e245c675fc01600ec6"
           }
         ],
         "catalogs": [
@@ -382,7 +398,9 @@
                 "resultSchema": "spec/v1/group/result.schema.json",
                 "fieldRegistry": "spec/v1/group/field-registry.json",
                 "sourceManifest": "spec/v1/group/source-manifest.json",
-                "conformanceManifest": "conformance/v1/group/manifest.json"
+                "conformanceManifest": "conformance/v1/group/manifest.json",
+                "continuity": "spec/v1/group/continuity.md",
+                "resolutionSchema": "spec/v1/group/resolution.schema.json"
               },
               "representation": {
                 "governance": "restricted-jcs-json",
@@ -438,9 +456,9 @@
               },
               "forkPolicy": {
                 "samePredecessorAndEpochSameDigest": "idempotent-duplicate",
-                "samePredecessorAndEpochDifferentDigest": "reject-fork",
-                "missingPredecessor": "reject-gap",
-                "staleEpoch": "reject-stale",
+                "samePredecessorAndEpochDifferentDigest": "quarantine-affected-mutations-and-collect-unanimous-base-authority-resolution",
+                "missingPredecessor": "durable-catch-up-pending",
+                "staleEpoch": "historical-context-not-current-execution-authority",
                 "crossGroup": "reject-cross-group",
                 "terminalRemovalReplay": "reject-removed-member"
               },
@@ -460,7 +478,7 @@
                 "authority": "endpoint-confirmation-or-none-only"
               },
               "persistencePolicy": {
-                "restart": "restore-high-water-predecessor-state-current-members-tombstones-and-per-member-projections-before-accepting-input",
+                "restart": "restore-high-water-checkpoints-and-durable-pending-history-before-new-input",
                 "bounded": true,
                 "persistedStationState": false,
                 "persistedProductPermission": false,
@@ -474,9 +492,9 @@
                 "payload": "MAX_GROUP_PAYLOAD_BYTES-is-opaque-payload-octets",
                 "projectionResults": "MAX_GROUP_RESULTS-equals-MAX_GROUP_PROJECTIONS-one-result-per-recipient",
                 "aggregate": "MAX_GROUP_AGGREGATE_BYTES-is-the-complete-canonical-result-CBOR",
-                "persisted": "MAX_GROUP_PERSISTED_BYTES-is-the-complete-bounded-retained-group-state",
+                "persisted": "bounded-hot-working-set; durable-pages-and-checkpoints-have-admission-quotas-not-lifetime-maximum",
                 "rejectedOrDuplicateInput": "no-budget-consumption-and-no-state-mutation",
-                "retryReset": "forbidden"
+                "retryReset": "processing-turn-only; never-reset-membership-or-replay-frontiers"
               },
               "atomicity": {
                 "transition": "validate-complete-predecessor-and-protected-operation-then-commit-successor-once",
@@ -494,7 +512,13 @@
                 "application-payload-interpretation",
                 "unbounded-broadcast",
                 "compatibility-translator-or-alternate-wire"
-              ]
+              ],
+              "resolution": {
+                "contentType": 1279328261,
+                "approval": "all-state-authorities-at-exact-uncontested-base",
+                "expiry": "none",
+                "liveness": "wait-for-authorized-resolution; do-not-infer-by-timeout"
+              }
             }
           }
         ],
@@ -524,7 +548,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/group/registry.json",
-            "sha256": "df0495fcd9f84e5b5847ac1bc039f4efed24edc77dc47af7f3249f2513c12b48"
+            "sha256": "7d31df4eda86e63531b8b0d6e02fa3727f0971bbd85f96e245c675fc01600ec6"
           }
         ],
         "catalogs": [
@@ -552,7 +576,9 @@
                 "resultSchema": "spec/v1/group/result.schema.json",
                 "fieldRegistry": "spec/v1/group/field-registry.json",
                 "sourceManifest": "spec/v1/group/source-manifest.json",
-                "conformanceManifest": "conformance/v1/group/manifest.json"
+                "conformanceManifest": "conformance/v1/group/manifest.json",
+                "continuity": "spec/v1/group/continuity.md",
+                "resolutionSchema": "spec/v1/group/resolution.schema.json"
               },
               "representation": {
                 "governance": "restricted-jcs-json",
@@ -608,9 +634,9 @@
               },
               "forkPolicy": {
                 "samePredecessorAndEpochSameDigest": "idempotent-duplicate",
-                "samePredecessorAndEpochDifferentDigest": "reject-fork",
-                "missingPredecessor": "reject-gap",
-                "staleEpoch": "reject-stale",
+                "samePredecessorAndEpochDifferentDigest": "quarantine-affected-mutations-and-collect-unanimous-base-authority-resolution",
+                "missingPredecessor": "durable-catch-up-pending",
+                "staleEpoch": "historical-context-not-current-execution-authority",
                 "crossGroup": "reject-cross-group",
                 "terminalRemovalReplay": "reject-removed-member"
               },
@@ -630,7 +656,7 @@
                 "authority": "endpoint-confirmation-or-none-only"
               },
               "persistencePolicy": {
-                "restart": "restore-high-water-predecessor-state-current-members-tombstones-and-per-member-projections-before-accepting-input",
+                "restart": "restore-high-water-checkpoints-and-durable-pending-history-before-new-input",
                 "bounded": true,
                 "persistedStationState": false,
                 "persistedProductPermission": false,
@@ -644,9 +670,9 @@
                 "payload": "MAX_GROUP_PAYLOAD_BYTES-is-opaque-payload-octets",
                 "projectionResults": "MAX_GROUP_RESULTS-equals-MAX_GROUP_PROJECTIONS-one-result-per-recipient",
                 "aggregate": "MAX_GROUP_AGGREGATE_BYTES-is-the-complete-canonical-result-CBOR",
-                "persisted": "MAX_GROUP_PERSISTED_BYTES-is-the-complete-bounded-retained-group-state",
+                "persisted": "bounded-hot-working-set; durable-pages-and-checkpoints-have-admission-quotas-not-lifetime-maximum",
                 "rejectedOrDuplicateInput": "no-budget-consumption-and-no-state-mutation",
-                "retryReset": "forbidden"
+                "retryReset": "processing-turn-only; never-reset-membership-or-replay-frontiers"
               },
               "atomicity": {
                 "transition": "validate-complete-predecessor-and-protected-operation-then-commit-successor-once",
@@ -664,7 +690,13 @@
                 "application-payload-interpretation",
                 "unbounded-broadcast",
                 "compatibility-translator-or-alternate-wire"
-              ]
+              ],
+              "resolution": {
+                "contentType": 1279328261,
+                "approval": "all-state-authorities-at-exact-uncontested-base",
+                "expiry": "none",
+                "liveness": "wait-for-authorized-resolution; do-not-infer-by-timeout"
+              }
             }
           }
         ],
@@ -694,7 +726,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/group/registry.json",
-            "sha256": "df0495fcd9f84e5b5847ac1bc039f4efed24edc77dc47af7f3249f2513c12b48"
+            "sha256": "7d31df4eda86e63531b8b0d6e02fa3727f0971bbd85f96e245c675fc01600ec6"
           }
         ],
         "catalogs": [
@@ -722,7 +754,9 @@
                 "resultSchema": "spec/v1/group/result.schema.json",
                 "fieldRegistry": "spec/v1/group/field-registry.json",
                 "sourceManifest": "spec/v1/group/source-manifest.json",
-                "conformanceManifest": "conformance/v1/group/manifest.json"
+                "conformanceManifest": "conformance/v1/group/manifest.json",
+                "continuity": "spec/v1/group/continuity.md",
+                "resolutionSchema": "spec/v1/group/resolution.schema.json"
               },
               "representation": {
                 "governance": "restricted-jcs-json",
@@ -778,9 +812,9 @@
               },
               "forkPolicy": {
                 "samePredecessorAndEpochSameDigest": "idempotent-duplicate",
-                "samePredecessorAndEpochDifferentDigest": "reject-fork",
-                "missingPredecessor": "reject-gap",
-                "staleEpoch": "reject-stale",
+                "samePredecessorAndEpochDifferentDigest": "quarantine-affected-mutations-and-collect-unanimous-base-authority-resolution",
+                "missingPredecessor": "durable-catch-up-pending",
+                "staleEpoch": "historical-context-not-current-execution-authority",
                 "crossGroup": "reject-cross-group",
                 "terminalRemovalReplay": "reject-removed-member"
               },
@@ -800,7 +834,7 @@
                 "authority": "endpoint-confirmation-or-none-only"
               },
               "persistencePolicy": {
-                "restart": "restore-high-water-predecessor-state-current-members-tombstones-and-per-member-projections-before-accepting-input",
+                "restart": "restore-high-water-checkpoints-and-durable-pending-history-before-new-input",
                 "bounded": true,
                 "persistedStationState": false,
                 "persistedProductPermission": false,
@@ -814,9 +848,9 @@
                 "payload": "MAX_GROUP_PAYLOAD_BYTES-is-opaque-payload-octets",
                 "projectionResults": "MAX_GROUP_RESULTS-equals-MAX_GROUP_PROJECTIONS-one-result-per-recipient",
                 "aggregate": "MAX_GROUP_AGGREGATE_BYTES-is-the-complete-canonical-result-CBOR",
-                "persisted": "MAX_GROUP_PERSISTED_BYTES-is-the-complete-bounded-retained-group-state",
+                "persisted": "bounded-hot-working-set; durable-pages-and-checkpoints-have-admission-quotas-not-lifetime-maximum",
                 "rejectedOrDuplicateInput": "no-budget-consumption-and-no-state-mutation",
-                "retryReset": "forbidden"
+                "retryReset": "processing-turn-only; never-reset-membership-or-replay-frontiers"
               },
               "atomicity": {
                 "transition": "validate-complete-predecessor-and-protected-operation-then-commit-successor-once",
@@ -834,7 +868,13 @@
                 "application-payload-interpretation",
                 "unbounded-broadcast",
                 "compatibility-translator-or-alternate-wire"
-              ]
+              ],
+              "resolution": {
+                "contentType": 1279328261,
+                "approval": "all-state-authorities-at-exact-uncontested-base",
+                "expiry": "none",
+                "liveness": "wait-for-authorized-resolution; do-not-infer-by-timeout"
+              }
             }
           }
         ],
@@ -864,7 +904,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/group/registry.json",
-            "sha256": "df0495fcd9f84e5b5847ac1bc039f4efed24edc77dc47af7f3249f2513c12b48"
+            "sha256": "7d31df4eda86e63531b8b0d6e02fa3727f0971bbd85f96e245c675fc01600ec6"
           }
         ],
         "catalogs": [
@@ -892,7 +932,9 @@
                 "resultSchema": "spec/v1/group/result.schema.json",
                 "fieldRegistry": "spec/v1/group/field-registry.json",
                 "sourceManifest": "spec/v1/group/source-manifest.json",
-                "conformanceManifest": "conformance/v1/group/manifest.json"
+                "conformanceManifest": "conformance/v1/group/manifest.json",
+                "continuity": "spec/v1/group/continuity.md",
+                "resolutionSchema": "spec/v1/group/resolution.schema.json"
               },
               "representation": {
                 "governance": "restricted-jcs-json",
@@ -948,9 +990,9 @@
               },
               "forkPolicy": {
                 "samePredecessorAndEpochSameDigest": "idempotent-duplicate",
-                "samePredecessorAndEpochDifferentDigest": "reject-fork",
-                "missingPredecessor": "reject-gap",
-                "staleEpoch": "reject-stale",
+                "samePredecessorAndEpochDifferentDigest": "quarantine-affected-mutations-and-collect-unanimous-base-authority-resolution",
+                "missingPredecessor": "durable-catch-up-pending",
+                "staleEpoch": "historical-context-not-current-execution-authority",
                 "crossGroup": "reject-cross-group",
                 "terminalRemovalReplay": "reject-removed-member"
               },
@@ -970,7 +1012,7 @@
                 "authority": "endpoint-confirmation-or-none-only"
               },
               "persistencePolicy": {
-                "restart": "restore-high-water-predecessor-state-current-members-tombstones-and-per-member-projections-before-accepting-input",
+                "restart": "restore-high-water-checkpoints-and-durable-pending-history-before-new-input",
                 "bounded": true,
                 "persistedStationState": false,
                 "persistedProductPermission": false,
@@ -984,9 +1026,9 @@
                 "payload": "MAX_GROUP_PAYLOAD_BYTES-is-opaque-payload-octets",
                 "projectionResults": "MAX_GROUP_RESULTS-equals-MAX_GROUP_PROJECTIONS-one-result-per-recipient",
                 "aggregate": "MAX_GROUP_AGGREGATE_BYTES-is-the-complete-canonical-result-CBOR",
-                "persisted": "MAX_GROUP_PERSISTED_BYTES-is-the-complete-bounded-retained-group-state",
+                "persisted": "bounded-hot-working-set; durable-pages-and-checkpoints-have-admission-quotas-not-lifetime-maximum",
                 "rejectedOrDuplicateInput": "no-budget-consumption-and-no-state-mutation",
-                "retryReset": "forbidden"
+                "retryReset": "processing-turn-only; never-reset-membership-or-replay-frontiers"
               },
               "atomicity": {
                 "transition": "validate-complete-predecessor-and-protected-operation-then-commit-successor-once",
@@ -1004,7 +1046,13 @@
                 "application-payload-interpretation",
                 "unbounded-broadcast",
                 "compatibility-translator-or-alternate-wire"
-              ]
+              ],
+              "resolution": {
+                "contentType": 1279328261,
+                "approval": "all-state-authorities-at-exact-uncontested-base",
+                "expiry": "none",
+                "liveness": "wait-for-authorized-resolution; do-not-infer-by-timeout"
+              }
             }
           }
         ],
@@ -1034,7 +1082,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/group/registry.json",
-            "sha256": "df0495fcd9f84e5b5847ac1bc039f4efed24edc77dc47af7f3249f2513c12b48"
+            "sha256": "7d31df4eda86e63531b8b0d6e02fa3727f0971bbd85f96e245c675fc01600ec6"
           }
         ],
         "catalogs": [
@@ -1062,7 +1110,9 @@
                 "resultSchema": "spec/v1/group/result.schema.json",
                 "fieldRegistry": "spec/v1/group/field-registry.json",
                 "sourceManifest": "spec/v1/group/source-manifest.json",
-                "conformanceManifest": "conformance/v1/group/manifest.json"
+                "conformanceManifest": "conformance/v1/group/manifest.json",
+                "continuity": "spec/v1/group/continuity.md",
+                "resolutionSchema": "spec/v1/group/resolution.schema.json"
               },
               "representation": {
                 "governance": "restricted-jcs-json",
@@ -1118,9 +1168,9 @@
               },
               "forkPolicy": {
                 "samePredecessorAndEpochSameDigest": "idempotent-duplicate",
-                "samePredecessorAndEpochDifferentDigest": "reject-fork",
-                "missingPredecessor": "reject-gap",
-                "staleEpoch": "reject-stale",
+                "samePredecessorAndEpochDifferentDigest": "quarantine-affected-mutations-and-collect-unanimous-base-authority-resolution",
+                "missingPredecessor": "durable-catch-up-pending",
+                "staleEpoch": "historical-context-not-current-execution-authority",
                 "crossGroup": "reject-cross-group",
                 "terminalRemovalReplay": "reject-removed-member"
               },
@@ -1140,7 +1190,7 @@
                 "authority": "endpoint-confirmation-or-none-only"
               },
               "persistencePolicy": {
-                "restart": "restore-high-water-predecessor-state-current-members-tombstones-and-per-member-projections-before-accepting-input",
+                "restart": "restore-high-water-checkpoints-and-durable-pending-history-before-new-input",
                 "bounded": true,
                 "persistedStationState": false,
                 "persistedProductPermission": false,
@@ -1154,9 +1204,9 @@
                 "payload": "MAX_GROUP_PAYLOAD_BYTES-is-opaque-payload-octets",
                 "projectionResults": "MAX_GROUP_RESULTS-equals-MAX_GROUP_PROJECTIONS-one-result-per-recipient",
                 "aggregate": "MAX_GROUP_AGGREGATE_BYTES-is-the-complete-canonical-result-CBOR",
-                "persisted": "MAX_GROUP_PERSISTED_BYTES-is-the-complete-bounded-retained-group-state",
+                "persisted": "bounded-hot-working-set; durable-pages-and-checkpoints-have-admission-quotas-not-lifetime-maximum",
                 "rejectedOrDuplicateInput": "no-budget-consumption-and-no-state-mutation",
-                "retryReset": "forbidden"
+                "retryReset": "processing-turn-only; never-reset-membership-or-replay-frontiers"
               },
               "atomicity": {
                 "transition": "validate-complete-predecessor-and-protected-operation-then-commit-successor-once",
@@ -1174,7 +1224,13 @@
                 "application-payload-interpretation",
                 "unbounded-broadcast",
                 "compatibility-translator-or-alternate-wire"
-              ]
+              ],
+              "resolution": {
+                "contentType": 1279328261,
+                "approval": "all-state-authorities-at-exact-uncontested-base",
+                "expiry": "none",
+                "liveness": "wait-for-authorized-resolution; do-not-infer-by-timeout"
+              }
             }
           }
         ],
@@ -1204,7 +1260,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/group/registry.json",
-            "sha256": "df0495fcd9f84e5b5847ac1bc039f4efed24edc77dc47af7f3249f2513c12b48"
+            "sha256": "7d31df4eda86e63531b8b0d6e02fa3727f0971bbd85f96e245c675fc01600ec6"
           }
         ],
         "catalogs": [
@@ -1232,7 +1288,9 @@
                 "resultSchema": "spec/v1/group/result.schema.json",
                 "fieldRegistry": "spec/v1/group/field-registry.json",
                 "sourceManifest": "spec/v1/group/source-manifest.json",
-                "conformanceManifest": "conformance/v1/group/manifest.json"
+                "conformanceManifest": "conformance/v1/group/manifest.json",
+                "continuity": "spec/v1/group/continuity.md",
+                "resolutionSchema": "spec/v1/group/resolution.schema.json"
               },
               "representation": {
                 "governance": "restricted-jcs-json",
@@ -1288,9 +1346,9 @@
               },
               "forkPolicy": {
                 "samePredecessorAndEpochSameDigest": "idempotent-duplicate",
-                "samePredecessorAndEpochDifferentDigest": "reject-fork",
-                "missingPredecessor": "reject-gap",
-                "staleEpoch": "reject-stale",
+                "samePredecessorAndEpochDifferentDigest": "quarantine-affected-mutations-and-collect-unanimous-base-authority-resolution",
+                "missingPredecessor": "durable-catch-up-pending",
+                "staleEpoch": "historical-context-not-current-execution-authority",
                 "crossGroup": "reject-cross-group",
                 "terminalRemovalReplay": "reject-removed-member"
               },
@@ -1310,7 +1368,7 @@
                 "authority": "endpoint-confirmation-or-none-only"
               },
               "persistencePolicy": {
-                "restart": "restore-high-water-predecessor-state-current-members-tombstones-and-per-member-projections-before-accepting-input",
+                "restart": "restore-high-water-checkpoints-and-durable-pending-history-before-new-input",
                 "bounded": true,
                 "persistedStationState": false,
                 "persistedProductPermission": false,
@@ -1324,9 +1382,9 @@
                 "payload": "MAX_GROUP_PAYLOAD_BYTES-is-opaque-payload-octets",
                 "projectionResults": "MAX_GROUP_RESULTS-equals-MAX_GROUP_PROJECTIONS-one-result-per-recipient",
                 "aggregate": "MAX_GROUP_AGGREGATE_BYTES-is-the-complete-canonical-result-CBOR",
-                "persisted": "MAX_GROUP_PERSISTED_BYTES-is-the-complete-bounded-retained-group-state",
+                "persisted": "bounded-hot-working-set; durable-pages-and-checkpoints-have-admission-quotas-not-lifetime-maximum",
                 "rejectedOrDuplicateInput": "no-budget-consumption-and-no-state-mutation",
-                "retryReset": "forbidden"
+                "retryReset": "processing-turn-only; never-reset-membership-or-replay-frontiers"
               },
               "atomicity": {
                 "transition": "validate-complete-predecessor-and-protected-operation-then-commit-successor-once",
@@ -1344,7 +1402,13 @@
                 "application-payload-interpretation",
                 "unbounded-broadcast",
                 "compatibility-translator-or-alternate-wire"
-              ]
+              ],
+              "resolution": {
+                "contentType": 1279328261,
+                "approval": "all-state-authorities-at-exact-uncontested-base",
+                "expiry": "none",
+                "liveness": "wait-for-authorized-resolution; do-not-infer-by-timeout"
+              }
             }
           }
         ],
@@ -1374,7 +1438,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/group/registry.json",
-            "sha256": "df0495fcd9f84e5b5847ac1bc039f4efed24edc77dc47af7f3249f2513c12b48"
+            "sha256": "7d31df4eda86e63531b8b0d6e02fa3727f0971bbd85f96e245c675fc01600ec6"
           }
         ],
         "catalogs": [
@@ -1402,7 +1466,9 @@
                 "resultSchema": "spec/v1/group/result.schema.json",
                 "fieldRegistry": "spec/v1/group/field-registry.json",
                 "sourceManifest": "spec/v1/group/source-manifest.json",
-                "conformanceManifest": "conformance/v1/group/manifest.json"
+                "conformanceManifest": "conformance/v1/group/manifest.json",
+                "continuity": "spec/v1/group/continuity.md",
+                "resolutionSchema": "spec/v1/group/resolution.schema.json"
               },
               "representation": {
                 "governance": "restricted-jcs-json",
@@ -1458,9 +1524,9 @@
               },
               "forkPolicy": {
                 "samePredecessorAndEpochSameDigest": "idempotent-duplicate",
-                "samePredecessorAndEpochDifferentDigest": "reject-fork",
-                "missingPredecessor": "reject-gap",
-                "staleEpoch": "reject-stale",
+                "samePredecessorAndEpochDifferentDigest": "quarantine-affected-mutations-and-collect-unanimous-base-authority-resolution",
+                "missingPredecessor": "durable-catch-up-pending",
+                "staleEpoch": "historical-context-not-current-execution-authority",
                 "crossGroup": "reject-cross-group",
                 "terminalRemovalReplay": "reject-removed-member"
               },
@@ -1480,7 +1546,7 @@
                 "authority": "endpoint-confirmation-or-none-only"
               },
               "persistencePolicy": {
-                "restart": "restore-high-water-predecessor-state-current-members-tombstones-and-per-member-projections-before-accepting-input",
+                "restart": "restore-high-water-checkpoints-and-durable-pending-history-before-new-input",
                 "bounded": true,
                 "persistedStationState": false,
                 "persistedProductPermission": false,
@@ -1494,9 +1560,9 @@
                 "payload": "MAX_GROUP_PAYLOAD_BYTES-is-opaque-payload-octets",
                 "projectionResults": "MAX_GROUP_RESULTS-equals-MAX_GROUP_PROJECTIONS-one-result-per-recipient",
                 "aggregate": "MAX_GROUP_AGGREGATE_BYTES-is-the-complete-canonical-result-CBOR",
-                "persisted": "MAX_GROUP_PERSISTED_BYTES-is-the-complete-bounded-retained-group-state",
+                "persisted": "bounded-hot-working-set; durable-pages-and-checkpoints-have-admission-quotas-not-lifetime-maximum",
                 "rejectedOrDuplicateInput": "no-budget-consumption-and-no-state-mutation",
-                "retryReset": "forbidden"
+                "retryReset": "processing-turn-only; never-reset-membership-or-replay-frontiers"
               },
               "atomicity": {
                 "transition": "validate-complete-predecessor-and-protected-operation-then-commit-successor-once",
@@ -1514,7 +1580,13 @@
                 "application-payload-interpretation",
                 "unbounded-broadcast",
                 "compatibility-translator-or-alternate-wire"
-              ]
+              ],
+              "resolution": {
+                "contentType": 1279328261,
+                "approval": "all-state-authorities-at-exact-uncontested-base",
+                "expiry": "none",
+                "liveness": "wait-for-authorized-resolution; do-not-infer-by-timeout"
+              }
             }
           }
         ],
@@ -1544,7 +1616,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/group/registry.json",
-            "sha256": "df0495fcd9f84e5b5847ac1bc039f4efed24edc77dc47af7f3249f2513c12b48"
+            "sha256": "7d31df4eda86e63531b8b0d6e02fa3727f0971bbd85f96e245c675fc01600ec6"
           }
         ],
         "catalogs": [
@@ -1572,7 +1644,9 @@
                 "resultSchema": "spec/v1/group/result.schema.json",
                 "fieldRegistry": "spec/v1/group/field-registry.json",
                 "sourceManifest": "spec/v1/group/source-manifest.json",
-                "conformanceManifest": "conformance/v1/group/manifest.json"
+                "conformanceManifest": "conformance/v1/group/manifest.json",
+                "continuity": "spec/v1/group/continuity.md",
+                "resolutionSchema": "spec/v1/group/resolution.schema.json"
               },
               "representation": {
                 "governance": "restricted-jcs-json",
@@ -1628,9 +1702,9 @@
               },
               "forkPolicy": {
                 "samePredecessorAndEpochSameDigest": "idempotent-duplicate",
-                "samePredecessorAndEpochDifferentDigest": "reject-fork",
-                "missingPredecessor": "reject-gap",
-                "staleEpoch": "reject-stale",
+                "samePredecessorAndEpochDifferentDigest": "quarantine-affected-mutations-and-collect-unanimous-base-authority-resolution",
+                "missingPredecessor": "durable-catch-up-pending",
+                "staleEpoch": "historical-context-not-current-execution-authority",
                 "crossGroup": "reject-cross-group",
                 "terminalRemovalReplay": "reject-removed-member"
               },
@@ -1650,7 +1724,7 @@
                 "authority": "endpoint-confirmation-or-none-only"
               },
               "persistencePolicy": {
-                "restart": "restore-high-water-predecessor-state-current-members-tombstones-and-per-member-projections-before-accepting-input",
+                "restart": "restore-high-water-checkpoints-and-durable-pending-history-before-new-input",
                 "bounded": true,
                 "persistedStationState": false,
                 "persistedProductPermission": false,
@@ -1664,9 +1738,9 @@
                 "payload": "MAX_GROUP_PAYLOAD_BYTES-is-opaque-payload-octets",
                 "projectionResults": "MAX_GROUP_RESULTS-equals-MAX_GROUP_PROJECTIONS-one-result-per-recipient",
                 "aggregate": "MAX_GROUP_AGGREGATE_BYTES-is-the-complete-canonical-result-CBOR",
-                "persisted": "MAX_GROUP_PERSISTED_BYTES-is-the-complete-bounded-retained-group-state",
+                "persisted": "bounded-hot-working-set; durable-pages-and-checkpoints-have-admission-quotas-not-lifetime-maximum",
                 "rejectedOrDuplicateInput": "no-budget-consumption-and-no-state-mutation",
-                "retryReset": "forbidden"
+                "retryReset": "processing-turn-only; never-reset-membership-or-replay-frontiers"
               },
               "atomicity": {
                 "transition": "validate-complete-predecessor-and-protected-operation-then-commit-successor-once",
@@ -1684,7 +1758,13 @@
                 "application-payload-interpretation",
                 "unbounded-broadcast",
                 "compatibility-translator-or-alternate-wire"
-              ]
+              ],
+              "resolution": {
+                "contentType": 1279328261,
+                "approval": "all-state-authorities-at-exact-uncontested-base",
+                "expiry": "none",
+                "liveness": "wait-for-authorized-resolution; do-not-infer-by-timeout"
+              }
             }
           }
         ],
@@ -1714,7 +1794,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/group/registry.json",
-            "sha256": "df0495fcd9f84e5b5847ac1bc039f4efed24edc77dc47af7f3249f2513c12b48"
+            "sha256": "7d31df4eda86e63531b8b0d6e02fa3727f0971bbd85f96e245c675fc01600ec6"
           }
         ],
         "catalogs": [
@@ -1742,7 +1822,9 @@
                 "resultSchema": "spec/v1/group/result.schema.json",
                 "fieldRegistry": "spec/v1/group/field-registry.json",
                 "sourceManifest": "spec/v1/group/source-manifest.json",
-                "conformanceManifest": "conformance/v1/group/manifest.json"
+                "conformanceManifest": "conformance/v1/group/manifest.json",
+                "continuity": "spec/v1/group/continuity.md",
+                "resolutionSchema": "spec/v1/group/resolution.schema.json"
               },
               "representation": {
                 "governance": "restricted-jcs-json",
@@ -1798,9 +1880,9 @@
               },
               "forkPolicy": {
                 "samePredecessorAndEpochSameDigest": "idempotent-duplicate",
-                "samePredecessorAndEpochDifferentDigest": "reject-fork",
-                "missingPredecessor": "reject-gap",
-                "staleEpoch": "reject-stale",
+                "samePredecessorAndEpochDifferentDigest": "quarantine-affected-mutations-and-collect-unanimous-base-authority-resolution",
+                "missingPredecessor": "durable-catch-up-pending",
+                "staleEpoch": "historical-context-not-current-execution-authority",
                 "crossGroup": "reject-cross-group",
                 "terminalRemovalReplay": "reject-removed-member"
               },
@@ -1820,7 +1902,7 @@
                 "authority": "endpoint-confirmation-or-none-only"
               },
               "persistencePolicy": {
-                "restart": "restore-high-water-predecessor-state-current-members-tombstones-and-per-member-projections-before-accepting-input",
+                "restart": "restore-high-water-checkpoints-and-durable-pending-history-before-new-input",
                 "bounded": true,
                 "persistedStationState": false,
                 "persistedProductPermission": false,
@@ -1834,9 +1916,9 @@
                 "payload": "MAX_GROUP_PAYLOAD_BYTES-is-opaque-payload-octets",
                 "projectionResults": "MAX_GROUP_RESULTS-equals-MAX_GROUP_PROJECTIONS-one-result-per-recipient",
                 "aggregate": "MAX_GROUP_AGGREGATE_BYTES-is-the-complete-canonical-result-CBOR",
-                "persisted": "MAX_GROUP_PERSISTED_BYTES-is-the-complete-bounded-retained-group-state",
+                "persisted": "bounded-hot-working-set; durable-pages-and-checkpoints-have-admission-quotas-not-lifetime-maximum",
                 "rejectedOrDuplicateInput": "no-budget-consumption-and-no-state-mutation",
-                "retryReset": "forbidden"
+                "retryReset": "processing-turn-only; never-reset-membership-or-replay-frontiers"
               },
               "atomicity": {
                 "transition": "validate-complete-predecessor-and-protected-operation-then-commit-successor-once",
@@ -1854,7 +1936,13 @@
                 "application-payload-interpretation",
                 "unbounded-broadcast",
                 "compatibility-translator-or-alternate-wire"
-              ]
+              ],
+              "resolution": {
+                "contentType": 1279328261,
+                "approval": "all-state-authorities-at-exact-uncontested-base",
+                "expiry": "none",
+                "liveness": "wait-for-authorized-resolution; do-not-infer-by-timeout"
+              }
             }
           }
         ],
@@ -1884,7 +1972,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/group/registry.json",
-            "sha256": "df0495fcd9f84e5b5847ac1bc039f4efed24edc77dc47af7f3249f2513c12b48"
+            "sha256": "7d31df4eda86e63531b8b0d6e02fa3727f0971bbd85f96e245c675fc01600ec6"
           }
         ],
         "catalogs": [
@@ -1912,7 +2000,9 @@
                 "resultSchema": "spec/v1/group/result.schema.json",
                 "fieldRegistry": "spec/v1/group/field-registry.json",
                 "sourceManifest": "spec/v1/group/source-manifest.json",
-                "conformanceManifest": "conformance/v1/group/manifest.json"
+                "conformanceManifest": "conformance/v1/group/manifest.json",
+                "continuity": "spec/v1/group/continuity.md",
+                "resolutionSchema": "spec/v1/group/resolution.schema.json"
               },
               "representation": {
                 "governance": "restricted-jcs-json",
@@ -1968,9 +2058,9 @@
               },
               "forkPolicy": {
                 "samePredecessorAndEpochSameDigest": "idempotent-duplicate",
-                "samePredecessorAndEpochDifferentDigest": "reject-fork",
-                "missingPredecessor": "reject-gap",
-                "staleEpoch": "reject-stale",
+                "samePredecessorAndEpochDifferentDigest": "quarantine-affected-mutations-and-collect-unanimous-base-authority-resolution",
+                "missingPredecessor": "durable-catch-up-pending",
+                "staleEpoch": "historical-context-not-current-execution-authority",
                 "crossGroup": "reject-cross-group",
                 "terminalRemovalReplay": "reject-removed-member"
               },
@@ -1990,7 +2080,7 @@
                 "authority": "endpoint-confirmation-or-none-only"
               },
               "persistencePolicy": {
-                "restart": "restore-high-water-predecessor-state-current-members-tombstones-and-per-member-projections-before-accepting-input",
+                "restart": "restore-high-water-checkpoints-and-durable-pending-history-before-new-input",
                 "bounded": true,
                 "persistedStationState": false,
                 "persistedProductPermission": false,
@@ -2004,9 +2094,9 @@
                 "payload": "MAX_GROUP_PAYLOAD_BYTES-is-opaque-payload-octets",
                 "projectionResults": "MAX_GROUP_RESULTS-equals-MAX_GROUP_PROJECTIONS-one-result-per-recipient",
                 "aggregate": "MAX_GROUP_AGGREGATE_BYTES-is-the-complete-canonical-result-CBOR",
-                "persisted": "MAX_GROUP_PERSISTED_BYTES-is-the-complete-bounded-retained-group-state",
+                "persisted": "bounded-hot-working-set; durable-pages-and-checkpoints-have-admission-quotas-not-lifetime-maximum",
                 "rejectedOrDuplicateInput": "no-budget-consumption-and-no-state-mutation",
-                "retryReset": "forbidden"
+                "retryReset": "processing-turn-only; never-reset-membership-or-replay-frontiers"
               },
               "atomicity": {
                 "transition": "validate-complete-predecessor-and-protected-operation-then-commit-successor-once",
@@ -2024,7 +2114,13 @@
                 "application-payload-interpretation",
                 "unbounded-broadcast",
                 "compatibility-translator-or-alternate-wire"
-              ]
+              ],
+              "resolution": {
+                "contentType": 1279328261,
+                "approval": "all-state-authorities-at-exact-uncontested-base",
+                "expiry": "none",
+                "liveness": "wait-for-authorized-resolution; do-not-infer-by-timeout"
+              }
             }
           }
         ],
@@ -2054,7 +2150,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/group/registry.json",
-            "sha256": "df0495fcd9f84e5b5847ac1bc039f4efed24edc77dc47af7f3249f2513c12b48"
+            "sha256": "7d31df4eda86e63531b8b0d6e02fa3727f0971bbd85f96e245c675fc01600ec6"
           }
         ],
         "catalogs": [
@@ -2082,7 +2178,9 @@
                 "resultSchema": "spec/v1/group/result.schema.json",
                 "fieldRegistry": "spec/v1/group/field-registry.json",
                 "sourceManifest": "spec/v1/group/source-manifest.json",
-                "conformanceManifest": "conformance/v1/group/manifest.json"
+                "conformanceManifest": "conformance/v1/group/manifest.json",
+                "continuity": "spec/v1/group/continuity.md",
+                "resolutionSchema": "spec/v1/group/resolution.schema.json"
               },
               "representation": {
                 "governance": "restricted-jcs-json",
@@ -2138,9 +2236,9 @@
               },
               "forkPolicy": {
                 "samePredecessorAndEpochSameDigest": "idempotent-duplicate",
-                "samePredecessorAndEpochDifferentDigest": "reject-fork",
-                "missingPredecessor": "reject-gap",
-                "staleEpoch": "reject-stale",
+                "samePredecessorAndEpochDifferentDigest": "quarantine-affected-mutations-and-collect-unanimous-base-authority-resolution",
+                "missingPredecessor": "durable-catch-up-pending",
+                "staleEpoch": "historical-context-not-current-execution-authority",
                 "crossGroup": "reject-cross-group",
                 "terminalRemovalReplay": "reject-removed-member"
               },
@@ -2160,7 +2258,7 @@
                 "authority": "endpoint-confirmation-or-none-only"
               },
               "persistencePolicy": {
-                "restart": "restore-high-water-predecessor-state-current-members-tombstones-and-per-member-projections-before-accepting-input",
+                "restart": "restore-high-water-checkpoints-and-durable-pending-history-before-new-input",
                 "bounded": true,
                 "persistedStationState": false,
                 "persistedProductPermission": false,
@@ -2174,9 +2272,9 @@
                 "payload": "MAX_GROUP_PAYLOAD_BYTES-is-opaque-payload-octets",
                 "projectionResults": "MAX_GROUP_RESULTS-equals-MAX_GROUP_PROJECTIONS-one-result-per-recipient",
                 "aggregate": "MAX_GROUP_AGGREGATE_BYTES-is-the-complete-canonical-result-CBOR",
-                "persisted": "MAX_GROUP_PERSISTED_BYTES-is-the-complete-bounded-retained-group-state",
+                "persisted": "bounded-hot-working-set; durable-pages-and-checkpoints-have-admission-quotas-not-lifetime-maximum",
                 "rejectedOrDuplicateInput": "no-budget-consumption-and-no-state-mutation",
-                "retryReset": "forbidden"
+                "retryReset": "processing-turn-only; never-reset-membership-or-replay-frontiers"
               },
               "atomicity": {
                 "transition": "validate-complete-predecessor-and-protected-operation-then-commit-successor-once",
@@ -2194,7 +2292,13 @@
                 "application-payload-interpretation",
                 "unbounded-broadcast",
                 "compatibility-translator-or-alternate-wire"
-              ]
+              ],
+              "resolution": {
+                "contentType": 1279328261,
+                "approval": "all-state-authorities-at-exact-uncontested-base",
+                "expiry": "none",
+                "liveness": "wait-for-authorized-resolution; do-not-infer-by-timeout"
+              }
             }
           }
         ],
@@ -2224,7 +2328,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/group/registry.json",
-            "sha256": "df0495fcd9f84e5b5847ac1bc039f4efed24edc77dc47af7f3249f2513c12b48"
+            "sha256": "7d31df4eda86e63531b8b0d6e02fa3727f0971bbd85f96e245c675fc01600ec6"
           }
         ],
         "catalogs": [],
@@ -2241,7 +2345,7 @@
           "outcome": "pending"
         },
         "confirmation": {
-          "confirmationId": "05050505050505050505050505050505",
+          "confirmationId": "94442448d8b02d75f16913a7c78ed1dd",
           "confirmedMessageIds": [
             "01010101010101010101010101010101"
           ],
@@ -2275,7 +2379,7 @@
         "sourceBindings": [
           {
             "sourcePath": "spec/v1/group/registry.json",
-            "sha256": "df0495fcd9f84e5b5847ac1bc039f4efed24edc77dc47af7f3249f2513c12b48"
+            "sha256": "7d31df4eda86e63531b8b0d6e02fa3727f0971bbd85f96e245c675fc01600ec6"
           }
         ],
         "catalogs": [],
@@ -2292,7 +2396,7 @@
           "outcome": "pending"
         },
         "confirmation": {
-          "confirmationId": "05050505050505050505050505050505",
+          "confirmationId": "94442448d8b02d75f16913a7c78ed1dd",
           "confirmedMessageIds": [
             "01010101010101010101010101010101"
           ],
@@ -2310,6 +2414,555 @@
       "expected": {
         "error": {
           "code": "confirmation-unauthenticated"
+        }
+      }
+    },
+    {
+      "$schema": "https://licoarc.com/spec/schemas/conformance-case.schema.json",
+      "caseVersion": "licoarc.conformance-case.v1",
+      "id": "missing-ancestry",
+      "target": {
+        "operationId": "licoarc.group.classify-delayed-history.v1"
+      },
+      "context": {
+        "sourceBindings": [
+          {
+            "sourcePath": "spec/v1/group/registry.json",
+            "sha256": "7d31df4eda86e63531b8b0d6e02fa3727f0971bbd85f96e245c675fc01600ec6"
+          }
+        ],
+        "catalogs": [
+          {
+            "name": "group-registry",
+            "sourcePath": "spec/v1/group/registry.json",
+            "value": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "$id": "https://licoarc.com/spec/v1/group/registry.json",
+              "registryVersion": "licoarc.group-collaboration.v1",
+              "wireId": "licoarc.group-collaboration.v1",
+              "protocolLineIdType": "DIGEST256-line-content-identity",
+              "capabilityId": "licoarc.group-collaboration.v1",
+              "lifecycle": "Candidate",
+              "normativeLanguage": "en",
+              "scope": "protected-bounded-group-state-message-and-per-member-projection",
+              "sourcePaths": {
+                "bounds": "spec/v1/group/bounds.json",
+                "labels": "spec/v1/group/labels.json",
+                "runtime": "spec/v1/group/runtime.cddl",
+                "schema": "spec/v1/group/group.schema.json",
+                "stateSchema": "spec/v1/group/state.schema.json",
+                "messageSchema": "spec/v1/group/message.schema.json",
+                "transitionSchema": "spec/v1/group/transition.schema.json",
+                "resultSchema": "spec/v1/group/result.schema.json",
+                "fieldRegistry": "spec/v1/group/field-registry.json",
+                "sourceManifest": "spec/v1/group/source-manifest.json",
+                "conformanceManifest": "conformance/v1/group/manifest.json",
+                "continuity": "spec/v1/group/continuity.md",
+                "resolutionSchema": "spec/v1/group/resolution.schema.json"
+              },
+              "representation": {
+                "governance": "restricted-jcs-json",
+                "runtime": "deterministic-cbor",
+                "mapKeyEncoding": "compact-unsigned-integer",
+                "lengthEncoding": "definite",
+                "rawBytes": "bstr",
+                "tags": "forbidden",
+                "floats": "forbidden",
+                "indefiniteLengths": "forbidden",
+                "duplicateLabels": "reject",
+                "unknownLabels": "reject",
+                "trailingBytes": "reject"
+              },
+              "sourceClosure": {
+                "manifestPath": "spec/v1/group/source-manifest.json",
+                "undeclaredFiles": "reject",
+                "symlinks": "reject",
+                "sortedPaths": "required"
+              },
+              "authority": {
+                "stateAndTransition": "owning-group-capability-and-endpoint-protection",
+                "perMemberProjection": "owning-group-capability-and-endpoint-confirmation",
+                "endpointAdmission": "endpoint-local",
+                "crossCapabilityTotals": "bounded-by-protocol-line",
+                "inheritance": "forbidden"
+              },
+              "stateIdentity": {
+                "digest": "SHA-256(domain=LICOARC-GROUP-STATE\\0, canonical-state)",
+                "tuple": [
+                  "groupId",
+                  "groupEpoch",
+                  "previousGroupStateDigest",
+                  "members",
+                  "transitionDigest"
+                ],
+                "genesisEpoch": 0,
+                "successorRule": "exactly-predecessor-epoch-plus-one",
+                "predecessorRule": "exact-complete-canonical-immediate-predecessor"
+              },
+              "transitionAuthorization": {
+                "genesis": "author-is-a-state-authority-member-in-the-genesis-snapshot",
+                "successor": "author-is-a-state-authority-in-the-exact-predecessor-snapshot",
+                "operations": [
+                  "add",
+                  "remove",
+                  "role"
+                ],
+                "stationOrder": "never-authority",
+                "productPermissions": "never-authority",
+                "arrivalOrder": "never-authority",
+                "authentication": "the-Endpoint-protection-context-authenticates-the-transition"
+              },
+              "forkPolicy": {
+                "samePredecessorAndEpochSameDigest": "idempotent-duplicate",
+                "samePredecessorAndEpochDifferentDigest": "quarantine-affected-mutations-and-collect-unanimous-base-authority-resolution",
+                "missingPredecessor": "durable-catch-up-pending",
+                "staleEpoch": "historical-context-not-current-execution-authority",
+                "crossGroup": "reject-cross-group",
+                "terminalRemovalReplay": "reject-removed-member"
+              },
+              "projectionPolicy": {
+                "recipients": "canonical-sorted-members-excluding-sender",
+                "maxRecipients": "MAX_GROUP_PROJECTIONS",
+                "projectionId": "first-16-bytes-SHA-256(domain=LICOARC-GROUP-PROJECTION\\0, stateDigest, messageId, recipient)",
+                "retry": "per-member-at-least-once-with-stable-projection-id",
+                "stationReceipt": "never-endpoint-confirmation"
+              },
+              "aggregationPolicy": {
+                "resultOrder": "recipient-endpoint-reference-byte-order",
+                "missingResult": "pending",
+                "allDelivered": "complete",
+                "noDeliveredAndAllTerminalFailure": "failed",
+                "otherwise": "partial",
+                "authority": "endpoint-confirmation-or-none-only"
+              },
+              "persistencePolicy": {
+                "restart": "restore-high-water-checkpoints-and-durable-pending-history-before-new-input",
+                "bounded": true,
+                "persistedStationState": false,
+                "persistedProductPermission": false,
+                "retiredStateReset": "no-legacy-group-root-or-namespace-is-read"
+              },
+              "resourceAccounting": {
+                "memberSet": "MAX_GROUP_MEMBERS-bounded-sorted-unique-Endpoint-references",
+                "state": "MAX_GROUP_STATE_BYTES-is-the-complete-canonical-state-CBOR",
+                "operation": "MAX_GROUP_OPERATION_BYTES-is-the-complete-canonical-transition-CBOR",
+                "messageControl": "MAX_GROUP_MESSAGE_CONTROL_BYTES-includes-control-and-maximum-payload-length-prefix-but-not-payload-octets",
+                "payload": "MAX_GROUP_PAYLOAD_BYTES-is-opaque-payload-octets",
+                "projectionResults": "MAX_GROUP_RESULTS-equals-MAX_GROUP_PROJECTIONS-one-result-per-recipient",
+                "aggregate": "MAX_GROUP_AGGREGATE_BYTES-is-the-complete-canonical-result-CBOR",
+                "persisted": "bounded-hot-working-set; durable-pages-and-checkpoints-have-admission-quotas-not-lifetime-maximum",
+                "rejectedOrDuplicateInput": "no-budget-consumption-and-no-state-mutation",
+                "retryReset": "processing-turn-only; never-reset-membership-or-replay-frontiers"
+              },
+              "atomicity": {
+                "transition": "validate-complete-predecessor-and-protected-operation-then-commit-successor-once",
+                "projection": "register-one-stable-projection-per-canonical-recipient-or-commit-none",
+                "result": "same-projection-and-identical-result-replays-without-reapplying-state",
+                "restart": "restore-current-state-predecessor-state-tombstones-and-projections-before-input",
+                "failure": "malformed-gap-fork-stale-unauthorized-or-over-bound-input-leaves-byte-identical-pre-state"
+              },
+              "outOfScope": [
+                "Station-membership-or-ordering-authority",
+                "Network-or-account-membership",
+                "human-or-device-identity",
+                "product-permission-or-command-catalogue",
+                "group-key-management",
+                "application-payload-interpretation",
+                "unbounded-broadcast",
+                "compatibility-translator-or-alternate-wire"
+              ],
+              "resolution": {
+                "contentType": 1279328261,
+                "approval": "all-state-authorities-at-exact-uncontested-base",
+                "expiry": "none",
+                "liveness": "wait-for-authorized-resolution; do-not-infer-by-timeout"
+              }
+            }
+          }
+        ],
+        "publicMaterial": [],
+        "clock": {},
+        "state": {},
+        "transport": {},
+        "storage": {}
+      },
+      "input": {
+        "authenticated": true,
+        "lineageKnown": false,
+        "senderAuthorizedThen": true,
+        "senderAuthorizedNow": true,
+        "effectRequested": true
+      },
+      "expected": {
+        "result": {
+          "disposition": "catch-up-pending",
+          "execute": false
+        }
+      }
+    },
+    {
+      "$schema": "https://licoarc.com/spec/schemas/conformance-case.schema.json",
+      "caseVersion": "licoarc.conformance-case.v1",
+      "id": "old-authenticated-history",
+      "target": {
+        "operationId": "licoarc.group.classify-delayed-history.v1"
+      },
+      "context": {
+        "sourceBindings": [
+          {
+            "sourcePath": "spec/v1/group/registry.json",
+            "sha256": "7d31df4eda86e63531b8b0d6e02fa3727f0971bbd85f96e245c675fc01600ec6"
+          }
+        ],
+        "catalogs": [
+          {
+            "name": "group-registry",
+            "sourcePath": "spec/v1/group/registry.json",
+            "value": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "$id": "https://licoarc.com/spec/v1/group/registry.json",
+              "registryVersion": "licoarc.group-collaboration.v1",
+              "wireId": "licoarc.group-collaboration.v1",
+              "protocolLineIdType": "DIGEST256-line-content-identity",
+              "capabilityId": "licoarc.group-collaboration.v1",
+              "lifecycle": "Candidate",
+              "normativeLanguage": "en",
+              "scope": "protected-bounded-group-state-message-and-per-member-projection",
+              "sourcePaths": {
+                "bounds": "spec/v1/group/bounds.json",
+                "labels": "spec/v1/group/labels.json",
+                "runtime": "spec/v1/group/runtime.cddl",
+                "schema": "spec/v1/group/group.schema.json",
+                "stateSchema": "spec/v1/group/state.schema.json",
+                "messageSchema": "spec/v1/group/message.schema.json",
+                "transitionSchema": "spec/v1/group/transition.schema.json",
+                "resultSchema": "spec/v1/group/result.schema.json",
+                "fieldRegistry": "spec/v1/group/field-registry.json",
+                "sourceManifest": "spec/v1/group/source-manifest.json",
+                "conformanceManifest": "conformance/v1/group/manifest.json",
+                "continuity": "spec/v1/group/continuity.md",
+                "resolutionSchema": "spec/v1/group/resolution.schema.json"
+              },
+              "representation": {
+                "governance": "restricted-jcs-json",
+                "runtime": "deterministic-cbor",
+                "mapKeyEncoding": "compact-unsigned-integer",
+                "lengthEncoding": "definite",
+                "rawBytes": "bstr",
+                "tags": "forbidden",
+                "floats": "forbidden",
+                "indefiniteLengths": "forbidden",
+                "duplicateLabels": "reject",
+                "unknownLabels": "reject",
+                "trailingBytes": "reject"
+              },
+              "sourceClosure": {
+                "manifestPath": "spec/v1/group/source-manifest.json",
+                "undeclaredFiles": "reject",
+                "symlinks": "reject",
+                "sortedPaths": "required"
+              },
+              "authority": {
+                "stateAndTransition": "owning-group-capability-and-endpoint-protection",
+                "perMemberProjection": "owning-group-capability-and-endpoint-confirmation",
+                "endpointAdmission": "endpoint-local",
+                "crossCapabilityTotals": "bounded-by-protocol-line",
+                "inheritance": "forbidden"
+              },
+              "stateIdentity": {
+                "digest": "SHA-256(domain=LICOARC-GROUP-STATE\\0, canonical-state)",
+                "tuple": [
+                  "groupId",
+                  "groupEpoch",
+                  "previousGroupStateDigest",
+                  "members",
+                  "transitionDigest"
+                ],
+                "genesisEpoch": 0,
+                "successorRule": "exactly-predecessor-epoch-plus-one",
+                "predecessorRule": "exact-complete-canonical-immediate-predecessor"
+              },
+              "transitionAuthorization": {
+                "genesis": "author-is-a-state-authority-member-in-the-genesis-snapshot",
+                "successor": "author-is-a-state-authority-in-the-exact-predecessor-snapshot",
+                "operations": [
+                  "add",
+                  "remove",
+                  "role"
+                ],
+                "stationOrder": "never-authority",
+                "productPermissions": "never-authority",
+                "arrivalOrder": "never-authority",
+                "authentication": "the-Endpoint-protection-context-authenticates-the-transition"
+              },
+              "forkPolicy": {
+                "samePredecessorAndEpochSameDigest": "idempotent-duplicate",
+                "samePredecessorAndEpochDifferentDigest": "quarantine-affected-mutations-and-collect-unanimous-base-authority-resolution",
+                "missingPredecessor": "durable-catch-up-pending",
+                "staleEpoch": "historical-context-not-current-execution-authority",
+                "crossGroup": "reject-cross-group",
+                "terminalRemovalReplay": "reject-removed-member"
+              },
+              "projectionPolicy": {
+                "recipients": "canonical-sorted-members-excluding-sender",
+                "maxRecipients": "MAX_GROUP_PROJECTIONS",
+                "projectionId": "first-16-bytes-SHA-256(domain=LICOARC-GROUP-PROJECTION\\0, stateDigest, messageId, recipient)",
+                "retry": "per-member-at-least-once-with-stable-projection-id",
+                "stationReceipt": "never-endpoint-confirmation"
+              },
+              "aggregationPolicy": {
+                "resultOrder": "recipient-endpoint-reference-byte-order",
+                "missingResult": "pending",
+                "allDelivered": "complete",
+                "noDeliveredAndAllTerminalFailure": "failed",
+                "otherwise": "partial",
+                "authority": "endpoint-confirmation-or-none-only"
+              },
+              "persistencePolicy": {
+                "restart": "restore-high-water-checkpoints-and-durable-pending-history-before-new-input",
+                "bounded": true,
+                "persistedStationState": false,
+                "persistedProductPermission": false,
+                "retiredStateReset": "no-legacy-group-root-or-namespace-is-read"
+              },
+              "resourceAccounting": {
+                "memberSet": "MAX_GROUP_MEMBERS-bounded-sorted-unique-Endpoint-references",
+                "state": "MAX_GROUP_STATE_BYTES-is-the-complete-canonical-state-CBOR",
+                "operation": "MAX_GROUP_OPERATION_BYTES-is-the-complete-canonical-transition-CBOR",
+                "messageControl": "MAX_GROUP_MESSAGE_CONTROL_BYTES-includes-control-and-maximum-payload-length-prefix-but-not-payload-octets",
+                "payload": "MAX_GROUP_PAYLOAD_BYTES-is-opaque-payload-octets",
+                "projectionResults": "MAX_GROUP_RESULTS-equals-MAX_GROUP_PROJECTIONS-one-result-per-recipient",
+                "aggregate": "MAX_GROUP_AGGREGATE_BYTES-is-the-complete-canonical-result-CBOR",
+                "persisted": "bounded-hot-working-set; durable-pages-and-checkpoints-have-admission-quotas-not-lifetime-maximum",
+                "rejectedOrDuplicateInput": "no-budget-consumption-and-no-state-mutation",
+                "retryReset": "processing-turn-only; never-reset-membership-or-replay-frontiers"
+              },
+              "atomicity": {
+                "transition": "validate-complete-predecessor-and-protected-operation-then-commit-successor-once",
+                "projection": "register-one-stable-projection-per-canonical-recipient-or-commit-none",
+                "result": "same-projection-and-identical-result-replays-without-reapplying-state",
+                "restart": "restore-current-state-predecessor-state-tombstones-and-projections-before-input",
+                "failure": "malformed-gap-fork-stale-unauthorized-or-over-bound-input-leaves-byte-identical-pre-state"
+              },
+              "outOfScope": [
+                "Station-membership-or-ordering-authority",
+                "Network-or-account-membership",
+                "human-or-device-identity",
+                "product-permission-or-command-catalogue",
+                "group-key-management",
+                "application-payload-interpretation",
+                "unbounded-broadcast",
+                "compatibility-translator-or-alternate-wire"
+              ],
+              "resolution": {
+                "contentType": 1279328261,
+                "approval": "all-state-authorities-at-exact-uncontested-base",
+                "expiry": "none",
+                "liveness": "wait-for-authorized-resolution; do-not-infer-by-timeout"
+              }
+            }
+          }
+        ],
+        "publicMaterial": [],
+        "clock": {},
+        "state": {},
+        "transport": {},
+        "storage": {}
+      },
+      "input": {
+        "authenticated": true,
+        "lineageKnown": true,
+        "senderAuthorizedThen": true,
+        "senderAuthorizedNow": false,
+        "effectRequested": true
+      },
+      "expected": {
+        "result": {
+          "disposition": "historical",
+          "execute": false
+        }
+      }
+    },
+    {
+      "$schema": "https://licoarc.com/spec/schemas/conformance-case.schema.json",
+      "caseVersion": "licoarc.conformance-case.v1",
+      "id": "current-membership-not-execution-permission",
+      "target": {
+        "operationId": "licoarc.group.classify-delayed-history.v1"
+      },
+      "context": {
+        "sourceBindings": [
+          {
+            "sourcePath": "spec/v1/group/registry.json",
+            "sha256": "7d31df4eda86e63531b8b0d6e02fa3727f0971bbd85f96e245c675fc01600ec6"
+          }
+        ],
+        "catalogs": [
+          {
+            "name": "group-registry",
+            "sourcePath": "spec/v1/group/registry.json",
+            "value": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "$id": "https://licoarc.com/spec/v1/group/registry.json",
+              "registryVersion": "licoarc.group-collaboration.v1",
+              "wireId": "licoarc.group-collaboration.v1",
+              "protocolLineIdType": "DIGEST256-line-content-identity",
+              "capabilityId": "licoarc.group-collaboration.v1",
+              "lifecycle": "Candidate",
+              "normativeLanguage": "en",
+              "scope": "protected-bounded-group-state-message-and-per-member-projection",
+              "sourcePaths": {
+                "bounds": "spec/v1/group/bounds.json",
+                "labels": "spec/v1/group/labels.json",
+                "runtime": "spec/v1/group/runtime.cddl",
+                "schema": "spec/v1/group/group.schema.json",
+                "stateSchema": "spec/v1/group/state.schema.json",
+                "messageSchema": "spec/v1/group/message.schema.json",
+                "transitionSchema": "spec/v1/group/transition.schema.json",
+                "resultSchema": "spec/v1/group/result.schema.json",
+                "fieldRegistry": "spec/v1/group/field-registry.json",
+                "sourceManifest": "spec/v1/group/source-manifest.json",
+                "conformanceManifest": "conformance/v1/group/manifest.json",
+                "continuity": "spec/v1/group/continuity.md",
+                "resolutionSchema": "spec/v1/group/resolution.schema.json"
+              },
+              "representation": {
+                "governance": "restricted-jcs-json",
+                "runtime": "deterministic-cbor",
+                "mapKeyEncoding": "compact-unsigned-integer",
+                "lengthEncoding": "definite",
+                "rawBytes": "bstr",
+                "tags": "forbidden",
+                "floats": "forbidden",
+                "indefiniteLengths": "forbidden",
+                "duplicateLabels": "reject",
+                "unknownLabels": "reject",
+                "trailingBytes": "reject"
+              },
+              "sourceClosure": {
+                "manifestPath": "spec/v1/group/source-manifest.json",
+                "undeclaredFiles": "reject",
+                "symlinks": "reject",
+                "sortedPaths": "required"
+              },
+              "authority": {
+                "stateAndTransition": "owning-group-capability-and-endpoint-protection",
+                "perMemberProjection": "owning-group-capability-and-endpoint-confirmation",
+                "endpointAdmission": "endpoint-local",
+                "crossCapabilityTotals": "bounded-by-protocol-line",
+                "inheritance": "forbidden"
+              },
+              "stateIdentity": {
+                "digest": "SHA-256(domain=LICOARC-GROUP-STATE\\0, canonical-state)",
+                "tuple": [
+                  "groupId",
+                  "groupEpoch",
+                  "previousGroupStateDigest",
+                  "members",
+                  "transitionDigest"
+                ],
+                "genesisEpoch": 0,
+                "successorRule": "exactly-predecessor-epoch-plus-one",
+                "predecessorRule": "exact-complete-canonical-immediate-predecessor"
+              },
+              "transitionAuthorization": {
+                "genesis": "author-is-a-state-authority-member-in-the-genesis-snapshot",
+                "successor": "author-is-a-state-authority-in-the-exact-predecessor-snapshot",
+                "operations": [
+                  "add",
+                  "remove",
+                  "role"
+                ],
+                "stationOrder": "never-authority",
+                "productPermissions": "never-authority",
+                "arrivalOrder": "never-authority",
+                "authentication": "the-Endpoint-protection-context-authenticates-the-transition"
+              },
+              "forkPolicy": {
+                "samePredecessorAndEpochSameDigest": "idempotent-duplicate",
+                "samePredecessorAndEpochDifferentDigest": "quarantine-affected-mutations-and-collect-unanimous-base-authority-resolution",
+                "missingPredecessor": "durable-catch-up-pending",
+                "staleEpoch": "historical-context-not-current-execution-authority",
+                "crossGroup": "reject-cross-group",
+                "terminalRemovalReplay": "reject-removed-member"
+              },
+              "projectionPolicy": {
+                "recipients": "canonical-sorted-members-excluding-sender",
+                "maxRecipients": "MAX_GROUP_PROJECTIONS",
+                "projectionId": "first-16-bytes-SHA-256(domain=LICOARC-GROUP-PROJECTION\\0, stateDigest, messageId, recipient)",
+                "retry": "per-member-at-least-once-with-stable-projection-id",
+                "stationReceipt": "never-endpoint-confirmation"
+              },
+              "aggregationPolicy": {
+                "resultOrder": "recipient-endpoint-reference-byte-order",
+                "missingResult": "pending",
+                "allDelivered": "complete",
+                "noDeliveredAndAllTerminalFailure": "failed",
+                "otherwise": "partial",
+                "authority": "endpoint-confirmation-or-none-only"
+              },
+              "persistencePolicy": {
+                "restart": "restore-high-water-checkpoints-and-durable-pending-history-before-new-input",
+                "bounded": true,
+                "persistedStationState": false,
+                "persistedProductPermission": false,
+                "retiredStateReset": "no-legacy-group-root-or-namespace-is-read"
+              },
+              "resourceAccounting": {
+                "memberSet": "MAX_GROUP_MEMBERS-bounded-sorted-unique-Endpoint-references",
+                "state": "MAX_GROUP_STATE_BYTES-is-the-complete-canonical-state-CBOR",
+                "operation": "MAX_GROUP_OPERATION_BYTES-is-the-complete-canonical-transition-CBOR",
+                "messageControl": "MAX_GROUP_MESSAGE_CONTROL_BYTES-includes-control-and-maximum-payload-length-prefix-but-not-payload-octets",
+                "payload": "MAX_GROUP_PAYLOAD_BYTES-is-opaque-payload-octets",
+                "projectionResults": "MAX_GROUP_RESULTS-equals-MAX_GROUP_PROJECTIONS-one-result-per-recipient",
+                "aggregate": "MAX_GROUP_AGGREGATE_BYTES-is-the-complete-canonical-result-CBOR",
+                "persisted": "bounded-hot-working-set; durable-pages-and-checkpoints-have-admission-quotas-not-lifetime-maximum",
+                "rejectedOrDuplicateInput": "no-budget-consumption-and-no-state-mutation",
+                "retryReset": "processing-turn-only; never-reset-membership-or-replay-frontiers"
+              },
+              "atomicity": {
+                "transition": "validate-complete-predecessor-and-protected-operation-then-commit-successor-once",
+                "projection": "register-one-stable-projection-per-canonical-recipient-or-commit-none",
+                "result": "same-projection-and-identical-result-replays-without-reapplying-state",
+                "restart": "restore-current-state-predecessor-state-tombstones-and-projections-before-input",
+                "failure": "malformed-gap-fork-stale-unauthorized-or-over-bound-input-leaves-byte-identical-pre-state"
+              },
+              "outOfScope": [
+                "Station-membership-or-ordering-authority",
+                "Network-or-account-membership",
+                "human-or-device-identity",
+                "product-permission-or-command-catalogue",
+                "group-key-management",
+                "application-payload-interpretation",
+                "unbounded-broadcast",
+                "compatibility-translator-or-alternate-wire"
+              ],
+              "resolution": {
+                "contentType": 1279328261,
+                "approval": "all-state-authorities-at-exact-uncontested-base",
+                "expiry": "none",
+                "liveness": "wait-for-authorized-resolution; do-not-infer-by-timeout"
+              }
+            }
+          }
+        ],
+        "publicMaterial": [],
+        "clock": {},
+        "state": {},
+        "transport": {},
+        "storage": {}
+      },
+      "input": {
+        "authenticated": true,
+        "lineageKnown": true,
+        "senderAuthorizedThen": true,
+        "senderAuthorizedNow": true,
+        "effectRequested": true
+      },
+      "expected": {
+        "result": {
+          "disposition": "current",
+          "execute": false
         }
       }
     }

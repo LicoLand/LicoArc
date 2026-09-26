@@ -1,150 +1,70 @@
 # Lico Arc Protocol Architecture
 
-This document projects the implementation-neutral architecture owned by the
-tracked definition graph. Exact wire and lifecycle authority remains in
-`spec/`, `conformance/`, and the generated artifact.
+## Independent lifetimes
 
-## Authority graph
+The conversation is a durable authorized peer scope, not a connection or session.
+A logical message and its protected intent survive routing, reconnect and recovery.
+Application capability revisions do not change either identity. Existing authorized
+conversations subscribe to relevant incremental capability updates; offline peers
+repair them from authenticated, bounded snapshot pages without rebinding.
+
+## Composition and dependency direction
 
 ```text
-decided algorithm and field semantics
-             │
-             ▼
-closed schemas · registries · policies · bounds · labels · CDDL
-             │
-             ├── source-owned formal claims and proof bindings
-             ├── positive and negative conformance corpora
-             └── content-identity projections
-             │
-             ▼
-Protocol Line manifest ── deterministic generation ── bundle
+application definitions and authorized effects
+                    |
+live capability state / durable custody and task facts
+                    |
+Endpoint Core: Foundation, Identity, Protection, Messaging, Reliability
+                    |
+     optional carriage adapters (Nostr or native HTTPS or another approved path)
 ```
 
-The graph is self-contained. Local research, external implementations,
-runtime results, service state, publication metadata, and deployment facts are
-not definition inputs.
+`spec/v1/foundation/targets.json` owns five core capabilities. Group Collaboration,
+HTTPS Station carriage and Federation Governance have separate conditional targets.
+A client need not implement a Station, and an enhanced headless service need not
+implement standard Nostr chat. Transport code cannot choose keys, authority states,
+application permissions, a tool catalogue or message lifetime.
 
-## Composition
+## Durable transactions
 
-`licoarc.protocol-line.v1` is a `Candidate`/`COMPLETE` composition with
-`sessionEligible: true` and `publicationEligible: false`. V1 / Generation 1 has a
-fixed content identity and contains exactly eight mandatory capabilities:
+Persist payload/ciphertext recovery material, native ratchet/replay state and inbox
+admission together before releasing plaintext or acknowledging durable custody.
+Persist exact prepared outputs before emission. Moving an accepted item between a
+hot cache and durable spool transfers custody; evicting the only copy is forbidden.
+Claim expiration releases exclusivity, never bytes. Quotas apply before acceptance.
 
-| Capability | Primary responsibility |
-| --- | --- |
-| Protocol Foundation | Canonical representations, identifiers, bounds, lifecycle, fixed admission, and source closure |
-| Identity | User-authorized multi-device authority and recovery, independent Endpoint continuity and keys, discovery descriptors, routes, and affiliations |
-| Pairwise Protection | Authenticated establishment, sibling authority-digest binding, paired prekeys, transcript binding, confirmation, ratchet, replay, persistence, and deletion |
-| Generic Messaging | Six message classes, opaque payload dispatch, attachments, and control budgets |
-| Reliable Exchange | Protected intent, stable identities, authenticated Endpoint confirmations, recovery, terminal state, and restart convergence |
-| HTTPS Transport | Bounded Station operations and opaque protected-packet transport |
-| Group Collaboration | Bounded membership, authorized state transitions, per-member projections, and aggregate outcomes |
-| Federation Governance | Membership, compatibility certification, revocation, advisories, threshold authority, and recovery |
+Execution uses a durable gate keyed by authenticated origin, conversation and task
+identity. Receiving a request does not require permission to execute it. Unknown
+interfaces can be retained for display or later compatible handling. An external
+side effect that may already have occurred is reconciled, not blindly retried.
+Task outcome evidence is independent of the session that carried it; completion may
+arrive before acceptance, and a cancelled local wait does not erase late facts.
 
-Each capability owns an exact source manifest and conformance corpus. The line
-admits no optional semantic gaps.
+## Identity and security
 
-## Content identity and proof boundary
+Each independently key-holding device is an Endpoint. Nostr account association is
+protected identity control, separate from capability updates. Current authorization
+and an unconsumed active paired prekey control establishment, not calendar expiry.
+Asynchronous prepared exchanges/replay answers survive alternating online periods.
+Never rewind nonce/counters or restart a stale sending state from an old backup.
+Retaining delayed ciphertext requires an actual owner for recoverable key material.
 
-The `stable-core` Profile identity is SHA-256 over deterministic CBOR of the
-named Profile semantic projection. The Protocol Line identity is independently
-computed from its named line projection. Neither projection includes its own
-identifier, publication state, proof-tool output, or source/artifact digest.
+Groups distinguish authenticated historical communication from authorization for
+current effects. Missing ancestry requests repair; an authenticated fork quarantines
+the affected state while the explicit base-authority resolution contract applies.
+A device delivery result is not a human-read fact and does not grant multiple devices
+permission to execute the same operation.
 
-Security claims have stable identifiers. A positive claim is admitted only
-when its required source-owned proof bindings agree with the claim, adversary
-model, formal model, and checked authority digest. Proof execution is evidence
-for this definition join; it is not implementation, device, or deployment
-evidence. Stable nonclaims remain explicit and cannot be promoted by passing
-tests.
+## Source graph and proof boundary
 
-The corpus join is equally strict: each mandatory capability and active
-Profile declares one complete manifest whose case set, operations, source
-bindings, expected results, and synthetic public material validate exactly.
-Reporting identifiers and expected values never dispatch execution.
+Normative records, schemas, CDDL, policies and definition corpora have closed source
+manifests. Each component and the Protocol Line has a recomputed semantic identity;
+the Nostr binding has its own content identity referencing the core. Generators may
+update joins and bundles but never fabricate proof output or expected test results.
 
-## User authority and pairwise state architecture
-
-User authority is a predecessor-bound snapshot chain. Genesis derives the
-self-certifying `userIdentityRef` from canonical management and recovery public
-keys. Management transitions require the predecessor management key pair;
-recovery transitions require the predecessor recovery pair and replacement-key
-possession. Devices are bounded entries with independent Endpoint-state
-digests, epochs, status, and possession proof. Equal-parent unequal successors
-remain explicit forks. Accepting user authority never changes local peer trust.
-
-Each Endpoint keeps independent keys and sessions. Establishment transcripts
-bind both Endpoint-state digests beside the initiating and responding
-user-authority-state digests. Authority snapshots do not contain the peer
-authority digest, which keeps this sibling binding acyclic. Application
-admission additionally requires a matching protected authority payload.
-That payload carries or references matching protected Endpoint identity records
-whose exact signing-key sets validate newly admitted-device possession; no
-global key map or Station roster participates. After a newer accepted authority
-snapshot revokes an Endpoint, its existing session cannot admit later
-application records. Unchanged offline devices retain their original
-admission-epoch possession proofs across unrelated successors.
-
-Every asynchronous establishment consumes one responder-issued pair containing
-one X25519 one-time prekey and one ML-KEM-768 one-time prekey under the same
-monotonic sequence. Both authentication signatures, the exact Protocol Line and Profile identities, identity states, roles,
-purpose, selected prekey pair, handshake material, key confirmation, and final
-SessionAccept are transitively transcript-bound.
-
-The responder validates against tentative state and atomically commits the
-session, complete pair redemption, state generation, and exact replay result.
-A concurrent loser receives the typed consumed result. Send and receive paths
-likewise derive tentatively and commit state before emission or plaintext
-release. Retry emits stored identical bytes; it never advances cryptographic
-state.
-
-The established state is a bounded classic X25519 Double Ratchet with bounded
-skipped-key storage and explicit rollback and deletion semantics. Header
-confidentiality, physical zeroization, and rollback detection under a fully
-compromised store are not claimed.
-
-## Messaging, reliability, and Groups
-
-Generic Messaging supplies protected message semantics and opaque application
-payloads. Reliable Exchange supplies stable protected intent and a bounded
-state machine around those messages. Group Collaboration projects one logical
-Group operation into bounded per-member work while retaining one versioned,
-Endpoint-authorized Group state.
-
-These layers do not inherit Station assertions. A transport acceptance is an
-operational hint only. Endpoint Accepted and Effect Completed advance only
-from an exact confirmation authenticated by the sending authorized Endpoint
-session. Effect Completed also requires authenticated success and an exact
-result digest. Attachments additionally require complete authenticated chunks
-and content digest; Groups accept only an Endpoint confirmation or no result.
-
-## Identity and governance
-
-Identity continuity is predecessor-bound and monotonic. User authority,
-Endpoint identity, discovery, routing, and Station affiliation have distinct
-scopes and rollback rules. A Station carries no user/device roster, cannot
-select an authority tip, and cannot create local trust.
-
-Federation Governance is a separate mandatory capability. Threshold roots and
-roles authorize exact governance transitions; membership, compatibility
-certification, revocation, and abuse advisories remain distinct. Endpoint
-admission remains local even when governance material validates.
-
-## Lifecycle architecture
-
-Definition status and lifecycle are independent. A complete Candidate may be
-session-eligible while remaining publication-ineligible. Publication is a
-separate channel action and cannot change defined bytes. An exact session is
-locked to one line identity; downgrade, fallback, substitution, component
-negotiation, dual semantics, and translation are forbidden.
-
-## Downstream boundary
-
-Endpoint and Station implementations own code, dependencies, entropy, key
-custody, persistent storage, scheduling, local policy, packaging, and runtime
-behavior. The modeled proof covers only declared formal claims under its
-stated ideal assumptions; definition-level corpus execution does not establish
-SDK completeness or Provider correctness. Executable interoperability, audit,
-publication, deployment, support, and operation each close independently in
-their owning repositories or channels. None is an input to, or blocker for,
-this definition.
+Current V1 is Candidate / PARTIAL, `sessionEligible: false`,
+`publicationEligible: false`. The new transcript and admission rules require formal
+requalification; old proof evidence remains bound to its old definition only.
+The deterministic models demonstrate specification behavior, not production crypto,
+a database durability guarantee, audited SDK behavior or deployed interoperability.

@@ -1,48 +1,52 @@
-# Lico Arc Protocol Documentation
+# LicoArc documentation
 
-This directory indexes LicoArc's formal protocol-definition documents.
-The [README Core Domain Model](../README.md#core-domain-model) owns the exact
-three-entity model; `PRODUCT.md` owns durable intent; `ARCHITECTURE.md` owns
-implementation-neutral boundaries; and `STATUS.md` reports definition
-maturity and the independent downstream-claim boundaries.
+LicoArc is an open communication protocol for people, devices and agents. Start
+with the explanation that matches your goal, then follow its links to the exact
+specification. You do not need to read decision workspaces to understand the protocol.
 
-The [Canonical Field Registry](../spec/FIELD-REGISTRY.md) is the sole
-normative field inventory. The [Decision Lifecycle](DECISION-LIFECYCLE.md)
-governs the independent [Algorithm Decision](algorithm-decisions/README.md)
-and [Message Field Decision](field-decisions/README.md) workspaces. Decision
-records explain history but never replace formal or machine-readable
-authorities.
+## Start here
 
-## Project documents
-
-| Topic | Document |
+| Your goal | Reading path |
 | --- | --- |
-| Core domain model | [README](../README.md#core-domain-model) |
-| Product goal and boundary | [PRODUCT.md](../PRODUCT.md) |
-| Domain language | [CONTEXT.md](../CONTEXT.md) |
-| Definition status | [STATUS.md](STATUS.md) |
-| Architecture | [ARCHITECTURE.md](../ARCHITECTURE.md) |
-| Decision lifecycle | [DECISION-LIFECYCLE.md](DECISION-LIFECYCLE.md) |
-| Algorithm decisions | [algorithm-decisions/README.md](algorithm-decisions/README.md) |
-| Field decisions | [field-decisions/README.md](field-decisions/README.md) |
-| Canonical field registry | [spec/FIELD-REGISTRY.md](../spec/FIELD-REGISTRY.md) |
-| Specification index | [spec/README.md](../spec/README.md) |
-| Source-integrity checks | [conformance/verification.md](conformance/verification.md) |
-| Initial V1 identity authority | [protocols/identity-v1.md](protocols/identity-v1.md) |
-| Confirmation-driven finality | [protocols/reliable-exchange-v1.md](protocols/reliable-exchange-v1.md) |
-| Repository operations | [RUNBOOK.md](RUNBOOK.md) |
+| Understand the protocol | [Overview](../README.md) → [Concepts](../CONTEXT.md) → [Architecture](../ARCHITECTURE.md) |
+| Build an independent implementation | [Implementer guide](guides/implementer-start.md) → [Core specification](../spec/README.md) |
+| Understand offline communication | [A message's journey](guides/message-journey.md) → [Durable continuity](../spec/v1/reliable/continuity.md) |
+| Use the Nostr network | [Nostr overview](protocols/nostr-interoperability-v1.md) → [Nostr binding](../spec/interop/v1/protocol.md) |
+| Track changes | [Definition status](STATUS.md) and [Changelog](../CHANGELOG.md) |
+| Propose an improvement | [Contributing](../CONTRIBUTING.md) and [Documenting a change](maintainers/documentation.md) |
 
-## Definition boundary
+## Protocol reference
 
-- LicoArc tracks normative prose, schemas, CDDL, registries, policies, bounds,
-  manifests, definition-level corpora, decisions, and deterministic artifacts.
-- `docs/references/` is ignored local research. No tracked source links to,
-  reads, embeds, or requires it.
-- Plans, reports, caches, build output, and raw verification material remain ignored.
-- Language implementations, providers, executable interoperability, device
-  validation, audits, packaging, publication channels, deployment, support,
-  operation, and product integration close only downstream.
-- Repository checks prove tracked definition-source consistency only.
+| Subject | Explanation | Definition sources |
+| --- | --- | --- |
+| Foundation | [Foundation](protocols/foundation-v1.md) | [Core targets](../spec/v1/foundation/targets.json) |
+| Identity | [Identity](protocols/identity-v1.md) | [Identity sources](../spec/v1/identity/source-manifest.json) |
+| Protection | [Pairwise protection](protocols/pairwise-protection-v1.md) | [Protection sources](../spec/v1/protection/source-manifest.json) |
+| Messaging | [Messages and attachments](protocols/generic-messaging-v1.md) | [Live capabilities](../spec/v1/messaging/capabilities.md) |
+| Reliability | [Reliable exchange](protocols/reliable-exchange-v1.md) | [Durable continuity](../spec/v1/reliable/continuity.md) |
+| Groups | [Group collaboration](protocols/group-collaboration-v1.md) | [Group continuity](../spec/v1/group/continuity.md) |
+| Native transport | [HTTPS Station](protocols/https-transport-v1.md) | [Transport sources](../spec/v1/transport/source-manifest.json) |
+| Federation | [Governance](protocols/federation-governance-v1.md) | [Governance sources](../spec/v1/governance/source-manifest.json) |
 
-Formal documents change with their owning definition. Examples remain
-synthetic and privacy-safe.
+[Field registry](../spec/FIELD-REGISTRY.md) identifies the active fields.
+The [source-check guide](conformance/verification.md) explains the repository tools.
+
+## Which documents define the rules?
+
+[Documentation authority](maintainers/documentation.md#authority-and-document-types)
+separates normative definitions, explanatory guides, and decision history.
+`spec/` owns the wire definitions; `docs/protocols/` explains and links to them.
+The [README Core Domain Model](../README.md#core-domain-model) remains the authority
+for the three domain entities. Website rendering does not add protocol meaning.
+
+## Maintainers and decision history
+
+[Algorithm decisions](algorithm-decisions/README.md),
+[field decisions](field-decisions/README.md), and [ADRs](adrs/README.md) explain
+why a choice was made. They are not a second current specification.
+See also [decision lifecycle](DECISION-LIFECYCLE.md), [repository runbook](RUNBOOK.md),
+[security reporting](../SECURITY.md), and [documentation publishing](maintainers/publishing.md).
+
+The website is generated from this repository. Edit the Markdown or its owning
+specification, not an HTML copy. `docs/catalog.json` supplies navigation and page
+classification; generated status and reference listings read the same source snapshot.

@@ -13,6 +13,7 @@
     "conformance/v1/reliable/manifest.json",
     "spec/v1/reliable/bounds.json",
     "spec/v1/reliable/confirmation.schema.json",
+    "spec/v1/reliable/continuity.md",
     "spec/v1/reliable/event.schema.json",
     "spec/v1/reliable/intent.schema.json",
     "spec/v1/reliable/labels.json",
