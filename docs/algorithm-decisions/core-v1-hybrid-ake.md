@@ -8,7 +8,7 @@
 | Decision ID | `ALG-core-v1-hybrid-ake` |
 | Decision status | `DECIDED` |
 | Definition status | `PARTIAL` |
-| Existing authority | [Final Protocol Vision](../../PRODUCT.md#final-protocol-vision) and [Pairwise Protection architecture](../../ARCHITECTURE.md#3-pairwise-protection) |
+| Existing authority | [Final Protocol Vision](../../PRODUCT.md#final-protocol-vision) and [Pairwise Protection architecture](../../ARCHITECTURE.md#identity-and-security) |
 | Authority targets | `spec/v1/protection/`, `spec/v1/protection/registry.json`, `spec/FIELD-REGISTRY.md`, `formal/`, `conformance/v1/protection/`, `spec/v1/manifest.json`, and `spec/protocol-lines.json` |
 | Predecessor or successor | Supersedes the ratchet-establishment scope of `ALG-baseline-pairwise-protection-suite`; the retired high-assurance construction has no active successor. |
 

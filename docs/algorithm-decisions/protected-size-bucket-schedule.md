@@ -8,7 +8,7 @@
 | Decision ID | `ALG-protected-size-bucket-schedule` |
 | Decision status | `REJECTED` |
 | Definition status | `NOT-SPECIFIED` |
-| Existing authority | [Performance-first privacy boundary](../../PRODUCT.md#transport-visible-metadata-and-endpoint-state) |
+| Existing authority | [Performance-first privacy boundary](../../PRODUCT.md#ownership-and-promises) |
 | Authority targets | `PRODUCT.md`, `ARCHITECTURE.md`, and future Protection Profiles |
 | Predecessor or successor | None |
 

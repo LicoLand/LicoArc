@@ -8,7 +8,7 @@
 | Decision ID | `FLD-session-accept` |
 | Decision status | `DECIDED` |
 | Definition status | `SPECIFIED` |
-| Existing authority | [Pairwise Protection architecture](../../../ARCHITECTURE.md#3-pairwise-protection) and the [Canonical Field Registry](../../../spec/FIELD-REGISTRY.md) |
+| Existing authority | [Pairwise Protection architecture](../../../ARCHITECTURE.md#identity-and-security) and the [Canonical Field Registry](../../../spec/FIELD-REGISTRY.md) |
 | Authority targets | `spec/FIELD-REGISTRY.md`, `spec/v1/protection/`, `spec/v1/protection/registry.json`, `formal/`, `conformance/v1/protection/`, and `spec/v1/manifest.json` |
 | Predecessor or successor | Replaces the withdrawn Candidate confirmation scope; preserves no old session identifier or confirmation wire. |
 | Current conclusion | The responder emits one transcript-bound SessionAccept authenticated by a full 32-byte HMAC-SHA-256. The initiator reaches ESTABLISHED only after verification; Station acceptance is never a substitute. |

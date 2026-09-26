@@ -8,7 +8,7 @@
 | Decision ID | `ALG-group-state-evolution` |
 | Decision status | `DECIDED` |
 | Definition status | `SPECIFIED` |
-| Existing authority | [Group collaboration](../../PRODUCT.md#group-collaboration) and [Group Collaboration architecture](../../ARCHITECTURE.md#5-group-collaboration) |
+| Existing authority | [Group collaboration](../../PRODUCT.md#conformance-targets) and [Group Collaboration architecture](../../ARCHITECTURE.md#composition-and-dependency-direction) |
 | Authority targets | `PRODUCT.md`, `ARCHITECTURE.md`, `spec/v1/group/`, `conformance/v1/group/`, Group field decisions, and the Protocol Line manifest |
 | Predecessor or successor | None |
 

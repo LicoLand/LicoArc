@@ -8,7 +8,7 @@
 | Decision ID | `FLD-ratchet-header` |
 | Decision status | `DECIDED` |
 | Definition status | `SPECIFIED` |
-| Existing authority | [Pairwise Protection architecture](../../../ARCHITECTURE.md#3-pairwise-protection) and the [Canonical Field Registry](../../../spec/FIELD-REGISTRY.md) |
+| Existing authority | [Pairwise Protection architecture](../../../ARCHITECTURE.md#identity-and-security) and the [Canonical Field Registry](../../../spec/FIELD-REGISTRY.md) |
 | Authority targets | `spec/FIELD-REGISTRY.md`, `spec/v1/protection/`, `spec/v1/protection/registry.json`, `formal/`, `conformance/v1/protection/`, and `spec/v1/manifest.json` |
 | Predecessor or successor | Replaces the withdrawn epoch/direction/counter scope; preserves no counter-only wire or compatibility path. |
 | Current conclusion | The classic X25519 Double Ratchet header carries authenticated DH public key, previous-chain length `PN`, and message number `N` in a canonical plaintext-but-authenticated header. |

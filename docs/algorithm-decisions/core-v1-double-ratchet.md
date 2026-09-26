@@ -8,7 +8,7 @@
 | Decision ID | `ALG-core-v1-double-ratchet` |
 | Decision status | `DECIDED` |
 | Definition status | `PARTIAL` |
-| Existing authority | [Pairwise Protection architecture](../../ARCHITECTURE.md#3-pairwise-protection) and the Core v1 Hybrid AKE decision |
+| Existing authority | [Pairwise Protection architecture](../../ARCHITECTURE.md#identity-and-security) and the Core v1 Hybrid AKE decision |
 | Authority targets | `spec/v1/protection/`, `spec/FIELD-REGISTRY.md`, `formal/`, `conformance/v1/protection/`, `spec/v1/manifest.json`, and `spec/protocol-lines.json` |
 | Predecessor or successor | Supersedes the counter-only ratchet scope of `ALG-baseline-pairwise-protection-suite`; a future PQ ratchet requires a new successor decision and Profile identity. |
 

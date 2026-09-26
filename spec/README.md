@@ -30,14 +30,11 @@ uses these states:
   review and regeneration.
 - **Published** — an immutable, content-addressed protocol definition.
 
-The repository currently contains the Candidate `v1` Protocol Line. Its
-explicit source manifest is [`v1/manifest.json`](v1/manifest.json). The
-manifest and generated bundle both declare exact wire ID
-`licoarc.protocol-line.v1` and lifecycle `Candidate`; the bundle digest binds
-those fields and all embedded sources. Its definition status is `COMPLETE`, it
-is eligible for sessions under the fixed definition, and publication remains
-separately unauthorized. This content addressing pins one exact Candidate
-snapshot without making the Candidate line immutable.
+The active source snapshot is described by [`v1/manifest.json`](v1/manifest.json)
+and the protocol/profile catalogues. Read those values for lifecycle, completeness
+and eligibility; this index does not maintain a second copy of them. The website's
+Definition snapshot renders the same values automatically. A source or website
+publication does not change a Protocol Line's lifecycle.
 
 ## Definition composition
 
@@ -78,4 +75,5 @@ generated consumer bundles live under `artifacts/`.
 [interop/v1/manifest.json](interop/v1/manifest.json) and
 [interop/v1/protocol.md](interop/v1/protocol.md) define the standard private-message
 baseline and open enhanced path. Its sources and corpus have independent
-closure and artifact identity; they do not alter native cryptographic bytes.
+closure and artifact identity; the adapter does not redefine native cryptographic
+bytes. A separate core revision may change those bytes under its own authority.

@@ -62,7 +62,8 @@ A source check is neither SDK execution, a security audit nor cross-client testi
 
 ## Documentation and verification
 
-Start with [Product](PRODUCT.md), [Architecture](ARCHITECTURE.md),
+Start with the [reader guide](docs/README.md) or [implementer guide](docs/guides/implementer-start.md),
+then [Product](PRODUCT.md), [Architecture](ARCHITECTURE.md),
 [Nostr interoperability](spec/interop/v1/protocol.md), and the
 [documentation index](docs/README.md). Normative sources are in `spec/`; generated
 bundles in `artifacts/` bind their exact sources and synthetic conformance corpora.
