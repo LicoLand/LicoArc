@@ -82,9 +82,7 @@
       "mlDsa65KeyId",
       "pairSequence",
       "x25519PublicKey",
-      "mlKem768EncapsulationKey",
-      "validFrom",
-      "validUntil"
+      "mlKem768EncapsulationKey"
     ],
     "prekeyTranscript": [
       "protocolLineId",
@@ -149,7 +147,7 @@
       "closed-labels-and-exact-shapes",
       "exact-line-and-profile-admission",
       "identity-continuity-and-key-purpose",
-      "bundle-validity-and-active-pair",
+      "active-pair-and-current-identity-authorization",
       "strict-bundle-dual-signatures",
       "strict-initiator-dual-signatures",
       "transcript-reproduction",
@@ -174,11 +172,11 @@
     ]
   },
   "bundleValidity": {
-    "unit": "unsigned-seconds-since-1970-01-01T00:00:00Z-without-leap-second-representation",
-    "relation": "validFrom < validUntil and validUntil - validFrom <= MAX_BUNDLE_VALIDITY_SPAN_SECONDS using checked integer arithmetic",
-    "eligibility": "the responder and initiator each require its trusted Endpoint clock to be within the half-open interval [validFrom, validUntil) during validation",
+    "eligibility": "current-accepted-endpoint-authorization-and-persistent-active-pair-inventory",
+    "wallClockGate": false,
     "stationTimeAuthority": false,
-    "expiryMutation": "none; expiry neither reserves, redeems nor removes an active pair"
+    "expiryMutation": "no-time-expiry; consume-once-or-explicitly-revoke/discard",
+    "offlineRetention": "persist-pending-pair-and-committed-replay-answer-until-safe-custody-completion-or-explicit-security-loss"
   },
   "hybridKeySchedule": {
     "prekeyTranscriptDigest": "SHA-256(prekeyTranscriptDigest-domain || deterministic-CBOR(prekeyTranscript))",

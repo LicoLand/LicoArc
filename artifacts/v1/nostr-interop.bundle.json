@@ -1,7 +1,7 @@
 {
   "artifactVersion": "licoarc.nostr-interop.bundle.v1",
   "generation": 1,
-  "bindingId": "4c473b9b38b5b1f68d3c5f208bc2b92466386c05d9b39ea4a1de88b652f6f244",
+  "bindingId": "ca1d16a9edaa934abdf91e92dc3e0ee970f813b664e4519eb90d3eb0ca49606a",
   "sources": {
     "conformance/interop/v1/cases.json": {
       "version": "licoarc.nostr-cases.v1",
@@ -482,7 +482,7 @@
           "operation": "binding",
           "requirement": "account-binding",
           "input": {
-            "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"capabilities\":[{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"}],\"channel\":\"33333333333333333333333333333333\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
+            "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"channel\":\"33333333333333333333333333333333\",\"conversation\":\"88888888888888888888888888888888\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
             "expectedContext": {
               "binding": "4444444444444444444444444444444444444444444444444444444444444444",
               "channel": "33333333333333333333333333333333",
@@ -496,7 +496,8 @@
               "nativeAuthenticated": true,
               "authorityAdmitted": true,
               "peerApproved": true,
-              "deviceRevoked": false
+              "deviceRevoked": false,
+              "conversation": "88888888888888888888888888888888"
             }
           },
           "expected": "valid"
@@ -506,7 +507,7 @@
           "operation": "binding",
           "requirement": "account-binding",
           "input": {
-            "text": "{\"binding\":\"9999999999999999999999999999999999999999999999999999999999999999\",\"capabilities\":[{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"}],\"channel\":\"33333333333333333333333333333333\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
+            "text": "{\"binding\":\"9999999999999999999999999999999999999999999999999999999999999999\",\"channel\":\"33333333333333333333333333333333\",\"conversation\":\"88888888888888888888888888888888\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
             "expectedContext": {
               "binding": "4444444444444444444444444444444444444444444444444444444444444444",
               "channel": "33333333333333333333333333333333",
@@ -520,7 +521,8 @@
               "nativeAuthenticated": true,
               "authorityAdmitted": true,
               "peerApproved": true,
-              "deviceRevoked": false
+              "deviceRevoked": false,
+              "conversation": "88888888888888888888888888888888"
             }
           },
           "expected": "binding-binding-mismatch"
@@ -530,7 +532,7 @@
           "operation": "binding",
           "requirement": "account-binding",
           "input": {
-            "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"capabilities\":[{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"}],\"channel\":\"99999999999999999999999999999999\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
+            "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"channel\":\"99999999999999999999999999999999\",\"conversation\":\"88888888888888888888888888888888\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
             "expectedContext": {
               "binding": "4444444444444444444444444444444444444444444444444444444444444444",
               "channel": "33333333333333333333333333333333",
@@ -544,7 +546,8 @@
               "nativeAuthenticated": true,
               "authorityAdmitted": true,
               "peerApproved": true,
-              "deviceRevoked": false
+              "deviceRevoked": false,
+              "conversation": "88888888888888888888888888888888"
             }
           },
           "expected": "binding-channel-mismatch"
@@ -554,7 +557,7 @@
           "operation": "binding",
           "requirement": "account-binding",
           "input": {
-            "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"capabilities\":[{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"}],\"channel\":\"33333333333333333333333333333333\",\"initiator\":\"9999999999999999999999999999999999999999999999999999999999999999\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
+            "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"channel\":\"33333333333333333333333333333333\",\"conversation\":\"88888888888888888888888888888888\",\"initiator\":\"9999999999999999999999999999999999999999999999999999999999999999\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
             "expectedContext": {
               "binding": "4444444444444444444444444444444444444444444444444444444444444444",
               "channel": "33333333333333333333333333333333",
@@ -568,7 +571,8 @@
               "nativeAuthenticated": true,
               "authorityAdmitted": true,
               "peerApproved": true,
-              "deviceRevoked": false
+              "deviceRevoked": false,
+              "conversation": "88888888888888888888888888888888"
             }
           },
           "expected": "binding-initiator-mismatch"
@@ -578,7 +582,7 @@
           "operation": "binding",
           "requirement": "account-binding",
           "input": {
-            "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"capabilities\":[{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"}],\"channel\":\"33333333333333333333333333333333\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"9999999999999999999999999999999999999999999999999999999999999999\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
+            "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"channel\":\"33333333333333333333333333333333\",\"conversation\":\"88888888888888888888888888888888\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"9999999999999999999999999999999999999999999999999999999999999999\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
             "expectedContext": {
               "binding": "4444444444444444444444444444444444444444444444444444444444444444",
               "channel": "33333333333333333333333333333333",
@@ -592,7 +596,8 @@
               "nativeAuthenticated": true,
               "authorityAdmitted": true,
               "peerApproved": true,
-              "deviceRevoked": false
+              "deviceRevoked": false,
+              "conversation": "88888888888888888888888888888888"
             }
           },
           "expected": "binding-responder-mismatch"
@@ -602,7 +607,7 @@
           "operation": "binding",
           "requirement": "account-binding",
           "input": {
-            "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"capabilities\":[{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"}],\"channel\":\"33333333333333333333333333333333\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"9999999999999999999999999999999999999999999999999999999999999999\"}",
+            "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"channel\":\"33333333333333333333333333333333\",\"conversation\":\"88888888888888888888888888888888\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"9999999999999999999999999999999999999999999999999999999999999999\"}",
             "expectedContext": {
               "binding": "4444444444444444444444444444444444444444444444444444444444444444",
               "channel": "33333333333333333333333333333333",
@@ -616,7 +621,8 @@
               "nativeAuthenticated": true,
               "authorityAdmitted": true,
               "peerApproved": true,
-              "deviceRevoked": false
+              "deviceRevoked": false,
+              "conversation": "88888888888888888888888888888888"
             }
           },
           "expected": "binding-session-mismatch"
@@ -626,7 +632,7 @@
           "operation": "binding",
           "requirement": "account-binding",
           "input": {
-            "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"capabilities\":[{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"}],\"channel\":\"33333333333333333333333333333333\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
+            "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"channel\":\"33333333333333333333333333333333\",\"conversation\":\"88888888888888888888888888888888\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
             "expectedContext": {
               "binding": "4444444444444444444444444444444444444444444444444444444444444444",
               "channel": "33333333333333333333333333333333",
@@ -640,7 +646,8 @@
               "nativeAuthenticated": false,
               "authorityAdmitted": true,
               "peerApproved": true,
-              "deviceRevoked": false
+              "deviceRevoked": false,
+              "conversation": "88888888888888888888888888888888"
             }
           },
           "expected": "native-admission-required"
@@ -650,7 +657,7 @@
           "operation": "binding",
           "requirement": "account-binding",
           "input": {
-            "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"capabilities\":[{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"}],\"channel\":\"33333333333333333333333333333333\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
+            "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"channel\":\"33333333333333333333333333333333\",\"conversation\":\"88888888888888888888888888888888\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
             "expectedContext": {
               "binding": "4444444444444444444444444444444444444444444444444444444444444444",
               "channel": "33333333333333333333333333333333",
@@ -664,7 +671,8 @@
               "nativeAuthenticated": true,
               "authorityAdmitted": false,
               "peerApproved": true,
-              "deviceRevoked": false
+              "deviceRevoked": false,
+              "conversation": "88888888888888888888888888888888"
             }
           },
           "expected": "native-admission-required"
@@ -674,7 +682,7 @@
           "operation": "binding",
           "requirement": "account-binding",
           "input": {
-            "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"capabilities\":[{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"}],\"channel\":\"33333333333333333333333333333333\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
+            "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"channel\":\"33333333333333333333333333333333\",\"conversation\":\"88888888888888888888888888888888\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
             "expectedContext": {
               "binding": "4444444444444444444444444444444444444444444444444444444444444444",
               "channel": "33333333333333333333333333333333",
@@ -688,7 +696,8 @@
               "nativeAuthenticated": true,
               "authorityAdmitted": true,
               "peerApproved": false,
-              "deviceRevoked": false
+              "deviceRevoked": false,
+              "conversation": "88888888888888888888888888888888"
             }
           },
           "expected": "peer-authorization-required"
@@ -698,7 +707,7 @@
           "operation": "binding",
           "requirement": "account-binding",
           "input": {
-            "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"capabilities\":[{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"}],\"channel\":\"33333333333333333333333333333333\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
+            "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"channel\":\"33333333333333333333333333333333\",\"conversation\":\"88888888888888888888888888888888\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
             "expectedContext": {
               "binding": "4444444444444444444444444444444444444444444444444444444444444444",
               "channel": "33333333333333333333333333333333",
@@ -712,7 +721,8 @@
               "nativeAuthenticated": true,
               "authorityAdmitted": true,
               "peerApproved": true,
-              "deviceRevoked": true
+              "deviceRevoked": true,
+              "conversation": "88888888888888888888888888888888"
             }
           },
           "expected": "peer-authorization-required"
@@ -722,7 +732,7 @@
           "operation": "binding",
           "requirement": "account-binding",
           "input": {
-            "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"capabilities\":[{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"}],\"channel\":\"33333333333333333333333333333333\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
+            "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"channel\":\"33333333333333333333333333333333\",\"conversation\":\"88888888888888888888888888888888\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
             "expectedContext": {
               "binding": "4444444444444444444444444444444444444444444444444444444444444444",
               "channel": "33333333333333333333333333333333",
@@ -736,32 +746,28 @@
               "nativeAuthenticated": true,
               "authorityAdmitted": true,
               "peerApproved": true,
-              "deviceRevoked": false
+              "deviceRevoked": false,
+              "conversation": "88888888888888888888888888888888"
             }
           },
           "expected": "binding-account-role-mismatch"
         },
         {
           "id": "binding-duplicate-cap-id",
-          "operation": "binding",
+          "operation": "intersection",
           "requirement": "capabilities",
           "input": {
-            "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"capabilities\":[{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"},{\"definition\":\"5555555555555555555555555555555555555555555555555555555555555555\",\"id\":\"org.example.review\"}],\"channel\":\"33333333333333333333333333333333\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
-            "expectedContext": {
-              "binding": "4444444444444444444444444444444444444444444444444444444444444444",
-              "channel": "33333333333333333333333333333333",
-              "initiator": "1111111111111111111111111111111111111111111111111111111111111111",
-              "responder": "2222222222222222222222222222222222222222222222222222222222222222",
-              "session": "6666666666666666666666666666666666666666666666666666666666666666",
-              "outerAuthenticated": true,
-              "sender": "1111111111111111111111111111111111111111111111111111111111111111",
-              "recipient": "2222222222222222222222222222222222222222222222222222222222222222",
-              "role": "initiator",
-              "nativeAuthenticated": true,
-              "authorityAdmitted": true,
-              "peerApproved": true,
-              "deviceRevoked": false
-            }
+            "left": [
+              {
+                "id": "org.example.review",
+                "definition": "4444444444444444444444444444444444444444444444444444444444444444"
+              },
+              {
+                "id": "org.example.review",
+                "definition": "4444444444444444444444444444444444444444444444444444444444444444"
+              }
+            ],
+            "right": []
           },
           "expected": "capability-order-or-duplicate"
         },
@@ -875,17 +881,19 @@
           "operation": "collaboration",
           "requirement": "execution",
           "input": {
-            "text": "{\"agreement\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"capability\":{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"},\"payload\":\"aGVsbG8=\"}",
+            "text": "{\"capability\":{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"},\"conversation\":\"88888888888888888888888888888888\",\"payload\":\"aGVsbG8=\"}",
             "context": {
               "bindingReady": true,
-              "agreement": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
               "common": [
                 {
                   "id": "org.example.review",
                   "definition": "4444444444444444444444444444444444444444444444444444444444444444"
                 }
               ],
-              "executionApproved": true
+              "executionApproved": true,
+              "conversation": "88888888888888888888888888888888",
+              "nativeAuthenticated": true,
+              "audienceApproved": true
             }
           },
           "expected": "68656c6c6f"
@@ -895,37 +903,41 @@
           "operation": "collaboration",
           "requirement": "execution",
           "input": {
-            "text": "{\"agreement\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"capability\":{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"},\"payload\":\"aGVsbG8=\"}",
+            "text": "{\"capability\":{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"},\"conversation\":\"88888888888888888888888888888888\",\"payload\":\"aGVsbG8=\"}",
             "context": {
               "bindingReady": true,
-              "agreement": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
               "common": [
                 {
                   "id": "org.example.review",
                   "definition": "4444444444444444444444444444444444444444444444444444444444444444"
                 }
               ],
-              "executionApproved": false
+              "executionApproved": false,
+              "conversation": "88888888888888888888888888888888",
+              "nativeAuthenticated": true,
+              "audienceApproved": true
             }
           },
-          "expected": "execution-approval-required"
+          "expected": "68656c6c6f"
         },
         {
           "id": "collaboration-no-binding",
           "operation": "collaboration",
           "requirement": "execution",
           "input": {
-            "text": "{\"agreement\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"capability\":{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"},\"payload\":\"aGVsbG8=\"}",
+            "text": "{\"capability\":{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"},\"conversation\":\"88888888888888888888888888888888\",\"payload\":\"aGVsbG8=\"}",
             "context": {
               "bindingReady": false,
-              "agreement": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
               "common": [
                 {
                   "id": "org.example.review",
                   "definition": "4444444444444444444444444444444444444444444444444444444444444444"
                 }
               ],
-              "executionApproved": true
+              "executionApproved": true,
+              "conversation": "88888888888888888888888888888888",
+              "nativeAuthenticated": true,
+              "audienceApproved": true
             }
           },
           "expected": "binding-required"
@@ -935,35 +947,39 @@
           "operation": "collaboration",
           "requirement": "execution",
           "input": {
-            "text": "{\"agreement\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"capability\":{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"},\"payload\":\"aGVsbG8=\"}",
+            "text": "{\"capability\":{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"},\"conversation\":\"88888888888888888888888888888888\",\"payload\":\"aGVsbG8=\"}",
             "context": {
               "bindingReady": true,
-              "agreement": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
               "common": [
                 {
                   "id": "org.example.review",
                   "definition": "4444444444444444444444444444444444444444444444444444444444444444"
                 }
               ],
-              "executionApproved": true
+              "executionApproved": true,
+              "conversation": "77777777777777777777777777777777",
+              "nativeAuthenticated": true,
+              "audienceApproved": true
             }
           },
-          "expected": "agreement-mismatch"
+          "expected": "conversation-mismatch"
         },
         {
           "id": "collaboration-unknown-capability",
           "operation": "collaboration",
           "requirement": "execution",
           "input": {
-            "text": "{\"agreement\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"capability\":{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"},\"payload\":\"aGVsbG8=\"}",
+            "text": "{\"capability\":{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"},\"conversation\":\"88888888888888888888888888888888\",\"payload\":\"aGVsbG8=\"}",
             "context": {
               "bindingReady": true,
-              "agreement": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
               "common": [],
-              "executionApproved": true
+              "executionApproved": true,
+              "conversation": "88888888888888888888888888888888",
+              "nativeAuthenticated": true,
+              "audienceApproved": true
             }
           },
-          "expected": "capability-unavailable"
+          "expected": "68656c6c6f"
         },
         {
           "id": "roundtrip-1",
@@ -1166,7 +1182,7 @@
         "initiator",
         "responder",
         "session",
-        "capabilities"
+        "conversation"
       ],
       "properties": {
         "binding": {
@@ -1189,30 +1205,9 @@
           "type": "string",
           "pattern": "^[0-9a-f]{64}$"
         },
-        "capabilities": {
-          "type": "array",
-          "maxItems": 64,
-          "uniqueItems": true,
-          "items": {
-            "type": "object",
-            "additionalProperties": false,
-            "required": [
-              "id",
-              "definition"
-            ],
-            "properties": {
-              "id": {
-                "type": "string",
-                "pattern": "^[a-z][a-z0-9.-]{0,126}[a-z0-9]$",
-                "minLength": 2,
-                "maxLength": 128
-              },
-              "definition": {
-                "type": "string",
-                "pattern": "^[0-9a-f]{64}$"
-              }
-            }
-          }
+        "conversation": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{32}$"
         }
       }
     },
@@ -1271,15 +1266,11 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
-        "agreement",
+        "conversation",
         "capability",
         "payload"
       ],
       "properties": {
-        "agreement": {
-          "type": "string",
-          "pattern": "^[0-9a-f]{64}$"
-        },
         "capability": {
           "type": "object",
           "additionalProperties": false,
@@ -1304,10 +1295,14 @@
           "type": "string",
           "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$",
           "maxLength": 349528
+        },
+        "conversation": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{32}$"
         }
       }
     },
-    "spec/interop/v1/fields.md": "# V1 interoperability fields\n\nThis table is incorporated by the Canonical Field Registry. It covers only\nthe Nostr outer binding and ordinary protected application payloads. It adds\nno native cryptographic header, handshake field, algorithm selector, Station\nroster or native identity alias. The linked schemas and protocol.md supply\nexact encoding, validation, direction and failure semantics.\n\n| Scope / value | Necessity and placement | Definition decision |\n| --- | --- | --- |\n| Carrier `channel` | Private pending-attempt/session lookup; cannot be derived before a native session exists; not an authenticator. | FLD-nostr-carrier-envelope |\n| Carrier `type` | Select one existing native validator before untrusted bytes are parsed; no algorithm negotiation. | FLD-nostr-carrier-envelope |\n| Carrier `digest` | Identify the complete unchanged native object across ordered or reordered fragments and wrappers; not a business id. | FLD-nostr-carrier-envelope |\n| Carrier `length` | Reserve bounded reassembly memory and derive count/final fragment length; outer event length cannot describe the full object. | FLD-nostr-carrier-envelope |\n| Carrier `index` | Restore order independently of relay order/timestamps; fragment count is derived and omitted. | FLD-nostr-carrier-envelope |\n| Carrier `data` | Transport exact native octets through the required Nostr JSON string boundary. | FLD-nostr-carrier-envelope |\n| Binding `binding` | Bind the exact non-circular interoperability semantic identity; version labels alone are insufficient. | FLD-nostr-session-binding |\n| Binding `channel` | Authenticate the selected outer association inside native protection. | FLD-nostr-session-binding |\n| Binding `initiator`, `responder` | Bind both role-ordered Nostr accounts to the native session; no cross-curve key alias. | FLD-nostr-session-binding |\n| Binding `session` | Reject cross-session reassociation; the exact native context is the authenticated source. | FLD-nostr-session-binding |\n| Binding `capabilities` (`id`, `definition`) | Peer-only exact independent application definitions; support does not imply approval. | FLD-nostr-session-binding |\n| Collaboration `agreement` | Bind both immutable capability offers to this association. | FLD-nostr-collaboration-payload |\n| Collaboration `capability` (`id`, `definition`) | Select only an exact mutually supported definition without inferring semantics from a brand or version label. | FLD-nostr-collaboration-payload |\n| Collaboration `payload` | Preserve opaque application bytes; native message kind/id/relatesTo already supply request semantics. | FLD-nostr-collaboration-payload |\n\nThe namespace tag and dedicated kind are fixed binding constants, not an\nupstream allocation. Upstream event fields, seals, gift wraps, Nostr key types,\nand standard-chat fields are inherited unchanged from the pinned NIPs and\nare not redefined by this registry. External wire names never become native\nCBOR labels. All carrier values are inside NIP-59 protection; all binding and\ncollaboration values are additionally inside native protection. A parser\nrejects unknown fields, duplicates, invalid bounds or noncanonical strings\nwithout state advance. No product-command catalogue is allocated here.\n",
+    "spec/interop/v1/fields.md": "# V1 interoperability fields\n\nThis table is incorporated by the Canonical Field Registry. It covers only\nthe Nostr outer binding and ordinary protected application payloads. It adds\nno native cryptographic header, handshake field, algorithm selector, Station\nroster or native identity alias. The linked schemas and protocol.md supply\nexact encoding, validation, direction and failure semantics.\n\n| Scope / value | Necessity and placement | Definition decision |\n| --- | --- | --- |\n| Carrier `channel` | Private pending-attempt/session lookup; cannot be derived before a native session exists; not an authenticator. | FLD-nostr-carrier-envelope |\n| Carrier `type` | Select one existing native validator before untrusted bytes are parsed; no algorithm negotiation. | FLD-nostr-carrier-envelope |\n| Carrier `digest` | Identify the complete unchanged native object across ordered or reordered fragments and wrappers; not a business id. | FLD-nostr-carrier-envelope |\n| Carrier `length` | Reserve bounded reassembly memory and derive count/final fragment length; outer event length cannot describe the full object. | FLD-nostr-carrier-envelope |\n| Carrier `index` | Restore order independently of relay order/timestamps; fragment count is derived and omitted. | FLD-nostr-carrier-envelope |\n| Carrier `data` | Transport exact native octets through the required Nostr JSON string boundary. | FLD-nostr-carrier-envelope |\n| Binding `binding` | Bind the exact non-circular interoperability semantic identity; version labels alone are insufficient. | FLD-nostr-session-binding |\n| Binding `channel` | Authenticate the selected outer association inside native protection. | FLD-nostr-session-binding |\n| Binding `initiator`, `responder` | Bind both role-ordered Nostr accounts to the native session; no cross-curve key alias. | FLD-nostr-session-binding |\n| Binding `session` | Reject cross-session reassociation; the exact native context is the authenticated source. | FLD-nostr-session-binding |\n| Binding `conversation` | Associates the established peer scope with a persistent dialogue; tools are not part of identity binding. | FLD-continuity-and-capability-records |\n| Collaboration `conversation` | Keeps business payload meaning independent of session renewal and capability updates. | FLD-continuity-and-capability-records |\n| Collaboration `capability` (`id`, `definition`) | Select only an exact mutually supported definition without inferring semantics from a brand or version label. | FLD-nostr-collaboration-payload |\n| Collaboration `payload` | Preserve opaque application bytes; native message kind/id/relatesTo already supply request semantics. | FLD-nostr-collaboration-payload |\n\nThe namespace tag and dedicated kind are fixed binding constants, not an\nupstream allocation. Upstream event fields, seals, gift wraps, Nostr key types,\nand standard-chat fields are inherited unchanged from the pinned NIPs and\nare not redefined by this registry. External wire names never become native\nCBOR labels. All carrier values are inside NIP-59 protection; all binding and\ncollaboration values are additionally inside native protection. A parser\nrejects unknown fields, duplicates, invalid bounds or noncanonical strings\nwithout state advance. No product-command catalogue is allocated here.\n",
     "spec/interop/v1/manifest.json": {
       "manifestVersion": "licoarc.nostr-interoperability.v1",
       "generation": 1,
@@ -1354,13 +1349,13 @@
         },
         "licoarc-enhanced": {
           "requirements": [
-            "nostr-dm",
+            "nostr-carrier",
             "licoarc.nostr-interoperability.v1",
-            "licoarc.protocol-line.v1"
+            "licoarc.endpoint-core.v1"
           ],
           "requiresLicoUp": false,
           "requiresFederationMembership": false,
-          "nativeProtocolLineId": "c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08",
+          "nativeProtocolLineId": "4cb15568e99396ef2789aec1828ad9dc4878f1cd1a04e28fe3feaac4dc753f4c",
           "nativeManifest": "spec/v1/manifest.json",
           "innerRumorKind": 44900,
           "namespaceTag": [
@@ -1368,7 +1363,17 @@
             "licoarc.v1"
           ],
           "wrapperKind": 1059,
-          "sealKind": 13
+          "sealKind": 13,
+          "requiresStandardChat": false
+        },
+        "nostr-carrier": {
+          "requirements": [
+            "NIP-01",
+            "NIP-44-v2",
+            "NIP-59"
+          ],
+          "requiresLicoUp": false,
+          "requiresFederationMembership": false
         }
       },
       "carrier": {
@@ -1388,9 +1393,9 @@
         "publicExtensionPublish": "forbidden",
         "outerAuthentication": "nostr-only-not-endpoint-authority",
         "innerAuthentication": "native-licoarc-only",
-        "retry": "identical-stored-gift-wraps-and-unchanged-native-object",
+        "retry": "same-attempt-identical-wraps; later-attempt-fresh-wrap-same-native-object-and-logical-intent",
         "relayReceipt": "transport-hint-only",
-        "earlyApplication": "bounded-durable-native-inbox-until-binding"
+        "earlyApplication": "durable-native-inbox-until-binding-without-TTL"
       },
       "bounds": {
         "MAX_OBJECT_BYTES": 524288,
@@ -1403,8 +1408,6 @@
         "MAX_REASSEMBLY_BYTES": 8388608,
         "MAX_PENDING_CHANNELS": 32,
         "MAX_ACTIVE_CHANNELS": 256,
-        "ASSEMBLY_WINDOW_SECONDS": 600,
-        "PAIRING_WINDOW_SECONDS": 600,
         "MAX_CAPABILITIES": 64,
         "MAX_CAPABILITY_ID_BYTES": 128,
         "MAX_BINDING_BYTES": 16384,
@@ -1415,17 +1418,22 @@
       },
       "applicationContentTypes": {
         "sessionBinding": 1279328257,
-        "collaboration": 1279328258
+        "collaboration": 1279328258,
+        "capabilityState": 1279328259,
+        "capabilityPage": 1279328260
       },
       "routing": {
         "selection": "per-message-explicit-security-requirement",
         "automaticDowngrade": false,
         "compatibilityCopy": false,
         "discoveryProvesCapability": false,
-        "capabilityPlacement": "protected-application-payload",
+        "capabilityPlacement": "independent-live-protected-state; never-identity-binding",
         "algorithmNegotiation": false,
         "sameNostrKeyImpliesSameEndpoint": false,
-        "capabilitiesImplyApproval": false
+        "capabilitiesImplyApproval": false,
+        "requiresNostrForCore": false,
+        "capabilityUpdateRebind": false,
+        "messageTTL": null
       },
       "securityBoundary": {
         "inheritsNativeProofs": false,
@@ -1443,7 +1451,7 @@
         "spec/interop/v1/protocol.md"
       ]
     },
-    "spec/interop/v1/protocol.md": "# Nostr interoperability and LicoArc extensions — V1\n\n## 1. Authority and conformance\n\nThis is the initial **V1 / Generation 1**, not a V2 migration. It defines two\nindependent communication paths. `nostr-dm` interoperates with any client that\nimplements the common NIP-17 baseline. `licoarc-enhanced` adds open endpoint\nprotection and collaboration semantics. Neither path requires the LicoUp\nproduct, an official service, an official client allowlist, or LicoArc Network\nmembership. A Nostr relay need not implement LicoArc Station operations.\n\nThe manifest fixes the upstream NIPs at one immutable commit. The referenced\nNIPs own their unmodified event, encryption and relay semantics; LicoArc owns\nonly the choices and extensions defined here. Supporting Nostr event carriage\nalone is NOT NIP-17 interoperability. Support claims MUST name the path and\nimplemented optional functions. This specification does not claim that any\ncurrent client implements either path or has passed cross-client testing.\n\nThe existing native V1 definition remains a complete eight-capability\ncomposition, including native HTTPS Transport and Federation Governance. Its\ncryptographic bytes, Profile and content identity are unchanged here. The\nNostr binding is an additional **outer carrier**, not a second interpretation\nof those protected bytes, an alternate cryptographic Profile, or a relaxation\nof their admission. Native HTTPS restrictions and governance operations apply\nwhen that native service is used, not to standard Nostr relays or baseline\nclients. Implementations claiming the complete native line must still satisfy\nits complete conformance contract. Path interoperability is a narrower claim.\n\nThe Canonical Field Registry incorporates `fields.md` for this scope. Closed\nschemas constrain structure; this document supplies the cross-field rules and\nstate transitions. Neither a schema nor a successful source test proves a\ncryptographic implementation. The binding's semantic identity is SHA-256 of\ncanonical JSON containing ordered `{path, source}` entries for exactly the\nmanifest's `semanticSources`, with JSON parsed and object keys sorted and\nMarkdown included as exact canonical UTF-8 text. It contains no own digest,\ncorpus results, implementation output or publication state: lifecycle,\ndefinitionStatus and implementationStatus are omitted from the manifest's\nsemantic projection. The independent bundle digest additionally binds the\ncomplete declared definition corpus and source manifest.\n\n## 2. Standard private-message path\n\nImplement NIP-01 event validation and WebSocket relay interaction, NIP-17\nprivate messages, NIP-44 **version 2**, and NIP-59 sealing/gift wrapping. A\nbaseline text message is an unsigned kind 14 rumor with required id and\ncreated_at and plain-text content; it is sealed as kind 13 and gift-wrapped\nas kind 1059 separately for each recipient and the sender. Replies and room\nmembership use NIP-17 semantics without LicoArc-required tags or fields.\n\nValidate event ids and signatures, encryption/MACs, intended recipient, and\nthat the seal author equals the rumor author before displaying plaintext.\nDo not treat the random wrapper signing key as the sender. Honor the upstream\ncreated_at randomization; wrapper timestamps are not task order or identity\nfreshness. Deduplicate received chat by authenticated sender and rumor id,\nnot by wrapper id. Unsigned rumors do not provide transferable attribution.\n\nResolve the recipient's authenticated latest kind 10050 inbox relay list with\nNIP-01 replacement ordering. Send only to that list, not to a guessed public\nrelay or a profile's unrelated relay list. A missing/invalid list produces\n`recipient-inbox-unavailable`, not a broadcast. A client must support NIP-42\nwhen a selected relay requires authentication; authentication is always for\nthe user-approved relay. NIP-11 limits can inform admission but cannot certify\nsecurity or availability. NIP-19/21 identifiers are optional UI conveniences;\nwire public keys remain the specified 32-byte x-only secp256k1 public keys.\n\nNIP-17 files, reactions, editing, deletion and disappearing-message features\nare optional and must not be advertised without their specific implementation\nand interoperability evidence. No NIP-04 fallback is defined. NIP-44 is not\nclaimed to provide cryptographic forward secrecy, post-compromise recovery or\npost-quantum protection. In particular, a disappearing-message request is not\na substitute for a ratchet or proof that every copy was deleted.\n\n## 3. Enhanced carrier, not another chat format\n\nOnly kind 1059 gift wraps are published. Inside the authenticated seal, a\nLicoArc extension rumor uses dedicated application kind **44900**, exactly\n`[[\"t\",\"licoarc.v1\"],[\"p\",recipientPubkey]]` as its tags, and a canonical JSON\ncarrier envelope as its content. The rumor otherwise follows NIP-59's unsigned\nevent and id rules. This kind is a LicoArc-defined, unallocated experimental\nkind, **not an approved NIP or a claim of upstream allocation**. Dispatch\nrequires both the kind and exact namespace/tag shape. Any later upstream\nallocation requires an explicit reviewed Candidate change. Unknown kinds or\nnamespaces are not chat, instructions or authorization.\n\nNIP-78 kinds 78/30078 are not used: private app storage is not this cross-client\ninterchange. Kind 14 is never parsed as a machine command. Outer gift-wrap\nmetadata contains only upstream routing information, never the LicoArc channel,\nobject type, capabilities, Endpoint identity or application payload. Do not\npublish a bare kind 44900 rumor or seal. The sender-backup copy required by\nstandard NIP-17 chat does not authorize another recipient for enhanced data;\nenhanced wraps go only to the intended remote account. Device synchronization\nis a separate user-authorized path.\n\nThe complete canonical UTF-8 Nostr event must fit MAX_EVENT_BYTES and any\nsmaller chosen relay limit. A refusal is a transport failure, never permission\nto send plaintext, choose a weaker path or publish on unrelated relays.\nEphemeral kind 21059 is not part of this V1 binding: choosing non-retention\ninstead of offline delivery is a different service contract, not an automatic\noptimization. No sender can force a malicious relay to erase received bytes.\n\n## 4. Object framing and bounded reassembly\n\nAn envelope has exactly `channel`, `type`, `digest`, `length`, `index`, `data`.\n`channel` is a fresh 128-bit random initiator-chosen identifier for one peer\npairing/session attempt, represented by 32 lowercase hex characters. It is a\nrouting hint, never a session authenticator. `type` selects one existing native\nobject grammar: endpoint identity record, user-authority snapshot, prekey\nbundle, first packet, SessionAccept, or established protected record.\n\n`digest` is lowercase SHA-256 of the **complete original native bytes**;\n`length` is their complete byte length. Split those bytes into consecutive\n8192-octet fragments. `index` is zero-based; total fragments are derived as\nceil(length/8192), never separately encoded. All non-final fragments are\nexactly 8192 octets; the final fragment has exactly the derived remaining\nlength. `data` is canonical padded standard Base64, without whitespace, URL\nalphabet or a prefix. Decoding and re-encoding must reproduce it exactly.\nNo native object is normalized, compressed, decrypted or re-encrypted by the\ncarrier. Single-fragment and fragmented objects use the same grammar.\n\nReassembly keys include authenticated seal author, local recipient, channel,\nobject type and full digest. All parts must agree on length. Identical parts\nare duplicates; conflicting bytes at one index reject the fragment without cache mutation. Accept\narbitrary fragment order. Bound counts and reserve the declared total length\nbefore allocation: at most 524288 bytes/object, 64 fragments/object, four\npending objects/peer, sixteen globally and 8388608 reserved bytes globally.\nOver-bound input is rejected before allocation and native state changes.\n\nAssembly has one 600-second local monotonic deadline from first admission;\nretries and duplicate fragments do not refresh it. Expiry discards only the\ncarrier cache and reports incomplete transport, not native task failure or\nsuccess. Repeated reassembly never extends native reliable-exchange deadlines.\nAll durable native replay, inbox, request and effect state survives cache\nexpiry and restart. Local resource admission may be stricter and reports a\nresource failure rather than weakening security.\n\nOnly complete exact-length digest-verified objects reach the indicated native\nvalidator. A hash match is NOT authentication. Wrong signature, wrong native\nline/Profile, revoked identity, prekey reuse, invalid AEAD or native replay\nstill rejects. Rewrapping the same object never creates a new business request.\nFor retry, persist and retransmit identical native bytes and already-built\ngift wraps; do not advance the ratchet or regenerate identity/capability state.\nReceiver native replay protection remains necessary after carrier caches expire.\n\n## 5. Pairing, native establishment and account binding\n\nNostr account keys and LicoArc Endpoint/user-authority keys are **different\nnamespaces and key types**. Never copy, reinterpret or silently derive one\nfrom the other. A Nostr account is not a legal identity, an Endpoint, a device\nroster or authority to execute effects. Multiple devices may advertise the\nsame account, but every native Endpoint retains independent keys and sessions.\n\nThe carried native object is exactly the `identity-update` or\n`user-authority-state` deterministic-CBOR record in\n`spec/v1/identity/runtime.cddl` for `endpoint-identity` or `user-authority`,\nrespectively. The other four types use the same-named grammar in\n`spec/v1/protection/runtime.cddl`: prekey-bundle, first-packet, session-accept,\nor protected-record. The last is raw header-CBOR || ciphertext || tag, NOT an\nenclosing CBOR array. The native parser remains authoritative; an envelope\ntype mismatch is invalid. The outer 512 KiB cap is not permission to exceed\nthe smaller native bound for that object.\n\nA user-approved pairing creates a pending channel with a fixed initiator and\nresponder Nostr account pair. The initiator sends native endpoint-identity and\nuser-authority objects; accepted predecessors needed by a fresh peer travel\nas separate objects of the same types. A responder that locally accepts the\npairing returns its own identity/authority material and an exact native signed\nprekey-bundle. Do not manufacture a prekey, reserve one at the relay or convert\na Nostr key into a prekey. Native chain, possession, bounds, signature and\npeer-trust validation is mandatory before first-packet construction/admission.\nNo Station directory or Nostr profile chooses the authority tip.\n\nMissing predecessors, missing prekeys or absent peer consent keep the attempt\npending within the original 600-second pairing window. At most 32 pending\nchannels exist locally; expiry reports `pairing-incomplete`. A refusal or\nunavailability is not evidence that the other client lacks all enhancements.\nReusing an established or closed channel for another session is forbidden.\nRecipient-first-contact approval or an existing user-approved peer policy is\nrequired before answering an unsolicited pairing. No application payload is\nallowed in these discovery objects: they carry public native identity/prekey\nmaterial only. Their transport does not gain post-quantum metadata secrecy.\n\nThe initiator sends `first-packet`; the responder executes the existing atomic\npaired-prekey redemption and returns the exact `session-accept`. A consumed\nprekey, invalid confirmation or failure has native failure semantics; no\nalternative cryptographic suite is selected. The initiator commits only after\nnative confirmation. Both sides next complete the native protected authority\npayload admission, including the exact peer Endpoint records it requires.\nDiscovery data and Nostr signatures are not substitutes for that admission.\n\nOnce established, each side sends exactly one protected Generic Message of\nclass `event`, contentType **1279328257**, whose payload is canonical JSON\nmatching binding.schema.json. It contains the binding semantic digest, the\nchannel, the fixed initiator/responder Nostr account keys, native `sessionContextDigest` as lowercase hexadecimal, and that sender's supported application capabilities. These\nare inside the native protected-record, not the cryptographic handshake.\nCapabilities do not select algorithms or change the native Profile.\n\nEach receiver checks these values against its exact native session and local\npending account/channel association AND the authenticated Nostr context. A\nmismatch closes that association before application admission. Native peer\ntrust must have been approved independently: matching public claims alone\nnever establishes trust. An already approved Endpoint-to-account association\ncannot be silently overwritten by a profile, new device, relay or Nostr key\nrotation. A replacement requires local approval and a fresh fully bound\nsession. Revoked native devices remain revoked even while they control a\nNostr key. Offline clients learn revocation only when valid newer native\nstate arrives; no immediate global-revocation guarantee is made.\n\nCapabilities are sorted by id, have unique ids, and pair an ASCII namespaced\nid with the SHA-256 digest of its exact independent application definition.\nCommon capabilities are the exact id+digest intersection, not version-name\nsimilarity. Empty intersection is valid: secure messaging capability does not\nimply any shared business extension. Freeze both binding records for this\nsession; duplicate identical records are harmless, changed records reject.\nAt most 256 active channels map to native sessions. Change of account,\ncapabilities or binding revision requires an explicitly established new bound\nchannel; it never rewrites the active session or downgrades an outstanding task.\n\nAfter both records validate, compute `agreement` as SHA-256 of ASCII\n`LICOARC-NOSTR-V1/AGREEMENT\\0` (the final character is one NUL octet), followed\nby canonical JSON `[initiatorBinding,responderBinding]` in that role order.\nThis binds both offers and the native context, without a circular digest or\nanother signature. Application messages that arrive before both binding\nrecords validate have disposition `binding-pending` and MUST NOT produce\nEndpoint Accepted, effects or an execution-success confirmation. Preserve the\nauthenticated payload and its disposition atomically in the native durable\ninbox/replay transaction: at most four such messages per channel, sixteen\nglobally and 8388608 payload bytes globally. The original pairing deadline\nbounds pending admission and is never reset by retries. Once both bindings\nvalidate, admit held messages through the normal authorization/reliable path;\ncompletion order does not confer execution order on concurrent operations.\n\nA repeated native packet retrieves its stored disposition, not a second\ndecryption or effect. On restart, recover both native replay state and held\npayloads together; never consume a ratchet key and then lose the only pending\nplaintext. Resource exhaustion or expiry records an authenticated non-success\nunder the native contract without a business effect. It is not a successful\nreceipt, a reason to replay already-consumed keys, or permission to create a\nnew task identity or weaker compatibility copy. Before binding, only the\nnative authority admission and the binding control message bypass this gate.\n\nAn `enhanced-message` uses an ordinary native Generic Message after binding;\nits opaque application content type still requires a mutually understood\napplication definition, but need not request a business capability. An unknown\ncontent type must be surfaced as unsupported, never dispatched as a tool.\n`enhanced-collaboration` below explicitly asserts an exact business capability.\n\n## 6. Open collaboration and explicit authorization\n\nA protected Generic Message with contentType **1279328258** carries canonical\nJSON `{agreement, capability, payload}`. `capability` is the exact agreed\nid+definition descriptor, and `payload` is canonical Base64 of the opaque\napplication bytes (at most 262144 bytes). Generic Message kind, messageId,\nrelatesTo, native protected intent, cancellation, attachment identities and\nEndpoint confirmations keep their existing meanings; do not invent another\nrequest identity or promote relay `OK` to an execution result.\n\nThe agreement must match the active association and the capability must be in\nthe frozen intersection. Unknown capabilities/digests fail without effects.\nCapability support is not consent: the Endpoint applies local approval and\nexecution permission for each request. Plain-text chat, a Nostr signature,\na remote Agent name or a capability advertisement never authorizes a tool.\nApplication definitions own their typed body and result schema. This generic\ncontract does not pretend to define a deployment command, shell API or the\nLicoUp workflow engine. Any third-party implementation of the same published\napplication definition can collaborate; client branding has no authority.\n\nLocal task extraction, model selection, workflow scheduling, UI and memories\nremain product behavior. They do not require a wire extension unless another\nEndpoint must interpret the corresponding operation. Sending content to a\nmodel provider is a separate authorized disclosure, not implied by peer E2EE.\n\n## 7. Path selection and failure\n\nEvery send has an explicit locally authorized requirement: `standard-chat`,\n`enhanced-message`, or `enhanced-collaboration`. Standard chat uses only the\nbaseline. Enhanced requests use only an established, account-bound native\nsession; collaboration additionally requires the exact agreed capability.\nDiscovery advertisements and successful relay storage are not readiness.\n\nIf an enhanced prerequisite fails, return `enhanced-unavailable`,\n`binding-required` or `capability-unavailable` and retain/cancel the pending\noperation according to its native contract. Never silently retry it as kind\n14, NIP-04, plaintext, another recipient, another unapproved relay, or a second\ncompatibility copy. A separately authorized standard message is a new user\noperation, not a retry of the enhanced operation. Strong and baseline\nconversations may coexist with explicit per-message security labels.\n\n## 8. Security and evidence boundary\n\nNIP-59 hides the inner sender/type from public observers but does not hide all\nrouting tags, IP addresses, authentication, traffic, size or timing from the\nrelay. Payload E2EE is not anonymity, relay non-retention, honest client code,\nor confidentiality from an authorized model provider. Native cryptographic\nclaims remain conditional on their own model and implementation assumptions.\nThose proofs do NOT automatically cover Nostr parsing, this new binding,\nfragment reassembly, account association or a concrete product integration.\n\nDefinition tests here exercise deterministic framing, routing and association\nrules with synthetic public fixtures. They do not implement production Nostr\ncryptography, connect real clients, audit an SDK or certify the composite.\nBefore a product claims interoperability, its owning repository must test\nstandard text/replies/group fan-out against an independent NIP-17 client;\nvalidate real NIP-44/59 vectors and signature failures; run the enhanced path\nbetween independent Endpoint implementations through an ordinary Nostr relay;\nexercise offline delivery, duplicate/reordered/lost fragments, prekey races,\nrevocation, restarts and mismatched capabilities; and verify that no failure\ncauses a weaker copy or unauthorized effect. Record exact clients, commits,\nrelay configuration and results separately from this definition's status.\n",
+    "spec/interop/v1/protocol.md": "# Nostr interoperability and LicoArc extensions — V1\n\n## 1. Authority and independent conformance targets\n\nThis is the unreleased initial V1 / Generation 1. Nostr is an optional transport\nand ecosystem adapter. A LicoArc core Endpoint MUST work without Nostr using another\napproved carrier. The durable contract in `spec/v1/reliable/continuity.md` and live\ncapability contract in `spec/v1/messaging/capabilities.md` are native, not Nostr-owned.\nThe manifest's `nativeProtocolLineId` identifies the current core definition; a\nsemantic change recomputes it instead of preserving unpublished obsolete bytes.\n\n`nostr-dm` provides unmodified common NIP-17 private text interoperability.\n`nostr-carrier` provides NIP-01/44-v2/59 event carriage and inbox discovery without\nrequiring a chat UI or kind-14 authoring. `licoarc-enhanced` uses that carrier plus\nLicoArc endpoint core and this binding. Enhanced-service implementations need not\nalso implement standard-chat behavior. A complete user-facing compatible chat client\nimplements both. Each support claim names the actual target and optional features.\n\nNo official client, LicoUp workflow runtime, official relay, client allowlist or\nfederation membership is needed. Group collaboration, native HTTPS Station operations\nand federation governance are independently scoped capabilities, not requirements on\nstandard Nostr relays. Nostr upstream owns its existing formats at the pinned revision.\nThe LicoArc binding owns only its extensions. Event carriage alone is not chat interop.\n\n## 2. Standard private-message path\n\nUse NIP-01 event verification and relay interaction, NIP-17 private messages, NIP-44\nversion 2 and NIP-59. Text is a kind 14 unsigned rumor, sealed as kind 13, gift-wrapped\nas kind 1059 separately for each recipient and the sender. Preserve upstream reply,\nroom and timestamp-randomization behavior without LicoArc-required fields.\nVerify signatures, ids, MACs, intended recipient and matching seal/rumor authors before\ndisplay; a random wrapper key is not the sender. Deduplicate by authenticated sender\nand rumor id. Kind 14 content is plain text, never an executable control packet.\n\nRetrieve the recipient's authenticated kind 10050 inbox-relay list using upstream\nreplacement ordering. Use user-selected/previously known discovery relays and cached\nsigned lists to find it; do not publish private data to discovery relays or to unrelated\nNIP-65 read/write relays. Refresh on reconnection and delivery failure; absence or\nconflicting/unverifiable information is inbox-unavailable, not a guessed broadcast.\nSupport NIP-42 on selected relays when required. A relay's limits/receipts do not prove\nsecurity, custody or delivery. NIP-11 limits inform resource admission; NIP-19/21 are\noptional presentation conveniences. Keep one fetch cursor per source and an unresolved\nmessage inventory. Creation-time-only fetching cannot establish complete catch-up.\n\nOptional files, reactions, edits, deletion and disappearing messages need independent\nimplementation claims. No NIP-04 fallback is defined. Standard NIP-44 is not claimed to\nprovide forward secrecy, post-compromise recovery or post-quantum protection. A\nuser-selected business expiry/deletion is not evidence that every remote copy disappeared.\n\n## 3. Enhanced framing\n\nPublish only kind 1059 gift wraps for durable enhanced work. The authenticated inner\nrumor is application kind 44900 with exactly `[[\"t\",\"licoarc.v1\"],[\"p\",recipientPubkey]]`\nand canonical JSON carrier content. Kind 44900 is experimental and unallocated upstream,\nNOT an approved NIP. Require kind and exact namespace; unknown values are unsupported,\nnot chat or instructions. NIP-78 is private app storage, not this interchange. Do not\npublish a bare extension rumor or seal. Outer tags never expose channel, capabilities,\nEndpoint identity or protected content. Enhanced data is wrapped only for the authorized\nremote account; device history synchronization needs its own authorization.\n\nThe envelope has exactly `channel`, `type`, `digest`, `length`, `index`, `data`.\n`channel` is a fresh 128-bit pairing/transport reference, not a conversation or an\nauthenticator. `type` selects the native deterministic-CBOR endpoint-identity,\nuser-authority, prekey-bundle, first-packet, session-accept or raw protected-record\nheader-CBOR || ciphertext || tag. Native type-specific bounds still apply.\n\nHash the complete original bytes with SHA-256, split into consecutive 8192-byte\nfragments, and encode each fragment in canonical padded standard Base64. Derive\nfragment count from length; all non-final fragments are full-sized, the last has the\nexact remainder. Preserve original protected bytes; a matching hash is not authentication.\nThe event must fit the local maximum and selected relay's smaller limit. Refusal cannot\nauthorize weaker encryption, unrelated relays or another recipient.\n\nReassembly keys include authenticated seal author, recipient, channel, type and digest.\nAccept any part order; identical parts coalesce, conflicting parts reject without\naltering accepted parts. Reserve declared bytes against quotas before allocation.\nHot reassembly bounds limit one working set, not logical lifetime. Persist accepted\nparts/spool references or guarantee retained recovery custody before reclaiming hot\nstate. There is no age-based assembly failure or pairing expiry. Native authentication,\nrevocation, consumed-prekey and replay checks remain mandatory on complete objects.\n\nSame-attempt retry uses the stored native packet and Gift Wraps. A later attempt may\nmake fresh outer wraps of the SAME protected object for late-upload/relay compatibility.\nNo fresh native nonce is required merely to rewrap; fresh native reprotection, when\nneeded, follows core continuity and keeps the exact logical intent. Rewrapping never\ncreates a new authorization or business request. Ephemeral 21059 is not used for\naccepted durable tasks; another explicitly declared transient capability can use it.\n\n## 4. Asynchronous pairing and identity-only binding\n\nNostr accounts and LicoArc user/Endpoint keys are distinct namespaces. Never reinterpret\nor silently derive one from the other. One account shared by devices is not a device\nroster, legal identity or execution authority. Every Endpoint retains independent keys.\n\nPersist a user/standing-policy-approved pairing with fixed initiator and responder\naccounts. Exchange identity and user-authority records, including missing predecessors,\nthen an exact signed active prekey pair. Validate native continuity, possession, peer\ntrust and signatures. Both parties may be offline between ANY steps without cancelling\nthis intent. Persist exact answers before transmission, replay them after restart.\nLocal quota pressure pauses new work, not already accepted pairing state. Responding\nto unsolicited pairing requires local policy. Public discovery materials contain no\napplication request; they do not acquire post-quantum metadata confidentiality.\n\nFollow native atomic paired-prekey redemption, first-packet and SessionAccept rules.\nClock-based prekey expiration is not part of this revised Candidate. Consumed/revoked\nmaterial is never reused; acquire fresh material when necessary without losing the\nconversation/request. Only after native confirmation and protected authority admission\nmay identity binding and live capability messages be accepted as control.\n\nAn identity binding is a protected Generic Message event, contentType 1279328257, with\ncanonical JSON per binding.schema.json: binding semantic id, channel, fixed accounts,\nnative session-context digest and persistent `conversation`. The conversation reference\nis agreed within an already approved peer/Group scope; it grants no new membership.\nVerify exact values against the authenticated native session, outer account context\nand local association. Binding mismatch affects that association, not unrelated work.\n\nThe binding contains NO capability list. Its immutable identity fields may not be\nrewritten inside a session. Tool changes, capability availability and permission\nchanges use independent protected live updates and NEVER trigger rebinding. A key or\naccount replacement is a different security event requiring approved continuity and a\nsafe session; the existing user-visible conversation and logical work survive it.\n\nIdentity binding acknowledgment can use the digest of role-ordered identity records\nunder `LICOARC-NOSTR-V1/AGREEMENT\\0`. This is a session-control fact, not a field in the\nbusiness request identity. It cannot force a new request when a session changes.\n\nApplication packets received before binding remain in a durable native inbox with\n`binding-pending` disposition and no execution. Commit retained payload/disposition\nwith native replay/ratchet state; never consume a key and lose the only payload.\nThere is no expiry of this accepted work. Quota refusal happens before native commit,\nretaining ciphertext custody. When binding succeeds, list candidates and apply normal\nreceipt/authorization rules; remove pending custody only in a successful durable handoff.\n\n## 5. Live capabilities and collaboration\n\nUse the native live capability record/page messages on existing sessions. Each authorized\nconversation gets relevant updates; roles distinguish a requester who understands the\ninterface from a provider with the tool. Offline repair, removal records, exact interface\ndigests, generation/revision ordering and scoped disclosure follow capabilities.md.\nNo global frozen intersection is part of the cryptographic or identity handshake.\n\nA protected Generic Message with contentType 1279328258 carries canonical JSON\n`{conversation,capability,payload}`; payload is Base64 application bytes, capability is\nid+definition. The protected intent contains this stable content, not a session-specific\nagreement. Generic kind, messageId, relatesTo, attachment and group identities keep their\nmeaning. Target/authorization and actual body/result grammar belong to the independently\npublished application contract; any client implementing it can participate.\n\nReceive validation checks authenticated scope, closed structure and payload bounds.\nIt does NOT require permission to execute. Durably store a request as waiting-approval or\nunsupported when appropriate; store responses, progress and cancellation facts against\ntheir existing request. The action boundary separately checks current invocation/provider\ncompatibility, target and authorization. A stale advertisement cannot authorize an effect.\nUnknown capabilities never dispatch to a tool, but need not destroy the whole conversation.\n\n## 6. Path selection and evidence\n\nEvery send has a locally authorized requirement: standard-chat, enhanced-message or\nenhanced-collaboration. The adapter may report unavailable; the core queues accepted\nintent for a later approved path. Never silently copy an enhanced task into kind 14,\nNIP-04, plaintext, another recipient or an unrelated relay. Switching equally protective,\nauthorized carriers is not downgrade and does not create new work.\n\nNIP-59 does not hide all recipient routing, IP/authentication, traffic, size or timing.\nNo relay deletion, unconditional availability, honest-client-code or automatic historical\nkey recovery guarantee is made. Standards and the native cryptographic primitive choices\nare reused, not reinvented. New composition/continuity semantics require their own proof\nreview and real-client qualification. Synthetic tests and deterministic models are not\nproduction crypto, storage or interoperability evidence. V1 revision changes must update\ncontent identities, source-closed artifacts and website pins together.\n",
     "spec/interop/v1/source-manifest.json": {
       "version": "licoarc.nostr-source-manifest.v1",
       "sourceRoots": [
@@ -1463,5 +1471,5 @@
       ]
     }
   },
-  "digest": "27e3d6bb6e048afdab02461b714bb61a50c72d77d52ce6ddb1dd0d8123c35838"
+  "digest": "c2596ddb12b6c54bf9d0d209cccb526e753068b09e60fdafda082f14512da1ff"
 }

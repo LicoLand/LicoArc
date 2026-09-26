@@ -21,8 +21,8 @@ Borrowing NIP-78 app-storage kinds conflicts with cross-client interchange;
 placing commands in kind 14 confuses conversation and execution authority.
 
 Select two explicitly authorized paths: unmodified NIP-17/44/59 chat, and an
-independent NIP-59 outer binding carrying native V1 objects. Preserve the
-existing native cryptographic construction instead of selecting a new suite.
+independent NIP-59 outer binding carrying native V1 objects. Keep primitive selection separate from application compatibility. Current V1
+continuity revises native admission and requires formal requalification.
 The binding uses bounded 8192-byte fragments to carry the existing 524288-byte
 native maximum without pretending every relay accepts a half-megabyte event.
 Capabilities stay in native protected application payloads, never the AKE.
@@ -31,15 +31,15 @@ Capabilities stay in native protected application payloads, never the AKE.
 
 The exact prototype is protocol.md sections 2–7: authenticated namespace
 classification, original-byte hashing/framing, bounded reassembly, existing
-native establishment, role/account/context binding, immutable capability
-intersection and explicit per-message path selection. Unknown or invalid
+native establishment, role/account/conversation binding, independent live capability
+matching and explicit per-message path selection. Unknown or invalid
 input cannot advance native state. An enhanced failure cannot enter standard
 chat. Any conforming independent client may implement the extension.
 
 The semantic identity binds only declared semantic sources and never itself.
-Original native line/Profile identities and cryptographic bytes remain fixed.
+Current semantic identities are recomputed; old proof inputs are not current evidence.
 No native Station operation or governance membership is needed by a Nostr relay.
-Native full-line conformance remains a separate, complete claim.
+Core, Group, transport and governance have independent conformance targets.
 
 ## Risks and non-goals
 

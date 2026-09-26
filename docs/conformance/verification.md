@@ -6,7 +6,7 @@ definition. They establish only definition and source-integrity facts.
 ## Current admission target
 
 The canonical manifest defines `licoarc.protocol-line.v1` as
-`Candidate` / `COMPLETE`, with `sessionEligible: true` and
+`Candidate` / `PARTIAL`, with `sessionEligible: false` and
 `publicationEligible: false`, V1 / Generation 1. It binds
 exactly eight complete capabilities, one
 complete active `stable-core` Protection Profile, 23 stable positive security

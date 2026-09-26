@@ -2,26 +2,16 @@
 
 [简体中文](README.zh-CN.md)
 
-Lico Arc Protocol is LicoLand's implementation-neutral **Protocol Layer**. It
-owns protocol meaning: closed schemas and registries, deterministic wire
-representations, security and lifecycle rules, definition-level conformance
-corpora, content-addressed Protocol Line artifacts, and federation governance.
+LicoArc defines open, implementation-neutral communication contracts for people,
+devices and agents. Conversations persist while connections change. Accepted
+messages, files and work wait safely for offline peers; application capabilities
+update existing conversations without rebinding or restarting encrypted sessions.
 
-Products and implementations may execute an exact pinned definition or submit
-proposals, but they cannot redefine it. Publication, implementation,
-interoperability execution, audit, deployment, support, and operation remain
-separate downstream concerns.
-
-LicoArc now separates **standard Nostr interoperability** from **open enhanced
-Endpoint and collaboration contracts**. A client implementing the common
-NIP-17/44/59 baseline can exchange ordinary private messages with other
-supporting Nostr clients without LicoUp, native Station APIs or federation
-membership. Enhanced peers add the independently specified LicoArc binding,
-not a private client allowlist. See [Nostr interoperability](docs/protocols/nostr-interoperability-v1.md).
-
-The native Protocol Line described below remains the complete enhanced
-composition; it is not a prerequisite for ordinary Nostr chat. These are
-protocol definitions, not a claim of an implemented or audited Nostr client.
+Nostr is an optional network adapter, not the foundation of identity or durable
+custody. The standard NIP-17 private-message path preserves interoperability with
+other supporting clients. Enhanced peers use the open LicoArc Endpoint Core and
+shared application definitions, over Nostr or another approved adapter. Neither
+path requires LicoUp, an official client, a particular model or an official service.
 
 ## Core Domain Model
 
@@ -29,82 +19,64 @@ This section is the sole authority for LicoArc's three domain entities.
 
 | Entity | Definition | Authority boundary |
 | --- | --- | --- |
-| **Endpoint** | A user-controlled origin or destination of protected communication. Every independently key-holding device or isolated runtime is a separate Endpoint. | Sole runtime authority for its own keys, sessions, plaintext, protected state, peer acceptance, local approval, effects, and authenticated confirmations. |
-| **Station** | An independently operated intermediary that transports opaque endpoint-protected data. | Untrusted by Endpoints. It has no user or device roster and only the transport authority explicitly granted by the pinned Protocol Line. |
-| **Network** | A federation interoperability context whose participants recognize communication under one pinned Protocol Line. | Provides recognition and transport context; it is not a trust root, identity authority, plaintext authority, or endpoint security authority. |
+| **Endpoint** | A user-controlled origin or destination of protected communication. Each independently key-holding device or isolated runtime is a separate Endpoint. | Controls keys, plaintext, peer trust, durable local state, consent, effects and authenticated confirmations. |
+| **Station** | An independently operated intermediary carrying opaque protected data. | Untrusted. Its custody or relay receipt never proves Endpoint storage, approval or execution. It has no user/device authority roster. |
+| **Network** | An interoperability context for mutually understood communication contracts. | Supplies recognition and transport context, not an identity root, plaintext authority or Endpoint authorization. |
 
-```text
-Endpoint A ── endpoint-protected LicoArc exchange ──▶
-    Network { one or more untrusted Stations } ──▶ Endpoint B
-```
+A Group is a protected collaboration object whose members are Endpoints, not a
+fourth entity. An application actor or Agent is scoped by its authorized Endpoint;
+its display name is not an execution grant.
 
-Every independently key-holding device or isolated runtime is a distinct
-Endpoint. A Group is a protected collaboration object whose members are
-Endpoints, not a fourth entity.
+## What V1 defines
 
-## Current Definition
+The [Endpoint Core](spec/v1/foundation/targets.json) requires five capabilities:
+Protocol Foundation, Identity, Pairwise Protection, Generic Messaging and Reliable
+Exchange. Group Collaboration, native HTTPS Station carriage and Federation
+Governance have separate conditional conformance targets. Supporting the core does
+not require implementing a chat UI, Nostr, a Station server or network governance.
 
-The tracked source graph defines `licoarc.protocol-line.v1` as:
+[Durable continuity](spec/v1/reliable/continuity.md) separates connection attempts,
+custody, approvals and execution facts. Resource budgets bound a processing turn,
+not the life of a message. Timed claim release never deletes the claimed item.
+[Live capabilities](spec/v1/messaging/capabilities.md) separate knowing an interface,
+providing a tool, availability and permission. Only the last controls authorization.
+
+## Current definition
 
 | Property | Value |
 | --- | --- |
+| Protocol | `licoarc.protocol-line.v1`, V1 / Generation 1 |
 | Lifecycle | `Candidate` |
-| Definition status | `COMPLETE` |
-| New-session eligibility | `true` |
-| Publication eligibility | `false` |
-| Protocol generation | `1` (Generation 1) |
-| Mandatory capabilities | 8, all `COMPLETE` |
-| Active Protection Profile | `stable-core`, `COMPLETE` |
+| Definition status | `PARTIAL` — revised semantics require formal requalification |
+| New-session eligibility | `false` |
+| Protocol-Line publication eligibility | `false` |
+| Mandatory core capabilities | 5; 3 separately defined optional scopes |
+| Package version | `0.1.0`, unchanged |
 
-The eight mandatory capabilities are Protocol Foundation, Identity, Pairwise
-Protection, Generic Messaging, Reliable Exchange, HTTPS Transport, Group
-Collaboration, and Federation Governance.
+The primitives remain X25519/ML-KEM-768 and Ed25519/ML-DSA-65 with a classic
+X25519 Double Ratchet. This revision changes prekey admission/transcripts,
+confirmation semantics and content identities. The prior proof remains preserved
+with its original digest; it does **not** prove this revision. See
+[status](docs/STATUS.md) and [formal requalification](formal/requalification.json).
+A source check is neither SDK execution, a security audit nor cross-client testing.
 
-Identity defines a user-authorized authority chain for multiple independent
-Endpoint devices and recovery. Each device keeps its own Endpoint keys and
-sessions. Pairwise transcripts bind both Endpoint-state digests and their
-sibling user-authority-state digests without creating a digest cycle. An exact
-protected Endpoint confirmation, rather than a Station signal, advances
-reliable finality. User/device authorization and local peer trust remain
-separate decisions.
+## Documentation and verification
 
-`stable-core` is an indivisible hybrid construction with paired X25519 and
-ML-KEM-768 one-time prekeys, dual Ed25519 and ML-DSA-65 authentication,
-fixed transcript-bound admission and confirmation, and a bounded X25519 Double
-Ratchet. Profile and Protocol Line identities are computed from named,
-non-circular semantic projections. Proof admission, security accounting, and
-the complete declared conformance corpus are part of definition admission.
+Start with [Product](PRODUCT.md), [Architecture](ARCHITECTURE.md),
+[Nostr interoperability](spec/interop/v1/protocol.md), and the
+[documentation index](docs/README.md). Normative sources are in `spec/`; generated
+bundles in `artifacts/` bind their exact sources and synthetic conformance corpora.
 
-`sessionEligible: true` means the Candidate definition permits authenticated
-sessions under the fixed V1 definition (Generation 1). It does not mean Published,
-implemented, interoperable, audited, deployed, supported, or operational.
+```sh
+npm run definition:refresh
+npm run verify
+npm run conformance:check
+```
 
-`publicationEligible: false` means this Candidate is ineligible for Protocol-Line
-publication. Repository source, license, and documentation may still be published
-as repository material under Apache-2.0.
-
-Canonical current facts are in [`spec/v1/manifest.json`](spec/v1/manifest.json),
-[`spec/protocol-lines.json`](spec/protocol-lines.json),
-[`spec/protection-profiles.json`](spec/protection-profiles.json), and
-[`docs/STATUS.md`](docs/STATUS.md).
-
-## Documentation
-
-The public English [documentation site](https://licoarc.com/) is an orientation
-layer; the repository sources below remain authoritative.
-
-- [Product authority and scope](PRODUCT.md)
-- [Architecture](ARCHITECTURE.md)
-- [Domain vocabulary](CONTEXT.md)
-- [Current status](docs/STATUS.md)
-- [Protocol documents](docs/protocols/)
-- [Definition verification](docs/conformance/verification.md)
-- [Decision lifecycle](docs/DECISION-LIFECYCLE.md)
-- [Canonical Field Registry](spec/FIELD-REGISTRY.md)
-- [Formal documentation index](docs/README.md)
-
-Run `npm run verify` for the repository-owned source-integrity checks. These
-checks validate the definition graph and generated artifact only; they do not
-claim downstream execution or delivery.
+`definition:refresh` recomputes source identities and artifacts, never proof output
+or expected test results. `formal:check` currently fails with an explicit
+requalification requirement rather than reusing the old proof as current evidence.
+All examples are synthetic. Implementation, interoperability, publication, audit,
+deployment, support and operation belong to downstream owners.
 
 License: Apache-2.0.

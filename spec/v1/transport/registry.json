@@ -94,7 +94,7 @@
       "responseBody": "affiliate-response",
       "acceptedStatus": 201,
       "target": "no-delivery-handle",
-      "idempotency": "required-operation-id-fixed-window"
+      "idempotency": "stable-operation-id-until-settled-or-handle-retired"
     },
     "RESERVE": {
       "method": "POST",
@@ -105,7 +105,7 @@
       "responseBody": "reserve-response",
       "acceptedStatus": 201,
       "target": "no-delivery-handle",
-      "idempotency": "required-operation-id-fixed-window"
+      "idempotency": "stable-operation-id-until-settled-or-handle-retired"
     },
     "SUBMIT": {
       "method": "POST",
@@ -116,7 +116,7 @@
       "responseBody": "submit-response",
       "acceptedStatus": 202,
       "target": "one-delivery-handle",
-      "idempotency": "required-operation-id-fixed-window"
+      "idempotency": "stable-operation-id-until-settled-or-handle-retired"
     },
     "CLAIM": {
       "method": "POST",
@@ -127,7 +127,7 @@
       "responseBody": "claim-response-with-bounded-packets",
       "acceptedStatus": 200,
       "target": "one-delivery-handle",
-      "idempotency": "required-operation-id-fixed-window"
+      "idempotency": "stable-operation-id-until-settled-or-handle-retired"
     },
     "SETTLE": {
       "method": "POST",
@@ -138,7 +138,7 @@
       "responseBody": "settle-response",
       "acceptedStatus": 200,
       "target": "one-delivery-handle",
-      "idempotency": "required-operation-id-fixed-window"
+      "idempotency": "stable-operation-id-until-settled-or-handle-retired"
     }
   },
   "bodyRules": {
@@ -193,7 +193,7 @@
     ],
     "stationAuthority": "transport-hint-only",
     "endpointFinalityAuthority": "none",
-    "acceptedStoragePrecondition": "station-must-be-able-to-honor-fixed-window-before-accepting-submit"
+    "acceptedStoragePrecondition": "durable-commit-and-custody-quota-before-acceptance; no-age-eviction"
   },
   "statusConsistency": {
     "validationOrder": "validate-carrier-then-canonical-response-body-then-status-consistency-before-state-change",
@@ -217,7 +217,7 @@
     "ambiguous": "same-operation-id-and-identical-canonical-request-only;-result-may-have-committed",
     "conflict": "same-operation-id-with-different-canonical-request-fails-closed",
     "submitBytes": "retry-must-use-identical-protected-packet-octets",
-    "windowReset": "retry-reconnect-route-change-and-station-migration-never-reset-or-extend"
+    "windowReset": "attempt-budgets-resume; leases-do-not-reset-message-custody-or-operation-idempotency"
   },
   "atomicity": {
     "operation": "validate-complete-request-against-one-tentative-state-then-commit-operation-result-once",
@@ -227,14 +227,17 @@
     "failure": "malformed-conflicting-stale-over-bound-and-status-mismatched-input-leaves-state-byte-identical"
   },
   "stateLifecycle": {
-    "affiliate": "accepted-affiliation-is-finite-and-station-scoped",
-    "reserve": "returns-one-short-lived-opaque-handle-and-finite-service-window",
-    "asyncHandle": "multiple-submissions-allowed-within-storage-window",
+    "affiliate": "station-scoped-until-authorized-revocation",
+    "reserve": "opaque-handle-until-authorized-consumption-or-retirement",
+    "asyncHandle": "multiple-submissions-under-authorized-custody-quota",
     "firstContactHandle": "one-accepted-submission-then-consumed",
-    "submit": "accepted-packet-is-stored-with-one-fixed-storage-window",
+    "submit": "durable-opaque-custody-until-authorized-settlement",
     "claim": "returns-bounded-items-and-one-live-claim-epoch",
     "settle": "complete-removes-or-release-returns-each-item-and-closes-each-claim-membership-atomically-for-the-whole-request",
-    "stationSignals": "never-advance-endpoint-accepted-or-effect-completed"
+    "stationSignals": "never-advance-endpoint-accepted-or-effect-completed",
+    "custody": "spec/v1/reliable/continuity.md#2-admission-custody-and-storage",
+    "claimExpiry": "release-exclusive-claim-only; preserve-item",
+    "idempotency": "retain-result-or-non-reusable-handle-frontier; no-wall-clock-forgetting"
   },
   "metadataBudget": {
     "visible": [
@@ -242,14 +245,14 @@
       "actual-framed-body-length",
       "method-and-fixed-path",
       "HTTP-version-and-TLS-certificate-name",
-      "operationId-within-fixed-idempotency-scope",
+      "operationId-within-stable-custody-scope",
       "mediaType-and-status",
       "typed-Station-outcome",
       "bounded-retry-hint-when-transient",
       "timing-frequency-route-and-connection-activity"
     ],
     "correlation": "handle-equality-operation-equality-packet-equality-length-timing-frequency-route-and-certificate-correlation-remain-possible",
-    "retention": "Station-retains-only-within-fixed-storage-idempotency-and-claim-windows; Endpoint-retains-local-policy",
+    "retention": "opaque-custody-until-authorized-settlement; claim-lease-expiry-does-not-delete-items",
     "confidentiality": "no-plaintext-or-application-meaning-is-carried-outside-protected-packet",
     "anonymity": "not-claimed",
     "unlinkability": "not-claimed",

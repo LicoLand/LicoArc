@@ -18,7 +18,8 @@
     "governanceSchemaPath",
     "runtimeCddlPath",
     "parserPolicy",
-    "sourceClosure"
+    "sourceClosure",
+    "conformanceTargets"
   ],
   "properties": {
     "$schema": {
@@ -138,6 +139,9 @@
           "const": "required"
         }
       }
+    },
+    "conformanceTargets": {
+      "const": "spec/v1/foundation/targets.json"
     }
   }
 }

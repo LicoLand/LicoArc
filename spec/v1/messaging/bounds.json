@@ -7,8 +7,7 @@
   "units": {
     "MAX_MESSAGE_RECORD_BYTES": "bytes",
     "MAX_CONTROL_RECORD_BYTES": "bytes",
-    "MAX_ATTACHMENT_CONTROL_BYTES": "bytes",
-    "ATTACHMENT_RECOVERY_WINDOW": "seconds"
+    "MAX_ATTACHMENT_CONTROL_BYTES": "bytes"
   },
   "bounds": {
     "MAX_PAYLOAD_BYTES": 262144,
@@ -32,7 +31,9 @@
     "MAX_RECOVERY_STATE_BYTES": 256,
     "MAX_STATE_UPDATE": 64,
     "MAX_RECOVERY_ROUND": 32,
-    "ATTACHMENT_RECOVERY_WINDOW": 86400
+    "MAX_CAPABILITY_RECORD_BYTES": 4096,
+    "MAX_CAPABILITY_PAGE_RECORDS": 64,
+    "MAX_CAPABILITY_PAGE_BYTES": 262144
   },
   "relationships": [
     "ATTACHMENT_CHUNK_BYTES > 0",
@@ -45,6 +46,7 @@
     "MAX_STATE_UPDATE = MAX_ATTACHMENT_STATE_UPDATES",
     "MAX_RECOVERY_ROUND = MAX_ATTACHMENT_RECOVERY_ROUNDS"
   ],
-  "resetPolicy": "none-of-retry-reconnect-session-renewal-route-change-station-migration-resets-or-extends-a-bound",
-  "recoveryWindowStart": "declaring-message-endpoint-acceptance"
+  "resetPolicy": "control-budgets-are-per-processing-turn; durable-chunks-and-task-identity-never-reset",
+  "recoveryWindowStart": "none; accepted-attachments-have-no-protocol-recovery-TTL",
+  "budgetScope": "per-wire-record-or-active-turn; not-total-attachments-or-recovery-lifetime"
 }

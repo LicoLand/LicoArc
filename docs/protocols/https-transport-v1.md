@@ -145,7 +145,7 @@ profile-wide maximum is therefore 9,143.
 ## Failure and effects
 
 Malformed carrier or control input is rejected before operation state changes.
-If a Station cannot honor the fixed storage or claim contract, it rejects
+If a Station cannot honor durable custody or a bounded claim lease, it rejects
 before acceptance. Station loss, deletion, replay, equivocation, correlation,
 selective denial, false outcomes, and unavailability remain threat-model
 inputs to Endpoint-owned Reliable Exchange.
@@ -153,3 +153,11 @@ inputs to Endpoint-owned Reliable Exchange.
 This profile is pure protocol input. Conformance testing performs no socket,
 DNS, TLS, credential, certificate-store, account, signing, deployment, or
 hosted-operation effect.
+
+## Durable continuity and current admission
+
+The current V1 lifecycle contract is [durable continuity](../../spec/v1/reliable/continuity.md).
+[Live capabilities](../../spec/v1/messaging/capabilities.md) update existing conversations
+without rebind. [Group continuity](../../spec/v1/group/continuity.md) separates history,
+effects and fork recovery. The revised Candidate is PARTIAL pending formal requalification;
+retained earlier proof output is not current evidence.

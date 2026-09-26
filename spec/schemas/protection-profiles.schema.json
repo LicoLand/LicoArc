@@ -120,7 +120,7 @@
       "items": {
         "$ref": "https://licoarc.com/spec/schemas/catalog-common.schema.json#/$defs/digest256"
       },
-      "minItems": 1
+      "minItems": 0
     },
     "contentIdentity": {
       "type": "object",

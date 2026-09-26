@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased — V1 continuity revision
+
+- Separate core, adapters, durable work and live capability state. No protocol TTL for accepted work.
+- Update capabilities without rebinding; preserve approvals, late facts and duplicate execution guards.
+- Revise prekey admission, confirmation fact identity, Group repair and custody policies.
+- Recompute semantic identities without a version bump. Reopen current formal admission; retained previous proofs remain historical.
+
+
 ## Unreleased — V1 Nostr interoperability
 
 - Separate standard NIP-17/44/59 private messaging from open LicoArc enhancements.

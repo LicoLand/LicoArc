@@ -31,6 +31,9 @@ authorities.
 | Nostr baseline and open extensions | [protocols/nostr-interoperability-v1.md](protocols/nostr-interoperability-v1.md) |
 | Initial V1 identity authority | [protocols/identity-v1.md](protocols/identity-v1.md) |
 | Confirmation-driven finality | [protocols/reliable-exchange-v1.md](protocols/reliable-exchange-v1.md) |
+| Durable communication and custody | [../spec/v1/reliable/continuity.md](../spec/v1/reliable/continuity.md) |
+| Live capability updates | [../spec/v1/messaging/capabilities.md](../spec/v1/messaging/capabilities.md) |
+| Group history and repair | [../spec/v1/group/continuity.md](../spec/v1/group/continuity.md) |
 | Repository operations | [RUNBOOK.md](RUNBOOK.md) |
 
 ## Definition boundary

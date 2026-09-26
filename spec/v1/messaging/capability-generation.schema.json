@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/v1/messaging/capability-generation.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "issuer",
+    "audience",
+    "previous",
+    "next"
+  ],
+  "properties": {
+    "issuer": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "audience": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{32}$"
+    },
+    "previous": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{32}$"
+    },
+    "next": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{32}$"
+    }
+  }
+}

@@ -44,13 +44,13 @@
     },
     "licoarc-enhanced": {
       "requirements": [
-        "nostr-dm",
+        "nostr-carrier",
         "licoarc.nostr-interoperability.v1",
-        "licoarc.protocol-line.v1"
+        "licoarc.endpoint-core.v1"
       ],
       "requiresLicoUp": false,
       "requiresFederationMembership": false,
-      "nativeProtocolLineId": "c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08",
+      "nativeProtocolLineId": "4cb15568e99396ef2789aec1828ad9dc4878f1cd1a04e28fe3feaac4dc753f4c",
       "nativeManifest": "spec/v1/manifest.json",
       "innerRumorKind": 44900,
       "namespaceTag": [
@@ -58,7 +58,17 @@
         "licoarc.v1"
       ],
       "wrapperKind": 1059,
-      "sealKind": 13
+      "sealKind": 13,
+      "requiresStandardChat": false
+    },
+    "nostr-carrier": {
+      "requirements": [
+        "NIP-01",
+        "NIP-44-v2",
+        "NIP-59"
+      ],
+      "requiresLicoUp": false,
+      "requiresFederationMembership": false
     }
   },
   "carrier": {
@@ -78,9 +88,9 @@
     "publicExtensionPublish": "forbidden",
     "outerAuthentication": "nostr-only-not-endpoint-authority",
     "innerAuthentication": "native-licoarc-only",
-    "retry": "identical-stored-gift-wraps-and-unchanged-native-object",
+    "retry": "same-attempt-identical-wraps; later-attempt-fresh-wrap-same-native-object-and-logical-intent",
     "relayReceipt": "transport-hint-only",
-    "earlyApplication": "bounded-durable-native-inbox-until-binding"
+    "earlyApplication": "durable-native-inbox-until-binding-without-TTL"
   },
   "bounds": {
     "MAX_OBJECT_BYTES": 524288,
@@ -93,8 +103,6 @@
     "MAX_REASSEMBLY_BYTES": 8388608,
     "MAX_PENDING_CHANNELS": 32,
     "MAX_ACTIVE_CHANNELS": 256,
-    "ASSEMBLY_WINDOW_SECONDS": 600,
-    "PAIRING_WINDOW_SECONDS": 600,
     "MAX_CAPABILITIES": 64,
     "MAX_CAPABILITY_ID_BYTES": 128,
     "MAX_BINDING_BYTES": 16384,
@@ -105,17 +113,22 @@
   },
   "applicationContentTypes": {
     "sessionBinding": 1279328257,
-    "collaboration": 1279328258
+    "collaboration": 1279328258,
+    "capabilityState": 1279328259,
+    "capabilityPage": 1279328260
   },
   "routing": {
     "selection": "per-message-explicit-security-requirement",
     "automaticDowngrade": false,
     "compatibilityCopy": false,
     "discoveryProvesCapability": false,
-    "capabilityPlacement": "protected-application-payload",
+    "capabilityPlacement": "independent-live-protected-state; never-identity-binding",
     "algorithmNegotiation": false,
     "sameNostrKeyImpliesSameEndpoint": false,
-    "capabilitiesImplyApproval": false
+    "capabilitiesImplyApproval": false,
+    "requiresNostrForCore": false,
+    "capabilityUpdateRebind": false,
+    "messageTTL": null
   },
   "securityBoundary": {
     "inheritsNativeProofs": false,

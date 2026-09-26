@@ -3,6 +3,7 @@ import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import test from "node:test";
+import { spawnSync } from "node:child_process";
 import {
   assertClosedJsonSchema,
   assertValidSecurityAccounting
@@ -41,7 +42,9 @@ test("security accounting is closed, source-authoritative, and lifecycle-generic
   assert.equal(registry.missingMandatoryBindingPolicy, "line-ineligible");
   assert.equal(registry.proofDoesNotDefineProtocol, true);
   assert.equal(registry.downstreamEvidenceDoesNotAdvanceDefinition, true);
-  assert.equal(bindings.bindings.length, 161);
+  assert.equal(bindings.bindings.length, 0);
+  assert.equal(registry.proofEvidencePath, null);
+  assert.equal(registry.proofEvidenceDigest, null);
   assert.equal(bindings.requiredKinds.length, 7);
   assert.ok(bindings.semanticSources.includes("spec/protocol-lines.json"));
   assert.ok(bindings.semanticSources.includes("spec/protection-profiles.json"));
@@ -87,14 +90,14 @@ test("every proved claim carries every exact formal binding kind and reference",
   }
 });
 
-test("the active Profile claim and nonclaim sets are exact and substantive", () => {
+test("the pending Profile retains exact claims and nonclaims without claiming proof", () => {
   const expectedClaimIds = Array.from({ length: 23 }, (_, index) =>
     `SEC-${String(index + 1).padStart(3, "0")}`);
   assert.deepEqual(claims.claims.map(({ id }) => id), expectedClaimIds);
-  assert.ok(claims.claims.every(({ status }) => status === "proved"));
+  assert.ok(claims.claims.every(({ status, counterexampleStatus }) => status === "unproved" && counterexampleStatus === "not-run"));
 
-  const activeProfile = protectionProfiles.profiles.find(({ profileId }) =>
-    protectionProfiles.activeProfileIds.includes(profileId));
+  assert.deepEqual(protectionProfiles.activeProfileIds, []);
+  const activeProfile = protectionProfiles.profiles[0];
   assert.deepEqual(activeProfile.requiredClaimIds, [
     ...expectedClaimIds.slice(0, 13),
     ...expectedClaimIds.slice(19)
@@ -110,31 +113,21 @@ test("the active Profile claim and nonclaim sets are exact and substantive", () 
   assert.ok(exactProfileNonclaims.every((nonclaim) => claims.nonClaims.includes(nonclaim)));
 });
 
-test("formal bindings, model constants, immutable runtime, and bundle proof evidence use content identities", () => {
-  const lineId = protocolLines.lines.find(({ sessionEligible }) => sessionEligible).protocolLineId;
-  const profileId = protectionProfiles.activeProfileIds[0];
-  for (const binding of bindings.bindings) {
-    if (binding.kind === "protocol-line-id") {
-      assert.equal(binding.authorityPath, "spec/protocol-lines.json");
-      assert.equal(binding.authorityPointer, "/lines/0/protocolLineId");
-    }
-    if (binding.kind === "profile-id") {
-      assert.equal(binding.authorityPath, "spec/protection-profiles.json");
-      assert.equal(binding.authorityPointer, "/profiles/0/profileId");
-    }
-  }
-  assert.match(generatedTheory, new RegExp(lineId, "u"));
-  assert.match(generatedTheory, new RegExp(profileId, "u"));
-  assert.ok(claims.claims.every(({ residualRisk }) => !residualRisk.includes("injection-pending")));
-  assert.equal(registry.proofEvidenceDigest,
-    createHash("sha256").update(proofEvidenceBytes).digest("hex"));
+test("prior proof remains content-bound evidence for its old definition, never the new Candidate", async () => {
+  const requalification = await readJson("formal/requalification.json");
+  assert.equal(requalification.status, "required");
+  assert.equal(requalification.supersededEvidenceDigest, createHash("sha256").update(proofEvidenceBytes).digest("hex"));
+  assert.equal(protocolLines.lines[0].sessionEligible, false);
+  assert.equal(protocolLines.lines[0].definitionStatus, "PARTIAL");
+  assert.notEqual(protocolLines.lines[0].protocolLineId, "c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08");
+  assert.doesNotMatch(generatedTheory, new RegExp(protocolLines.lines[0].protocolLineId));
   assert.match(proofEvidence.imageDigest, /^sha256:[0-9a-f]{64}$/u);
-  assert.deepEqual(proofEvidence.execution.arguments,
-    ["--prove", "--heuristic=s", "+RTS", "-N1", "-RTS"]);
-  assert.ok(proofEvidence.lemmas.some(({ name, result }) =>
-    name === "executable_ratchet_evolution" && result === "verified"));
-  assert.ok(proofEvidence.lemmas.some(({ name, result }) =>
-    name === "executable_authenticated_confirmation_and_metadata" && result === "verified"));
+  assert.ok(proofEvidence.lemmas.some(({ result }) => result === "verified"));
+  for (const command of ["tools/formal/generate.mjs", "tools/formal/check.mjs"]) {
+    const result = spawnSync(process.execPath, [command], { cwd: root, encoding: "utf8" });
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr + result.stdout, /FORMAL_MODEL_REQUALIFICATION_REQUIRED/);
+  }
 });
 
 test("unknown adversaries and downstream proof authority fail closed", () => {

@@ -1,0 +1,23 @@
+{
+  "version": "licoarc.proof-requalification.v1",
+  "status": "required",
+  "supersededRevision": "996dc9162401d31a9747f0a98accf3536b53d765",
+  "supersededEvidencePath": "formal/evidence.json",
+  "supersededEvidenceDigest": "74cf8df346a261164a097732b8fa6e03471d63104ae5001e5ccb6273b34f38e5",
+  "reasons": [
+    "clock-independent-active-prekey-admission",
+    "confirmation-facts-independent-of-transport-session",
+    "durable-lifetimes-and-processing-budget-separation",
+    "live-capabilities-and-group-resolution"
+  ],
+  "nextEvidenceMustCover": [
+    "revised-transcripts-and-source-identities",
+    "arbitrarily-delayed-active-prekey-first-packets",
+    "no-nonce-reuse-across-recovery",
+    "receipt-reordering-cross-session-duplicates-and-conflicts",
+    "capability-update-authorization-generation-and-snapshot-repair",
+    "group-fork-resolution-and-current-effect-authorization",
+    "new-positive-dual-signature-first-packet-vector-for-revised-transcript"
+  ],
+  "claim": "retained-prior-proof-is-not-evidence-for-current-Candidate"
+}

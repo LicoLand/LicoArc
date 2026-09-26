@@ -18,15 +18,15 @@
           },
           {
             "sourcePath": "spec/schemas/security-claims.schema.json",
-            "sha256": "3573ef47f7e65a4d89a7df50e498853b08d471f9a3e5de8f1a3e73bd3c3aa434"
+            "sha256": "ddcd70f1e6271d0626d531b8c7d7af0639db78a4cf71d9f9d0040ff0c39ac2da"
           },
           {
             "sourcePath": "spec/schemas/security-formal-bindings.schema.json",
-            "sha256": "c35524c6b61da02315b8d329f1877df57848393fbf87be44e25826c312e48c9f"
+            "sha256": "09d825f057585c5e1413da292bb0fb6def444017080b2cce6b634509a5290d9e"
           },
           {
             "sourcePath": "spec/schemas/security-registry.schema.json",
-            "sha256": "d23e49b5df0aba9bf87cb559e52ef19f7b6337cc82d4ae479d48fe4927d03641"
+            "sha256": "f303cab58598b0835fe5d1a3fd9550438da7c19f80c8e01ca2212932226d3ac9"
           },
           {
             "sourcePath": "spec/v1/security/adversary-model.json",
@@ -34,15 +34,15 @@
           },
           {
             "sourcePath": "spec/v1/security/claims.json",
-            "sha256": "ed72d9502c21788f063902cc48bdb90a53cab662d4adf47b32e5270dcc44e1c1"
+            "sha256": "b02ae9359f2555d3947e37d1514547a35a35c2b109a22e46bc424e155fcb3530"
           },
           {
             "sourcePath": "spec/v1/security/formal-bindings.json",
-            "sha256": "490d3dca1f4200589018966beae81ff6a75705f00135a13970cc549e708089a3"
+            "sha256": "3746869185e493346d16692c0cb38e29a3648dfd5d4318b3ef34c6b350c38e4e"
           },
           {
             "sourcePath": "spec/v1/security/registry.json",
-            "sha256": "3e834aa185a98e86f0b53248f27f741ca372bb1b535e92665fbb8c46616aa1f1"
+            "sha256": "1d80ddbcf0a81e540d9eeaeaa2a63a9567c10902fffcb2cfb121ff7dadb089a7"
           }
         ],
         "catalogs": [
@@ -54,12 +54,12 @@
               "$id": "https://licoarc.com/spec/v1/security/registry.json",
               "registryVersion": "licoarc.security-accounting.v1",
               "lifecycle": "Candidate",
-              "definitionStatus": "COMPLETE",
+              "definitionStatus": "PARTIAL",
               "claimsPath": "spec/v1/security/claims.json",
               "adversaryModelPath": "spec/v1/security/adversary-model.json",
               "formalBindingsPath": "spec/v1/security/formal-bindings.json",
-              "proofEvidencePath": "formal/evidence.json",
-              "proofEvidenceDigest": "74cf8df346a261164a097732b8fa6e03471d63104ae5001e5ccb6273b34f38e5",
+              "proofEvidencePath": null,
+              "proofEvidenceDigest": null,
               "proofDoesNotDefineProtocol": true,
               "downstreamEvidenceDoesNotAdvanceDefinition": true,
               "missingMandatoryBindingPolicy": "line-ineligible"
@@ -179,11 +179,11 @@
                     "at-least-one-hybrid-component-uncompromised",
                     "atomic-durable-compare-and-commit"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_001_hybrid_ake_key_secrecy",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "computational-hybrid-security-and-live-session-compromise-outside-symbolic-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-002",
@@ -199,11 +199,11 @@
                     "authenticated-peer-key-acceptance",
                     "atomic-durable-compare-and-commit"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_002_mutual_endpoint_authentication",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "computational-primitives-and-peer-key-acceptance-outside-symbolic-model",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-003",
@@ -217,11 +217,11 @@
                     "at-least-one-hybrid-component-uncompromised",
                     "source-bound-transcript"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_003_classical_pq_hybrid_robustness",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "computational-combiner-security-outside-symbolic-model",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-004",
@@ -235,11 +235,11 @@
                     "ideal-hybrid-constructor",
                     "atomic-durable-compare-and-commit"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_004_unknown_key_share_resistance",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "computational-transcript-and-combiner-security-outside-symbolic-model",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-005",
@@ -254,11 +254,11 @@
                     "authenticated-peer-key-acceptance",
                     "responder-identity-and-prekey-not-compromised"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_005_key_compromise_impersonation_boundary",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "responder-identity-or-prekey-compromise-is-the-explicit-impersonation-boundary",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-006",
@@ -272,11 +272,11 @@
                     "source-bound-protocol-line-content-identity",
                     "authenticated-fixed-context-transcript"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_006_protocol_line_content_binding",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "endpoint-signing-key-compromise-or-compromised-local-authority-input-outside-symbolic-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-007",
@@ -290,11 +290,11 @@
                     "source-bound-profile-content-identity",
                     "authenticated-fixed-context-transcript"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_007_protection_profile_content_binding",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "endpoint-signing-key-compromise-or-compromised-local-authority-input-outside-symbolic-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-008",
@@ -309,11 +309,11 @@
                     "ideal-hybrid-constructor",
                     "atomic-durable-compare-and-commit"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_008_session_independence",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "full-live-compromise-of-the-target-session-outside-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-009",
@@ -328,11 +328,11 @@
                     "post-accept-ephemeral-erasure",
                     "atomic-durable-compare-and-commit"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_009_initial_forward_secrecy",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "pre-accept-and-live-session-compromise-outside-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-010",
@@ -346,11 +346,11 @@
                     "fresh-classical-dh-ratchet-input",
                     "prior-ratchet-key-erasure"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_010_double_ratchet_forward_secrecy",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "computational-ratchet-security-and-physical-zeroization-outside-symbolic-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-011",
@@ -364,11 +364,11 @@
                     "fresh-uncompromised-classical-dh-ratchet-input",
                     "atomic-durable-compare-and-commit"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_011_double_ratchet_post_compromise_recovery",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "ongoing-post-quantum-post-compromise-recovery-explicit-nonclaim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-012",
@@ -384,11 +384,11 @@
                     "atomic-durable-compare-and-commit",
                     "unique-record-coordinate"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_012_replay_resistance",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "application-replay-and-fully-compromised-store-outside-model",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-013",
@@ -403,11 +403,11 @@
                     "atomic-durable-compare-and-commit",
                     "monotonic-committed-state-generation"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_013_state_rollback_resistance",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "rollback-detection-under-fully-compromised-store-explicit-nonclaim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-014",
@@ -423,11 +423,11 @@
                     "ideal-dual-signature-authentication",
                     "canonical-authority-state-digest"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_014_self_certifying_user_authority",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "management-and-recovery-key-compromise-remains-the-explicit-authority-boundary",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-015",
@@ -441,11 +441,11 @@
                     "monotonic-predecessor-bound-route-chain",
                     "affiliation-state-binding"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_015_route_migration_safety",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "endpoint-route-signing-key-compromise-and-route-availability-outside-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-016",
@@ -461,11 +461,11 @@
                     "ideal-dual-signature-authentication",
                     "atomic-high-water-compare-and-commit"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_016_management_and_recovery_transition_authorization",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "compromise-of-the-selected-predecessor-authority-key-composition-remains-the-explicit-boundary",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-017",
@@ -481,11 +481,11 @@
                     "exact-endpoint-state-digest",
                     "ideal-dual-signature-authentication"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_017_endpoint_possession_authorization",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "endpoint-signing-key-compromise-remains-the-explicit-possession-boundary",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-018",
@@ -501,11 +501,11 @@
                     "independent-canonical-state-digests",
                     "source-bound-transcript"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_018_acyclic_sibling_endpoint_authority_session_binding",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "semantic-cycle-rejection-in-real-decoders-remains-an-implementation-conformance-obligation",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-019",
@@ -521,11 +521,11 @@
                     "exact-sender-session-and-logical-message-binding",
                     "application-result-digest-binding"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_019_authenticated_confirmation_finality",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "exactly-once-effects-without-application-idempotency-remains-an-explicit-nonclaim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-020",
@@ -540,11 +540,11 @@
                     "complete-validation-before-mutation",
                     "checked-integer-arithmetic"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_020_fail_closed_resource_bounds",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "implementation-resource-accounting-remains-a-conformance-obligation",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-021",
@@ -560,11 +560,11 @@
                     "secret-uncompromised-chain-key",
                     "source-bound-associated-data"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_021_pairwise_record_confidentiality",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "traffic-metadata-and-ratchet-header-confidentiality-outside-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-022",
@@ -580,11 +580,11 @@
                     "source-bound-associated-data",
                     "atomic-durable-compare-and-commit"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_022_pairwise_record_authentication_and_integrity",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "computational-aead-security-and-live-session-compromise-outside-symbolic-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-023",
@@ -599,11 +599,11 @@
                     "secret-uncompromised-chain-key",
                     "station-observes-only-protected-carrier-metadata"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_023_sender_metadata_confidentiality",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "traffic-correlation-length-timing-and-anonymity-outside-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 }
               ],
               "nonClaims": [
@@ -630,12 +630,12 @@
               "$id": "https://licoarc.com/spec/v1/security/registry.json",
               "registryVersion": "licoarc.security-accounting.v1",
               "lifecycle": "Candidate",
-              "definitionStatus": "COMPLETE",
+              "definitionStatus": "PARTIAL",
               "claimsPath": "spec/v1/security/claims.json",
               "adversaryModelPath": "spec/v1/security/adversary-model.json",
               "formalBindingsPath": "spec/v1/security/formal-bindings.json",
-              "proofEvidencePath": "formal/evidence.json",
-              "proofEvidenceDigest": "74cf8df346a261164a097732b8fa6e03471d63104ae5001e5ccb6273b34f38e5",
+              "proofEvidencePath": null,
+              "proofEvidenceDigest": null,
               "proofDoesNotDefineProtocol": true,
               "downstreamEvidenceDoesNotAdvanceDefinition": true,
               "missingMandatoryBindingPolicy": "line-ineligible"
@@ -3539,15 +3539,15 @@
           },
           {
             "sourcePath": "spec/schemas/security-claims.schema.json",
-            "sha256": "3573ef47f7e65a4d89a7df50e498853b08d471f9a3e5de8f1a3e73bd3c3aa434"
+            "sha256": "ddcd70f1e6271d0626d531b8c7d7af0639db78a4cf71d9f9d0040ff0c39ac2da"
           },
           {
             "sourcePath": "spec/schemas/security-formal-bindings.schema.json",
-            "sha256": "c35524c6b61da02315b8d329f1877df57848393fbf87be44e25826c312e48c9f"
+            "sha256": "09d825f057585c5e1413da292bb0fb6def444017080b2cce6b634509a5290d9e"
           },
           {
             "sourcePath": "spec/schemas/security-registry.schema.json",
-            "sha256": "d23e49b5df0aba9bf87cb559e52ef19f7b6337cc82d4ae479d48fe4927d03641"
+            "sha256": "f303cab58598b0835fe5d1a3fd9550438da7c19f80c8e01ca2212932226d3ac9"
           },
           {
             "sourcePath": "spec/v1/security/adversary-model.json",
@@ -3555,15 +3555,15 @@
           },
           {
             "sourcePath": "spec/v1/security/claims.json",
-            "sha256": "ed72d9502c21788f063902cc48bdb90a53cab662d4adf47b32e5270dcc44e1c1"
+            "sha256": "b02ae9359f2555d3947e37d1514547a35a35c2b109a22e46bc424e155fcb3530"
           },
           {
             "sourcePath": "spec/v1/security/formal-bindings.json",
-            "sha256": "490d3dca1f4200589018966beae81ff6a75705f00135a13970cc549e708089a3"
+            "sha256": "3746869185e493346d16692c0cb38e29a3648dfd5d4318b3ef34c6b350c38e4e"
           },
           {
             "sourcePath": "spec/v1/security/registry.json",
-            "sha256": "3e834aa185a98e86f0b53248f27f741ca372bb1b535e92665fbb8c46616aa1f1"
+            "sha256": "1d80ddbcf0a81e540d9eeaeaa2a63a9567c10902fffcb2cfb121ff7dadb089a7"
           }
         ],
         "catalogs": [
@@ -3575,12 +3575,12 @@
               "$id": "https://licoarc.com/spec/v1/security/registry.json",
               "registryVersion": "licoarc.security-accounting.v1",
               "lifecycle": "Candidate",
-              "definitionStatus": "COMPLETE",
+              "definitionStatus": "PARTIAL",
               "claimsPath": "spec/v1/security/claims.json",
               "adversaryModelPath": "spec/v1/security/adversary-model.json",
               "formalBindingsPath": "spec/v1/security/formal-bindings.json",
-              "proofEvidencePath": "formal/evidence.json",
-              "proofEvidenceDigest": "74cf8df346a261164a097732b8fa6e03471d63104ae5001e5ccb6273b34f38e5",
+              "proofEvidencePath": null,
+              "proofEvidenceDigest": null,
               "proofDoesNotDefineProtocol": true,
               "downstreamEvidenceDoesNotAdvanceDefinition": true,
               "missingMandatoryBindingPolicy": "line-ineligible"
@@ -3700,11 +3700,11 @@
                     "at-least-one-hybrid-component-uncompromised",
                     "atomic-durable-compare-and-commit"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_001_hybrid_ake_key_secrecy",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "computational-hybrid-security-and-live-session-compromise-outside-symbolic-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-002",
@@ -3720,11 +3720,11 @@
                     "authenticated-peer-key-acceptance",
                     "atomic-durable-compare-and-commit"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_002_mutual_endpoint_authentication",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "computational-primitives-and-peer-key-acceptance-outside-symbolic-model",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-003",
@@ -3738,11 +3738,11 @@
                     "at-least-one-hybrid-component-uncompromised",
                     "source-bound-transcript"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_003_classical_pq_hybrid_robustness",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "computational-combiner-security-outside-symbolic-model",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-004",
@@ -3756,11 +3756,11 @@
                     "ideal-hybrid-constructor",
                     "atomic-durable-compare-and-commit"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_004_unknown_key_share_resistance",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "computational-transcript-and-combiner-security-outside-symbolic-model",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-005",
@@ -3775,11 +3775,11 @@
                     "authenticated-peer-key-acceptance",
                     "responder-identity-and-prekey-not-compromised"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_005_key_compromise_impersonation_boundary",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "responder-identity-or-prekey-compromise-is-the-explicit-impersonation-boundary",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-006",
@@ -3793,11 +3793,11 @@
                     "source-bound-protocol-line-content-identity",
                     "authenticated-fixed-context-transcript"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_006_protocol_line_content_binding",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "endpoint-signing-key-compromise-or-compromised-local-authority-input-outside-symbolic-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-007",
@@ -3811,11 +3811,11 @@
                     "source-bound-profile-content-identity",
                     "authenticated-fixed-context-transcript"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_007_protection_profile_content_binding",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "endpoint-signing-key-compromise-or-compromised-local-authority-input-outside-symbolic-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-008",
@@ -3830,11 +3830,11 @@
                     "ideal-hybrid-constructor",
                     "atomic-durable-compare-and-commit"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_008_session_independence",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "full-live-compromise-of-the-target-session-outside-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-009",
@@ -3849,11 +3849,11 @@
                     "post-accept-ephemeral-erasure",
                     "atomic-durable-compare-and-commit"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_009_initial_forward_secrecy",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "pre-accept-and-live-session-compromise-outside-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-010",
@@ -3867,11 +3867,11 @@
                     "fresh-classical-dh-ratchet-input",
                     "prior-ratchet-key-erasure"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_010_double_ratchet_forward_secrecy",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "computational-ratchet-security-and-physical-zeroization-outside-symbolic-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-011",
@@ -3885,11 +3885,11 @@
                     "fresh-uncompromised-classical-dh-ratchet-input",
                     "atomic-durable-compare-and-commit"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_011_double_ratchet_post_compromise_recovery",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "ongoing-post-quantum-post-compromise-recovery-explicit-nonclaim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-012",
@@ -3905,11 +3905,11 @@
                     "atomic-durable-compare-and-commit",
                     "unique-record-coordinate"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_012_replay_resistance",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "application-replay-and-fully-compromised-store-outside-model",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-013",
@@ -3924,11 +3924,11 @@
                     "atomic-durable-compare-and-commit",
                     "monotonic-committed-state-generation"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_013_state_rollback_resistance",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "rollback-detection-under-fully-compromised-store-explicit-nonclaim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-014",
@@ -3944,11 +3944,11 @@
                     "ideal-dual-signature-authentication",
                     "canonical-authority-state-digest"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_014_self_certifying_user_authority",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "management-and-recovery-key-compromise-remains-the-explicit-authority-boundary",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-015",
@@ -3962,11 +3962,11 @@
                     "monotonic-predecessor-bound-route-chain",
                     "affiliation-state-binding"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_015_route_migration_safety",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "endpoint-route-signing-key-compromise-and-route-availability-outside-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-016",
@@ -3982,11 +3982,11 @@
                     "ideal-dual-signature-authentication",
                     "atomic-high-water-compare-and-commit"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_016_management_and_recovery_transition_authorization",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "compromise-of-the-selected-predecessor-authority-key-composition-remains-the-explicit-boundary",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-017",
@@ -4002,11 +4002,11 @@
                     "exact-endpoint-state-digest",
                     "ideal-dual-signature-authentication"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_017_endpoint_possession_authorization",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "endpoint-signing-key-compromise-remains-the-explicit-possession-boundary",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-018",
@@ -4022,11 +4022,11 @@
                     "independent-canonical-state-digests",
                     "source-bound-transcript"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_018_acyclic_sibling_endpoint_authority_session_binding",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "semantic-cycle-rejection-in-real-decoders-remains-an-implementation-conformance-obligation",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-019",
@@ -4042,11 +4042,11 @@
                     "exact-sender-session-and-logical-message-binding",
                     "application-result-digest-binding"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_019_authenticated_confirmation_finality",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "exactly-once-effects-without-application-idempotency-remains-an-explicit-nonclaim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-020",
@@ -4061,11 +4061,11 @@
                     "complete-validation-before-mutation",
                     "checked-integer-arithmetic"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_020_fail_closed_resource_bounds",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "implementation-resource-accounting-remains-a-conformance-obligation",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-021",
@@ -4081,11 +4081,11 @@
                     "secret-uncompromised-chain-key",
                     "source-bound-associated-data"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_021_pairwise_record_confidentiality",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "traffic-metadata-and-ratchet-header-confidentiality-outside-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-022",
@@ -4101,11 +4101,11 @@
                     "source-bound-associated-data",
                     "atomic-durable-compare-and-commit"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_022_pairwise_record_authentication_and_integrity",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "computational-aead-security-and-live-session-compromise-outside-symbolic-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-023",
@@ -4120,11 +4120,11 @@
                     "secret-uncompromised-chain-key",
                     "station-observes-only-protected-carrier-metadata"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_023_sender_metadata_confidentiality",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "traffic-correlation-length-timing-and-anonymity-outside-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 }
               ],
               "nonClaims": [
@@ -4151,12 +4151,12 @@
               "$id": "https://licoarc.com/spec/v1/security/registry.json",
               "registryVersion": "licoarc.security-accounting.v1",
               "lifecycle": "Candidate",
-              "definitionStatus": "COMPLETE",
+              "definitionStatus": "PARTIAL",
               "claimsPath": "spec/v1/security/claims.json",
               "adversaryModelPath": "spec/v1/security/adversary-model.json",
               "formalBindingsPath": "spec/v1/security/formal-bindings.json",
-              "proofEvidencePath": "formal/evidence.json",
-              "proofEvidenceDigest": "74cf8df346a261164a097732b8fa6e03471d63104ae5001e5ccb6273b34f38e5",
+              "proofEvidencePath": null,
+              "proofEvidenceDigest": null,
               "proofDoesNotDefineProtocol": true,
               "downstreamEvidenceDoesNotAdvanceDefinition": true,
               "missingMandatoryBindingPolicy": "line-ineligible"
@@ -7034,15 +7034,15 @@
           },
           {
             "sourcePath": "spec/schemas/security-claims.schema.json",
-            "sha256": "3573ef47f7e65a4d89a7df50e498853b08d471f9a3e5de8f1a3e73bd3c3aa434"
+            "sha256": "ddcd70f1e6271d0626d531b8c7d7af0639db78a4cf71d9f9d0040ff0c39ac2da"
           },
           {
             "sourcePath": "spec/schemas/security-formal-bindings.schema.json",
-            "sha256": "c35524c6b61da02315b8d329f1877df57848393fbf87be44e25826c312e48c9f"
+            "sha256": "09d825f057585c5e1413da292bb0fb6def444017080b2cce6b634509a5290d9e"
           },
           {
             "sourcePath": "spec/schemas/security-registry.schema.json",
-            "sha256": "d23e49b5df0aba9bf87cb559e52ef19f7b6337cc82d4ae479d48fe4927d03641"
+            "sha256": "f303cab58598b0835fe5d1a3fd9550438da7c19f80c8e01ca2212932226d3ac9"
           },
           {
             "sourcePath": "spec/v1/security/adversary-model.json",
@@ -7050,15 +7050,15 @@
           },
           {
             "sourcePath": "spec/v1/security/claims.json",
-            "sha256": "ed72d9502c21788f063902cc48bdb90a53cab662d4adf47b32e5270dcc44e1c1"
+            "sha256": "b02ae9359f2555d3947e37d1514547a35a35c2b109a22e46bc424e155fcb3530"
           },
           {
             "sourcePath": "spec/v1/security/formal-bindings.json",
-            "sha256": "490d3dca1f4200589018966beae81ff6a75705f00135a13970cc549e708089a3"
+            "sha256": "3746869185e493346d16692c0cb38e29a3648dfd5d4318b3ef34c6b350c38e4e"
           },
           {
             "sourcePath": "spec/v1/security/registry.json",
-            "sha256": "3e834aa185a98e86f0b53248f27f741ca372bb1b535e92665fbb8c46616aa1f1"
+            "sha256": "1d80ddbcf0a81e540d9eeaeaa2a63a9567c10902fffcb2cfb121ff7dadb089a7"
           }
         ],
         "catalogs": [
@@ -7070,12 +7070,12 @@
               "$id": "https://licoarc.com/spec/v1/security/registry.json",
               "registryVersion": "licoarc.security-accounting.v1",
               "lifecycle": "Candidate",
-              "definitionStatus": "COMPLETE",
+              "definitionStatus": "PARTIAL",
               "claimsPath": "spec/v1/security/claims.json",
               "adversaryModelPath": "spec/v1/security/adversary-model.json",
               "formalBindingsPath": "spec/v1/security/formal-bindings.json",
-              "proofEvidencePath": "formal/evidence.json",
-              "proofEvidenceDigest": "74cf8df346a261164a097732b8fa6e03471d63104ae5001e5ccb6273b34f38e5",
+              "proofEvidencePath": null,
+              "proofEvidenceDigest": null,
               "proofDoesNotDefineProtocol": true,
               "downstreamEvidenceDoesNotAdvanceDefinition": true,
               "missingMandatoryBindingPolicy": "line-ineligible"
@@ -7195,11 +7195,11 @@
                     "at-least-one-hybrid-component-uncompromised",
                     "atomic-durable-compare-and-commit"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_001_hybrid_ake_key_secrecy",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "computational-hybrid-security-and-live-session-compromise-outside-symbolic-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-002",
@@ -7215,11 +7215,11 @@
                     "authenticated-peer-key-acceptance",
                     "atomic-durable-compare-and-commit"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_002_mutual_endpoint_authentication",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "computational-primitives-and-peer-key-acceptance-outside-symbolic-model",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-003",
@@ -7233,11 +7233,11 @@
                     "at-least-one-hybrid-component-uncompromised",
                     "source-bound-transcript"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_003_classical_pq_hybrid_robustness",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "computational-combiner-security-outside-symbolic-model",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-004",
@@ -7251,11 +7251,11 @@
                     "ideal-hybrid-constructor",
                     "atomic-durable-compare-and-commit"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_004_unknown_key_share_resistance",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "computational-transcript-and-combiner-security-outside-symbolic-model",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-005",
@@ -7270,11 +7270,11 @@
                     "authenticated-peer-key-acceptance",
                     "responder-identity-and-prekey-not-compromised"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_005_key_compromise_impersonation_boundary",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "responder-identity-or-prekey-compromise-is-the-explicit-impersonation-boundary",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-006",
@@ -7288,11 +7288,11 @@
                     "source-bound-protocol-line-content-identity",
                     "authenticated-fixed-context-transcript"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_006_protocol_line_content_binding",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "endpoint-signing-key-compromise-or-compromised-local-authority-input-outside-symbolic-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-007",
@@ -7306,11 +7306,11 @@
                     "source-bound-profile-content-identity",
                     "authenticated-fixed-context-transcript"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_007_protection_profile_content_binding",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "endpoint-signing-key-compromise-or-compromised-local-authority-input-outside-symbolic-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-008",
@@ -7325,11 +7325,11 @@
                     "ideal-hybrid-constructor",
                     "atomic-durable-compare-and-commit"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_008_session_independence",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "full-live-compromise-of-the-target-session-outside-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-009",
@@ -7344,11 +7344,11 @@
                     "post-accept-ephemeral-erasure",
                     "atomic-durable-compare-and-commit"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_009_initial_forward_secrecy",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "pre-accept-and-live-session-compromise-outside-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-010",
@@ -7362,11 +7362,11 @@
                     "fresh-classical-dh-ratchet-input",
                     "prior-ratchet-key-erasure"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_010_double_ratchet_forward_secrecy",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "computational-ratchet-security-and-physical-zeroization-outside-symbolic-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-011",
@@ -7380,11 +7380,11 @@
                     "fresh-uncompromised-classical-dh-ratchet-input",
                     "atomic-durable-compare-and-commit"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_011_double_ratchet_post_compromise_recovery",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "ongoing-post-quantum-post-compromise-recovery-explicit-nonclaim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-012",
@@ -7400,11 +7400,11 @@
                     "atomic-durable-compare-and-commit",
                     "unique-record-coordinate"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_012_replay_resistance",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "application-replay-and-fully-compromised-store-outside-model",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-013",
@@ -7419,11 +7419,11 @@
                     "atomic-durable-compare-and-commit",
                     "monotonic-committed-state-generation"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_013_state_rollback_resistance",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "rollback-detection-under-fully-compromised-store-explicit-nonclaim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-014",
@@ -7439,11 +7439,11 @@
                     "ideal-dual-signature-authentication",
                     "canonical-authority-state-digest"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_014_self_certifying_user_authority",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "management-and-recovery-key-compromise-remains-the-explicit-authority-boundary",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-015",
@@ -7457,11 +7457,11 @@
                     "monotonic-predecessor-bound-route-chain",
                     "affiliation-state-binding"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_015_route_migration_safety",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "endpoint-route-signing-key-compromise-and-route-availability-outside-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-016",
@@ -7477,11 +7477,11 @@
                     "ideal-dual-signature-authentication",
                     "atomic-high-water-compare-and-commit"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_016_management_and_recovery_transition_authorization",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "compromise-of-the-selected-predecessor-authority-key-composition-remains-the-explicit-boundary",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-017",
@@ -7497,11 +7497,11 @@
                     "exact-endpoint-state-digest",
                     "ideal-dual-signature-authentication"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_017_endpoint_possession_authorization",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "endpoint-signing-key-compromise-remains-the-explicit-possession-boundary",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-018",
@@ -7517,11 +7517,11 @@
                     "independent-canonical-state-digests",
                     "source-bound-transcript"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_018_acyclic_sibling_endpoint_authority_session_binding",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "semantic-cycle-rejection-in-real-decoders-remains-an-implementation-conformance-obligation",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-019",
@@ -7537,11 +7537,11 @@
                     "exact-sender-session-and-logical-message-binding",
                     "application-result-digest-binding"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_019_authenticated_confirmation_finality",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "exactly-once-effects-without-application-idempotency-remains-an-explicit-nonclaim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-020",
@@ -7556,11 +7556,11 @@
                     "complete-validation-before-mutation",
                     "checked-integer-arithmetic"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_020_fail_closed_resource_bounds",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "implementation-resource-accounting-remains-a-conformance-obligation",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-021",
@@ -7576,11 +7576,11 @@
                     "secret-uncompromised-chain-key",
                     "source-bound-associated-data"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_021_pairwise_record_confidentiality",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "traffic-metadata-and-ratchet-header-confidentiality-outside-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-022",
@@ -7596,11 +7596,11 @@
                     "source-bound-associated-data",
                     "atomic-durable-compare-and-commit"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_022_pairwise_record_authentication_and_integrity",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "computational-aead-security-and-live-session-compromise-outside-symbolic-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-023",
@@ -7615,11 +7615,11 @@
                     "secret-uncompromised-chain-key",
                     "station-observes-only-protected-carrier-metadata"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_023_sender_metadata_confidentiality",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "traffic-correlation-length-timing-and-anonymity-outside-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 }
               ],
               "nonClaims": [
@@ -7646,12 +7646,12 @@
               "$id": "https://licoarc.com/spec/v1/security/registry.json",
               "registryVersion": "licoarc.security-accounting.v1",
               "lifecycle": "Candidate",
-              "definitionStatus": "COMPLETE",
+              "definitionStatus": "PARTIAL",
               "claimsPath": "spec/v1/security/claims.json",
               "adversaryModelPath": "spec/v1/security/adversary-model.json",
               "formalBindingsPath": "spec/v1/security/formal-bindings.json",
-              "proofEvidencePath": "formal/evidence.json",
-              "proofEvidenceDigest": "74cf8df346a261164a097732b8fa6e03471d63104ae5001e5ccb6273b34f38e5",
+              "proofEvidencePath": null,
+              "proofEvidenceDigest": null,
               "proofDoesNotDefineProtocol": true,
               "downstreamEvidenceDoesNotAdvanceDefinition": true,
               "missingMandatoryBindingPolicy": "line-ineligible"
@@ -10529,15 +10529,15 @@
           },
           {
             "sourcePath": "spec/schemas/security-claims.schema.json",
-            "sha256": "3573ef47f7e65a4d89a7df50e498853b08d471f9a3e5de8f1a3e73bd3c3aa434"
+            "sha256": "ddcd70f1e6271d0626d531b8c7d7af0639db78a4cf71d9f9d0040ff0c39ac2da"
           },
           {
             "sourcePath": "spec/schemas/security-formal-bindings.schema.json",
-            "sha256": "c35524c6b61da02315b8d329f1877df57848393fbf87be44e25826c312e48c9f"
+            "sha256": "09d825f057585c5e1413da292bb0fb6def444017080b2cce6b634509a5290d9e"
           },
           {
             "sourcePath": "spec/schemas/security-registry.schema.json",
-            "sha256": "d23e49b5df0aba9bf87cb559e52ef19f7b6337cc82d4ae479d48fe4927d03641"
+            "sha256": "f303cab58598b0835fe5d1a3fd9550438da7c19f80c8e01ca2212932226d3ac9"
           },
           {
             "sourcePath": "spec/v1/security/adversary-model.json",
@@ -10545,15 +10545,15 @@
           },
           {
             "sourcePath": "spec/v1/security/claims.json",
-            "sha256": "ed72d9502c21788f063902cc48bdb90a53cab662d4adf47b32e5270dcc44e1c1"
+            "sha256": "b02ae9359f2555d3947e37d1514547a35a35c2b109a22e46bc424e155fcb3530"
           },
           {
             "sourcePath": "spec/v1/security/formal-bindings.json",
-            "sha256": "490d3dca1f4200589018966beae81ff6a75705f00135a13970cc549e708089a3"
+            "sha256": "3746869185e493346d16692c0cb38e29a3648dfd5d4318b3ef34c6b350c38e4e"
           },
           {
             "sourcePath": "spec/v1/security/registry.json",
-            "sha256": "3e834aa185a98e86f0b53248f27f741ca372bb1b535e92665fbb8c46616aa1f1"
+            "sha256": "1d80ddbcf0a81e540d9eeaeaa2a63a9567c10902fffcb2cfb121ff7dadb089a7"
           }
         ],
         "catalogs": [
@@ -10565,12 +10565,12 @@
               "$id": "https://licoarc.com/spec/v1/security/registry.json",
               "registryVersion": "licoarc.security-accounting.v1",
               "lifecycle": "Candidate",
-              "definitionStatus": "COMPLETE",
+              "definitionStatus": "PARTIAL",
               "claimsPath": "spec/v1/security/claims.json",
               "adversaryModelPath": "spec/v1/security/adversary-model.json",
               "formalBindingsPath": "spec/v1/security/formal-bindings.json",
-              "proofEvidencePath": "formal/evidence.json",
-              "proofEvidenceDigest": "74cf8df346a261164a097732b8fa6e03471d63104ae5001e5ccb6273b34f38e5",
+              "proofEvidencePath": null,
+              "proofEvidenceDigest": null,
               "proofDoesNotDefineProtocol": true,
               "downstreamEvidenceDoesNotAdvanceDefinition": true,
               "missingMandatoryBindingPolicy": "line-ineligible"
@@ -10690,11 +10690,11 @@
                     "at-least-one-hybrid-component-uncompromised",
                     "atomic-durable-compare-and-commit"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_001_hybrid_ake_key_secrecy",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "computational-hybrid-security-and-live-session-compromise-outside-symbolic-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-002",
@@ -10710,11 +10710,11 @@
                     "authenticated-peer-key-acceptance",
                     "atomic-durable-compare-and-commit"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_002_mutual_endpoint_authentication",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "computational-primitives-and-peer-key-acceptance-outside-symbolic-model",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-003",
@@ -10728,11 +10728,11 @@
                     "at-least-one-hybrid-component-uncompromised",
                     "source-bound-transcript"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_003_classical_pq_hybrid_robustness",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "computational-combiner-security-outside-symbolic-model",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-004",
@@ -10746,11 +10746,11 @@
                     "ideal-hybrid-constructor",
                     "atomic-durable-compare-and-commit"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_004_unknown_key_share_resistance",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "computational-transcript-and-combiner-security-outside-symbolic-model",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-005",
@@ -10765,11 +10765,11 @@
                     "authenticated-peer-key-acceptance",
                     "responder-identity-and-prekey-not-compromised"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_005_key_compromise_impersonation_boundary",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "responder-identity-or-prekey-compromise-is-the-explicit-impersonation-boundary",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-006",
@@ -10783,11 +10783,11 @@
                     "source-bound-protocol-line-content-identity",
                     "authenticated-fixed-context-transcript"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_006_protocol_line_content_binding",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "endpoint-signing-key-compromise-or-compromised-local-authority-input-outside-symbolic-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-007",
@@ -10801,11 +10801,11 @@
                     "source-bound-profile-content-identity",
                     "authenticated-fixed-context-transcript"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_007_protection_profile_content_binding",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "endpoint-signing-key-compromise-or-compromised-local-authority-input-outside-symbolic-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-008",
@@ -10820,11 +10820,11 @@
                     "ideal-hybrid-constructor",
                     "atomic-durable-compare-and-commit"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_008_session_independence",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "full-live-compromise-of-the-target-session-outside-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-009",
@@ -10839,11 +10839,11 @@
                     "post-accept-ephemeral-erasure",
                     "atomic-durable-compare-and-commit"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_009_initial_forward_secrecy",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "pre-accept-and-live-session-compromise-outside-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-010",
@@ -10857,11 +10857,11 @@
                     "fresh-classical-dh-ratchet-input",
                     "prior-ratchet-key-erasure"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_010_double_ratchet_forward_secrecy",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "computational-ratchet-security-and-physical-zeroization-outside-symbolic-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-011",
@@ -10875,11 +10875,11 @@
                     "fresh-uncompromised-classical-dh-ratchet-input",
                     "atomic-durable-compare-and-commit"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_011_double_ratchet_post_compromise_recovery",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "ongoing-post-quantum-post-compromise-recovery-explicit-nonclaim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-012",
@@ -10895,11 +10895,11 @@
                     "atomic-durable-compare-and-commit",
                     "unique-record-coordinate"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_012_replay_resistance",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "application-replay-and-fully-compromised-store-outside-model",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-013",
@@ -10914,11 +10914,11 @@
                     "atomic-durable-compare-and-commit",
                     "monotonic-committed-state-generation"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_013_state_rollback_resistance",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "rollback-detection-under-fully-compromised-store-explicit-nonclaim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-014",
@@ -10934,11 +10934,11 @@
                     "ideal-dual-signature-authentication",
                     "canonical-authority-state-digest"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_014_self_certifying_user_authority",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "management-and-recovery-key-compromise-remains-the-explicit-authority-boundary",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-015",
@@ -10952,11 +10952,11 @@
                     "monotonic-predecessor-bound-route-chain",
                     "affiliation-state-binding"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_015_route_migration_safety",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "endpoint-route-signing-key-compromise-and-route-availability-outside-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-016",
@@ -10972,11 +10972,11 @@
                     "ideal-dual-signature-authentication",
                     "atomic-high-water-compare-and-commit"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_016_management_and_recovery_transition_authorization",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "compromise-of-the-selected-predecessor-authority-key-composition-remains-the-explicit-boundary",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-017",
@@ -10992,11 +10992,11 @@
                     "exact-endpoint-state-digest",
                     "ideal-dual-signature-authentication"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_017_endpoint_possession_authorization",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "endpoint-signing-key-compromise-remains-the-explicit-possession-boundary",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-018",
@@ -11012,11 +11012,11 @@
                     "independent-canonical-state-digests",
                     "source-bound-transcript"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_018_acyclic_sibling_endpoint_authority_session_binding",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "semantic-cycle-rejection-in-real-decoders-remains-an-implementation-conformance-obligation",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-019",
@@ -11032,11 +11032,11 @@
                     "exact-sender-session-and-logical-message-binding",
                     "application-result-digest-binding"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_019_authenticated_confirmation_finality",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "exactly-once-effects-without-application-idempotency-remains-an-explicit-nonclaim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-020",
@@ -11051,11 +11051,11 @@
                     "complete-validation-before-mutation",
                     "checked-integer-arithmetic"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_020_fail_closed_resource_bounds",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "implementation-resource-accounting-remains-a-conformance-obligation",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-021",
@@ -11071,11 +11071,11 @@
                     "secret-uncompromised-chain-key",
                     "source-bound-associated-data"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_021_pairwise_record_confidentiality",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "traffic-metadata-and-ratchet-header-confidentiality-outside-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-022",
@@ -11091,11 +11091,11 @@
                     "source-bound-associated-data",
                     "atomic-durable-compare-and-commit"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_022_pairwise_record_authentication_and_integrity",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "computational-aead-security-and-live-session-compromise-outside-symbolic-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-023",
@@ -11110,11 +11110,11 @@
                     "secret-uncompromised-chain-key",
                     "station-observes-only-protected-carrier-metadata"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_023_sender_metadata_confidentiality",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "traffic-correlation-length-timing-and-anonymity-outside-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 }
               ],
               "nonClaims": [
@@ -11141,12 +11141,12 @@
               "$id": "https://licoarc.com/spec/v1/security/registry.json",
               "registryVersion": "licoarc.security-accounting.v1",
               "lifecycle": "Candidate",
-              "definitionStatus": "COMPLETE",
+              "definitionStatus": "PARTIAL",
               "claimsPath": "spec/v1/security/claims.json",
               "adversaryModelPath": "spec/v1/security/adversary-model.json",
               "formalBindingsPath": "spec/v1/security/formal-bindings.json",
-              "proofEvidencePath": "formal/evidence.json",
-              "proofEvidenceDigest": "74cf8df346a261164a097732b8fa6e03471d63104ae5001e5ccb6273b34f38e5",
+              "proofEvidencePath": null,
+              "proofEvidenceDigest": null,
               "proofDoesNotDefineProtocol": true,
               "downstreamEvidenceDoesNotAdvanceDefinition": true,
               "missingMandatoryBindingPolicy": "line-ineligible"
@@ -13927,15 +13927,15 @@
           },
           {
             "sourcePath": "spec/schemas/security-claims.schema.json",
-            "sha256": "3573ef47f7e65a4d89a7df50e498853b08d471f9a3e5de8f1a3e73bd3c3aa434"
+            "sha256": "ddcd70f1e6271d0626d531b8c7d7af0639db78a4cf71d9f9d0040ff0c39ac2da"
           },
           {
             "sourcePath": "spec/schemas/security-formal-bindings.schema.json",
-            "sha256": "c35524c6b61da02315b8d329f1877df57848393fbf87be44e25826c312e48c9f"
+            "sha256": "09d825f057585c5e1413da292bb0fb6def444017080b2cce6b634509a5290d9e"
           },
           {
             "sourcePath": "spec/schemas/security-registry.schema.json",
-            "sha256": "d23e49b5df0aba9bf87cb559e52ef19f7b6337cc82d4ae479d48fe4927d03641"
+            "sha256": "f303cab58598b0835fe5d1a3fd9550438da7c19f80c8e01ca2212932226d3ac9"
           },
           {
             "sourcePath": "spec/v1/security/adversary-model.json",
@@ -13943,15 +13943,15 @@
           },
           {
             "sourcePath": "spec/v1/security/claims.json",
-            "sha256": "ed72d9502c21788f063902cc48bdb90a53cab662d4adf47b32e5270dcc44e1c1"
+            "sha256": "b02ae9359f2555d3947e37d1514547a35a35c2b109a22e46bc424e155fcb3530"
           },
           {
             "sourcePath": "spec/v1/security/formal-bindings.json",
-            "sha256": "490d3dca1f4200589018966beae81ff6a75705f00135a13970cc549e708089a3"
+            "sha256": "3746869185e493346d16692c0cb38e29a3648dfd5d4318b3ef34c6b350c38e4e"
           },
           {
             "sourcePath": "spec/v1/security/registry.json",
-            "sha256": "3e834aa185a98e86f0b53248f27f741ca372bb1b535e92665fbb8c46616aa1f1"
+            "sha256": "1d80ddbcf0a81e540d9eeaeaa2a63a9567c10902fffcb2cfb121ff7dadb089a7"
           }
         ],
         "catalogs": [
@@ -13963,12 +13963,12 @@
               "$id": "https://licoarc.com/spec/v1/security/registry.json",
               "registryVersion": "licoarc.security-accounting.v1",
               "lifecycle": "Candidate",
-              "definitionStatus": "COMPLETE",
+              "definitionStatus": "PARTIAL",
               "claimsPath": "spec/v1/security/claims.json",
               "adversaryModelPath": "spec/v1/security/adversary-model.json",
               "formalBindingsPath": "spec/v1/security/formal-bindings.json",
-              "proofEvidencePath": "formal/evidence.json",
-              "proofEvidenceDigest": "74cf8df346a261164a097732b8fa6e03471d63104ae5001e5ccb6273b34f38e5",
+              "proofEvidencePath": null,
+              "proofEvidenceDigest": null,
               "proofDoesNotDefineProtocol": true,
               "downstreamEvidenceDoesNotAdvanceDefinition": true,
               "missingMandatoryBindingPolicy": "line-ineligible"
@@ -14088,11 +14088,11 @@
                     "at-least-one-hybrid-component-uncompromised",
                     "atomic-durable-compare-and-commit"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_001_hybrid_ake_key_secrecy",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "computational-hybrid-security-and-live-session-compromise-outside-symbolic-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-002",
@@ -14108,11 +14108,11 @@
                     "authenticated-peer-key-acceptance",
                     "atomic-durable-compare-and-commit"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_002_mutual_endpoint_authentication",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "computational-primitives-and-peer-key-acceptance-outside-symbolic-model",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-003",
@@ -14126,11 +14126,11 @@
                     "at-least-one-hybrid-component-uncompromised",
                     "source-bound-transcript"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_003_classical_pq_hybrid_robustness",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "computational-combiner-security-outside-symbolic-model",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-004",
@@ -14144,11 +14144,11 @@
                     "ideal-hybrid-constructor",
                     "atomic-durable-compare-and-commit"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_004_unknown_key_share_resistance",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "computational-transcript-and-combiner-security-outside-symbolic-model",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-005",
@@ -14163,11 +14163,11 @@
                     "authenticated-peer-key-acceptance",
                     "responder-identity-and-prekey-not-compromised"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_005_key_compromise_impersonation_boundary",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "responder-identity-or-prekey-compromise-is-the-explicit-impersonation-boundary",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-006",
@@ -14181,11 +14181,11 @@
                     "source-bound-protocol-line-content-identity",
                     "authenticated-fixed-context-transcript"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_006_protocol_line_content_binding",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "endpoint-signing-key-compromise-or-compromised-local-authority-input-outside-symbolic-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-007",
@@ -14199,11 +14199,11 @@
                     "source-bound-profile-content-identity",
                     "authenticated-fixed-context-transcript"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_007_protection_profile_content_binding",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "endpoint-signing-key-compromise-or-compromised-local-authority-input-outside-symbolic-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-008",
@@ -14218,11 +14218,11 @@
                     "ideal-hybrid-constructor",
                     "atomic-durable-compare-and-commit"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_008_session_independence",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "full-live-compromise-of-the-target-session-outside-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-009",
@@ -14237,11 +14237,11 @@
                     "post-accept-ephemeral-erasure",
                     "atomic-durable-compare-and-commit"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_009_initial_forward_secrecy",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "pre-accept-and-live-session-compromise-outside-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-010",
@@ -14255,11 +14255,11 @@
                     "fresh-classical-dh-ratchet-input",
                     "prior-ratchet-key-erasure"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_010_double_ratchet_forward_secrecy",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "computational-ratchet-security-and-physical-zeroization-outside-symbolic-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-011",
@@ -14273,11 +14273,11 @@
                     "fresh-uncompromised-classical-dh-ratchet-input",
                     "atomic-durable-compare-and-commit"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_011_double_ratchet_post_compromise_recovery",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "ongoing-post-quantum-post-compromise-recovery-explicit-nonclaim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-012",
@@ -14293,11 +14293,11 @@
                     "atomic-durable-compare-and-commit",
                     "unique-record-coordinate"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_012_replay_resistance",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "application-replay-and-fully-compromised-store-outside-model",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-013",
@@ -14312,11 +14312,11 @@
                     "atomic-durable-compare-and-commit",
                     "monotonic-committed-state-generation"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_013_state_rollback_resistance",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "rollback-detection-under-fully-compromised-store-explicit-nonclaim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-014",
@@ -14332,11 +14332,11 @@
                     "ideal-dual-signature-authentication",
                     "canonical-authority-state-digest"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_014_self_certifying_user_authority",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "management-and-recovery-key-compromise-remains-the-explicit-authority-boundary",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-015",
@@ -14350,11 +14350,11 @@
                     "monotonic-predecessor-bound-route-chain",
                     "affiliation-state-binding"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_015_route_migration_safety",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "endpoint-route-signing-key-compromise-and-route-availability-outside-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-016",
@@ -14370,11 +14370,11 @@
                     "ideal-dual-signature-authentication",
                     "atomic-high-water-compare-and-commit"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_016_management_and_recovery_transition_authorization",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "compromise-of-the-selected-predecessor-authority-key-composition-remains-the-explicit-boundary",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-017",
@@ -14390,11 +14390,11 @@
                     "exact-endpoint-state-digest",
                     "ideal-dual-signature-authentication"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_017_endpoint_possession_authorization",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "endpoint-signing-key-compromise-remains-the-explicit-possession-boundary",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-018",
@@ -14410,11 +14410,11 @@
                     "independent-canonical-state-digests",
                     "source-bound-transcript"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_018_acyclic_sibling_endpoint_authority_session_binding",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "semantic-cycle-rejection-in-real-decoders-remains-an-implementation-conformance-obligation",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-019",
@@ -14430,11 +14430,11 @@
                     "exact-sender-session-and-logical-message-binding",
                     "application-result-digest-binding"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_019_authenticated_confirmation_finality",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "exactly-once-effects-without-application-idempotency-remains-an-explicit-nonclaim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-020",
@@ -14449,11 +14449,11 @@
                     "complete-validation-before-mutation",
                     "checked-integer-arithmetic"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_020_fail_closed_resource_bounds",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "implementation-resource-accounting-remains-a-conformance-obligation",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-021",
@@ -14469,11 +14469,11 @@
                     "secret-uncompromised-chain-key",
                     "source-bound-associated-data"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_021_pairwise_record_confidentiality",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "traffic-metadata-and-ratchet-header-confidentiality-outside-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-022",
@@ -14489,11 +14489,11 @@
                     "source-bound-associated-data",
                     "atomic-durable-compare-and-commit"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_022_pairwise_record_authentication_and_integrity",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "computational-aead-security-and-live-session-compromise-outside-symbolic-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-023",
@@ -14508,11 +14508,11 @@
                     "secret-uncompromised-chain-key",
                     "station-observes-only-protected-carrier-metadata"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_023_sender_metadata_confidentiality",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "traffic-correlation-length-timing-and-anonymity-outside-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 }
               ],
               "nonClaims": [
@@ -14539,12 +14539,12 @@
               "$id": "https://licoarc.com/spec/v1/security/registry.json",
               "registryVersion": "licoarc.security-accounting.v1",
               "lifecycle": "Candidate",
-              "definitionStatus": "COMPLETE",
+              "definitionStatus": "PARTIAL",
               "claimsPath": "spec/v1/security/claims.json",
               "adversaryModelPath": "spec/v1/security/adversary-model.json",
               "formalBindingsPath": "spec/v1/security/formal-bindings.json",
-              "proofEvidencePath": "formal/evidence.json",
-              "proofEvidenceDigest": "74cf8df346a261164a097732b8fa6e03471d63104ae5001e5ccb6273b34f38e5",
+              "proofEvidencePath": null,
+              "proofEvidenceDigest": null,
               "proofDoesNotDefineProtocol": true,
               "downstreamEvidenceDoesNotAdvanceDefinition": true,
               "missingMandatoryBindingPolicy": "line-ineligible"
@@ -17345,15 +17345,15 @@
           },
           {
             "sourcePath": "spec/schemas/security-claims.schema.json",
-            "sha256": "3573ef47f7e65a4d89a7df50e498853b08d471f9a3e5de8f1a3e73bd3c3aa434"
+            "sha256": "ddcd70f1e6271d0626d531b8c7d7af0639db78a4cf71d9f9d0040ff0c39ac2da"
           },
           {
             "sourcePath": "spec/schemas/security-formal-bindings.schema.json",
-            "sha256": "c35524c6b61da02315b8d329f1877df57848393fbf87be44e25826c312e48c9f"
+            "sha256": "09d825f057585c5e1413da292bb0fb6def444017080b2cce6b634509a5290d9e"
           },
           {
             "sourcePath": "spec/schemas/security-registry.schema.json",
-            "sha256": "d23e49b5df0aba9bf87cb559e52ef19f7b6337cc82d4ae479d48fe4927d03641"
+            "sha256": "f303cab58598b0835fe5d1a3fd9550438da7c19f80c8e01ca2212932226d3ac9"
           },
           {
             "sourcePath": "spec/v1/security/adversary-model.json",
@@ -17361,15 +17361,15 @@
           },
           {
             "sourcePath": "spec/v1/security/claims.json",
-            "sha256": "ed72d9502c21788f063902cc48bdb90a53cab662d4adf47b32e5270dcc44e1c1"
+            "sha256": "b02ae9359f2555d3947e37d1514547a35a35c2b109a22e46bc424e155fcb3530"
           },
           {
             "sourcePath": "spec/v1/security/formal-bindings.json",
-            "sha256": "490d3dca1f4200589018966beae81ff6a75705f00135a13970cc549e708089a3"
+            "sha256": "3746869185e493346d16692c0cb38e29a3648dfd5d4318b3ef34c6b350c38e4e"
           },
           {
             "sourcePath": "spec/v1/security/registry.json",
-            "sha256": "3e834aa185a98e86f0b53248f27f741ca372bb1b535e92665fbb8c46616aa1f1"
+            "sha256": "1d80ddbcf0a81e540d9eeaeaa2a63a9567c10902fffcb2cfb121ff7dadb089a7"
           }
         ],
         "catalogs": [
@@ -17381,12 +17381,12 @@
               "$id": "https://licoarc.com/spec/v1/security/registry.json",
               "registryVersion": "licoarc.security-accounting.v1",
               "lifecycle": "Candidate",
-              "definitionStatus": "COMPLETE",
+              "definitionStatus": "PARTIAL",
               "claimsPath": "spec/v1/security/claims.json",
               "adversaryModelPath": "spec/v1/security/adversary-model.json",
               "formalBindingsPath": "spec/v1/security/formal-bindings.json",
-              "proofEvidencePath": "formal/evidence.json",
-              "proofEvidenceDigest": "74cf8df346a261164a097732b8fa6e03471d63104ae5001e5ccb6273b34f38e5",
+              "proofEvidencePath": null,
+              "proofEvidenceDigest": null,
               "proofDoesNotDefineProtocol": true,
               "downstreamEvidenceDoesNotAdvanceDefinition": true,
               "missingMandatoryBindingPolicy": "line-ineligible"
@@ -17506,11 +17506,11 @@
                     "at-least-one-hybrid-component-uncompromised",
                     "atomic-durable-compare-and-commit"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_001_hybrid_ake_key_secrecy",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "computational-hybrid-security-and-live-session-compromise-outside-symbolic-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-002",
@@ -17526,11 +17526,11 @@
                     "authenticated-peer-key-acceptance",
                     "atomic-durable-compare-and-commit"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_002_mutual_endpoint_authentication",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "computational-primitives-and-peer-key-acceptance-outside-symbolic-model",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-003",
@@ -17544,11 +17544,11 @@
                     "at-least-one-hybrid-component-uncompromised",
                     "source-bound-transcript"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_003_classical_pq_hybrid_robustness",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "computational-combiner-security-outside-symbolic-model",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-004",
@@ -17562,11 +17562,11 @@
                     "ideal-hybrid-constructor",
                     "atomic-durable-compare-and-commit"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_004_unknown_key_share_resistance",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "computational-transcript-and-combiner-security-outside-symbolic-model",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-005",
@@ -17581,11 +17581,11 @@
                     "authenticated-peer-key-acceptance",
                     "responder-identity-and-prekey-not-compromised"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_005_key_compromise_impersonation_boundary",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "responder-identity-or-prekey-compromise-is-the-explicit-impersonation-boundary",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-006",
@@ -17599,11 +17599,11 @@
                     "source-bound-protocol-line-content-identity",
                     "authenticated-fixed-context-transcript"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_006_protocol_line_content_binding",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "endpoint-signing-key-compromise-or-compromised-local-authority-input-outside-symbolic-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-007",
@@ -17617,11 +17617,11 @@
                     "source-bound-profile-content-identity",
                     "authenticated-fixed-context-transcript"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_007_protection_profile_content_binding",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "endpoint-signing-key-compromise-or-compromised-local-authority-input-outside-symbolic-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-008",
@@ -17636,11 +17636,11 @@
                     "ideal-hybrid-constructor",
                     "atomic-durable-compare-and-commit"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_008_session_independence",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "full-live-compromise-of-the-target-session-outside-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-009",
@@ -17655,11 +17655,11 @@
                     "post-accept-ephemeral-erasure",
                     "atomic-durable-compare-and-commit"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_009_initial_forward_secrecy",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "pre-accept-and-live-session-compromise-outside-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-010",
@@ -17673,11 +17673,11 @@
                     "fresh-classical-dh-ratchet-input",
                     "prior-ratchet-key-erasure"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_010_double_ratchet_forward_secrecy",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "computational-ratchet-security-and-physical-zeroization-outside-symbolic-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-011",
@@ -17691,11 +17691,11 @@
                     "fresh-uncompromised-classical-dh-ratchet-input",
                     "atomic-durable-compare-and-commit"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_011_double_ratchet_post_compromise_recovery",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "ongoing-post-quantum-post-compromise-recovery-explicit-nonclaim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-012",
@@ -17711,11 +17711,11 @@
                     "atomic-durable-compare-and-commit",
                     "unique-record-coordinate"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_012_replay_resistance",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "application-replay-and-fully-compromised-store-outside-model",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-013",
@@ -17730,11 +17730,11 @@
                     "atomic-durable-compare-and-commit",
                     "monotonic-committed-state-generation"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_013_state_rollback_resistance",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "rollback-detection-under-fully-compromised-store-explicit-nonclaim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-014",
@@ -17750,11 +17750,11 @@
                     "ideal-dual-signature-authentication",
                     "canonical-authority-state-digest"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_014_self_certifying_user_authority",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "management-and-recovery-key-compromise-remains-the-explicit-authority-boundary",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-015",
@@ -17768,11 +17768,11 @@
                     "monotonic-predecessor-bound-route-chain",
                     "affiliation-state-binding"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_015_route_migration_safety",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "endpoint-route-signing-key-compromise-and-route-availability-outside-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-016",
@@ -17788,11 +17788,11 @@
                     "ideal-dual-signature-authentication",
                     "atomic-high-water-compare-and-commit"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_016_management_and_recovery_transition_authorization",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "compromise-of-the-selected-predecessor-authority-key-composition-remains-the-explicit-boundary",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-017",
@@ -17808,11 +17808,11 @@
                     "exact-endpoint-state-digest",
                     "ideal-dual-signature-authentication"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_017_endpoint_possession_authorization",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "endpoint-signing-key-compromise-remains-the-explicit-possession-boundary",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-018",
@@ -17828,11 +17828,11 @@
                     "independent-canonical-state-digests",
                     "source-bound-transcript"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_018_acyclic_sibling_endpoint_authority_session_binding",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "semantic-cycle-rejection-in-real-decoders-remains-an-implementation-conformance-obligation",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-019",
@@ -17848,11 +17848,11 @@
                     "exact-sender-session-and-logical-message-binding",
                     "application-result-digest-binding"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_019_authenticated_confirmation_finality",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "exactly-once-effects-without-application-idempotency-remains-an-explicit-nonclaim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-020",
@@ -17867,11 +17867,11 @@
                     "complete-validation-before-mutation",
                     "checked-integer-arithmetic"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_020_fail_closed_resource_bounds",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "implementation-resource-accounting-remains-a-conformance-obligation",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-021",
@@ -17887,11 +17887,11 @@
                     "secret-uncompromised-chain-key",
                     "source-bound-associated-data"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_021_pairwise_record_confidentiality",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "traffic-metadata-and-ratchet-header-confidentiality-outside-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-022",
@@ -17907,11 +17907,11 @@
                     "source-bound-associated-data",
                     "atomic-durable-compare-and-commit"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_022_pairwise_record_authentication_and_integrity",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "computational-aead-security-and-live-session-compromise-outside-symbolic-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-023",
@@ -17926,11 +17926,11 @@
                     "secret-uncompromised-chain-key",
                     "station-observes-only-protected-carrier-metadata"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_023_sender_metadata_confidentiality",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "traffic-correlation-length-timing-and-anonymity-outside-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 }
               ],
               "nonClaims": [
@@ -17957,12 +17957,12 @@
               "$id": "https://licoarc.com/spec/v1/security/registry.json",
               "registryVersion": "licoarc.security-accounting.v1",
               "lifecycle": "Candidate",
-              "definitionStatus": "COMPLETE",
+              "definitionStatus": "PARTIAL",
               "claimsPath": "spec/v1/security/claims.json",
               "adversaryModelPath": "spec/v1/security/adversary-model.json",
               "formalBindingsPath": "spec/v1/security/formal-bindings.json",
-              "proofEvidencePath": "formal/evidence.json",
-              "proofEvidenceDigest": "74cf8df346a261164a097732b8fa6e03471d63104ae5001e5ccb6273b34f38e5",
+              "proofEvidencePath": null,
+              "proofEvidenceDigest": null,
               "proofDoesNotDefineProtocol": true,
               "downstreamEvidenceDoesNotAdvanceDefinition": true,
               "missingMandatoryBindingPolicy": "line-ineligible"
@@ -20839,15 +20839,15 @@
           },
           {
             "sourcePath": "spec/schemas/security-claims.schema.json",
-            "sha256": "3573ef47f7e65a4d89a7df50e498853b08d471f9a3e5de8f1a3e73bd3c3aa434"
+            "sha256": "ddcd70f1e6271d0626d531b8c7d7af0639db78a4cf71d9f9d0040ff0c39ac2da"
           },
           {
             "sourcePath": "spec/schemas/security-formal-bindings.schema.json",
-            "sha256": "c35524c6b61da02315b8d329f1877df57848393fbf87be44e25826c312e48c9f"
+            "sha256": "09d825f057585c5e1413da292bb0fb6def444017080b2cce6b634509a5290d9e"
           },
           {
             "sourcePath": "spec/schemas/security-registry.schema.json",
-            "sha256": "d23e49b5df0aba9bf87cb559e52ef19f7b6337cc82d4ae479d48fe4927d03641"
+            "sha256": "f303cab58598b0835fe5d1a3fd9550438da7c19f80c8e01ca2212932226d3ac9"
           },
           {
             "sourcePath": "spec/v1/security/adversary-model.json",
@@ -20855,15 +20855,15 @@
           },
           {
             "sourcePath": "spec/v1/security/claims.json",
-            "sha256": "ed72d9502c21788f063902cc48bdb90a53cab662d4adf47b32e5270dcc44e1c1"
+            "sha256": "b02ae9359f2555d3947e37d1514547a35a35c2b109a22e46bc424e155fcb3530"
           },
           {
             "sourcePath": "spec/v1/security/formal-bindings.json",
-            "sha256": "490d3dca1f4200589018966beae81ff6a75705f00135a13970cc549e708089a3"
+            "sha256": "3746869185e493346d16692c0cb38e29a3648dfd5d4318b3ef34c6b350c38e4e"
           },
           {
             "sourcePath": "spec/v1/security/registry.json",
-            "sha256": "3e834aa185a98e86f0b53248f27f741ca372bb1b535e92665fbb8c46616aa1f1"
+            "sha256": "1d80ddbcf0a81e540d9eeaeaa2a63a9567c10902fffcb2cfb121ff7dadb089a7"
           }
         ],
         "catalogs": [
@@ -20875,12 +20875,12 @@
               "$id": "https://licoarc.com/spec/v1/security/registry.json",
               "registryVersion": "licoarc.security-accounting.v1",
               "lifecycle": "Candidate",
-              "definitionStatus": "COMPLETE",
+              "definitionStatus": "PARTIAL",
               "claimsPath": "spec/v1/security/claims.json",
               "adversaryModelPath": "spec/v1/security/adversary-model.json",
               "formalBindingsPath": "spec/v1/security/formal-bindings.json",
-              "proofEvidencePath": "formal/evidence.json",
-              "proofEvidenceDigest": "74cf8df346a261164a097732b8fa6e03471d63104ae5001e5ccb6273b34f38e5",
+              "proofEvidencePath": null,
+              "proofEvidenceDigest": null,
               "proofDoesNotDefineProtocol": true,
               "downstreamEvidenceDoesNotAdvanceDefinition": true,
               "missingMandatoryBindingPolicy": "line-ineligible"
@@ -21000,11 +21000,11 @@
                     "at-least-one-hybrid-component-uncompromised",
                     "atomic-durable-compare-and-commit"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_001_hybrid_ake_key_secrecy",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "computational-hybrid-security-and-live-session-compromise-outside-symbolic-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-002",
@@ -21020,11 +21020,11 @@
                     "authenticated-peer-key-acceptance",
                     "atomic-durable-compare-and-commit"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_002_mutual_endpoint_authentication",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "computational-primitives-and-peer-key-acceptance-outside-symbolic-model",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-003",
@@ -21038,11 +21038,11 @@
                     "at-least-one-hybrid-component-uncompromised",
                     "source-bound-transcript"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_003_classical_pq_hybrid_robustness",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "computational-combiner-security-outside-symbolic-model",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-004",
@@ -21056,11 +21056,11 @@
                     "ideal-hybrid-constructor",
                     "atomic-durable-compare-and-commit"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_004_unknown_key_share_resistance",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "computational-transcript-and-combiner-security-outside-symbolic-model",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-005",
@@ -21075,11 +21075,11 @@
                     "authenticated-peer-key-acceptance",
                     "responder-identity-and-prekey-not-compromised"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_005_key_compromise_impersonation_boundary",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "responder-identity-or-prekey-compromise-is-the-explicit-impersonation-boundary",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-006",
@@ -21093,11 +21093,11 @@
                     "source-bound-protocol-line-content-identity",
                     "authenticated-fixed-context-transcript"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_006_protocol_line_content_binding",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "endpoint-signing-key-compromise-or-compromised-local-authority-input-outside-symbolic-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-007",
@@ -21111,11 +21111,11 @@
                     "source-bound-profile-content-identity",
                     "authenticated-fixed-context-transcript"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_007_protection_profile_content_binding",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "endpoint-signing-key-compromise-or-compromised-local-authority-input-outside-symbolic-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-008",
@@ -21130,11 +21130,11 @@
                     "ideal-hybrid-constructor",
                     "atomic-durable-compare-and-commit"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_008_session_independence",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "full-live-compromise-of-the-target-session-outside-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-009",
@@ -21149,11 +21149,11 @@
                     "post-accept-ephemeral-erasure",
                     "atomic-durable-compare-and-commit"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_009_initial_forward_secrecy",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "pre-accept-and-live-session-compromise-outside-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-010",
@@ -21167,11 +21167,11 @@
                     "fresh-classical-dh-ratchet-input",
                     "prior-ratchet-key-erasure"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_010_double_ratchet_forward_secrecy",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "computational-ratchet-security-and-physical-zeroization-outside-symbolic-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-011",
@@ -21185,11 +21185,11 @@
                     "fresh-uncompromised-classical-dh-ratchet-input",
                     "atomic-durable-compare-and-commit"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_011_double_ratchet_post_compromise_recovery",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "ongoing-post-quantum-post-compromise-recovery-explicit-nonclaim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-012",
@@ -21205,11 +21205,11 @@
                     "atomic-durable-compare-and-commit",
                     "unique-record-coordinate"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_012_replay_resistance",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "application-replay-and-fully-compromised-store-outside-model",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-013",
@@ -21224,11 +21224,11 @@
                     "atomic-durable-compare-and-commit",
                     "monotonic-committed-state-generation"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_013_state_rollback_resistance",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "rollback-detection-under-fully-compromised-store-explicit-nonclaim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-014",
@@ -21244,11 +21244,11 @@
                     "ideal-dual-signature-authentication",
                     "canonical-authority-state-digest"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_014_self_certifying_user_authority",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "management-and-recovery-key-compromise-remains-the-explicit-authority-boundary",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-015",
@@ -21262,11 +21262,11 @@
                     "monotonic-predecessor-bound-route-chain",
                     "affiliation-state-binding"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_015_route_migration_safety",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "endpoint-route-signing-key-compromise-and-route-availability-outside-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-016",
@@ -21282,11 +21282,11 @@
                     "ideal-dual-signature-authentication",
                     "atomic-high-water-compare-and-commit"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_016_management_and_recovery_transition_authorization",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "compromise-of-the-selected-predecessor-authority-key-composition-remains-the-explicit-boundary",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-017",
@@ -21302,11 +21302,11 @@
                     "exact-endpoint-state-digest",
                     "ideal-dual-signature-authentication"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_017_endpoint_possession_authorization",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "endpoint-signing-key-compromise-remains-the-explicit-possession-boundary",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-018",
@@ -21322,11 +21322,11 @@
                     "independent-canonical-state-digests",
                     "source-bound-transcript"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_018_acyclic_sibling_endpoint_authority_session_binding",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "semantic-cycle-rejection-in-real-decoders-remains-an-implementation-conformance-obligation",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-019",
@@ -21342,11 +21342,11 @@
                     "exact-sender-session-and-logical-message-binding",
                     "application-result-digest-binding"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_019_authenticated_confirmation_finality",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "exactly-once-effects-without-application-idempotency-remains-an-explicit-nonclaim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-020",
@@ -21361,11 +21361,11 @@
                     "complete-validation-before-mutation",
                     "checked-integer-arithmetic"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_020_fail_closed_resource_bounds",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "implementation-resource-accounting-remains-a-conformance-obligation",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-021",
@@ -21381,11 +21381,11 @@
                     "secret-uncompromised-chain-key",
                     "source-bound-associated-data"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_021_pairwise_record_confidentiality",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "traffic-metadata-and-ratchet-header-confidentiality-outside-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-022",
@@ -21401,11 +21401,11 @@
                     "source-bound-associated-data",
                     "atomic-durable-compare-and-commit"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_022_pairwise_record_authentication_and_integrity",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "computational-aead-security-and-live-session-compromise-outside-symbolic-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 },
                 {
                   "id": "SEC-023",
@@ -21420,11 +21420,11 @@
                     "secret-uncompromised-chain-key",
                     "station-observes-only-protected-carrier-metadata"
                   ],
-                  "proofModel": "formal/generated/licoarc-core-v1.spthy",
-                  "proofLemma": "SEC_023_sender_metadata_confidentiality",
-                  "counterexampleStatus": "no-counterexample-found",
+                  "proofModel": null,
+                  "proofLemma": null,
+                  "counterexampleStatus": "not-run",
                   "residualRisk": "traffic-correlation-length-timing-and-anonymity-outside-claim",
-                  "status": "proved"
+                  "status": "unproved"
                 }
               ],
               "nonClaims": [
@@ -21451,12 +21451,12 @@
               "$id": "https://licoarc.com/spec/v1/security/registry.json",
               "registryVersion": "licoarc.security-accounting.v1",
               "lifecycle": "Candidate",
-              "definitionStatus": "COMPLETE",
+              "definitionStatus": "PARTIAL",
               "claimsPath": "spec/v1/security/claims.json",
               "adversaryModelPath": "spec/v1/security/adversary-model.json",
               "formalBindingsPath": "spec/v1/security/formal-bindings.json",
-              "proofEvidencePath": "formal/evidence.json",
-              "proofEvidenceDigest": "74cf8df346a261164a097732b8fa6e03471d63104ae5001e5ccb6273b34f38e5",
+              "proofEvidencePath": null,
+              "proofEvidenceDigest": null,
               "proofDoesNotDefineProtocol": true,
               "downstreamEvidenceDoesNotAdvanceDefinition": true,
               "missingMandatoryBindingPolicy": "line-ineligible"

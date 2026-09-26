@@ -7,7 +7,7 @@
 | Decision track | `ALGORITHM` |
 | Decision ID | `ALG-core-v1-double-ratchet` |
 | Decision status | `DECIDED` |
-| Definition status | `SPECIFIED` |
+| Definition status | `PARTIAL` |
 | Existing authority | [Pairwise Protection architecture](../../ARCHITECTURE.md#3-pairwise-protection) and the Core v1 Hybrid AKE decision |
 | Authority targets | `spec/v1/protection/`, `spec/FIELD-REGISTRY.md`, `formal/`, `conformance/v1/protection/`, `spec/v1/manifest.json`, and `spec/protocol-lines.json` |
 | Predecessor or successor | Supersedes the counter-only ratchet scope of `ALG-baseline-pairwise-protection-suite`; a future PQ ratchet requires a new successor decision and Profile identity. |
@@ -138,3 +138,5 @@ line admission close the selected construction.
 RFC-7748, RFC-5869, RFC-8439, and published Double Ratchet lineage inform
 primitive behavior and known risks only. They cannot define LicoArc fields,
 state, trust, or Protocol Line meaning.
+
+Current V1 continuity revision reopens formal admission. See [the continuity decision](durable-continuity-live-capabilities.md). Prior proof output is not evidence for the revised transcript or admission.

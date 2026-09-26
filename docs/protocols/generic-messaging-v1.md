@@ -147,35 +147,25 @@ Non-empty ranges request one bounded selective retransmission batch. Empty
 ranges are valid only after all derived indexes are durably accepted, exact
 length equals `byteLength`, and `contentDigest` verifies. Empty verified state
 is the sole routine success report; a successful chunk never creates a routine
-Endpoint Confirmation. `complete`, `cancelled`, and `failed` are absorbing.
+Endpoint Confirmation. Completed or cancelled execution is not reopened by retries; late evidence is retained.
 
-Every changed state uses a new `messageId`; a byte-identical duplicate state
-is idempotent. `stateUpdate` and `recoveryRound` cannot decrease or reset.
-Across one attachment lifetime the Endpoint enforces:
+Every changed state uses a new `messageId`; a byte-identical duplicate is
+idempotent. `stateUpdate` and `recoveryRound` are monotonic control revisions,
+not a message lifetime. Processing limits (64 updates, 32 recovery rounds,
+256 retransmitted chunks and 16,384 control octets per turn) pause work and
+resume in another scheduling turn without discarding accepted chunks. Local
+retry, network reconnect and session renewal never rewind nonce/replay state.
 
-| Bound | Value |
-| --- | ---: |
-| `MAX_ATTACHMENT_STATE_UPDATES` | 64 |
-| `MAX_ATTACHMENT_RECOVERY_ROUNDS` | 32 |
-| `MAX_ATTACHMENT_RETRANSMITTED_CHUNKS` | 256 |
-| `MAX_ATTACHMENT_CONTROL_BYTES` | 16,384 |
-| `ATTACHMENT_RECOVERY_WINDOW` | 86,400 seconds |
+Old valid progress can be deduplicated; late verified completion remains evidence.
+An explicit cancellation prevents further execution, not historical receipt.
+Deduplication and tuple state must not expire while old packets or pending work
+can still refer to it. Storage layout and scheduling are implementation choices;
+custody, recovery and result meaning follow the durable continuity contract.
 
-Retry, reconnect, session renewal, Route change, and Station migration cannot
-refresh a bound or extend the window. A lower state update is
-`stale-state`; a return to an earlier counter or recovery round is
-`reset-attempt`; a request after absorbing terminal state is
-`terminal-reopen`. Bounds fail with typed `state-bound-exceeded`,
-`recovery-round-exceeded`, `retransmission-bound-exceeded`, or
-`control-budget-exceeded` outcomes. Terminal tombstones and tuple deduplication
-state are retained through the recovery window; storage layout and retry
-scheduling remain implementation-local.
-
-The canonical maximum Generic Message record is 328,503 octets. The canonical
-maximum Attachment Receive State is 256 octets, including its complete map,
-labels, range array, and values. The lifetime control budget is exactly 64
-maximum-size states, or 16,384 octets; rejected or duplicate input does not
-consume that budget or mutate attachment state.
+The maximum Generic Message record is 328,503 octets and a bounded recovery
+control record is 256 octets. These are individual-frame limits, not total
+conversation size or time spent offline. The bounded attachment grammar remains
+one optional representation; application streams are independent of its object size.
 
 ## Failure outcomes
 
@@ -198,3 +188,11 @@ digest accounting. It does not inspect product Payload meaning, storage, retry
 queues, Stations, or private runtime data. The conformance fixtures contain
 synthetic bytes and identifiers only; no machine identity, credentials, or
 backend state is part of this contract.
+
+## Durable continuity and current admission
+
+The current V1 lifecycle contract is [durable continuity](../../spec/v1/reliable/continuity.md).
+[Live capabilities](../../spec/v1/messaging/capabilities.md) update existing conversations
+without rebind. [Group continuity](../../spec/v1/group/continuity.md) separates history,
+effects and fork recovery. The revised Candidate is PARTIAL pending formal requalification;
+retained earlier proof output is not current evidence.

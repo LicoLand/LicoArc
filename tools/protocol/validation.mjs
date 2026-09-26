@@ -81,11 +81,21 @@ export function assertValidProtocolDefinition({
       lineIdentityInput
     });
   } else {
-    if (line.protocolLineId !== null || manifest.protocolLineId !== null ||
-        line.sessionEligible || manifest.sessionEligible ||
+    if (line.sessionEligible || manifest.sessionEligible ||
         line.publicationEligible || manifest.publicationEligible) {
       throw new ProtocolDefinitionError("incomplete-line-admission");
     }
+    // A content identity is not a security admission claim. Always recompute it.
+    for (const profile of protectionProfiles.profiles) {
+      const input = profileIdentityInputs instanceof Map ? profileIdentityInputs.get(profile.profileLocator) : profileIdentityInputs[profile.profileLocator];
+      if (!input) throw new ProtocolDefinitionError("missing-profile-identity-input");
+      assertProtectionProfileId(profile.profileId, input);
+    }
+    assertProtocolLineId(line.protocolLineId, {
+      ...lineIdentityInput, generation: line.generation,
+      mandatoryCapabilitySemanticIdentities: line.mandatoryCapabilities.map(id => manifest.capabilities.find(c => c.capabilityId === id).semanticIdentity),
+      protectionProfileIds: line.protectionProfileIds, stableClaimIds: line.stableClaimIds
+    });
   }
   return Object.freeze({ line, securitySummary });
 }
@@ -203,7 +213,7 @@ function assertCompleteCorpus(line, conformance) {
   if (corpora.size !== conformance.capabilityCorpora.length) {
     throw new ProtocolDefinitionError("duplicate-capability-corpus");
   }
-  assertEqualSet([...corpora.keys()].sort(), line.mandatoryCapabilities,
+  assertEqualSet([...corpora.keys()].sort(), line.definedCapabilities ?? line.mandatoryCapabilities,
     "capability-corpus-set-mismatch");
   for (const capabilityId of line.mandatoryCapabilities) {
     const corpus = corpora.get(capabilityId);

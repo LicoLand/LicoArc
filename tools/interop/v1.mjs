@@ -80,16 +80,14 @@ export function validateEnvelope(text) {
 }
 export function emptyAssemblyState() { return { entries: new Map(), reserved: 0, clock: 0 }; }
 function advanceClock(state, now) {
-  requireThat(Number.isSafeInteger(now) && now >= state.clock, "monotonic-clock-required");
+  requireThat(Number.isSafeInteger(now) && now >= 0, "invalid-observation-time");
 }
-/** Expiry is explicit; no fragment (including a duplicate) resets a deadline. */
-export function expireAssemblies(state, now) {
-  advanceClock(state, now);
+/** Explicit cache reclamation requires a durable recovery copy; age never deletes accepted fragments. */
+export function releaseAssemblies(state, keys, { durableRecoveryVerified = false } = {}) {
+  requireThat(durableRecoveryVerified === true, "durable-recovery-required");
   const entries = new Map(state.entries); let reserved = state.reserved;
-  for (const [key, value] of entries) if (now >= value.deadline) {
-    entries.delete(key); reserved -= value.length;
-  }
-  return { entries, reserved, clock: now };
+  for (const key of keys) { const value = entries.get(key); if (value) {entries.delete(key); reserved -= value.length;} }
+  return { ...state, entries, reserved };
 }
 /** Pure reducer: rejected input throws without changing state; complete digest failures release only carrier cache. */
 export function acceptFragment(state, text, context, now) {
@@ -99,7 +97,6 @@ export function acceptFragment(state, text, context, now) {
   const key = canonical([context.sender, context.recipient, e.channel, e.type, e.digest]);
   const current = state.entries.get(key);
   if (current) {
-    requireThat(now < current.deadline, "assembly-expired");
     requireThat(e.length === current.length, "fragment-length-conflict");
     const previous = current.parts.get(e.index);
     if (previous) {
@@ -113,7 +110,7 @@ export function acceptFragment(state, text, context, now) {
     requireThat(state.reserved + e.length <= B.MAX_REASSEMBLY_BYTES, "reassembly-byte-limit");
   }
   const next = current ? { ...current, parts: new Map(current.parts) } : {
-    peer, length: e.length, deadline: now + B.ASSEMBLY_WINDOW_SECONDS, parts: new Map()
+    peer, length: e.length, parts: new Map()
   };
   next.parts.set(e.index, bytes);
   const entries = new Map(state.entries);
@@ -131,7 +128,7 @@ export function acceptFragment(state, text, context, now) {
 function validateCapabilities(capabilities) {
   requireThat(Array.isArray(capabilities) && capabilities.length <= B.MAX_CAPABILITIES, "capability-bound");
   for (let i = 0; i < capabilities.length; i++) {
-    assertValidAgainstClosedSchema(capabilities[i], schemas.binding.properties.capabilities.items);
+    assertValidAgainstClosedSchema(capabilities[i], schemas.collaboration.properties.capability);
     if (i > 0) requireThat(capabilities[i - 1].id < capabilities[i].id, "capability-order-or-duplicate");
   }
 }
@@ -144,12 +141,11 @@ export function validateBinding(text, expected) {
     "peer-authorization-required");
   accountContext(expected);
   requireThat(expected.role === "initiator" || expected.role === "responder", "binding-role");
-  for (const key of ["binding", "channel", "initiator", "responder", "session"])
+  for (const key of ["binding", "channel", "initiator", "responder", "session", "conversation"])
     requireThat(record[key] === expected[key], `binding-${key}-mismatch`);
   const receiverRole = expected.role === "initiator" ? "responder" : "initiator";
   requireThat(record[expected.role] === expected.sender && record[receiverRole] === expected.recipient,
     "binding-account-role-mismatch");
-  validateCapabilities(record.capabilities);
   return record;
 }
 export function freezeBinding(previous, next) {
@@ -163,9 +159,9 @@ export function commonCapabilities(left, right) {
 }
 export function agreementDigest(initiator, responder) {
   for (const record of [initiator, responder]) {
-    assertValidAgainstClosedSchema(record, schemas.binding); validateCapabilities(record.capabilities);
+    assertValidAgainstClosedSchema(record, schemas.binding);
   }
-  for (const key of ["binding", "channel", "initiator", "responder", "session"])
+  for (const key of ["binding", "channel", "initiator", "responder", "session", "conversation"])
     requireThat(initiator[key] === responder[key], "agreement-context-mismatch");
   return sha256(Buffer.concat([Buffer.from("LICOARC-NOSTR-V1/AGREEMENT\0", "ascii"),
     Buffer.from(canonical([initiator, responder]), "utf8")]));
@@ -189,10 +185,9 @@ export function selectPath(requirement, readiness, capability = null) {
 export function validateCollaboration(text, context) {
   const record = decodeCanonical(text, "collaboration", B.MAX_APPLICATION_BYTES * 2);
   requireThat(context?.bindingReady === true, "binding-required");
-  requireThat(record.agreement === context.agreement, "agreement-mismatch");
-  requireThat(Array.isArray(context.common) && context.common.some((c) =>
-    c.id === record.capability.id && c.definition === record.capability.definition), "capability-unavailable");
-  requireThat(context.executionApproved === true, "execution-approval-required");
+  requireThat(record.conversation === context.conversation, "conversation-mismatch");
+  requireThat(context.nativeAuthenticated === true && context.audienceApproved === true, "collaboration-unauthorized");
+  // Receipt and safe storage are independent from execution authorization / current tool availability.
   return { record, bytes: decodeBase64(record.payload, B.MAX_APPLICATION_BYTES) };
 }
 export function semanticBindingId(sources) {
@@ -217,36 +212,36 @@ export function holdBeforeBinding(state, record, now) {
   advanceClock(state, now);
   requireThat(record.nativeAuthenticated === true && record.authorityAdmitted === true, "native-admission-required");
   requireThat(HEX32.test(record.channel) && HEX64.test(record.nativeRecordId), "native-inbox-key-invalid");
-  requireThat(Number.isSafeInteger(record.deadline) && now < record.deadline, "pairing-expired");
   requireThat(record.payload instanceof Uint8Array && record.payload.length <= B.MAX_OBJECT_BYTES, "inbox-payload-bound");
   const key = canonical([record.channel, record.nativeRecordId]);
   const previous = state.entries.get(key);
   if (previous) {
-    requireThat(previous.payload.equals(Buffer.from(record.payload)) && previous.deadline === record.deadline,
+    requireThat(previous.payload.equals(Buffer.from(record.payload)),
       "native-inbox-conflict");
     return { state: { ...state, clock: now }, status: "binding-pending" };
   }
-  requireThat(state.entries.size < B.MAX_PREBINDING_MESSAGES, "prebinding-global-limit");
-  requireThat([...state.entries.values()].filter((v) => v.channel === record.channel).length <
-    B.MAX_PREBINDING_MESSAGES_PER_CHANNEL, "prebinding-channel-limit");
-  requireThat(state.reserved + record.payload.length <= B.MAX_PREBINDING_BYTES, "prebinding-byte-limit");
+  if (state.entries.size >= B.MAX_PREBINDING_MESSAGES ||
+      [...state.entries.values()].filter(v => v.channel === record.channel).length >= B.MAX_PREBINDING_MESSAGES_PER_CHANNEL ||
+      state.reserved + record.payload.length > B.MAX_PREBINDING_BYTES)
+    return { state, status: "backpressure" }; // do not commit/consume a native key; the durable ciphertext spool retains custody
   const entries = new Map(state.entries);
   entries.set(key, { channel: record.channel, nativeRecordId: record.nativeRecordId,
-    deadline: record.deadline, payload: Buffer.from(record.payload) });
+    payload: Buffer.from(record.payload) });
   return { state: { entries, reserved: state.reserved + record.payload.length, clock: now }, status: "binding-pending" };
 }
 export function resolveBindingInbox(state, channel, bindingReady, now) {
   advanceClock(state, now);
   requireThat(HEX32.test(channel) && typeof bindingReady === "boolean", "binding-context-invalid");
-  const entries = new Map(state.entries); const candidates = []; const failures = []; let reserved = state.reserved;
-  for (const [key, record] of entries) {
-    if (record.channel !== channel) continue;
-    if (now >= record.deadline || bindingReady) {
-      entries.delete(key); reserved -= record.payload.length;
-      if (now >= record.deadline) failures.push(record.nativeRecordId);
-      else candidates.push({ ...record, payload: Buffer.from(record.payload) });
-    }
-  }
-  // Candidates still need ordinary native/application authorization. Never execute here.
-  return { state: { entries, reserved, clock: now }, candidates, failures };
+  const candidates = bindingReady ? [...state.entries.values()].filter(r => r.channel === channel)
+    .map(r => ({ ...r, payload: Buffer.from(r.payload) })) : [];
+  // Listing candidates is not a durable handoff. Keep custody until the destination commit succeeds.
+  return { state, candidates, failures: [] };
+}
+export function commitBindingInbox(state, channel, recordIds, durableCommit) {
+  requireThat(durableCommit === true, "inbox-handoff-not-committed");
+  requireThat(HEX32.test(channel) && Array.isArray(recordIds) && recordIds.every(id => HEX64.test(id)), "invalid-inbox-handoff");
+  const entries = new Map(state.entries); let reserved = state.reserved;
+  for (const recordId of recordIds) { const key = canonical([channel, recordId]), r = entries.get(key);
+    if(r) {entries.delete(key); reserved -= r.payload.length;} }
+  return { ...state, entries, reserved };
 }

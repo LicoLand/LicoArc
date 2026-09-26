@@ -2,17 +2,17 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "manifestVersion": "licoarc.protocol-line-manifest.v1",
   "wireId": "licoarc.protocol-line.v1",
-  "protocolLineId": "c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08",
+  "protocolLineId": "4cb15568e99396ef2789aec1828ad9dc4878f1cd1a04e28fe3feaac4dc753f4c",
   "generation": 1,
   "lifecycle": "Candidate",
-  "definitionStatus": "COMPLETE",
-  "sessionEligible": true,
+  "definitionStatus": "PARTIAL",
+  "sessionEligible": false,
   "publicationEligible": false,
   "protocolLineCatalog": "spec/protocol-lines.json",
   "protectionProfileCatalog": "spec/protection-profiles.json",
   "fieldRegistry": {
     "path": "spec/FIELD-REGISTRY.md",
-    "sourceDigest": "95784a44904f46669debdad66a02d0758824c71fba83b757b498c3785d868e4e",
+    "sourceDigest": "384837b1d986157c185ac13c1eb0d2611617518075634eaf020e8aeb7c870987",
     "authority": "canonical-field-registry"
   },
   "capabilities": [
@@ -20,7 +20,7 @@
       "capabilityId": "licoarc.federation-governance.v1",
       "version": 1,
       "definitionStatus": "COMPLETE",
-      "semanticIdentity": "c98128656377ad872124e5293a02b3c87d2c3c97b20d5ea210c7a5c71d11a8a1",
+      "semanticIdentity": "9dcba3b57ecb0010730380a8c134ad6a4b6f62fd8e60f44ee5f5a0548266756e",
       "sourceManifestPath": "spec/v1/governance/source-manifest.json",
       "sourceRoots": [],
       "sourcePaths": [],
@@ -30,37 +30,37 @@
       "capabilityId": "licoarc.generic-messaging.v1",
       "version": 1,
       "definitionStatus": "COMPLETE",
-      "semanticIdentity": "b0bb068b0acd09aa09666a0380c3cae98e4c0e9739e732484e874aa088f1ac24",
+      "semanticIdentity": "c0516f8a0aef2812f2178f1236d32e738b2b82db59954f50a860b260ca67d804",
       "sourceManifestPath": "spec/v1/messaging/source-manifest.json",
       "sourceRoots": [],
       "sourcePaths": [],
-      "sourceDigest": "9fc7e1635ef076db2108747aae4f70167412c35bd87945e51d26c7be41402ef4"
+      "sourceDigest": "461b9b1f7015d8807ad95bc8282c2098177868a3bc40a997e57cfa1a0e9635b8"
     },
     {
       "capabilityId": "licoarc.group-collaboration.v1",
       "version": 1,
       "definitionStatus": "COMPLETE",
-      "semanticIdentity": "a853f9db567d4f4d7204ede9f33b458770632887f6ccd0fc765cf04fbfea61ac",
+      "semanticIdentity": "ee64f27415cd65f40c98d79151b328292d85dfc9d421893803e50e6e4fb884f7",
       "sourceManifestPath": "spec/v1/group/source-manifest.json",
       "sourceRoots": [],
       "sourcePaths": [],
-      "sourceDigest": "1b65d55ecb15d67ff8a06bf6542fc33a92ef6ecb7ab25dea997c3313b79a346b"
+      "sourceDigest": "6983d631bd887d16e05b7e23a1451a996d9ea8a1ba660e6be4ca799b69786303"
     },
     {
       "capabilityId": "licoarc.https-transport.v1",
       "version": 1,
       "definitionStatus": "COMPLETE",
-      "semanticIdentity": "9acd5f74119612b3479d908a1c72a8a86d47a35d001cad8049e00e7341e449c5",
+      "semanticIdentity": "6fcafacb0f3a59464725fa33f7a205ee762a813e0fafb11dbb245cf0b1863674",
       "sourceManifestPath": "spec/v1/transport/source-manifest.json",
       "sourceRoots": [],
       "sourcePaths": [],
-      "sourceDigest": "418c4da90461d7c985af8e3c5a66314e19c9c3f178271e2a70118e314c156924"
+      "sourceDigest": "9cde5fcc12e90d28d88d9ca935d7f03e54910a431fa57bff0b79db3804dcead0"
     },
     {
       "capabilityId": "licoarc.identity.v1",
       "version": 1,
       "definitionStatus": "COMPLETE",
-      "semanticIdentity": "41e3cd1302565ec7275c2a047f93c38cf2e570e080d103b58dd6a1506a20537b",
+      "semanticIdentity": "1e6ecb6df2d9b57a1c3285e2a98c70ed7e6855d394bce69c6c4c6527fde8d494",
       "sourceManifestPath": "spec/v1/identity/source-manifest.json",
       "sourceRoots": [],
       "sourcePaths": [],
@@ -69,36 +69,36 @@
     {
       "capabilityId": "licoarc.pairwise-protection.v1",
       "version": 1,
-      "definitionStatus": "COMPLETE",
-      "semanticIdentity": "4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17",
+      "definitionStatus": "PARTIAL",
+      "semanticIdentity": "abef93baec2b1a7ecdf67bb3783bc641c0c1be7f3696615462597f323e4b46b5",
       "sourceManifestPath": "spec/v1/protection/source-manifest.json",
       "sourceRoots": [],
       "sourcePaths": [],
-      "sourceDigest": "cd07cdc2b5e7c99f2fbe8fe87ef202f6c87389f0e379957913f4e38ca1590f97"
+      "sourceDigest": "f9d4b0515f60e5f2c62356075867d14c8d1478a8f61c8991b15ee882b1ef2f12"
     },
     {
       "capabilityId": "licoarc.protocol-foundation.v1",
       "version": 1,
       "definitionStatus": "COMPLETE",
-      "semanticIdentity": "b1348b600b9f8baae49c9fbe5b5ba66e7540db03dfa957e7545f482c07f2a741",
+      "semanticIdentity": "6b13a9e553ed6db1744f7db11f9e0d62d5eb6a06fe040a76b60aa3a59eb2a175",
       "sourceManifestPath": "spec/v1/foundation/source-manifest.json",
       "sourceRoots": [],
       "sourcePaths": [],
-      "sourceDigest": "a3863797f71e3827ee4bd2670c042223454ec2fa646d532296a739fcd57d9a73"
+      "sourceDigest": "f26c2b0a091e2bee416616ed1933a0f5fb1b2474d927d57bd61202b04902793a"
     },
     {
       "capabilityId": "licoarc.reliable-exchange.v1",
       "version": 1,
       "definitionStatus": "COMPLETE",
-      "semanticIdentity": "77dea4067691dc394a282af29dae2128926854dfa978a6dd83add9ff02ebea26",
+      "semanticIdentity": "38e2127634002b773217aba8300efc1dbedadb9339f22ff5f3583cdca013c5f5",
       "sourceManifestPath": "spec/v1/reliable/source-manifest.json",
       "sourceRoots": [],
       "sourcePaths": [],
-      "sourceDigest": "82fdb131cf0a4aae61d6df1efa60b6865af2c432835b5d43d01adcbc8b1725ac"
+      "sourceDigest": "c3df4ddedd63e7ddfe46d0d2ca0b3db101e275b82cb86f1273642d211a025f52"
     }
   ],
   "protectionProfileIds": [
-    "4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17"
+    "abef93baec2b1a7ecdf67bb3783bc641c0c1be7f3696615462597f323e4b46b5"
   ],
   "stableClaimIds": [
     "SEC-001",
@@ -126,8 +126,17 @@
     "SEC-023"
   ],
   "missingMandatoryCapabilities": [],
-  "openDefinitions": [],
-  "blockers": [],
+  "openDefinitions": [
+    {
+      "definitionId": "security-accounting",
+      "definitionStatus": "PARTIAL",
+      "sourceManifestPath": "spec/v1/security/source-manifest.json",
+      "sourceDigest": null
+    }
+  ],
+  "blockers": [
+    "SEC-proof-requalification"
+  ],
   "sourceClosure": {
     "roots": [
       "conformance/v1",

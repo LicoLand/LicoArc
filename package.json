@@ -19,8 +19,10 @@
     "test:focused": "node --test tests/protocol-line-complete.test.mjs tests/pairwise-protection.test.mjs tests/security-claims.test.mjs tests/candidate-integration.test.mjs tests/conformance.test.mjs tests/protocol-foundation.test.mjs tests/identity.test.mjs tests/reliable-confirmations.test.mjs tests/generic-messaging.test.mjs tests/group-collaboration.test.mjs tests/https-transport.test.mjs tests/federation-governance.test.mjs tests/algorithm-decisions.test.mjs tests/status-boundaries.test.mjs",
     "check:focused": "npm run formal:check && npm run conformance:check && npm run test:focused && npm run artifacts:check",
     "test": "node --test tests/*.test.mjs",
-    "verify": "npm run artifacts:check && npm test",
-    "test:interop": "node --test tests/nostr-interoperability.test.mjs"
+    "verify": "npm run artifacts:check && npm test && npm run conformance:check",
+    "test:interop": "node --test tests/nostr-interoperability.test.mjs",
+    "definition:refresh": "node tools/refresh-definition.mjs && npm run artifacts:generate",
+    "test:continuity": "node --test tests/durable-continuity.test.mjs tests/live-capabilities.test.mjs tests/confirmation-continuity.test.mjs"
   },
   "engines": {
     "node": ">=24.15.0 <25"

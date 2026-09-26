@@ -3,10 +3,10 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { assertClosedJsonSchema } from "../tools/protocol/index.mjs";
 import { B, manifest, schemas, canonical, sha256, classifyRumor, fragmentObject,
-  validateEnvelope, emptyAssemblyState, expireAssemblies, acceptFragment,
+  validateEnvelope, emptyAssemblyState, releaseAssemblies, acceptFragment,
   validateBinding, freezeBinding, commonCapabilities, agreementDigest,
   selectPath, validateCollaboration, semanticBindingId,
-  emptyBindingInbox, holdBeforeBinding, resolveBindingInbox } from "../tools/interop/v1.mjs";
+  emptyBindingInbox, holdBeforeBinding, resolveBindingInbox, commitBindingInbox } from "../tools/interop/v1.mjs";
 import { buildBindingArtifact } from "../tools/generate-interop-artifact.mjs";
 
 const root = new URL("../", import.meta.url);
@@ -16,7 +16,7 @@ const A = "1".repeat(64), Z = "2".repeat(64), CHANNEL = "3".repeat(32), DEF = "4
 const context = { outerAuthenticated: true, sender: A, recipient: Z };
 const cap = { id: "org.example.review", definition: DEF };
 const binding = { binding: DEF, channel: CHANNEL, initiator: A, responder: Z,
-  session: "6".repeat(64), capabilities: [cap] };
+  session: "6".repeat(64), conversation: "8".repeat(32) };
 const contextBinding = { ...binding, ...context, role: "initiator", nativeAuthenticated: true,
   authorityAdmitted: true, peerApproved: true, deviceRevoked: false };
 const expectError = (fn, code) => assert.throws(fn, (e) => e.code === code, code);
@@ -93,16 +93,17 @@ test("reassembly accepts deterministic permutations across fragment boundaries",
   }
 });
 
-test("duplicate fragments do not reserve memory or refresh fixed deadlines", () => {
+test("duplicate fragments have no lifetime and hot-state reclamation needs durable recovery", () => {
   const parts = fragmentObject(Buffer.alloc(8193), CHANNEL, "protected-record");
   const first = acceptFragment(emptyAssemblyState(), canonical(parts[0]), context, 1);
-  assert.equal(first.state.entries.size, 1); assert.equal(first.state.reserved, 8193);
   const duplicate = acceptFragment(first.state, canonical(parts[0]), context, 500);
-  assert.equal(duplicate.status, "duplicate"); assert.equal(duplicate.state.reserved, first.state.reserved);
-  assert.equal([...duplicate.state.entries.values()][0].deadline, 601);
-  expectError(() => acceptFragment(duplicate.state, canonical(parts[1]), context, 601), "assembly-expired");
-  assert.equal(expireAssemblies(duplicate.state, 601).reserved, 0);
-  expectError(() => acceptFragment(duplicate.state, canonical(parts[1]), context, 499), "monotonic-clock-required");
+  assert.equal(duplicate.status, "duplicate"); assert.equal(duplicate.state.reserved, 8193);
+  assert.equal(Object.hasOwn([...duplicate.state.entries.values()][0], "deadline"), false);
+  assert.equal(acceptFragment(duplicate.state, canonical(parts[1]), context, 31_536_000).status, "complete");
+  assert.equal(acceptFragment(duplicate.state, canonical(parts[1]), context, 0).status, "complete");
+  const keys = [...duplicate.state.entries.keys()];
+  expectError(() => releaseAssemblies(duplicate.state, keys, {}), "durable-recovery-required");
+  assert.equal(releaseAssemblies(duplicate.state, keys, {durableRecoveryVerified:true}).reserved, 0);
 });
 
 test("conflicting fragments fail without mutation; final hash failure releases only transport state", () => {
@@ -145,15 +146,16 @@ test("peer and global limits are checked before reserving more state", () => {
   expectError(() => acceptFragment(peerState, canonical(extra), context, 1), "peer-object-limit");
 });
 
-test("binding offers are immutable and the ordered agreement includes both offers", () => {
+test("identity association is immutable but contains no mutable capability list", () => {
   const accepted = validateBinding(canonical(binding), contextBinding);
   const frozen = freezeBinding(null, accepted);
   assert.deepEqual(freezeBinding(frozen, structuredClone(accepted)), frozen);
-  expectError(() => freezeBinding(frozen, { ...accepted, capabilities: [] }), "binding-changed");
-  const responder = { ...binding, capabilities: [] };
+  expectError(() => freezeBinding(frozen, { ...accepted, conversation: "7".repeat(32) }), "binding-changed");
+  const responder = { ...binding };
   const digest = agreementDigest(binding, responder);
   assert.match(digest, /^[0-9a-f]{64}$/);
-  assert.notEqual(digest, agreementDigest(responder, binding));
+  assert.equal(digest, agreementDigest(responder, binding));
+  assert.equal(Object.hasOwn(schemas.binding.properties, "capabilities"), false);
   expectError(() => agreementDigest(binding, { ...responder, session: DEF }), "agreement-context-mismatch");
   const duplicate = [{ id: "org.a", definition: DEF }, { id: "org.a", definition: A }];
   expectError(() => commonCapabilities(duplicate, []), "capability-order-or-duplicate");
@@ -173,7 +175,7 @@ test("all absent enhanced prerequisites fail rather than selecting ordinary chat
 
 test("prebinding application disposition survives replay and a modeled restart without execution", () => {
   const record = { channel: CHANNEL, nativeRecordId: DEF, payload: Buffer.from("sensitive"),
-    deadline: 600, nativeAuthenticated: true, authorityAdmitted: true };
+    nativeAuthenticated: true, authorityAdmitted: true };
   const first = holdBeforeBinding(emptyBindingInbox(), record, 0);
   assert.equal(first.status, "binding-pending");
   const recovered = { ...first.state, entries: new Map([...first.state.entries].map(([k, v]) =>
@@ -182,24 +184,26 @@ test("prebinding application disposition survives replay and a modeled restart w
   assert.equal(replay.state.reserved, 9); assert.equal(replay.state.entries.size, 1);
   assert.equal(resolveBindingInbox(replay.state, CHANNEL, false, 110).candidates.length, 0);
   const ready = resolveBindingInbox(replay.state, CHANNEL, true, 120);
-  assert.equal(ready.candidates.length, 1); assert.equal(ready.state.reserved, 0);
+  assert.equal(ready.candidates.length, 1); assert.equal(ready.state.reserved, 9);
+  expectError(() => commitBindingInbox(ready.state, CHANNEL, [DEF], false), "inbox-handoff-not-committed");
+  assert.equal(commitBindingInbox(ready.state, CHANNEL, [DEF], true).reserved, 0);
   assert.equal(ready.candidates[0].payload.toString(), "sensitive");
-  expectError(() => holdBeforeBinding(recovered, { ...record, deadline: 700 }, 100), "native-inbox-conflict");
+  expectError(() => holdBeforeBinding(recovered, { ...record, payload: Buffer.from("changed") }, 100), "native-inbox-conflict");
   const expired = resolveBindingInbox(replay.state, CHANNEL, true, 600);
-  assert.deepEqual(expired.failures, [DEF]); assert.equal(expired.candidates.length, 0);
+  assert.deepEqual(expired.failures, []); assert.equal(expired.candidates.length, 1);
 });
 
 test("prebinding inbox enforces channel limits and native authentication", () => {
   let state = emptyBindingInbox();
   for (let i = 0; i < 4; i++) state = holdBeforeBinding(state, {
     channel: CHANNEL, nativeRecordId: String(i).repeat(64), payload: Buffer.from([i]),
-    deadline: 600, nativeAuthenticated: true, authorityAdmitted: true
+    nativeAuthenticated: true, authorityAdmitted: true
   }, 0).state;
   const fifth = { channel: CHANNEL, nativeRecordId: DEF, payload: Buffer.from("x"),
-    deadline: 600, nativeAuthenticated: true, authorityAdmitted: true };
-  expectError(() => holdBeforeBinding(state, fifth, 1), "prebinding-channel-limit");
+    nativeAuthenticated: true, authorityAdmitted: true };
+  assert.equal(holdBeforeBinding(state, fifth, 1).status, "backpressure");
   expectError(() => holdBeforeBinding(state, { ...fifth, nativeAuthenticated: false }, 1), "native-admission-required");
-  expectError(() => holdBeforeBinding(state, fifth, 600), "pairing-expired");
+  assert.equal(holdBeforeBinding(state, fifth, 31_536_000).status, "backpressure");
 });
 
 test("independent artifact closes sources and separates semantic identity from evidence/status", async () => {
@@ -215,5 +219,6 @@ test("independent artifact closes sources and separates semantic identity from e
   copy["spec/interop/v1/protocol.md"] += "\nDifferent semantics.\n";
   assert.notEqual(artifact.bindingId, semanticBindingId(copy));
   const native = await read("spec/v1/manifest.json");
-  assert.equal(native.protocolLineId, "c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08");
+  assert.equal(native.protocolLineId, manifest.paths["licoarc-enhanced"].nativeProtocolLineId);
+  assert.equal(manifest.routing.requiresNostrForCore, false);
 });

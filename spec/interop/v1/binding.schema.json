@@ -9,7 +9,7 @@
     "initiator",
     "responder",
     "session",
-    "capabilities"
+    "conversation"
   ],
   "properties": {
     "binding": {
@@ -32,30 +32,9 @@
       "type": "string",
       "pattern": "^[0-9a-f]{64}$"
     },
-    "capabilities": {
-      "type": "array",
-      "maxItems": 64,
-      "uniqueItems": true,
-      "items": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": [
-          "id",
-          "definition"
-        ],
-        "properties": {
-          "id": {
-            "type": "string",
-            "pattern": "^[a-z][a-z0-9.-]{0,126}[a-z0-9]$",
-            "minLength": 2,
-            "maxLength": 128
-          },
-          "definition": {
-            "type": "string",
-            "pattern": "^[0-9a-f]{64}$"
-          }
-        }
-      }
+    "conversation": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{32}$"
     }
   }
 }

@@ -169,7 +169,7 @@ this native field inventory, native HTTPS service or federation membership.
 | `station-descriptor.signatures` | `StationDescriptor` | `signatures` | `Signature[1..4]` | M | Discovery participants | Strictly deterministic-CBOR-ordered unique signatures with purpose `station-descriptor`, covering domain-separated deterministic CBOR of the complete descriptor excluding this field; genesis resolves a current key and every successor has a predecessor-authorized signature. | Authenticates the complete Station descriptor so listeners, keys, validity, and certification references cannot be altered independently. | [signatures](../docs/field-decisions/fields/descriptor-signatures.md) |
 | `listener.transport-profile-id` | `Listener` | `transportProfileId` | `DIGEST256` | M | Endpoint and Station | Selects one exact outer parser and Transport Profile; it is not endpoint identity or protection authority. | Selects one exact Station-facing carrier contract without allowing transport choice to redefine Endpoint identity, protection, or receipt semantics. | [transportProfileId](../docs/field-decisions/fields/transport-profile-id.md) |
 | `listener.endpoint-uri` | `Listener` | `endpointUri` | canonical ASCII HTTPS URI, 10..128 octets | M | Discovery participants | Lowercase scheme and DNS host or canonical IP literal; no user information, query, fragment, port, or dot segment. It supplies a location only and cannot change `stationId`. | Locates a Station listener without allowing hosting or address changes to redefine Station or Endpoint identity. | [endpointUri](../docs/field-decisions/fields/endpoint-uri.md) |
-| `transport.operation-id` | `AFFILIATE`, `RESERVE`, `SUBMIT`, `CLAIM`, `SETTLE` | `operationId` | `ID128` | M | Calling Endpoint and Station | Scoped to Station, authenticated caller, operation, and fixed idempotency window. Same ID plus different canonical request is `conflict`. | Makes bounded Station operations idempotent so retry after ambiguity does not create conflicting reservations, submissions, claims, or settlements. | [operationId](../docs/field-decisions/fields/station-operation-id.md) |
+| `transport.operation-id` | `AFFILIATE`, `RESERVE`, `SUBMIT`, `CLAIM`, `SETTLE` | `operationId` | `ID128` | M | Calling Endpoint and Station | Scoped to Station, authenticated caller, operation, and durable operation identity scope. Same ID plus different canonical request is `conflict`. | Makes bounded Station operations idempotent so retry after ambiguity does not create conflicting reservations, submissions, claims, or settlements. | [operationId](../docs/field-decisions/fields/station-operation-id.md) |
 | `reserve.handle-class` | `RESERVE` | `handleClass` | `async \| firstContact` | M | Calling Endpoint and Station | Selects the fixed handle lifecycle; `firstContact` permits one accepted submission. | Selects the exact bounded lifecycle of a Delivery Handle so asynchronous delivery and single-use first contact cannot be confused. | [handleClass](../docs/field-decisions/fields/handle-class.md) |
 | `transport.delivery-handle` | `RESERVE` result, `SUBMIT`, `CLAIM` | `deliveryHandle` | `TOKEN256` | M | Calling Endpoint and Station | Short-lived, opaque, Station-scoped, non-enumerable routing capability; one Protocol-Line-pinned URI-safe text encoding is used only in a URI representation. | Provides a short-lived opaque routing capability that keeps Endpoint identity and message meaning separate from Station addressing. | [deliveryHandle](../docs/field-decisions/fields/delivery-handle.md) |
 | `transport.protected-packet` | `SUBMIT` body, claimed item | `protectedPacket` | `bstr[1..MAX_PACKET_BYTES]` | M | Endpoint; opaque bytes visible to Station | Carried as the raw binary body or bounded claimed-item bytes without a text-object wrapper, binary-to-text armoring, or a duplicate length field. | Carries the sole bounded Endpoint-protected packet through a Station without text conversion, plaintext interpretation, or duplicate content authority. | [protectedPacket](../docs/field-decisions/fields/protected-packet.md) |
@@ -356,16 +356,12 @@ extension, private header, or compatibility path.
   session-authenticated derivative traffic; attachment finality requires all
   authenticated chunks, exact offsets and lengths, the declared content
   digest, and the eligible protected Endpoint confirmation.
-- The sender preserves immutable source bytes and original chunk Messages
-  until confirmed verified completion, cancellation, terminal failure, or the
-  fixed `ATTACHMENT_RECOVERY_WINDOW`. The receiver preserves durably accepted
-  chunks and confirmation state to the same payload-release boundary. Both
-  peers retain
-  the terminal result, immutable tuple bindings, and deduplication tombstones
-  through the end of that window even after payload bytes may be released.
-  Retry, Route change, Station change, and replay never reset or extend the
-  window. Completion, cancellation, and terminal failure are absorbing;
-  delayed or replayed recovery state cannot recreate transfer authority.
+- The sender preserves immutable source bytes and the stable attachment identity until
+  verified completion or explicitly authorized deletion/custody transfer. The receiver
+  durably preserves accepted chunks. Neither has a protocol recovery TTL. Pausing a
+  processing turn or releasing its hot state cannot delete the sole recoverable copy.
+  Deduplication facts remain until safe authenticated compaction; an old retry cannot
+  reopen execution. Late authenticated content and result evidence may still be recorded.
 - Idle relationships are silent at the LicoArc layer. Every control record,
   retry, recovery round, retransmitted Payload octet, intrinsic protection
   expansion, and Transport Profile byte is charged to its exact immutable
@@ -378,8 +374,22 @@ extension, private header, or compatibility path.
   selection, retry scheduling, quotas, durable
   storage layout, and final local effects remain Endpoint- or
   implementation-local state rather than fields. A conforming Endpoint must
-  nevertheless preserve the protocol state it has confirmed until the exact
-  terminal or retention transition permits deletion.
+  nevertheless preserve the protocol state it has confirmed until verified custody transfer or
+  explicit authorized deletion permits payload release; unresolved identities remain guarded.
 - A current mutable Candidate may define only a subset of this registry.
   `docs/STATUS.md` reports that definition fact; Candidate bytes never narrow,
   extend, or override this registry.
+
+## Durable continuity and live capability fields
+
+[Field decision](../docs/field-decisions/fields/continuity-and-capability-records.md)
+owns the necessity review. Exact closed fields live in
+`spec/v1/messaging/capability.schema.json` and `capability-page.schema.json`.
+`spec/v1/reliable/continuity.md` owns lifetime and fact semantics. A transport
+channel/session id never replaces the persistent `conversation` reference.
+Capability lists are no longer fields of the Nostr identity binding.
+
+Group resolution fields are owned by `spec/v1/group/resolution.schema.json` and the
+continuity field decision. Capability record/page fields are owned by messaging,
+not Nostr. Prekey calendar labels 8 and 9 are removed and reserved; V1 signatures
+now authenticate the revised field projection. Old proofs are not inherited.

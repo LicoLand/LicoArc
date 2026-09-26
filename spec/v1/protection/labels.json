@@ -49,16 +49,6 @@
       "type": "bstr1184"
     },
     {
-      "name": "validFrom",
-      "label": 8,
-      "type": "uint53"
-    },
-    {
-      "name": "validUntil",
-      "label": 9,
-      "type": "uint53"
-    },
-    {
       "name": "ed25519Signature",
       "label": 10,
       "type": "bstr64"

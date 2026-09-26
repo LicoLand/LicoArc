@@ -21,6 +21,7 @@
     "spec/v1/foundation/registry.json",
     "spec/v1/foundation/representation.json",
     "spec/v1/foundation/runtime.cddl",
+    "spec/v1/foundation/targets.json",
     "spec/v1/schemas/foundation-bounds.schema.json",
     "spec/v1/schemas/foundation-identifiers.schema.json",
     "spec/v1/schemas/foundation-labels.schema.json",

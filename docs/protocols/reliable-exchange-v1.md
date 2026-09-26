@@ -20,7 +20,7 @@ The profile deliberately does not promise exactly-once local effects,
 guaranteed Station delivery, trusted time, a retry scheduler, or a storage
 engine. The application receives a bounded idempotency input and owns effect
 idempotency. Reusing an idempotency input for different canonical meaning is a
-terminal conflict.
+conflict without a second execution.
 
 ## Stable intent and retry
 
@@ -33,9 +33,9 @@ the same Protected Intent and produces a new transport packet, but it cannot
 create a second authorization or effect. Send atomically commits the advanced
 snapshot and exact retry packet before emission. Restart restores that
 complete monotonic snapshot before processing new input; a lower generation
-is `state-rollback` and emits no packet or effect. Restart never discovers a
-retired state root and never resets a retry, Route, confirmation, attachment,
-or retained-state bound.
+is `state-rollback` and emits no packet or effect. Restart never discovers a retired state root or rewinds replay/nonce state.
+Retry and other processing budgets may resume in a new bounded turn; accepted
+work has no lifetime expiry.
 
 Each metadata-only event names the expected snapshot generation and is
 validated against the complete immutable current snapshot before one atomic
@@ -47,12 +47,10 @@ hierarchy: outbox states are `created`, `in-flight`, `ambiguous`, `accepted`,
 replay is idempotent. The same identity with a different protected meaning is
 `intent-conflict` and cannot mutate state.
 
-`ambiguous` records preserve the intent for a caller-selected retry. A
-`terminal` result is absorbing until its bounded tombstone retention ends;
-attempts to reopen it are rejected. Retry, reconnect, session renewal, Route
-replacement, Station migration, and replay do not refresh any fixed counter
-or window. Bounds include retry transmissions, Route migrations, transitions,
-pending messages, terminal tombstones, and persisted snapshot bytes.
+`ambiguous` records preserve the intent for a caller-selected retry. Known terminal effects cannot authorize a second execution. Late authenticated
+facts remain admissible; timeouts and cancellation intent are not terminal facts.
+Retry/route/transition limits bound a processing turn, not a logical message.
+Persist unresolved task and replay state beyond the bounded working set.
 
 Accounting is disjoint and exact: a canonical Protected Intent is at most
 262,558 octets; event metadata is at most 4,294 octets; one retained protected
@@ -69,9 +67,11 @@ code, and one sorted unique `confirmedMessageIds` array. The array is bounded
 by `MAX_CONFIRMATION_IDS`; different stages or outcomes require separate
 confirmation identities. A duplicate confirmation is accepted only when its
 canonical bytes match. A different result for one confirmation identity is a
-terminal `confirmation-conflict`.
+`evidence-conflict` for reconciliation, not an arrival-order winner.
 
-The closed confirmation stages are exactly:
+Confirmation identifiers derive from fact content and Endpoint, not a transport
+session. Successful completion may arrive before acceptance; result content can
+be verified later against its recorded digest. The stages are exactly:
 
 1. Endpoint Accepted: the exact protected authorized Endpoint confirmation
    reports that the record was accepted and deduplicated.
@@ -94,7 +94,8 @@ Receive State. A non-empty range request is selective recovery feedback; a
 successful chunk does not generate a routine confirmation. Empty ranges are
 valid only after exact length and whole-content digest verification. Attachment
 completion additionally requires the matching authenticated Endpoint
-confirmation. Completion, cancellation, and failure are absorbing.
+confirmation. Completion and confirmed stop prevent reexecution, not receipt of late facts.
+A local cancel request is not a confirmed stop; missing results remain unknown.
 
 Group delivery keeps one stable projection identity per recipient. Results are
 sorted by recipient Endpoint reference and are independently `pending`,
@@ -113,3 +114,11 @@ recovery, Group partial failure, restart snapshots, typed terminal outcomes,
 and the adversarial corpus. Fixtures contain only synthetic bytes and bounded
 reason classes. No scheduler, storage layout, plaintext runtime data, Station
 queue state, or application command meaning is part of this profile.
+
+## Durable continuity and current admission
+
+The current V1 lifecycle contract is [durable continuity](../../spec/v1/reliable/continuity.md).
+[Live capabilities](../../spec/v1/messaging/capabilities.md) update existing conversations
+without rebind. [Group continuity](../../spec/v1/group/continuity.md) separates history,
+effects and fork recovery. The revised Candidate is PARTIAL pending formal requalification;
+retained earlier proof output is not current evidence.
