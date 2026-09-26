@@ -1,0 +1,18 @@
+{
+  "version": "licoarc.nostr-source-manifest.v1",
+  "sourceRoots": [
+    "conformance/interop/v1",
+    "spec/interop/v1"
+  ],
+  "sources": [
+    "conformance/interop/v1/cases.json",
+    "conformance/interop/v1/manifest.json",
+    "spec/interop/v1/binding.schema.json",
+    "spec/interop/v1/carrier.schema.json",
+    "spec/interop/v1/collaboration.schema.json",
+    "spec/interop/v1/fields.md",
+    "spec/interop/v1/manifest.json",
+    "spec/interop/v1/protocol.md",
+    "spec/interop/v1/source-manifest.json"
+  ]
+}

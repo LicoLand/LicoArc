@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/interop/v1/binding.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "binding",
+    "channel",
+    "initiator",
+    "responder",
+    "session",
+    "capabilities"
+  ],
+  "properties": {
+    "binding": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "channel": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{32}$"
+    },
+    "initiator": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "responder": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "session": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "capabilities": {
+      "type": "array",
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "definition"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9.-]{0,126}[a-z0-9]$",
+            "minLength": 2,
+            "maxLength": 128
+          },
+          "definition": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        }
+      }
+    }
+  }
+}

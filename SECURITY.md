@@ -57,3 +57,13 @@ authorities.
 - Social engineering against maintainers or users.
 - Reports that require real secrets, private payloads, or private runtime
   data to be disclosed publicly.
+
+## Nostr compatibility boundary
+
+Standard NIP-17/44/59 chat and enhanced LicoArc sessions have different
+security properties and explicit per-message selection. No implicit downgrade
+or compatibility copy is permitted. Nostr keys do not become native Endpoint
+keys; capabilities do not authorize execution. Native ideal-model proofs do
+not establish the new Nostr parser, framing or account binding. Definition
+conformance is not real-client interoperability or a composite security audit.
+See [the binding threat boundary](spec/interop/v1/protocol.md#8-security-and-evidence-boundary).

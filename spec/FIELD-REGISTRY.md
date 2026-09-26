@@ -65,6 +65,19 @@ never define a LicoArc field or contribute missing protocol meaning. The
 field-specific detail records keep that evidence separate from each field's
 LicoArc-owned vision contribution.
 
+## Nostr interoperability scope
+
+The initial V1 also defines standard Nostr interoperability and an independent
+outer binding. This registry incorporates [V1 interoperability fields](interop/v1/fields.md)
+as the sole field inventory for that scope. Its schemas and rules are under
+`spec/interop/v1/`; its definition corpus is under `conformance/interop/v1/`.
+These are not native CBOR fields and do not alter the native AKE, ratchet,
+identity or confirmation grammars. Upstream Nostr fields retain their exact
+pinned upstream semantics. Native representation rules below are scoped to
+the native Protocol Line; the outer binding's JSON/Base64 carriage is not a
+native packet rewrite or translation. Standard Nostr chat does not require
+this native field inventory, native HTTPS service or federation membership.
+
 ## Common representation rules
 
 - Signed objects, protected records, and bounded claim collections use the
@@ -75,8 +88,9 @@ LicoArc-owned vision contribution.
   map key and enum value, uses the shortest deterministic CBOR representation,
   and forbids indefinite-length core values.
 - Station submission carries `protectedPacket` as the Transport Profile's raw
-  binary body. It is never wrapped in JSON or
-  Base64 by LicoArc.
+  binary body. The native HTTPS Profile never wraps it in JSON or
+  Base64. The independent Nostr outer binding preserves the original octets
+  through its explicitly defined JSON/Base64 boundary.
 - `ID128` is a 16-octet unpredictable identifier, `DIGEST256` is a 32-octet
   content digest, and `TOKEN256` is a 32-octet unpredictable capability value.
 - `M` means mandatory, `C` means conditionally mandatory, and `O` means

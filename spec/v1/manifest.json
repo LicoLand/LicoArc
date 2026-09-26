@@ -12,7 +12,7 @@
   "protectionProfileCatalog": "spec/protection-profiles.json",
   "fieldRegistry": {
     "path": "spec/FIELD-REGISTRY.md",
-    "sourceDigest": "b12222aa376c1d83d885b2d9c29063c7f5a11d14b719b76b9afa3704fddd131d",
+    "sourceDigest": "95784a44904f46669debdad66a02d0758824c71fba83b757b498c3785d868e4e",
     "authority": "canonical-field-registry"
   },
   "capabilities": [

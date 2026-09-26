@@ -28,6 +28,7 @@ authorities.
 | Canonical field registry | [spec/FIELD-REGISTRY.md](../spec/FIELD-REGISTRY.md) |
 | Specification index | [spec/README.md](../spec/README.md) |
 | Source-integrity checks | [conformance/verification.md](conformance/verification.md) |
+| Nostr baseline and open extensions | [protocols/nostr-interoperability-v1.md](protocols/nostr-interoperability-v1.md) |
 | Initial V1 identity authority | [protocols/identity-v1.md](protocols/identity-v1.md) |
 | Confirmation-driven finality | [protocols/reliable-exchange-v1.md](protocols/reliable-exchange-v1.md) |
 | Repository operations | [RUNBOOK.md](RUNBOOK.md) |
