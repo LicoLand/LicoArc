@@ -4,6 +4,23 @@ Lico Arc Protocol is LicoLand's implementation-neutral Protocol Layer. It is
 the sole authority for the protocol meaning used by the three-entity Core
 Domain Model defined in [`README.md`](README.md#core-domain-model).
 
+## Layered interoperability
+
+Standard Nostr private messaging is the baseline service reach, not an
+alternative weak LicoArc Profile. The common pinned NIP-17/44/59 contract
+remains upstream-owned. LicoArc owns the open enhanced carrier/account binding
+and collaboration dispatch contract defined in
+[spec/interop/v1/protocol.md](spec/interop/v1/protocol.md). Any independent
+client may implement these extensions; no LicoUp identity, official Station
+or Network membership is required for this path.
+
+Local workflow orchestration, model choice, UI and memory are product behavior.
+Only shared cross-Endpoint meaning belongs in an application definition.
+Protection and execution authorization remain separate: a supported
+capability is never consent. A failed enhanced send never becomes ordinary
+chat or a second compatibility copy. Native full-line conformance, Nostr
+baseline interoperability and extension interoperability are distinct claims.
+
 ## Product promise
 
 LicoArc defines immutable, independently implementable Protocol Lines through

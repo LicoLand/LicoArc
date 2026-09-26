@@ -1,0 +1,1032 @@
+{
+  "version": "licoarc.nostr-cases.v1",
+  "cases": [
+    {
+      "id": "classify-text",
+      "operation": "classify",
+      "requirement": "classification",
+      "input": {
+        "rumor": {
+          "pubkey": "1111111111111111111111111111111111111111111111111111111111111111",
+          "kind": 14,
+          "tags": [
+            [
+              "p",
+              "2222222222222222222222222222222222222222222222222222222222222222"
+            ]
+          ],
+          "content": "{\"command\":\"never execute chat\"}"
+        },
+        "context": {
+          "outerAuthenticated": true,
+          "sender": "1111111111111111111111111111111111111111111111111111111111111111",
+          "recipient": "2222222222222222222222222222222222222222222222222222222222222222"
+        }
+      },
+      "expected": "standard-text"
+    },
+    {
+      "id": "classify-extension",
+      "operation": "classify",
+      "requirement": "classification",
+      "input": {
+        "rumor": {
+          "pubkey": "1111111111111111111111111111111111111111111111111111111111111111",
+          "kind": 44900,
+          "tags": [
+            [
+              "t",
+              "licoarc.v1"
+            ],
+            [
+              "p",
+              "2222222222222222222222222222222222222222222222222222222222222222"
+            ]
+          ],
+          "content": "{\"command\":\"never execute chat\"}"
+        },
+        "context": {
+          "outerAuthenticated": true,
+          "sender": "1111111111111111111111111111111111111111111111111111111111111111",
+          "recipient": "2222222222222222222222222222222222222222222222222222222222222222"
+        }
+      },
+      "expected": "enhanced-carrier"
+    },
+    {
+      "id": "classify-unknown-kind",
+      "operation": "classify",
+      "requirement": "classification",
+      "input": {
+        "rumor": {
+          "pubkey": "1111111111111111111111111111111111111111111111111111111111111111",
+          "kind": 30078,
+          "tags": [
+            [
+              "t",
+              "licoarc.v1"
+            ],
+            [
+              "p",
+              "2222222222222222222222222222222222222222222222222222222222222222"
+            ]
+          ],
+          "content": "{\"command\":\"never execute chat\"}"
+        },
+        "context": {
+          "outerAuthenticated": true,
+          "sender": "1111111111111111111111111111111111111111111111111111111111111111",
+          "recipient": "2222222222222222222222222222222222222222222222222222222222222222"
+        }
+      },
+      "expected": "unsupported"
+    },
+    {
+      "id": "classify-wrong-namespace",
+      "operation": "classify",
+      "requirement": "classification",
+      "input": {
+        "rumor": {
+          "pubkey": "1111111111111111111111111111111111111111111111111111111111111111",
+          "kind": 44900,
+          "tags": [
+            [
+              "t",
+              "other.v1"
+            ],
+            [
+              "p",
+              "2222222222222222222222222222222222222222222222222222222222222222"
+            ]
+          ],
+          "content": "{\"command\":\"never execute chat\"}"
+        },
+        "context": {
+          "outerAuthenticated": true,
+          "sender": "1111111111111111111111111111111111111111111111111111111111111111",
+          "recipient": "2222222222222222222222222222222222222222222222222222222222222222"
+        }
+      },
+      "expected": "unsupported"
+    },
+    {
+      "id": "classify-extra-tag",
+      "operation": "classify",
+      "requirement": "classification",
+      "input": {
+        "rumor": {
+          "pubkey": "1111111111111111111111111111111111111111111111111111111111111111",
+          "kind": 44900,
+          "tags": [
+            [
+              "t",
+              "licoarc.v1"
+            ],
+            [
+              "p",
+              "2222222222222222222222222222222222222222222222222222222222222222"
+            ],
+            [
+              "x",
+              "unexpected"
+            ]
+          ],
+          "content": "{\"command\":\"never execute chat\"}"
+        },
+        "context": {
+          "outerAuthenticated": true,
+          "sender": "1111111111111111111111111111111111111111111111111111111111111111",
+          "recipient": "2222222222222222222222222222222222222222222222222222222222222222"
+        }
+      },
+      "expected": "unsupported"
+    },
+    {
+      "id": "classify-author-substitution",
+      "operation": "classify",
+      "requirement": "classification",
+      "input": {
+        "rumor": {
+          "pubkey": "4444444444444444444444444444444444444444444444444444444444444444",
+          "kind": 44900,
+          "tags": [
+            [
+              "t",
+              "licoarc.v1"
+            ],
+            [
+              "p",
+              "2222222222222222222222222222222222222222222222222222222222222222"
+            ]
+          ],
+          "content": "{\"command\":\"never execute chat\"}"
+        },
+        "context": {
+          "outerAuthenticated": true,
+          "sender": "1111111111111111111111111111111111111111111111111111111111111111",
+          "recipient": "2222222222222222222222222222222222222222222222222222222222222222"
+        }
+      },
+      "expected": "seal-rumor-author-mismatch"
+    },
+    {
+      "id": "classify-recipient-substitution",
+      "operation": "classify",
+      "requirement": "classification",
+      "input": {
+        "rumor": {
+          "pubkey": "1111111111111111111111111111111111111111111111111111111111111111",
+          "kind": 44900,
+          "tags": [
+            [
+              "t",
+              "licoarc.v1"
+            ],
+            [
+              "p",
+              "4444444444444444444444444444444444444444444444444444444444444444"
+            ]
+          ],
+          "content": "{\"command\":\"never execute chat\"}"
+        },
+        "context": {
+          "outerAuthenticated": true,
+          "sender": "1111111111111111111111111111111111111111111111111111111111111111",
+          "recipient": "2222222222222222222222222222222222222222222222222222222222222222"
+        }
+      },
+      "expected": "recipient-mismatch"
+    },
+    {
+      "id": "classify-unverified-outer",
+      "operation": "classify",
+      "requirement": "classification",
+      "input": {
+        "rumor": {
+          "pubkey": "1111111111111111111111111111111111111111111111111111111111111111",
+          "kind": 44900,
+          "tags": [
+            [
+              "t",
+              "licoarc.v1"
+            ],
+            [
+              "p",
+              "2222222222222222222222222222222222222222222222222222222222222222"
+            ]
+          ],
+          "content": "{\"command\":\"never execute chat\"}"
+        },
+        "context": {
+          "outerAuthenticated": false,
+          "sender": "1111111111111111111111111111111111111111111111111111111111111111",
+          "recipient": "2222222222222222222222222222222222222222222222222222222222222222"
+        }
+      },
+      "expected": "outer-authentication-required"
+    },
+    {
+      "id": "route-plain",
+      "operation": "route",
+      "requirement": "explicit-path",
+      "input": {
+        "requirement": "standard-chat",
+        "readiness": {
+          "sendApproved": true,
+          "inboxAvailable": true,
+          "enhancedSession": false,
+          "bindingReady": false,
+          "common": [
+            {
+              "id": "org.example.review",
+              "definition": "4444444444444444444444444444444444444444444444444444444444444444"
+            }
+          ]
+        },
+        "capability": null
+      },
+      "expected": "nostr-dm"
+    },
+    {
+      "id": "route-enhanced",
+      "operation": "route",
+      "requirement": "explicit-path",
+      "input": {
+        "requirement": "enhanced-message",
+        "readiness": {
+          "sendApproved": true,
+          "inboxAvailable": true,
+          "enhancedSession": true,
+          "bindingReady": true,
+          "common": [
+            {
+              "id": "org.example.review",
+              "definition": "4444444444444444444444444444444444444444444444444444444444444444"
+            }
+          ]
+        },
+        "capability": null
+      },
+      "expected": "licoarc-enhanced"
+    },
+    {
+      "id": "route-collaboration",
+      "operation": "route",
+      "requirement": "explicit-path",
+      "input": {
+        "requirement": "enhanced-collaboration",
+        "readiness": {
+          "sendApproved": true,
+          "inboxAvailable": true,
+          "enhancedSession": true,
+          "bindingReady": true,
+          "common": [
+            {
+              "id": "org.example.review",
+              "definition": "4444444444444444444444444444444444444444444444444444444444444444"
+            }
+          ]
+        },
+        "capability": {
+          "id": "org.example.review",
+          "definition": "4444444444444444444444444444444444444444444444444444444444444444"
+        }
+      },
+      "expected": "licoarc-enhanced"
+    },
+    {
+      "id": "route-no-inbox",
+      "operation": "route",
+      "requirement": "explicit-path",
+      "input": {
+        "requirement": "standard-chat",
+        "readiness": {
+          "sendApproved": true,
+          "inboxAvailable": false,
+          "enhancedSession": true,
+          "bindingReady": true,
+          "common": [
+            {
+              "id": "org.example.review",
+              "definition": "4444444444444444444444444444444444444444444444444444444444444444"
+            }
+          ]
+        },
+        "capability": null
+      },
+      "expected": "recipient-inbox-unavailable"
+    },
+    {
+      "id": "route-no-session",
+      "operation": "route",
+      "requirement": "explicit-path",
+      "input": {
+        "requirement": "enhanced-message",
+        "readiness": {
+          "sendApproved": true,
+          "inboxAvailable": true,
+          "enhancedSession": false,
+          "bindingReady": true,
+          "common": [
+            {
+              "id": "org.example.review",
+              "definition": "4444444444444444444444444444444444444444444444444444444444444444"
+            }
+          ]
+        },
+        "capability": null
+      },
+      "expected": "enhanced-unavailable"
+    },
+    {
+      "id": "route-no-binding",
+      "operation": "route",
+      "requirement": "explicit-path",
+      "input": {
+        "requirement": "enhanced-message",
+        "readiness": {
+          "sendApproved": true,
+          "inboxAvailable": true,
+          "enhancedSession": true,
+          "bindingReady": false,
+          "common": [
+            {
+              "id": "org.example.review",
+              "definition": "4444444444444444444444444444444444444444444444444444444444444444"
+            }
+          ]
+        },
+        "capability": null
+      },
+      "expected": "binding-required"
+    },
+    {
+      "id": "route-no-capability",
+      "operation": "route",
+      "requirement": "explicit-path",
+      "input": {
+        "requirement": "enhanced-collaboration",
+        "readiness": {
+          "sendApproved": true,
+          "inboxAvailable": true,
+          "enhancedSession": true,
+          "bindingReady": true,
+          "common": []
+        },
+        "capability": {
+          "id": "org.example.review",
+          "definition": "4444444444444444444444444444444444444444444444444444444444444444"
+        }
+      },
+      "expected": "capability-unavailable"
+    },
+    {
+      "id": "route-definition-mismatch",
+      "operation": "route",
+      "requirement": "explicit-path",
+      "input": {
+        "requirement": "enhanced-collaboration",
+        "readiness": {
+          "sendApproved": true,
+          "inboxAvailable": true,
+          "enhancedSession": true,
+          "bindingReady": true,
+          "common": [
+            {
+              "id": "org.example.review",
+              "definition": "4444444444444444444444444444444444444444444444444444444444444444"
+            }
+          ]
+        },
+        "capability": {
+          "id": "org.example.review",
+          "definition": "5555555555555555555555555555555555555555555555555555555555555555"
+        }
+      },
+      "expected": "capability-unavailable"
+    },
+    {
+      "id": "route-no-send-consent",
+      "operation": "route",
+      "requirement": "explicit-path",
+      "input": {
+        "requirement": "standard-chat",
+        "readiness": {
+          "sendApproved": false,
+          "inboxAvailable": true,
+          "enhancedSession": true,
+          "bindingReady": true,
+          "common": [
+            {
+              "id": "org.example.review",
+              "definition": "4444444444444444444444444444444444444444444444444444444444444444"
+            }
+          ]
+        },
+        "capability": null
+      },
+      "expected": "send-approval-required"
+    },
+    {
+      "id": "route-unknown",
+      "operation": "route",
+      "requirement": "explicit-path",
+      "input": {
+        "requirement": "auto",
+        "readiness": {
+          "sendApproved": true,
+          "inboxAvailable": true,
+          "enhancedSession": true,
+          "bindingReady": true,
+          "common": [
+            {
+              "id": "org.example.review",
+              "definition": "4444444444444444444444444444444444444444444444444444444444444444"
+            }
+          ]
+        },
+        "capability": null
+      },
+      "expected": "unknown-requirement"
+    },
+    {
+      "id": "route-relay-receipt",
+      "operation": "route",
+      "requirement": "explicit-path",
+      "input": {
+        "requirement": "enhanced-message",
+        "readiness": {
+          "sendApproved": true,
+          "inboxAvailable": true,
+          "enhancedSession": false,
+          "bindingReady": true,
+          "common": [
+            {
+              "id": "org.example.review",
+              "definition": "4444444444444444444444444444444444444444444444444444444444444444"
+            }
+          ],
+          "relayOK": true
+        },
+        "capability": null
+      },
+      "expected": "enhanced-unavailable"
+    },
+    {
+      "id": "binding-match",
+      "operation": "binding",
+      "requirement": "account-binding",
+      "input": {
+        "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"capabilities\":[{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"}],\"channel\":\"33333333333333333333333333333333\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
+        "expectedContext": {
+          "binding": "4444444444444444444444444444444444444444444444444444444444444444",
+          "channel": "33333333333333333333333333333333",
+          "initiator": "1111111111111111111111111111111111111111111111111111111111111111",
+          "responder": "2222222222222222222222222222222222222222222222222222222222222222",
+          "session": "6666666666666666666666666666666666666666666666666666666666666666",
+          "outerAuthenticated": true,
+          "sender": "1111111111111111111111111111111111111111111111111111111111111111",
+          "recipient": "2222222222222222222222222222222222222222222222222222222222222222",
+          "role": "initiator",
+          "nativeAuthenticated": true,
+          "authorityAdmitted": true,
+          "peerApproved": true,
+          "deviceRevoked": false
+        }
+      },
+      "expected": "valid"
+    },
+    {
+      "id": "binding-wrong-binding",
+      "operation": "binding",
+      "requirement": "account-binding",
+      "input": {
+        "text": "{\"binding\":\"9999999999999999999999999999999999999999999999999999999999999999\",\"capabilities\":[{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"}],\"channel\":\"33333333333333333333333333333333\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
+        "expectedContext": {
+          "binding": "4444444444444444444444444444444444444444444444444444444444444444",
+          "channel": "33333333333333333333333333333333",
+          "initiator": "1111111111111111111111111111111111111111111111111111111111111111",
+          "responder": "2222222222222222222222222222222222222222222222222222222222222222",
+          "session": "6666666666666666666666666666666666666666666666666666666666666666",
+          "outerAuthenticated": true,
+          "sender": "1111111111111111111111111111111111111111111111111111111111111111",
+          "recipient": "2222222222222222222222222222222222222222222222222222222222222222",
+          "role": "initiator",
+          "nativeAuthenticated": true,
+          "authorityAdmitted": true,
+          "peerApproved": true,
+          "deviceRevoked": false
+        }
+      },
+      "expected": "binding-binding-mismatch"
+    },
+    {
+      "id": "binding-wrong-channel",
+      "operation": "binding",
+      "requirement": "account-binding",
+      "input": {
+        "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"capabilities\":[{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"}],\"channel\":\"99999999999999999999999999999999\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
+        "expectedContext": {
+          "binding": "4444444444444444444444444444444444444444444444444444444444444444",
+          "channel": "33333333333333333333333333333333",
+          "initiator": "1111111111111111111111111111111111111111111111111111111111111111",
+          "responder": "2222222222222222222222222222222222222222222222222222222222222222",
+          "session": "6666666666666666666666666666666666666666666666666666666666666666",
+          "outerAuthenticated": true,
+          "sender": "1111111111111111111111111111111111111111111111111111111111111111",
+          "recipient": "2222222222222222222222222222222222222222222222222222222222222222",
+          "role": "initiator",
+          "nativeAuthenticated": true,
+          "authorityAdmitted": true,
+          "peerApproved": true,
+          "deviceRevoked": false
+        }
+      },
+      "expected": "binding-channel-mismatch"
+    },
+    {
+      "id": "binding-wrong-initiator",
+      "operation": "binding",
+      "requirement": "account-binding",
+      "input": {
+        "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"capabilities\":[{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"}],\"channel\":\"33333333333333333333333333333333\",\"initiator\":\"9999999999999999999999999999999999999999999999999999999999999999\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
+        "expectedContext": {
+          "binding": "4444444444444444444444444444444444444444444444444444444444444444",
+          "channel": "33333333333333333333333333333333",
+          "initiator": "1111111111111111111111111111111111111111111111111111111111111111",
+          "responder": "2222222222222222222222222222222222222222222222222222222222222222",
+          "session": "6666666666666666666666666666666666666666666666666666666666666666",
+          "outerAuthenticated": true,
+          "sender": "1111111111111111111111111111111111111111111111111111111111111111",
+          "recipient": "2222222222222222222222222222222222222222222222222222222222222222",
+          "role": "initiator",
+          "nativeAuthenticated": true,
+          "authorityAdmitted": true,
+          "peerApproved": true,
+          "deviceRevoked": false
+        }
+      },
+      "expected": "binding-initiator-mismatch"
+    },
+    {
+      "id": "binding-wrong-responder",
+      "operation": "binding",
+      "requirement": "account-binding",
+      "input": {
+        "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"capabilities\":[{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"}],\"channel\":\"33333333333333333333333333333333\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"9999999999999999999999999999999999999999999999999999999999999999\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
+        "expectedContext": {
+          "binding": "4444444444444444444444444444444444444444444444444444444444444444",
+          "channel": "33333333333333333333333333333333",
+          "initiator": "1111111111111111111111111111111111111111111111111111111111111111",
+          "responder": "2222222222222222222222222222222222222222222222222222222222222222",
+          "session": "6666666666666666666666666666666666666666666666666666666666666666",
+          "outerAuthenticated": true,
+          "sender": "1111111111111111111111111111111111111111111111111111111111111111",
+          "recipient": "2222222222222222222222222222222222222222222222222222222222222222",
+          "role": "initiator",
+          "nativeAuthenticated": true,
+          "authorityAdmitted": true,
+          "peerApproved": true,
+          "deviceRevoked": false
+        }
+      },
+      "expected": "binding-responder-mismatch"
+    },
+    {
+      "id": "binding-wrong-session",
+      "operation": "binding",
+      "requirement": "account-binding",
+      "input": {
+        "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"capabilities\":[{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"}],\"channel\":\"33333333333333333333333333333333\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"9999999999999999999999999999999999999999999999999999999999999999\"}",
+        "expectedContext": {
+          "binding": "4444444444444444444444444444444444444444444444444444444444444444",
+          "channel": "33333333333333333333333333333333",
+          "initiator": "1111111111111111111111111111111111111111111111111111111111111111",
+          "responder": "2222222222222222222222222222222222222222222222222222222222222222",
+          "session": "6666666666666666666666666666666666666666666666666666666666666666",
+          "outerAuthenticated": true,
+          "sender": "1111111111111111111111111111111111111111111111111111111111111111",
+          "recipient": "2222222222222222222222222222222222222222222222222222222222222222",
+          "role": "initiator",
+          "nativeAuthenticated": true,
+          "authorityAdmitted": true,
+          "peerApproved": true,
+          "deviceRevoked": false
+        }
+      },
+      "expected": "binding-session-mismatch"
+    },
+    {
+      "id": "binding-no-native",
+      "operation": "binding",
+      "requirement": "account-binding",
+      "input": {
+        "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"capabilities\":[{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"}],\"channel\":\"33333333333333333333333333333333\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
+        "expectedContext": {
+          "binding": "4444444444444444444444444444444444444444444444444444444444444444",
+          "channel": "33333333333333333333333333333333",
+          "initiator": "1111111111111111111111111111111111111111111111111111111111111111",
+          "responder": "2222222222222222222222222222222222222222222222222222222222222222",
+          "session": "6666666666666666666666666666666666666666666666666666666666666666",
+          "outerAuthenticated": true,
+          "sender": "1111111111111111111111111111111111111111111111111111111111111111",
+          "recipient": "2222222222222222222222222222222222222222222222222222222222222222",
+          "role": "initiator",
+          "nativeAuthenticated": false,
+          "authorityAdmitted": true,
+          "peerApproved": true,
+          "deviceRevoked": false
+        }
+      },
+      "expected": "native-admission-required"
+    },
+    {
+      "id": "binding-no-authority",
+      "operation": "binding",
+      "requirement": "account-binding",
+      "input": {
+        "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"capabilities\":[{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"}],\"channel\":\"33333333333333333333333333333333\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
+        "expectedContext": {
+          "binding": "4444444444444444444444444444444444444444444444444444444444444444",
+          "channel": "33333333333333333333333333333333",
+          "initiator": "1111111111111111111111111111111111111111111111111111111111111111",
+          "responder": "2222222222222222222222222222222222222222222222222222222222222222",
+          "session": "6666666666666666666666666666666666666666666666666666666666666666",
+          "outerAuthenticated": true,
+          "sender": "1111111111111111111111111111111111111111111111111111111111111111",
+          "recipient": "2222222222222222222222222222222222222222222222222222222222222222",
+          "role": "initiator",
+          "nativeAuthenticated": true,
+          "authorityAdmitted": false,
+          "peerApproved": true,
+          "deviceRevoked": false
+        }
+      },
+      "expected": "native-admission-required"
+    },
+    {
+      "id": "binding-no-trust",
+      "operation": "binding",
+      "requirement": "account-binding",
+      "input": {
+        "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"capabilities\":[{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"}],\"channel\":\"33333333333333333333333333333333\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
+        "expectedContext": {
+          "binding": "4444444444444444444444444444444444444444444444444444444444444444",
+          "channel": "33333333333333333333333333333333",
+          "initiator": "1111111111111111111111111111111111111111111111111111111111111111",
+          "responder": "2222222222222222222222222222222222222222222222222222222222222222",
+          "session": "6666666666666666666666666666666666666666666666666666666666666666",
+          "outerAuthenticated": true,
+          "sender": "1111111111111111111111111111111111111111111111111111111111111111",
+          "recipient": "2222222222222222222222222222222222222222222222222222222222222222",
+          "role": "initiator",
+          "nativeAuthenticated": true,
+          "authorityAdmitted": true,
+          "peerApproved": false,
+          "deviceRevoked": false
+        }
+      },
+      "expected": "peer-authorization-required"
+    },
+    {
+      "id": "binding-revoked",
+      "operation": "binding",
+      "requirement": "account-binding",
+      "input": {
+        "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"capabilities\":[{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"}],\"channel\":\"33333333333333333333333333333333\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
+        "expectedContext": {
+          "binding": "4444444444444444444444444444444444444444444444444444444444444444",
+          "channel": "33333333333333333333333333333333",
+          "initiator": "1111111111111111111111111111111111111111111111111111111111111111",
+          "responder": "2222222222222222222222222222222222222222222222222222222222222222",
+          "session": "6666666666666666666666666666666666666666666666666666666666666666",
+          "outerAuthenticated": true,
+          "sender": "1111111111111111111111111111111111111111111111111111111111111111",
+          "recipient": "2222222222222222222222222222222222222222222222222222222222222222",
+          "role": "initiator",
+          "nativeAuthenticated": true,
+          "authorityAdmitted": true,
+          "peerApproved": true,
+          "deviceRevoked": true
+        }
+      },
+      "expected": "peer-authorization-required"
+    },
+    {
+      "id": "binding-role-mismatch",
+      "operation": "binding",
+      "requirement": "account-binding",
+      "input": {
+        "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"capabilities\":[{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"}],\"channel\":\"33333333333333333333333333333333\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
+        "expectedContext": {
+          "binding": "4444444444444444444444444444444444444444444444444444444444444444",
+          "channel": "33333333333333333333333333333333",
+          "initiator": "1111111111111111111111111111111111111111111111111111111111111111",
+          "responder": "2222222222222222222222222222222222222222222222222222222222222222",
+          "session": "6666666666666666666666666666666666666666666666666666666666666666",
+          "outerAuthenticated": true,
+          "sender": "1111111111111111111111111111111111111111111111111111111111111111",
+          "recipient": "2222222222222222222222222222222222222222222222222222222222222222",
+          "role": "responder",
+          "nativeAuthenticated": true,
+          "authorityAdmitted": true,
+          "peerApproved": true,
+          "deviceRevoked": false
+        }
+      },
+      "expected": "binding-account-role-mismatch"
+    },
+    {
+      "id": "binding-duplicate-cap-id",
+      "operation": "binding",
+      "requirement": "capabilities",
+      "input": {
+        "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"capabilities\":[{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"},{\"definition\":\"5555555555555555555555555555555555555555555555555555555555555555\",\"id\":\"org.example.review\"}],\"channel\":\"33333333333333333333333333333333\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
+        "expectedContext": {
+          "binding": "4444444444444444444444444444444444444444444444444444444444444444",
+          "channel": "33333333333333333333333333333333",
+          "initiator": "1111111111111111111111111111111111111111111111111111111111111111",
+          "responder": "2222222222222222222222222222222222222222222222222222222222222222",
+          "session": "6666666666666666666666666666666666666666666666666666666666666666",
+          "outerAuthenticated": true,
+          "sender": "1111111111111111111111111111111111111111111111111111111111111111",
+          "recipient": "2222222222222222222222222222222222222222222222222222222222222222",
+          "role": "initiator",
+          "nativeAuthenticated": true,
+          "authorityAdmitted": true,
+          "peerApproved": true,
+          "deviceRevoked": false
+        }
+      },
+      "expected": "capability-order-or-duplicate"
+    },
+    {
+      "id": "envelope-valid",
+      "operation": "envelope",
+      "requirement": "framing",
+      "input": {
+        "text": "{\"channel\":\"33333333333333333333333333333333\",\"data\":\"YQ==\",\"digest\":\"ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb\",\"index\":0,\"length\":1,\"type\":\"protected-record\"}"
+      },
+      "expected": "valid"
+    },
+    {
+      "id": "envelope-noncanonical",
+      "operation": "envelope",
+      "requirement": "framing",
+      "input": {
+        "text": "{\n  \"channel\": \"33333333333333333333333333333333\",\n  \"type\": \"protected-record\",\n  \"digest\": \"ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb\",\n  \"length\": 1,\n  \"index\": 0,\n  \"data\": \"YQ==\"\n}"
+      },
+      "expected": "noncanonical-json"
+    },
+    {
+      "id": "envelope-pad-bits",
+      "operation": "envelope",
+      "requirement": "framing",
+      "input": {
+        "text": "{\"channel\":\"33333333333333333333333333333333\",\"data\":\"YR==\",\"digest\":\"ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb\",\"index\":0,\"length\":1,\"type\":\"protected-record\"}"
+      },
+      "expected": "noncanonical-base64"
+    },
+    {
+      "id": "envelope-bad-index",
+      "operation": "envelope",
+      "requirement": "framing",
+      "input": {
+        "text": "{\"channel\":\"33333333333333333333333333333333\",\"data\":\"YQ==\",\"digest\":\"ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb\",\"index\":1,\"length\":1,\"type\":\"protected-record\"}"
+      },
+      "expected": "fragment-index"
+    },
+    {
+      "id": "envelope-geometry",
+      "operation": "envelope",
+      "requirement": "framing",
+      "input": {
+        "text": "{\"channel\":\"33333333333333333333333333333333\",\"data\":\"YQ==\",\"digest\":\"ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb\",\"index\":0,\"length\":2,\"type\":\"protected-record\"}"
+      },
+      "expected": "fragment-geometry"
+    },
+    {
+      "id": "capabilities-exact",
+      "operation": "intersection",
+      "requirement": "capabilities",
+      "input": {
+        "left": [
+          {
+            "id": "org.example.review",
+            "definition": "4444444444444444444444444444444444444444444444444444444444444444"
+          }
+        ],
+        "right": [
+          {
+            "id": "org.example.review",
+            "definition": "4444444444444444444444444444444444444444444444444444444444444444"
+          }
+        ]
+      },
+      "expected": [
+        {
+          "id": "org.example.review",
+          "definition": "4444444444444444444444444444444444444444444444444444444444444444"
+        }
+      ]
+    },
+    {
+      "id": "capabilities-not-brand",
+      "operation": "intersection",
+      "requirement": "capabilities",
+      "input": {
+        "left": [
+          {
+            "id": "org.example.review",
+            "definition": "4444444444444444444444444444444444444444444444444444444444444444"
+          }
+        ],
+        "right": [
+          {
+            "id": "org.example.review",
+            "definition": "7777777777777777777777777777777777777777777777777777777777777777"
+          }
+        ]
+      },
+      "expected": []
+    },
+    {
+      "id": "capabilities-empty",
+      "operation": "intersection",
+      "requirement": "capabilities",
+      "input": {
+        "left": [],
+        "right": [
+          {
+            "id": "org.example.review",
+            "definition": "4444444444444444444444444444444444444444444444444444444444444444"
+          }
+        ]
+      },
+      "expected": []
+    },
+    {
+      "id": "collaboration-valid",
+      "operation": "collaboration",
+      "requirement": "execution",
+      "input": {
+        "text": "{\"agreement\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"capability\":{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"},\"payload\":\"aGVsbG8=\"}",
+        "context": {
+          "bindingReady": true,
+          "agreement": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "common": [
+            {
+              "id": "org.example.review",
+              "definition": "4444444444444444444444444444444444444444444444444444444444444444"
+            }
+          ],
+          "executionApproved": true
+        }
+      },
+      "expected": "68656c6c6f"
+    },
+    {
+      "id": "collaboration-no-approval",
+      "operation": "collaboration",
+      "requirement": "execution",
+      "input": {
+        "text": "{\"agreement\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"capability\":{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"},\"payload\":\"aGVsbG8=\"}",
+        "context": {
+          "bindingReady": true,
+          "agreement": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "common": [
+            {
+              "id": "org.example.review",
+              "definition": "4444444444444444444444444444444444444444444444444444444444444444"
+            }
+          ],
+          "executionApproved": false
+        }
+      },
+      "expected": "execution-approval-required"
+    },
+    {
+      "id": "collaboration-no-binding",
+      "operation": "collaboration",
+      "requirement": "execution",
+      "input": {
+        "text": "{\"agreement\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"capability\":{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"},\"payload\":\"aGVsbG8=\"}",
+        "context": {
+          "bindingReady": false,
+          "agreement": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "common": [
+            {
+              "id": "org.example.review",
+              "definition": "4444444444444444444444444444444444444444444444444444444444444444"
+            }
+          ],
+          "executionApproved": true
+        }
+      },
+      "expected": "binding-required"
+    },
+    {
+      "id": "collaboration-wrong-agreement",
+      "operation": "collaboration",
+      "requirement": "execution",
+      "input": {
+        "text": "{\"agreement\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"capability\":{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"},\"payload\":\"aGVsbG8=\"}",
+        "context": {
+          "bindingReady": true,
+          "agreement": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "common": [
+            {
+              "id": "org.example.review",
+              "definition": "4444444444444444444444444444444444444444444444444444444444444444"
+            }
+          ],
+          "executionApproved": true
+        }
+      },
+      "expected": "agreement-mismatch"
+    },
+    {
+      "id": "collaboration-unknown-capability",
+      "operation": "collaboration",
+      "requirement": "execution",
+      "input": {
+        "text": "{\"agreement\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"capability\":{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"},\"payload\":\"aGVsbG8=\"}",
+        "context": {
+          "bindingReady": true,
+          "agreement": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "common": [],
+          "executionApproved": true
+        }
+      },
+      "expected": "capability-unavailable"
+    },
+    {
+      "id": "roundtrip-1",
+      "operation": "roundtrip",
+      "requirement": "reassembly",
+      "input": {
+        "length": 1,
+        "byte": 53,
+        "channel": "33333333333333333333333333333333",
+        "type": "protected-record",
+        "context": {
+          "outerAuthenticated": true,
+          "sender": "1111111111111111111111111111111111111111111111111111111111111111",
+          "recipient": "2222222222222222222222222222222222222222222222222222222222222222"
+        }
+      },
+      "expected": "complete"
+    },
+    {
+      "id": "roundtrip-8192",
+      "operation": "roundtrip",
+      "requirement": "reassembly",
+      "input": {
+        "length": 8192,
+        "byte": 53,
+        "channel": "33333333333333333333333333333333",
+        "type": "protected-record",
+        "context": {
+          "outerAuthenticated": true,
+          "sender": "1111111111111111111111111111111111111111111111111111111111111111",
+          "recipient": "2222222222222222222222222222222222222222222222222222222222222222"
+        }
+      },
+      "expected": "complete"
+    },
+    {
+      "id": "roundtrip-8193",
+      "operation": "roundtrip",
+      "requirement": "reassembly",
+      "input": {
+        "length": 8193,
+        "byte": 53,
+        "channel": "33333333333333333333333333333333",
+        "type": "protected-record",
+        "context": {
+          "outerAuthenticated": true,
+          "sender": "1111111111111111111111111111111111111111111111111111111111111111",
+          "recipient": "2222222222222222222222222222222222222222222222222222222222222222"
+        }
+      },
+      "expected": "complete"
+    },
+    {
+      "id": "roundtrip-524288",
+      "operation": "roundtrip",
+      "requirement": "reassembly",
+      "input": {
+        "length": 524288,
+        "byte": 53,
+        "channel": "33333333333333333333333333333333",
+        "type": "protected-record",
+        "context": {
+          "outerAuthenticated": true,
+          "sender": "1111111111111111111111111111111111111111111111111111111111111111",
+          "recipient": "2222222222222222222222222222222222222222222222222222222222222222"
+        }
+      },
+      "expected": "complete"
+    }
+  ]
+}

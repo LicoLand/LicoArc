@@ -4,6 +4,33 @@ This document projects the implementation-neutral architecture owned by the
 tracked definition graph. Exact wire and lifecycle authority remains in
 `spec/`, `conformance/`, and the generated artifact.
 
+## Nostr and enhancement layering
+
+```text
+Client experience / local agents / local workflow engine
+             |                         |
+     Standard NIP-17 chat       Open collaboration definitions
+             |                 Protected capability/account binding
+             |                 Native V1 Endpoint protection
+             |                         |
+             +------ NIP-59 gift wraps-+
+                           |
+                NIP-01 compatible relays
+```
+
+The [independent V1 binding](spec/interop/v1/protocol.md) owns the exact
+classification and byte-preserving carrier. Nostr event and private-message
+semantics are reused, not reimplemented as incompatible equivalents.
+Native cryptographic composition remains fixed; application capabilities stay
+outside its handshake. An outer-carrier change does not translate native
+protected bytes or authorize a downgrade.
+
+The following authority graph and eight-capability composition describe the
+native enhanced Protocol Line. Native HTTPS and Federation Governance retain
+their scopes; neither is imposed on ordinary Nostr clients or relays. The
+binding has separate source/corpus closure and does not inherit native proof
+claims for its new parser, association or framing behavior.
+
 ## Authority graph
 
 ```text

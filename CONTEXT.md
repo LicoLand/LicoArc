@@ -3,6 +3,11 @@
 This glossary projects the current protocol vocabulary. The Core Domain Model
 in [`README.md`](README.md#core-domain-model) is authoritative.
 
+Nostr interoperability is an outer/client compatibility context, not a fourth
+core entity. Nostr accounts, LicoArc Endpoint keys and user authority remain
+distinct. Ordinary Nostr chat needs no native Station or Network membership;
+see [the V1 binding](spec/interop/v1/protocol.md).
+
 **Protocol Layer**
 The implementation-neutral authority for protocol meaning. It defines bytes,
 identifiers, states, failures, security claims, and governance, but executes no

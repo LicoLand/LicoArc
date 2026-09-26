@@ -4,6 +4,10 @@ Status: Candidate source specification. This document defines carriage only. It
 does not publish a Protocol Line, authorize a Station, implement an HTTP client
 or server, or turn a Station response into an Endpoint confirmation.
 
+The [Nostr interoperability binding](nostr-interoperability-v1.md) is a separate
+outer carrier. The HTTP/TLS/Station rules below do not apply to ordinary Nostr
+relays or make native HTTPS a prerequisite for standard private messaging.
+
 ## Profile identity and authority
 
 The stable Transport contract/wire locator is `licoarc.https-transport.v1`.

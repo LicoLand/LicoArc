@@ -72,3 +72,10 @@ spec/vN/
 Human-readable projections live under `docs/protocols/`; executable examples,
 negative cases, and requirement-evidence mappings live under `conformance/`;
 generated consumer bundles live under `artifacts/`.
+
+## Independent Nostr interoperability binding (V1)
+
+[interop/v1/manifest.json](interop/v1/manifest.json) and
+[interop/v1/protocol.md](interop/v1/protocol.md) define the standard private-message
+baseline and open enhanced path. Its sources and corpus have independent
+closure and artifact identity; they do not alter native cryptographic bytes.

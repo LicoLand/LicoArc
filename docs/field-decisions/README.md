@@ -224,3 +224,12 @@ schema or CDDL, registry entry, positive and negative definition-level corpus
 cases, and artifact source closure.
 
 This workspace never substitutes for those authorities.
+
+## Nostr outer-binding and application composites
+
+These records review their individual component values in the incorporated
+interoperability field table; they add no native cryptographic field.
+
+- [nostr-carrier-envelope.md](fields/nostr-carrier-envelope.md)
+- [nostr-session-binding.md](fields/nostr-session-binding.md)
+- [nostr-collaboration-payload.md](fields/nostr-collaboration-payload.md)

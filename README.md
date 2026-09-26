@@ -12,6 +12,17 @@ proposals, but they cannot redefine it. Publication, implementation,
 interoperability execution, audit, deployment, support, and operation remain
 separate downstream concerns.
 
+LicoArc now separates **standard Nostr interoperability** from **open enhanced
+Endpoint and collaboration contracts**. A client implementing the common
+NIP-17/44/59 baseline can exchange ordinary private messages with other
+supporting Nostr clients without LicoUp, native Station APIs or federation
+membership. Enhanced peers add the independently specified LicoArc binding,
+not a private client allowlist. See [Nostr interoperability](docs/protocols/nostr-interoperability-v1.md).
+
+The native Protocol Line described below remains the complete enhanced
+composition; it is not a prerequisite for ordinary Nostr chat. These are
+protocol definitions, not a claim of an implemented or audited Nostr client.
+
 ## Core Domain Model
 
 This section is the sole authority for LicoArc's three domain entities.

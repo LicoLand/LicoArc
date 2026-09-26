@@ -16,6 +16,13 @@ canonical manifest reports:
 | Active Protection Profile | `stable-core`, `COMPLETE` |
 | Missing definitions or blockers | none |
 
+The independent `licoarc.nostr-interoperability.v1` binding is also a V1
+Candidate with a specified definition under `spec/interop/v1/`. It defines
+standard Nostr chat separately from enhanced Endpoint/collaboration support.
+Its own artifact and corpus do not claim product implementation, upstream
+kind allocation, composite cryptographic proof or real-client interoperability.
+The native status table above does not extend those claims to this new scope.
+
 The eight capabilities are Protocol Foundation, Identity, Pairwise Protection,
 Generic Messaging, Reliable Exchange, HTTPS Transport, Group Collaboration,
 and Federation Governance.

@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased — V1 Nostr interoperability
+
+- Separate standard NIP-17/44/59 private messaging from open LicoArc enhancements.
+- Define byte-preserving Nostr carriage, bounded fragments, native account/session
+  binding, exact application capabilities and no implicit downgrade.
+- Keep native V1 / Generation 1, its cryptographic Profile and package version;
+  give the independent binding its own schemas, corpus and deterministic artifact.
+- Add definition CI; distinguish source checks from implementation and audit claims.
+
 All notable definition-source changes are recorded here. A changelog entry is
 not publication, implementation, interoperability, audit, deployment, support,
 or operation evidence.

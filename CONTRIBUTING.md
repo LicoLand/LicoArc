@@ -60,7 +60,10 @@ reviewable, and privacy-safe standards.
    `conformance/` directory. Update the version manifest when adding or
    removing a canonical source.
 5. Regenerate the bundle with `npm run artifacts:generate`.
-6. Run `npm run verify` and make sure the artifact check and all tests pass.
+6. Run `npm run verify` and make sure both native and interoperability
+   artifact checks and all tests pass. Nostr interoperability sources live in
+   `spec/interop/v1/` and `conformance/interop/v1/`; their independent closure
+   must not be inserted into native cryptographic proof claims.
 7. Update each decision record's definition evidence and the formal
    documentation that owns the changed fact in the same change, and add a
    [CHANGELOG.md](CHANGELOG.md) entry.

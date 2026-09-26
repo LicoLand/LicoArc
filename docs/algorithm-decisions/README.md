@@ -45,3 +45,5 @@ conformance corpus, and Candidate Protocol Line authority.
 | `ALG-user-authority-state` | How does one user-authorized, recoverable Endpoint authority chain evolve without infrastructure authority? | `DECIDED` | `SPECIFIED` | [user-authority-state.md](user-authority-state.md) |
 | `ALG-confirmation-driven-finality` | Which authenticated Endpoint confirmation advances reliable finality without transferable checkpoints? | `DECIDED` | `SPECIFIED` | [confirmation-driven-finality.md](confirmation-driven-finality.md) |
 | `ALG-group-state-evolution` | Which bounded deterministic procedure evolves protected Group membership state? | `DECIDED` | `SPECIFIED` | [group-state-evolution.md](group-state-evolution.md) |
+
+| `ALG-nostr-layered-interoperability` | How can standard Nostr clients interoperate while open enhancements retain native Endpoint authority? | `DECIDED` | `SPECIFIED` | [nostr-layered-interoperability.md](nostr-layered-interoperability.md) |
