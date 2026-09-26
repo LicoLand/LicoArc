@@ -2,9 +2,10 @@
   "$schema": "https://licoarc.com/spec/schemas/conformance-corpus-manifest.schema.json",
   "manifestVersion": "licoarc.conformance-corpus-manifest.v1",
   "corpusId": "licoarc.protection.conformance.v1",
-  "caseCount": 28,
+  "caseCount": 29,
   "operationIds": [
     "licoarc.identity.compute-profile.v1",
+    "licoarc.protection.active-prekey-admission.v1",
     "licoarc.protection.admit-prekey-pair.v1",
     "licoarc.protection.commit-first-packet.v1",
     "licoarc.protection.compute-session-accept.v1",

@@ -5,7 +5,6 @@ const HEX_ID = /^[0-9a-f]{32}$/u;
 const HEX_DIGEST = /^[0-9a-f]{64}$/u;
 const STAGES = new Set(["endpointAccepted", "effectCompleted"]);
 const OUTCOMES = new Set(["succeeded", "rejected", "failed"]);
-const TERMINAL_STATES = new Set(["completed", "rejected", "failed"]);
 const GROUP_AUTHORITIES = new Set(["endpoint-confirmation", "none"]);
 const MAX_CONFIRMATION_IDS = 32;
 const MAX_FAILURE_CODE = 13;
@@ -64,80 +63,87 @@ export function validateEndpointConfirmation(confirmation) {
   return confirmation;
 }
 
+/** Stable facts exclude the session used to authenticate a particular delivery. */
 export function confirmationBinding({ confirmation, senderEndpointRef, sessionId }) {
   validateEndpointConfirmation(confirmation);
   assertHex(senderEndpointRef, HEX_DIGEST, "invalid-sender-endpoint-ref");
-  assertHex(sessionId, HEX_ID, "invalid-session-id");
-  return createHash("sha256")
-    .update("LICOARC-RELIABLE-CONFIRMATION-V1\0", "ascii")
-    .update(canonicalizeRestrictedJson({
-      confirmationId: confirmation.confirmationId,
-      confirmationStage: confirmation.confirmationStage,
-      confirmationOutcome: confirmation.confirmationOutcome,
-      confirmedMessageIds: confirmation.confirmedMessageIds,
-      failureCode: confirmation.failureCode ?? null,
-      resultDigest: confirmation.resultDigest ?? null,
-      senderEndpointRef,
-      sessionId
-    }), "utf8")
-    .digest("hex");
+  if (sessionId !== undefined) assertHex(sessionId, HEX_ID, "invalid-session-id");
+  const { confirmationId: _id, ...meaning } = confirmation;
+  return createHash("sha256").update("LICOARC-RELIABLE-CONFIRMATION-V1\0", "ascii")
+    .update(canonicalizeRestrictedJson({ ...meaning, senderEndpointRef }), "utf8").digest("hex");
+}
+
+/** V1 identifiers are content-derived; an unlimited cache of random receipt ids is unnecessary. */
+export function createEndpointConfirmation(meaning, senderEndpointRef) {
+  const confirmation = { ...meaning, confirmationId: "0".repeat(32) };
+  confirmation.confirmationId = confirmationBinding({ confirmation, senderEndpointRef }).slice(0, 32);
+  return confirmation;
+}
+
+function semanticFact(confirmation, senderEndpointRef, logicalMessageId) {
+  return { logicalMessageId, senderEndpointRef, stage: confirmation.confirmationStage,
+    outcome: confirmation.confirmationOutcome, failureCode: confirmation.failureCode ?? null,
+    resultDigest: confirmation.resultDigest ?? null };
+}
+function factDigest(fact) {
+  return createHash("sha256").update("LICOARC-RELIABLE-FACT-V1\0", "ascii")
+    .update(canonicalizeRestrictedJson(fact), "utf8").digest("hex");
 }
 
 export function applyReliableConfirmation({ state, confirmation, session, expectedResultDigest = undefined }) {
-  assertPlainObject(state, "invalid-state");
-  validateSession(session);
+  assertPlainObject(state, "invalid-state"); validateSession(session);
   validateEndpointConfirmation(confirmation);
   assertHex(state.logicalMessageId, HEX_ID, "invalid-message-id");
-  if (!confirmation.confirmedMessageIds.includes(state.logicalMessageId)) {
+  if (!confirmation.confirmedMessageIds.includes(state.logicalMessageId))
     throw new ReliableConfirmationError("message-not-confirmed");
-  }
-  if (session.expectedSenderEndpointRef !== session.senderEndpointRef) {
+  if (session.expectedSenderEndpointRef !== session.senderEndpointRef)
     throw new ReliableConfirmationError("wrong-sender");
-  }
   if (!session.authenticated) throw new ReliableConfirmationError("confirmation-unauthenticated");
   if (!session.senderAuthorized) throw new ReliableConfirmationError("sender-unauthorized");
-
-  const binding = confirmationBinding({
-    confirmation,
-    senderEndpointRef: session.senderEndpointRef,
-    sessionId: session.sessionId
-  });
-  const prior = state.confirmations?.[confirmation.confirmationId];
-  if (prior !== undefined) {
-    if (prior === binding) return { status: "duplicate", state };
-    throw new ReliableConfirmationError("confirmation-conflict");
+  const binding = confirmationBinding({ confirmation, senderEndpointRef: session.senderEndpointRef });
+  if (confirmation.confirmationId !== binding.slice(0, 32))
+    throw new ReliableConfirmationError("confirmation-id-mismatch");
+  if (expectedResultDigest !== undefined) {
+    assertHex(expectedResultDigest, HEX_DIGEST, "invalid-expected-result-digest");
+    if (confirmation.confirmationStage === "effectCompleted" && confirmation.confirmationOutcome === "succeeded" &&
+        confirmation.resultDigest !== expectedResultDigest) throw new ReliableConfirmationError("wrong-result-digest");
   }
-  if (TERMINAL_STATES.has(state.finalityState)) throw new ReliableConfirmationError("terminal-reopen");
-
-  if (confirmation.confirmationStage === "effectCompleted") {
-    if (state.finalityState !== "accepted") throw new ReliableConfirmationError("premature-effect-confirmation");
-    if (confirmation.confirmationOutcome === "succeeded") {
-      assertHex(expectedResultDigest, HEX_DIGEST, "missing-expected-result-digest");
-      if (confirmation.resultDigest !== expectedResultDigest) throw new ReliableConfirmationError("wrong-result-digest");
-    }
+  const fact = semanticFact(confirmation, session.senderEndpointRef, state.logicalMessageId);
+  const digest = factDigest(fact);
+  const priorFacts = state.facts ?? {};
+  if (Object.hasOwn(priorFacts, digest)) {
+    // Missing result content can be independently verified later without replaying execution.
+    if (expectedResultDigest !== undefined && state.resultVerified !== true &&
+        fact.stage === "effectCompleted" && fact.outcome === "succeeded" &&
+        state.resultDigest === fact.resultDigest && state.evidenceConflict !== true)
+      return { status: "advanced", state: { ...structuredClone(state), resultVerified: true } };
+    return { status: "duplicate", state };
   }
-
-  const nextState = structuredClone(state);
-  nextState.confirmations = { ...(state.confirmations ?? {}), [confirmation.confirmationId]: binding };
-  nextState.transitionCount = (state.transitionCount ?? 0) + 1;
-  nextState.lastConfirmationBinding = binding;
-  nextState.localEffectAudit = [...(state.localEffectAudit ?? []), {
-    confirmationId: confirmation.confirmationId,
-    confirmationStage: confirmation.confirmationStage,
-    confirmationOutcome: confirmation.confirmationOutcome,
-    resultDigest: confirmation.resultDigest ?? null
-  }];
-  if (confirmation.confirmationStage === "endpointAccepted") {
-    nextState.finalityState = confirmation.confirmationOutcome === "succeeded"
-      ? "accepted"
-      : confirmation.confirmationOutcome;
-  } else {
-    nextState.finalityState = confirmation.confirmationOutcome === "succeeded"
-      ? "completed"
-      : confirmation.confirmationOutcome;
-    if (confirmation.resultDigest !== undefined) nextState.resultDigest = confirmation.resultDigest;
-  }
-  return { status: "advanced", state: nextState };
+  // At most two distinct facts per stage are sufficient to prove inconsistency.
+  // Canonical selection makes the retained evidence independent of arrival order.
+  const all = { ...priorFacts, [digest]: fact };
+  const facts = {};
+  for (const stage of STAGES) for (const id of Object.keys(all).filter(k => all[k].stage === stage).sort().slice(0, 2))
+    facts[id] = all[id];
+  const next = structuredClone(state); next.facts = facts;
+  const acceptance = Object.values(facts).filter(f => f.stage === "endpointAccepted");
+  const effects = Object.values(facts).filter(f => f.stage === "effectCompleted");
+  const conflict = acceptance.length > 1 || effects.length > 1 ||
+    (effects.length > 0 && acceptance.some(f => f.outcome !== "succeeded"));
+  // Confirmation ids derive from immutable meaning, so no unbounded per-id guard map is needed.
+  next.confirmations = {};
+  next.transitionCount = Object.keys(facts).length;
+  next.localEffectAudit = Object.keys(facts).sort().map(k => ({ factDigest: k, ...facts[k] }));
+  next.lastConfirmationBinding = binding;
+  next.evidenceConflict = conflict;
+  if (conflict) next.finalityState = "evidence-conflict";
+  else if (effects.length) {
+    next.finalityState = effects[0].outcome === "succeeded" ? "completed" : effects[0].outcome;
+    if (effects[0].resultDigest !== null) next.resultDigest = effects[0].resultDigest;
+    next.resultVerified = expectedResultDigest !== undefined || next.resultVerified === true;
+  } else if (acceptance.length) next.finalityState = acceptance[0].outcome === "succeeded" ? "accepted" : acceptance[0].outcome;
+  // Cancellation intent / transport uncertainty are preserved fields, not evidence to erase.
+  return { status: conflict ? "conflict" : "advanced", state: next };
 }
 
 export function applyAttachmentConfirmation({ state, confirmation, session, expectedResultDigest }) {
@@ -160,7 +166,8 @@ export function applyGroupMemberConfirmation({ result, confirmation, session, ex
       finalityState: result.finalityState ?? "pending",
       confirmations: result.confirmations ?? {},
       transitionCount: result.transitionCount ?? 0,
-      localEffectAudit: result.localEffectAudit ?? []
+      localEffectAudit: result.localEffectAudit ?? [],
+      facts: result.facts ?? {}
     },
     confirmation,
     session,
@@ -174,6 +181,8 @@ export function applyGroupMemberConfirmation({ result, confirmation, session, ex
       confirmations: reduced.state.confirmations,
       transitionCount: reduced.state.transitionCount,
       localEffectAudit: reduced.state.localEffectAudit,
+      facts: reduced.state.facts,
+      evidenceConflict: reduced.state.evidenceConflict,
       ...(reduced.state.resultDigest === undefined ? {} : { resultDigest: reduced.state.resultDigest })
     }
   };
@@ -194,7 +203,7 @@ export function executeReliableConfirmationCase(input) {
   return {
     status: reduced.status,
     finalityState: reduced.state.finalityState,
-    stateMutation: reduced.status === "advanced"
+    stateMutation: reduced.status === "advanced" || reduced.status === "conflict"
   };
 }
 
@@ -204,7 +213,7 @@ export function executeGroupMemberConfirmationCase(input) {
   return {
     status: reduced.status,
     finalityState: reduced.result.finalityState ?? "pending",
-    stateMutation: reduced.status === "advanced"
+    stateMutation: reduced.status === "advanced" || reduced.status === "conflict"
   };
 }
 

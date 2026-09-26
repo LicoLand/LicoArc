@@ -7,6 +7,7 @@ import {
   applyGroupMemberConfirmation,
   applyReliableConfirmation,
   confirmationBinding,
+  createEndpointConfirmation,
   executeGroupMemberConfirmationCase,
   executeReliableConfirmationCase,
   validateClosedSchema,
@@ -29,13 +30,10 @@ const session = Object.freeze({
 });
 
 function confirmation(overrides = {}) {
-  return {
-    confirmationId: id(5),
-    confirmedMessageIds: [messageId],
-    confirmationStage: "endpointAccepted",
-    confirmationOutcome: "succeeded",
-    ...overrides
-  };
+  const raw = { confirmationId: id(5), confirmedMessageIds: [messageId],
+    confirmationStage: "endpointAccepted", confirmationOutcome: "succeeded", ...overrides };
+  try { const { confirmationId, ...meaning } = raw; return createEndpointConfirmation(meaning, senderEndpointRef); }
+  catch { return raw; } // malformed fixtures must reach the validator under test
 }
 
 function state(overrides = {}) {
@@ -85,15 +83,15 @@ test("only an authenticated confirmation from the exact authorized sending sessi
   }
 });
 
-test("binding covers message, sender, session, stage, outcome, failure, and result", () => {
+test("binding covers the fact and sender, while transport-session authentication remains independent", () => {
   const base = confirmationBinding({ confirmation: confirmation(), senderEndpointRef, sessionId });
   const variants = [
     { confirmation: confirmation({ confirmedMessageIds: [id(6)] }), senderEndpointRef, sessionId },
     { confirmation: confirmation(), senderEndpointRef: digest(7), sessionId },
-    { confirmation: confirmation(), senderEndpointRef, sessionId: id(8) },
     { confirmation: confirmation({ confirmationOutcome: "failed", failureCode: 1 }), senderEndpointRef, sessionId }
   ];
   for (const variant of variants) assert.notEqual(confirmationBinding(variant), base);
+  assert.equal(confirmationBinding({ confirmation: confirmation(), senderEndpointRef, sessionId: id(8) }), base);
   const completed = confirmation({ confirmationStage: "effectCompleted", resultDigest });
   assert.notEqual(
     confirmationBinding({ confirmation: completed, senderEndpointRef, sessionId }),
@@ -109,22 +107,22 @@ test("exact replay is idempotent and changed reuse is rejected without mutation"
   assert.deepEqual(replay.state, before);
   assert.throws(() => applyReliableConfirmation({
     state: first.state,
-    confirmation: confirmation({ confirmationOutcome: "failed", failureCode: 1 }),
+    confirmation: { ...confirmation(), confirmationOutcome: "failed", failureCode: 1 },
     session
-  }), throwsCode("confirmation-conflict"));
+  }), throwsCode("confirmation-id-mismatch"));
   assert.deepEqual(first.state, before);
 });
 
-test("effect completion requires prior acceptance and the exact result digest", () => {
+test("effect completion survives missing prior acceptance and verifies available result content", () => {
   const effect = confirmation({
     confirmationId: id(6),
     confirmationStage: "effectCompleted",
     resultDigest
   });
-  assert.throws(
-    () => applyReliableConfirmation({ state: state(), confirmation: effect, session, expectedResultDigest: resultDigest }),
-    throwsCode("premature-effect-confirmation")
-  );
+  const early = applyReliableConfirmation({ state: state(), confirmation: effect, session });
+  assert.equal(early.state.finalityState, "completed");
+  assert.equal(early.state.resultVerified, false);
+  assert.equal(applyReliableConfirmation({ state: early.state, confirmation: confirmation(), session }).state.finalityState, "completed");
   const accepted = applyReliableConfirmation({ state: state(), confirmation: confirmation(), session }).state;
   assert.throws(
     () => applyReliableConfirmation({ state: accepted, confirmation: effect, session, expectedResultDigest: digest(9) }),

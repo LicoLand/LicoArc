@@ -19,7 +19,9 @@
     "resultSchema": "spec/v1/group/result.schema.json",
     "fieldRegistry": "spec/v1/group/field-registry.json",
     "sourceManifest": "spec/v1/group/source-manifest.json",
-    "conformanceManifest": "conformance/v1/group/manifest.json"
+    "conformanceManifest": "conformance/v1/group/manifest.json",
+    "continuity": "spec/v1/group/continuity.md",
+    "resolutionSchema": "spec/v1/group/resolution.schema.json"
   },
   "representation": {
     "governance": "restricted-jcs-json",
@@ -75,9 +77,9 @@
   },
   "forkPolicy": {
     "samePredecessorAndEpochSameDigest": "idempotent-duplicate",
-    "samePredecessorAndEpochDifferentDigest": "reject-fork",
-    "missingPredecessor": "reject-gap",
-    "staleEpoch": "reject-stale",
+    "samePredecessorAndEpochDifferentDigest": "quarantine-affected-mutations-and-collect-unanimous-base-authority-resolution",
+    "missingPredecessor": "durable-catch-up-pending",
+    "staleEpoch": "historical-context-not-current-execution-authority",
     "crossGroup": "reject-cross-group",
     "terminalRemovalReplay": "reject-removed-member"
   },
@@ -97,7 +99,7 @@
     "authority": "endpoint-confirmation-or-none-only"
   },
   "persistencePolicy": {
-    "restart": "restore-high-water-predecessor-state-current-members-tombstones-and-per-member-projections-before-accepting-input",
+    "restart": "restore-high-water-checkpoints-and-durable-pending-history-before-new-input",
     "bounded": true,
     "persistedStationState": false,
     "persistedProductPermission": false,
@@ -111,9 +113,9 @@
     "payload": "MAX_GROUP_PAYLOAD_BYTES-is-opaque-payload-octets",
     "projectionResults": "MAX_GROUP_RESULTS-equals-MAX_GROUP_PROJECTIONS-one-result-per-recipient",
     "aggregate": "MAX_GROUP_AGGREGATE_BYTES-is-the-complete-canonical-result-CBOR",
-    "persisted": "MAX_GROUP_PERSISTED_BYTES-is-the-complete-bounded-retained-group-state",
+    "persisted": "bounded-hot-working-set; durable-pages-and-checkpoints-have-admission-quotas-not-lifetime-maximum",
     "rejectedOrDuplicateInput": "no-budget-consumption-and-no-state-mutation",
-    "retryReset": "forbidden"
+    "retryReset": "processing-turn-only; never-reset-membership-or-replay-frontiers"
   },
   "atomicity": {
     "transition": "validate-complete-predecessor-and-protected-operation-then-commit-successor-once",
@@ -131,5 +133,11 @@
     "application-payload-interpretation",
     "unbounded-broadcast",
     "compatibility-translator-or-alternate-wire"
-  ]
+  ],
+  "resolution": {
+    "contentType": 1279328261,
+    "approval": "all-state-authorities-at-exact-uncontested-base",
+    "expiry": "none",
+    "liveness": "wait-for-authorized-resolution; do-not-infer-by-timeout"
+  }
 }

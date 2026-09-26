@@ -14,16 +14,13 @@
     {
       "wireId": "licoarc.protocol-line.v1",
       "generation": 1,
-      "protocolLineId": "c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08",
+      "protocolLineId": "4cb15568e99396ef2789aec1828ad9dc4878f1cd1a04e28fe3feaac4dc753f4c",
       "lifecycle": "Candidate",
-      "definitionStatus": "COMPLETE",
-      "sessionEligible": true,
+      "definitionStatus": "PARTIAL",
+      "sessionEligible": false,
       "publicationEligible": false,
       "mandatoryCapabilities": [
-        "licoarc.federation-governance.v1",
         "licoarc.generic-messaging.v1",
-        "licoarc.group-collaboration.v1",
-        "licoarc.https-transport.v1",
         "licoarc.identity.v1",
         "licoarc.pairwise-protection.v1",
         "licoarc.protocol-foundation.v1",
@@ -40,7 +37,7 @@
         "licoarc.reliable-exchange.v1"
       ],
       "protectionProfileIds": [
-        "4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17"
+        "abef93baec2b1a7ecdf67bb3783bc641c0c1be7f3696615462597f323e4b46b5"
       ],
       "stableClaimIds": [
         "SEC-001",
@@ -67,7 +64,9 @@
         "SEC-022",
         "SEC-023"
       ],
-      "blockers": []
+      "blockers": [
+        "SEC-proof-requalification"
+      ]
     }
   ],
   "contentIdentity": {

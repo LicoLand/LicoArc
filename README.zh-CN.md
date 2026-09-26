@@ -1,93 +1,53 @@
-# Lico Arc Protocol
+# Lico Arc 通讯协议
 
 [English](README.md)
 
-Lico Arc Protocol 是 LicoLand 的实现中立**协议层（Protocol Layer）**。它拥有
-协议语义：封闭 schema 与注册表、确定性 wire 表示、安全与生命周期规则、定义级
-一致性语料、内容寻址 Protocol Line 产物以及联邦治理。
+LicoArc 为人、设备和智能体定义开放的通讯规则，不绑定某一个客户端。
+对话持续存在，连接可以更换；已经保存的消息、附件、审批和工作，不因用户
+长时间离线而失效。工具能力变化直接更新已有对话，不需要重新绑定或重建加密连接。
 
-产品和实现可以执行一个精确固定的定义或提交提案，但不能重新定义协议。发布、
-实现、互操作执行、审计、部署、支持和运营均由各自的下游所有者独立闭环。
+Nostr 是可选的网络接入方式，不是身份、消息保存和任务运行的唯一基础。
+标准私信继续采用共同的 NIP-17 格式，与支持相同规范的客户端互通。
+增强通讯采用 LicoArc 端点核心以及双方理解的应用接口，既能使用 Nostr，
+也能使用其他已授权通道；不要求使用 LicoUp、官方中继或相同的工作流引擎。
 
-LicoArc 采用分层设计：**标准 Nostr 互操作 + 开放的增强端点与协作契约**。
-实现共同 NIP-17/44/59 私信规范的客户端，可与其他支持该规范的 Nostr 客户端
-交换普通加密消息，无须使用 LicoUp、原生 Station API 或加入联邦治理网络。
-增强能力按共同扩展开放给第三方实现，不能以客户端品牌作为准入条件。
-详见 [Nostr 互操作规范](docs/protocols/nostr-interoperability-v1.md)。
-以下八项能力仍描述原生增强 Protocol Line，不是普通 Nostr 通信的前置条件。
-本仓库定义协议，不宣称客户端已实现互通或已完成组合安全审计。
+## 基本原则
 
-## 核心领域模型
+**端点决定。** 每个独立持有密钥的设备都是 Endpoint，控制自己的明文、信任和授权。
+**中继不可信。** Station 可以保管密文，但它说“收到了”不代表接收设备已保存，
+更不代表用户已审批或工作已完成。Network 不替用户作出信任决定。
+**等待不是失败。** 可以限制一次网络请求、一次处理的资源，不能据此删除已经接纳的消息。
+**能力不是权限。** 手机可以请求电脑编译，不必自己安装编译器；新增工具不自动获得执行许可。
 
-本节是 LicoArc 三种领域实体的唯一权威定义。
+核心只要求协议基础、身份、成对保护、通用消息和可靠交换五项能力。
+群组、原生 HTTPS 通讯站、联邦治理各有独立的适用范围，不成为普通客户端的强制负担。
 
-| 实体 | 定义 | 权威边界 |
-| --- | --- | --- |
-| **Endpoint（端点）** | 用户控制的受保护通信起点或终点；每个独立持有密钥的设备或隔离运行时都是独立 Endpoint。 | 仅对自身密钥、session、明文、受保护状态、对端接受、本地审批、效果及认证确认拥有运行时权威。 |
-| **Station（通讯站）** | 独立运营、负责传输端点保护不透明数据的中间实体。 | Endpoint 始终不信任它；它没有用户或设备名单，只有固定 Protocol Line 明确授予的传输权限。 |
-| **Network（网络）** | 参与方在同一固定 Protocol Line 下互认通信的联邦互操作上下文。 | 只提供互认与传输上下文；不是信任根、身份权威、明文权威或端点安全权威。 |
+## 当前状态
 
-```text
-Endpoint A ── 端点保护的 LicoArc 通信 ──▶
-    Network { 一个或多个不可信 Station } ──▶ Endpoint B
-```
-
-每个独立持有密钥的设备或隔离运行时都是独立 Endpoint。Group 是以 Endpoint
-为成员的受保护协作对象，不是第四种实体。
-
-## 当前定义
-
-已追踪源图将 `licoarc.protocol-line.v1` 定义为：
-
-| 属性 | 值 |
+| 项目 | 值 |
 | --- | --- |
+| 协议 | `licoarc.protocol-line.v1`，V1 / Generation 1 |
 | 生命周期 | `Candidate` |
-| 定义状态 | `COMPLETE` |
-| 新 session 资格 | `true` |
-| 发布资格 | `false` |
-| 协议 generation | `1`（Generation 1） |
-| 强制能力 | 8 项，全部 `COMPLETE` |
-| 活动 Protection Profile | `stable-core`，`COMPLETE` |
+| 定义状态 | `PARTIAL`：当前语义已经修订，形式化证明需要重新验证 |
+| 允许建立新会话 | `false` |
+| 允许发布 Protocol Line | `false` |
+| 包版本 | `0.1.0`，保持不变 |
 
-八项强制能力是 Protocol Foundation、Identity、Pairwise Protection、Generic
-Messaging、Reliable Exchange、HTTPS Transport、Group Collaboration、
-Federation Governance。
+此次调整涉及预密钥的接纳规则、握手内容以及结果确认的含义，不能沿用旧证明宣布安全。
+旧证明保留原始内容和摘要，但不作为新定义的证据。源码校验和模拟测试也不等于
+客户端已经实现、第三方已经互通或安全审计完成。
 
-Identity 为多个相互独立的 Endpoint 设备和恢复定义用户授权的权威链。每台设备
-保有自己的 Endpoint 密钥与 session。Pairwise transcript 同时绑定双方的
-Endpoint 状态摘要及其同级用户权威状态摘要，并避免形成摘要环。只有精确匹配的
-受保护 Endpoint 确认可以推进可靠终态，Station 信号不能。用户/设备授权与本地
-对端信任始终是两个独立决定。
+实现、互操作、审计和部署由各自的下游所有者负责。
 
-`stable-core` 是不可拆分的混合构造：成对使用 X25519 与 ML-KEM-768 一次性
-prekey，以 Ed25519 与 ML-DSA-65 双重认证，将固定协议身份与确认绑定到 transcript，
-并使用有界 X25519 Double Ratchet。Profile 与 Protocol Line 身份来自有名称、
-无循环依赖的语义投影。证明准入、安全核算及完整声明的一致性语料都是定义准入
-的一部分。
+详见 [持久通讯规则](spec/v1/reliable/continuity.md)、
+[能力实时更新](spec/v1/messaging/capabilities.md)、
+[Nostr 接入规范](spec/interop/v1/protocol.md)、[状态](docs/STATUS.md) 和
+[文档索引](docs/README.md)。
 
-`sessionEligible: true` 仅表示固定 V1 / Generation 1 Candidate 定义允许建立新 session；不表示它已发布、已实现、完成互操作、已审计、已部署、受支持或正在运营。
-`publicationEligible: false` 表示该 Candidate 不具备 Protocol-Line 发布资格。源代码、许可证和文档仍可作为 Apache-2.0 仓库材料发布。
-
-当前规范事实见 [`spec/v1/manifest.json`](spec/v1/manifest.json)、
-[`spec/protocol-lines.json`](spec/protocol-lines.json)、
-[`spec/protection-profiles.json`](spec/protection-profiles.json) 与
-[`docs/STATUS.md`](docs/STATUS.md)。
-
-## 文档
-
-英文公开[文档网站](https://licoarc.com/)仅提供导读；下列仓库源文件仍是权威来源。
-
-- [产品权威与范围](PRODUCT.md)
-- [架构](ARCHITECTURE.md)
-- [领域词汇](CONTEXT.md)
-- [当前状态](docs/STATUS.md)
-- [协议文档](docs/protocols/)
-- [定义验证](docs/conformance/verification.md)
-- [决策生命周期](docs/DECISION-LIFECYCLE.md)
-- [规范字段注册表](spec/FIELD-REGISTRY.md)
-- [正式文档索引](docs/README.md)
-
-运行 `npm run verify` 执行仓库拥有的源完整性检查。这些检查只验证定义图及生成
-产物，不声明任何下游执行或交付状态。
+```sh
+npm run definition:refresh
+npm run verify
+npm run conformance:check
+```
 
 许可证：Apache-2.0。

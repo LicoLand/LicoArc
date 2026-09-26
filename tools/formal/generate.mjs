@@ -4,6 +4,11 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
+const currentSecurity = JSON.parse(await readFile(resolve(root, 'spec/v1/security/registry.json'), 'utf8'));
+if (currentSecurity.definitionStatus !== 'COMPLETE') {
+  throw new Error('FORMAL_MODEL_REQUALIFICATION_REQUIRED: review the revised lifecycle model and proof bindings before replay; retained evidence is historical');
+}
+
 const checkOnly = process.argv.includes('--check');
 const templatePath = 'formal/licoarc-core-v1.spthy';
 const generatedPath = 'formal/generated/licoarc-core-v1.spthy';

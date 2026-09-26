@@ -4,7 +4,7 @@
   "wireId": "licoarc.protocol-line.v1",
   "generation": 1,
   "lifecycle": "Candidate",
-  "definitionStatus": "COMPLETE",
+  "definitionStatus": "PARTIAL",
   "capabilityCorpora": [
     {
       "capabilityId": "licoarc.federation-governance.v1",
@@ -18,7 +18,7 @@
       "capabilityId": "licoarc.generic-messaging.v1",
       "definitionStatus": "COMPLETE",
       "manifestPath": "conformance/v1/messaging/manifest.json",
-      "sourceDigest": "9fc7e1635ef076db2108747aae4f70167412c35bd87945e51d26c7be41402ef4",
+      "sourceDigest": "461b9b1f7015d8807ad95bc8282c2098177868a3bc40a997e57cfa1a0e9635b8",
       "protectionProfileIds": [],
       "complete": true
     },
@@ -26,7 +26,7 @@
       "capabilityId": "licoarc.group-collaboration.v1",
       "definitionStatus": "COMPLETE",
       "manifestPath": "conformance/v1/group/manifest.json",
-      "sourceDigest": "1b65d55ecb15d67ff8a06bf6542fc33a92ef6ecb7ab25dea997c3313b79a346b",
+      "sourceDigest": "6983d631bd887d16e05b7e23a1451a996d9ea8a1ba660e6be4ca799b69786303",
       "protectionProfileIds": [],
       "complete": true
     },
@@ -34,7 +34,7 @@
       "capabilityId": "licoarc.https-transport.v1",
       "definitionStatus": "COMPLETE",
       "manifestPath": "conformance/v1/transport/manifest.json",
-      "sourceDigest": "418c4da90461d7c985af8e3c5a66314e19c9c3f178271e2a70118e314c156924",
+      "sourceDigest": "9cde5fcc12e90d28d88d9ca935d7f03e54910a431fa57bff0b79db3804dcead0",
       "protectionProfileIds": [],
       "complete": true
     },
@@ -50,9 +50,9 @@
       "capabilityId": "licoarc.pairwise-protection.v1",
       "definitionStatus": "COMPLETE",
       "manifestPath": "conformance/v1/protection/manifest.json",
-      "sourceDigest": "cd07cdc2b5e7c99f2fbe8fe87ef202f6c87389f0e379957913f4e38ca1590f97",
+      "sourceDigest": "f9d4b0515f60e5f2c62356075867d14c8d1478a8f61c8991b15ee882b1ef2f12",
       "protectionProfileIds": [
-        "4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17"
+        "abef93baec2b1a7ecdf67bb3783bc641c0c1be7f3696615462597f323e4b46b5"
       ],
       "complete": true
     },
@@ -60,7 +60,7 @@
       "capabilityId": "licoarc.protocol-foundation.v1",
       "definitionStatus": "COMPLETE",
       "manifestPath": "conformance/v1/foundation/manifest.json",
-      "sourceDigest": "a3863797f71e3827ee4bd2670c042223454ec2fa646d532296a739fcd57d9a73",
+      "sourceDigest": "f26c2b0a091e2bee416616ed1933a0f5fb1b2474d927d57bd61202b04902793a",
       "protectionProfileIds": [],
       "complete": true
     },
@@ -68,7 +68,7 @@
       "capabilityId": "licoarc.reliable-exchange.v1",
       "definitionStatus": "COMPLETE",
       "manifestPath": "conformance/v1/reliable/manifest.json",
-      "sourceDigest": "82fdb131cf0a4aae61d6df1efa60b6865af2c432835b5d43d01adcbc8b1725ac",
+      "sourceDigest": "c3df4ddedd63e7ddfe46d0d2ca0b3db101e275b82cb86f1273642d211a025f52",
       "protectionProfileIds": [],
       "complete": true
     }
@@ -78,11 +78,11 @@
       "definitionId": "security-accounting",
       "definitionStatus": "COMPLETE",
       "manifestPath": "conformance/v1/security/manifest.json",
-      "sourceDigest": "6c72a9363186649e8a1b67febaf2275f0116c13e3ae36f04aecfdf23092d440f",
+      "sourceDigest": "5fef9e73d31a531aa9c0ccd48c312caf9585aa766c424b64a9a1848d8b781130",
       "complete": true
     }
   ],
   "absentCorpora": [],
   "sourceClosure": "declared-component-source-closures",
-  "protocolLineId": "c0b64d71865ce972a944db3d31a18cb03395300f3ed006c21e64429178c23a08"
+  "protocolLineId": "4cb15568e99396ef2789aec1828ad9dc4878f1cd1a04e28fe3feaac4dc753f4c"
 }

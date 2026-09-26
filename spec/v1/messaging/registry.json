@@ -13,7 +13,12 @@
     "messageSchema": "spec/v1/messaging/message.schema.json",
     "controlSchema": "spec/v1/messaging/control.schema.json",
     "sourceManifest": "spec/v1/messaging/source-manifest.json",
-    "conformanceManifest": "conformance/v1/messaging/manifest.json"
+    "conformanceManifest": "conformance/v1/messaging/manifest.json",
+    "capabilities": "spec/v1/messaging/capabilities.md",
+    "capabilitySchema": "spec/v1/messaging/capability.schema.json",
+    "capabilityPageSchema": "spec/v1/messaging/capability-page.schema.json",
+    "capabilityGenerationSchema": "spec/v1/messaging/capability-generation.schema.json",
+    "capabilitySyncSchema": "spec/v1/messaging/capability-sync.schema.json"
   },
   "representation": {
     "source": "restricted-jcs-json",
@@ -31,10 +36,10 @@
   "resourceAccounting": {
     "messageRecordMaximum": "MAX_MESSAGE_RECORD_BYTES-is-the-canonical-CBOR-record-maximum",
     "controlRecordMaximum": "MAX_CONTROL_RECORD_BYTES-is-the-canonical-attachment-receive-state-maximum",
-    "controlLifetimeMaximum": "MAX_ATTACHMENT_CONTROL_BYTES-counts-every-canonical-receive-state-octet-once",
+    "controlLifetimeMaximum": "MAX_ATTACHMENT_CONTROL_BYTES-is-one-scheduling-turn-not-attachment-lifetime",
     "protectedPacketOctets": "charged-to-Pairwise-Protection-and-retransmission-budgets-never-carrier-overhead",
     "rejectedOrDuplicateInput": "no-budget-consumption-and-no-state-mutation",
-    "retryReset": "forbidden"
+    "retryReset": "turn-budgets-may-reset; received-chunks-and-business-identity-may-not"
   },
   "protectedPlacement": {
     "visibility": "peer-endpoints-only",
@@ -87,21 +92,21 @@
     "relatesTo": "declaring-message-id",
     "ranges": "canonical-half-open-sorted-disjoint-non-adjacent",
     "emptyRanges": "verified-completion-only",
-    "terminality": "complete-cancelled-failed-absorbing",
-    "lifetimeBounds": [
-      "MAX_ATTACHMENT_STATE_UPDATES",
-      "MAX_ATTACHMENT_RECOVERY_ROUNDS",
-      "MAX_ATTACHMENT_RETRANSMITTED_CHUNKS",
-      "MAX_ATTACHMENT_CONTROL_BYTES",
-      "ATTACHMENT_RECOVERY_WINDOW"
-    ],
+    "terminality": "terminal-execution-or-explicit-deletion; late-authenticated-content-and-evidence-may-still-be-recorded",
     "resetEvents": [
       "retry",
       "reconnect",
       "session-renewal",
       "route-change",
       "station-migration"
-    ]
+    ],
+    "processingTurnBudgets": [
+      "MAX_ATTACHMENT_STATE_UPDATES",
+      "MAX_ATTACHMENT_RECOVERY_ROUNDS",
+      "MAX_ATTACHMENT_RETRANSMITTED_CHUNKS",
+      "MAX_ATTACHMENT_CONTROL_BYTES"
+    ],
+    "recoveryLifetime": "no-protocol-TTL"
   },
   "failurePolicy": {
     "unknownCritical": "terminal-unknown-critical-extension",
@@ -110,9 +115,9 @@
     "conflict": "terminal-conflicting-chunk",
     "geometry": "terminal-invalid-geometry",
     "digest": "terminal-digest-mismatch",
-    "stale": "terminal-stale-state",
-    "reset": "terminal-reset-attempt",
-    "bounds": "terminal-bound-exceeded"
+    "stale": "ignore-stale-feedback-without-losing-received-chunks",
+    "reset": "reject-illegal-identity-or-crypto-reset; allow-new-processing-turn",
+    "bounds": "pause-turn-or-backpressure-before-new-custody"
   },
   "outOfScope": [
     "product-command-catalogues",
@@ -121,5 +126,16 @@
     "retry-scheduling",
     "station-to-station-protocol",
     "station-receipts-as-endpoint-confirmations"
-  ]
+  ],
+  "liveCapabilities": {
+    "recordContentType": 1279328259,
+    "pageContentType": 1279328260,
+    "binding": "independent-of-session-and-conversation-lifetime",
+    "update": "push-to-existing-authorized-conversations; catch-up-when-offline",
+    "executionPermission": "separate-current-policy-check"
+  },
+  "applicationContentTypes": {
+    "capabilityGeneration": 1279328262,
+    "capabilitySync": 1279328263
+  }
 }

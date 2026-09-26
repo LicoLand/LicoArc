@@ -2,70 +2,37 @@
 
 ## Definition authority
 
-This protocol-definition repository owns `licoarc.protocol-line.v1`. The
-canonical manifest reports:
+This protocol-definition repository owns `licoarc.protocol-line.v1`, initial V1 /
+Generation 1. The canonical manifest reports Candidate / PARTIAL,
+`sessionEligible: false`, `publicationEligible: false`, with blocker
+`SEC-proof-requalification`. Package version 0.1.0 is unchanged.
 
-| Dimension | Current value |
-| --- | --- |
-| Lifecycle | `Candidate` |
-| Definition status | `COMPLETE` |
-| Protocol | V1 / Generation 1 |
-| Session eligible | `true` |
-| Protocol-Line publication eligible | `false` |
-| Mandatory capability closure | 8 of 8 `COMPLETE` |
-| Active Protection Profile | `stable-core`, `COMPLETE` |
-| Missing definitions or blockers | none |
+The Endpoint Core has five mandatory capabilities. Group Collaboration, HTTPS
+Transport and Federation Governance are separately defined optional scopes.
+The Nostr binding is SPECIFIED and independent of the ordinary NIP-17 chat path;
+its enhanced path cannot bypass core session admission.
 
-The independent `licoarc.nostr-interoperability.v1` binding is also a V1
-Candidate with a specified definition under `spec/interop/v1/`. It defines
-standard Nostr chat separately from enhanced Endpoint/collaboration support.
-Its own artifact and corpus do not claim product implementation, upstream
-kind allocation, composite cryptographic proof or real-client interoperability.
-The native status table above does not extend those claims to this new scope.
-
-The eight capabilities are Protocol Foundation, Identity, Pairwise Protection,
-Generic Messaging, Reliable Exchange, HTTPS Transport, Group Collaboration,
-and Federation Governance.
-
-V1 / Generation 1 defines user-authorized multi-device identity and recovery. Each
-authorized device remains an independent Endpoint with its own keys and
-sessions. Pairwise establishment binds sibling user-authority-state digests
-beside both Endpoint-state digests without a digest cycle. Exact authenticated
-Endpoint confirmations control acceptance and effect finality; Station state
-does not. User/device authorization never changes local peer trust, and a
-Station has no user/device roster or authority-tip role.
+Durable work has no protocol lifetime. Capability updates reach existing authorized
+conversations without rebind. Source definitions and deterministic models cover
+custody, recovery, live capability repair, confirmation facts and Group continuity.
+The revised cryptographic transcript and admission have not completed current proof
+admission; the old evidence has not been relabelled as new evidence.
 
 ## Tracked source closure
 
-The tracked definition graph closes all mandatory semantic source manifests,
-the active Profile, stable security claims and required modeled-proof
-bindings, the complete declared capability/Profile corpora, named non-circular
-Profile and Protocol Line content identities, and deterministic artifact
-generation. Formal replay establishes only the declared ideal-model claims
-under their recorded assumptions.
+The tracked definition graph is under `spec/` and `conformance/`. Deterministic
+artifacts bind its schemas, policies, corpus and current content identities.
+`formal/requalification.json` binds the retained prior proof and lists new proof
+obligations. `formal:generate` and `formal:check` stop explicitly until the formal
+model has been requalified; source tests do not advance that status.
 
-`spec/protocol-lines.json` owns the fixed initial V1 definition.
-`spec/protection-profiles.json` owns the sole active Profile admission. `spec/v1/` and
-`conformance/v1/` are the tracked definition graph;
-`artifacts/v1/licoarc.bundle.json` is its deterministic Candidate projection.
-
-`docs/references/` is ignored local research and is not part of the tracked
-definition graph.
+`docs/references/` is ignored local research, not a definition source.
 
 ## Ownership boundary
 
-`sessionEligible: true` permits sessions under the fixed V1 definition.
-`publicationEligible: false` is the machine lifecycle decision that keeps this
-Candidate ineligible for Protocol-Line publication. It does not forbid
-publishing repository source, license, or documentation as repository material
-under Apache-2.0, and it does not authorize certification, stability,
-deployment, or runtime claims.
-
-The TypeScript, Rust, and Go repositories independently admit and execute the
-initial V1 bundle through local decoders, authority validators, session
-gates, confirmation reducers, and corpus executors. Those focused SDK paths do
-not establish complete product integration, Provider correctness, device
-custody, cross-language interoperability, external audit, package release,
-publication, deployment, support, or operation. Each claim closes separately
-in its owner and cannot advance or block a LicoArc definition or alter its
-bytes.
+Publishing repository source and documentation does not publish a Protocol Line,
+authorize a session, claim a crypto implementation, or establish delivery through a
+malicious Station. SDKs, client integration, independent interoperability, security
+audits, packaging, deployment, support and operation remain downstream concerns.
+Those downstream results cannot advance or block a LicoArc definition or alter its
+bytes. The source-owned formal gate is a separate, currently open obligation.

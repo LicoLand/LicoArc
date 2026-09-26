@@ -78,7 +78,7 @@ test("five operations have exact methods, targets, media types, and handle place
   ]);
   for (const [operation, definition] of Object.entries(registry.operations)) {
     assert.equal(definition.method, "POST", operation);
-    assert.equal(definition.idempotency, "required-operation-id-fixed-window", operation);
+    assert.equal(definition.idempotency, "stable-operation-id-until-settled-or-handle-retired", operation);
     const carrier = defaultCarrier(operation);
     assert.doesNotThrow(() => validateCarrier(carrier), operation);
     if (definition.target === "one-delivery-handle") {
@@ -134,15 +134,15 @@ test("outcomes are typed Station hints and retry never creates new authorization
   assert.equal(registry.outcomes.endpointFinalityAuthority, "none");
 });
 
-test("storage, claim, settlement, and first-contact behavior have fixed lifetime bounds", () => {
-  assert.equal(B.STORAGE_WINDOW_SECONDS, 3600);
+test("custody has no age expiry while claims and individual settlements remain bounded", () => {
+  assert.equal(Object.hasOwn(B, "STORAGE_WINDOW_SECONDS"), false);
   assert.equal(B.CLAIM_WINDOW_SECONDS, 300);
-  assert.equal(B.IDEMPOTENCY_WINDOW_SECONDS, 300);
+  assert.equal(Object.hasOwn(B, "IDEMPOTENCY_WINDOW_SECONDS"), false);
   assert.equal(B.MAX_CLAIM_ITEMS, 64);
   assert.equal(B.MAX_SETTLEMENT_ITEMS, 64);
-  assert.equal(boundsDocument.resetPolicy, "retry-reconnect-route-change-station-migration-never-reset-or-extend-a-window");
+  assert.match(boundsDocument.resetPolicy, /processing-turn/);
   assert.equal(registry.stateLifecycle.firstContactHandle, "one-accepted-submission-then-consumed");
-  assert.equal(registry.outcomes.acceptedStoragePrecondition, "station-must-be-able-to-honor-fixed-window-before-accepting-submit");
+  assert.match(registry.outcomes.acceptedStoragePrecondition, /durable/);
   assert.throws(() => validateClaim({ itemCount: B.MAX_CLAIM_ITEMS + 1, bytes: 1 }), code("claim-bound-rejected"));
   assert.throws(() => validateClaim({ itemCount: 1, bytes: B.MAX_CLAIM_BYTES + 1 }), code("claim-bound-rejected"));
   assert.throws(() => validateSettlement({ items: B.MAX_SETTLEMENT_ITEMS + 1, attempts: 1 }), code("settlement-bound-rejected"));

@@ -26,5 +26,6 @@
     "undeclaredFiles": "reject",
     "symlinks": "reject",
     "sortedPaths": "required"
-  }
+  },
+  "conformanceTargets": "spec/v1/foundation/targets.json"
 }

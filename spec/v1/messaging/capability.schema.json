@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licoarc.com/spec/v1/messaging/capability.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "issuer",
+    "audience",
+    "generation",
+    "revision",
+    "capability",
+    "role",
+    "availability"
+  ],
+  "properties": {
+    "issuer": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "audience": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{32}$"
+    },
+    "generation": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{32}$"
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991
+    },
+    "capability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "definition"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9.-]{0,126}[a-z0-9]$",
+          "minLength": 2,
+          "maxLength": 128
+        },
+        "definition": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "role": {
+      "enum": [
+        "invoke",
+        "provide"
+      ]
+    },
+    "availability": {
+      "enum": [
+        "available",
+        "unavailable",
+        "removed"
+      ]
+    }
+  }
+}

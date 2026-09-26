@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 import test from "node:test";
 import {
   applyGroupMemberConfirmation,
+  createEndpointConfirmation,
   decodeDeterministicCbor,
   encodeDeterministicCbor
 } from "../tools/protocol/index.mjs";
@@ -701,13 +702,13 @@ function recordProjectionResult(store, rawResult, protectedContext = undefined) 
 function protectedConfirmation(projection, outcome, failureCode = undefined) {
   const recipientEndpointRef = toHex(projection.recipientEndpointRef);
   return {
-    confirmation: {
+    confirmation: createEndpointConfirmation({
       confirmationId: toHex(projection.projectionId),
       confirmedMessageIds: [toHex(projection.projectionId)],
       confirmationStage: "endpointAccepted",
       confirmationOutcome: outcome === "delivered" ? "succeeded" : outcome === "rejected" ? "rejected" : "failed",
       ...(failureCode === undefined ? {} : { failureCode: failureCodeValue(failureCode) })
-    },
+    }, recipientEndpointRef),
     session: {
       sessionId: toHex(bytes16(90)),
       senderEndpointRef: recipientEndpointRef,

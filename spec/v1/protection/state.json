@@ -22,17 +22,17 @@
     "reservationStates": [],
     "publicationEffect": "none",
     "receiptEffect": "none",
-    "expiryEffect": "eligibility-only-no-removal-no-reservation-no-redemption",
+    "expiryEffect": "none; no-time-based-invalidation",
     "explicitDiscard": "atomically-remove-the-complete-active-pair; the-sequence-remains-permanently-unavailable-by-high-water",
     "overflow": "terminal-counter-overflow-without-wrap-or-mutation"
   },
   "committedHandshakeReplay": {
     "index": "pair-sequence-to-exact-first-packet-digest-session-context-and-identical-session-accept",
     "bound": "MAX_COMMITTED_HANDSHAKE_REPLAY_BINDINGS",
-    "admissionWhenFull": "terminal-resource-bound-before-prekey-redemption-or-session-mutation",
+    "admissionWhenFull": "backpressure-new-establishment-before-redemption; spill-accepted-state-to-durable-store",
     "exactReplay": "return-identical-session-accept-without-mutation",
     "changedReplay": "terminal-prekey-consumed-without-mutation",
-    "lifetime": "the-live-session-lifetime; retry-reconnect-restart-route-change-and-station-migration-do-not-remove-it",
+    "lifetime": "retain-while-pending-establishment-or-replay-custody-depends-on-it; no-time-expiry",
     "deletion": "remove-the-binding-in-the-session-deletion-commit; later first-packet replay returns prekey-consumed-from-high-water-state"
   },
   "handshakeTransitions": [
@@ -163,14 +163,15 @@
     "prepare": "derive-key-nonce-next-chain-and-exact-packet-in-tentative-snapshot",
     "commit": "atomically-durably-store-next-chain-counters-state-generation-and-one-exact-retryable-packet",
     "emit": "only-after-successful-durable-commit",
-    "retry": "emit-only-the-identical-stored-packet-with-no-new-key-or-counter-advance",
+    "retry": "same-attempt-identical-packet; later-session-reprotection-of-same-logical-intent-uses-fresh-key-and-nonce",
     "persistenceFailure": "return-persistence-and-emit-nothing-with-unchanged-pre-state"
   },
   "receive": {
     "prepare": "parse-and-authenticate-using-a-tentative-snapshot-with-bounded-skipped-key-derivation",
     "commit": "atomically-durably-store-ratchet-advance-skipped-key-delta-replay-state-inbox-record-and-state-generation",
     "deliver": "only-after-successful-durable-commit",
-    "failure": "return-typed-failure-release-no-plaintext-and-preserve-pre-state"
+    "failure": "return-typed-failure-release-no-plaintext-and-preserve-pre-state",
+    "resourceFailure": "preserve-not-yet-decryptable-ciphertext-and-recovery-intent; no-key-or-business-state-advance"
   },
   "restart": {
     "restore": "last-complete-committed-monotonic-snapshot-before-any-operation",
@@ -185,7 +186,8 @@
       "physical-zeroization",
       "rollback-detection-under-fully-compromised-store",
       "memory-side-channel-resistance"
-    ]
+    ],
+    "pendingCustody": "require-safe-recoverable-replacement-or-explicit-user-visible-loss-before-deleting-last-required-material"
   },
   "tentativeRule": "all parsing-derivation-authentication-and-bound-checks-use-an-isolated snapshot; only the named atomic commit may mutate durable state"
 }

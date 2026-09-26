@@ -477,7 +477,7 @@
       "operation": "binding",
       "requirement": "account-binding",
       "input": {
-        "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"capabilities\":[{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"}],\"channel\":\"33333333333333333333333333333333\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
+        "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"channel\":\"33333333333333333333333333333333\",\"conversation\":\"88888888888888888888888888888888\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
         "expectedContext": {
           "binding": "4444444444444444444444444444444444444444444444444444444444444444",
           "channel": "33333333333333333333333333333333",
@@ -491,7 +491,8 @@
           "nativeAuthenticated": true,
           "authorityAdmitted": true,
           "peerApproved": true,
-          "deviceRevoked": false
+          "deviceRevoked": false,
+          "conversation": "88888888888888888888888888888888"
         }
       },
       "expected": "valid"
@@ -501,7 +502,7 @@
       "operation": "binding",
       "requirement": "account-binding",
       "input": {
-        "text": "{\"binding\":\"9999999999999999999999999999999999999999999999999999999999999999\",\"capabilities\":[{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"}],\"channel\":\"33333333333333333333333333333333\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
+        "text": "{\"binding\":\"9999999999999999999999999999999999999999999999999999999999999999\",\"channel\":\"33333333333333333333333333333333\",\"conversation\":\"88888888888888888888888888888888\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
         "expectedContext": {
           "binding": "4444444444444444444444444444444444444444444444444444444444444444",
           "channel": "33333333333333333333333333333333",
@@ -515,7 +516,8 @@
           "nativeAuthenticated": true,
           "authorityAdmitted": true,
           "peerApproved": true,
-          "deviceRevoked": false
+          "deviceRevoked": false,
+          "conversation": "88888888888888888888888888888888"
         }
       },
       "expected": "binding-binding-mismatch"
@@ -525,7 +527,7 @@
       "operation": "binding",
       "requirement": "account-binding",
       "input": {
-        "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"capabilities\":[{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"}],\"channel\":\"99999999999999999999999999999999\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
+        "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"channel\":\"99999999999999999999999999999999\",\"conversation\":\"88888888888888888888888888888888\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
         "expectedContext": {
           "binding": "4444444444444444444444444444444444444444444444444444444444444444",
           "channel": "33333333333333333333333333333333",
@@ -539,7 +541,8 @@
           "nativeAuthenticated": true,
           "authorityAdmitted": true,
           "peerApproved": true,
-          "deviceRevoked": false
+          "deviceRevoked": false,
+          "conversation": "88888888888888888888888888888888"
         }
       },
       "expected": "binding-channel-mismatch"
@@ -549,7 +552,7 @@
       "operation": "binding",
       "requirement": "account-binding",
       "input": {
-        "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"capabilities\":[{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"}],\"channel\":\"33333333333333333333333333333333\",\"initiator\":\"9999999999999999999999999999999999999999999999999999999999999999\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
+        "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"channel\":\"33333333333333333333333333333333\",\"conversation\":\"88888888888888888888888888888888\",\"initiator\":\"9999999999999999999999999999999999999999999999999999999999999999\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
         "expectedContext": {
           "binding": "4444444444444444444444444444444444444444444444444444444444444444",
           "channel": "33333333333333333333333333333333",
@@ -563,7 +566,8 @@
           "nativeAuthenticated": true,
           "authorityAdmitted": true,
           "peerApproved": true,
-          "deviceRevoked": false
+          "deviceRevoked": false,
+          "conversation": "88888888888888888888888888888888"
         }
       },
       "expected": "binding-initiator-mismatch"
@@ -573,7 +577,7 @@
       "operation": "binding",
       "requirement": "account-binding",
       "input": {
-        "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"capabilities\":[{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"}],\"channel\":\"33333333333333333333333333333333\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"9999999999999999999999999999999999999999999999999999999999999999\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
+        "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"channel\":\"33333333333333333333333333333333\",\"conversation\":\"88888888888888888888888888888888\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"9999999999999999999999999999999999999999999999999999999999999999\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
         "expectedContext": {
           "binding": "4444444444444444444444444444444444444444444444444444444444444444",
           "channel": "33333333333333333333333333333333",
@@ -587,7 +591,8 @@
           "nativeAuthenticated": true,
           "authorityAdmitted": true,
           "peerApproved": true,
-          "deviceRevoked": false
+          "deviceRevoked": false,
+          "conversation": "88888888888888888888888888888888"
         }
       },
       "expected": "binding-responder-mismatch"
@@ -597,7 +602,7 @@
       "operation": "binding",
       "requirement": "account-binding",
       "input": {
-        "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"capabilities\":[{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"}],\"channel\":\"33333333333333333333333333333333\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"9999999999999999999999999999999999999999999999999999999999999999\"}",
+        "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"channel\":\"33333333333333333333333333333333\",\"conversation\":\"88888888888888888888888888888888\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"9999999999999999999999999999999999999999999999999999999999999999\"}",
         "expectedContext": {
           "binding": "4444444444444444444444444444444444444444444444444444444444444444",
           "channel": "33333333333333333333333333333333",
@@ -611,7 +616,8 @@
           "nativeAuthenticated": true,
           "authorityAdmitted": true,
           "peerApproved": true,
-          "deviceRevoked": false
+          "deviceRevoked": false,
+          "conversation": "88888888888888888888888888888888"
         }
       },
       "expected": "binding-session-mismatch"
@@ -621,7 +627,7 @@
       "operation": "binding",
       "requirement": "account-binding",
       "input": {
-        "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"capabilities\":[{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"}],\"channel\":\"33333333333333333333333333333333\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
+        "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"channel\":\"33333333333333333333333333333333\",\"conversation\":\"88888888888888888888888888888888\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
         "expectedContext": {
           "binding": "4444444444444444444444444444444444444444444444444444444444444444",
           "channel": "33333333333333333333333333333333",
@@ -635,7 +641,8 @@
           "nativeAuthenticated": false,
           "authorityAdmitted": true,
           "peerApproved": true,
-          "deviceRevoked": false
+          "deviceRevoked": false,
+          "conversation": "88888888888888888888888888888888"
         }
       },
       "expected": "native-admission-required"
@@ -645,7 +652,7 @@
       "operation": "binding",
       "requirement": "account-binding",
       "input": {
-        "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"capabilities\":[{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"}],\"channel\":\"33333333333333333333333333333333\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
+        "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"channel\":\"33333333333333333333333333333333\",\"conversation\":\"88888888888888888888888888888888\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
         "expectedContext": {
           "binding": "4444444444444444444444444444444444444444444444444444444444444444",
           "channel": "33333333333333333333333333333333",
@@ -659,7 +666,8 @@
           "nativeAuthenticated": true,
           "authorityAdmitted": false,
           "peerApproved": true,
-          "deviceRevoked": false
+          "deviceRevoked": false,
+          "conversation": "88888888888888888888888888888888"
         }
       },
       "expected": "native-admission-required"
@@ -669,7 +677,7 @@
       "operation": "binding",
       "requirement": "account-binding",
       "input": {
-        "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"capabilities\":[{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"}],\"channel\":\"33333333333333333333333333333333\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
+        "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"channel\":\"33333333333333333333333333333333\",\"conversation\":\"88888888888888888888888888888888\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
         "expectedContext": {
           "binding": "4444444444444444444444444444444444444444444444444444444444444444",
           "channel": "33333333333333333333333333333333",
@@ -683,7 +691,8 @@
           "nativeAuthenticated": true,
           "authorityAdmitted": true,
           "peerApproved": false,
-          "deviceRevoked": false
+          "deviceRevoked": false,
+          "conversation": "88888888888888888888888888888888"
         }
       },
       "expected": "peer-authorization-required"
@@ -693,7 +702,7 @@
       "operation": "binding",
       "requirement": "account-binding",
       "input": {
-        "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"capabilities\":[{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"}],\"channel\":\"33333333333333333333333333333333\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
+        "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"channel\":\"33333333333333333333333333333333\",\"conversation\":\"88888888888888888888888888888888\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
         "expectedContext": {
           "binding": "4444444444444444444444444444444444444444444444444444444444444444",
           "channel": "33333333333333333333333333333333",
@@ -707,7 +716,8 @@
           "nativeAuthenticated": true,
           "authorityAdmitted": true,
           "peerApproved": true,
-          "deviceRevoked": true
+          "deviceRevoked": true,
+          "conversation": "88888888888888888888888888888888"
         }
       },
       "expected": "peer-authorization-required"
@@ -717,7 +727,7 @@
       "operation": "binding",
       "requirement": "account-binding",
       "input": {
-        "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"capabilities\":[{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"}],\"channel\":\"33333333333333333333333333333333\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
+        "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"channel\":\"33333333333333333333333333333333\",\"conversation\":\"88888888888888888888888888888888\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
         "expectedContext": {
           "binding": "4444444444444444444444444444444444444444444444444444444444444444",
           "channel": "33333333333333333333333333333333",
@@ -731,32 +741,28 @@
           "nativeAuthenticated": true,
           "authorityAdmitted": true,
           "peerApproved": true,
-          "deviceRevoked": false
+          "deviceRevoked": false,
+          "conversation": "88888888888888888888888888888888"
         }
       },
       "expected": "binding-account-role-mismatch"
     },
     {
       "id": "binding-duplicate-cap-id",
-      "operation": "binding",
+      "operation": "intersection",
       "requirement": "capabilities",
       "input": {
-        "text": "{\"binding\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"capabilities\":[{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"},{\"definition\":\"5555555555555555555555555555555555555555555555555555555555555555\",\"id\":\"org.example.review\"}],\"channel\":\"33333333333333333333333333333333\",\"initiator\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"responder\":\"2222222222222222222222222222222222222222222222222222222222222222\",\"session\":\"6666666666666666666666666666666666666666666666666666666666666666\"}",
-        "expectedContext": {
-          "binding": "4444444444444444444444444444444444444444444444444444444444444444",
-          "channel": "33333333333333333333333333333333",
-          "initiator": "1111111111111111111111111111111111111111111111111111111111111111",
-          "responder": "2222222222222222222222222222222222222222222222222222222222222222",
-          "session": "6666666666666666666666666666666666666666666666666666666666666666",
-          "outerAuthenticated": true,
-          "sender": "1111111111111111111111111111111111111111111111111111111111111111",
-          "recipient": "2222222222222222222222222222222222222222222222222222222222222222",
-          "role": "initiator",
-          "nativeAuthenticated": true,
-          "authorityAdmitted": true,
-          "peerApproved": true,
-          "deviceRevoked": false
-        }
+        "left": [
+          {
+            "id": "org.example.review",
+            "definition": "4444444444444444444444444444444444444444444444444444444444444444"
+          },
+          {
+            "id": "org.example.review",
+            "definition": "4444444444444444444444444444444444444444444444444444444444444444"
+          }
+        ],
+        "right": []
       },
       "expected": "capability-order-or-duplicate"
     },
@@ -870,17 +876,19 @@
       "operation": "collaboration",
       "requirement": "execution",
       "input": {
-        "text": "{\"agreement\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"capability\":{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"},\"payload\":\"aGVsbG8=\"}",
+        "text": "{\"capability\":{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"},\"conversation\":\"88888888888888888888888888888888\",\"payload\":\"aGVsbG8=\"}",
         "context": {
           "bindingReady": true,
-          "agreement": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "common": [
             {
               "id": "org.example.review",
               "definition": "4444444444444444444444444444444444444444444444444444444444444444"
             }
           ],
-          "executionApproved": true
+          "executionApproved": true,
+          "conversation": "88888888888888888888888888888888",
+          "nativeAuthenticated": true,
+          "audienceApproved": true
         }
       },
       "expected": "68656c6c6f"
@@ -890,37 +898,41 @@
       "operation": "collaboration",
       "requirement": "execution",
       "input": {
-        "text": "{\"agreement\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"capability\":{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"},\"payload\":\"aGVsbG8=\"}",
+        "text": "{\"capability\":{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"},\"conversation\":\"88888888888888888888888888888888\",\"payload\":\"aGVsbG8=\"}",
         "context": {
           "bindingReady": true,
-          "agreement": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "common": [
             {
               "id": "org.example.review",
               "definition": "4444444444444444444444444444444444444444444444444444444444444444"
             }
           ],
-          "executionApproved": false
+          "executionApproved": false,
+          "conversation": "88888888888888888888888888888888",
+          "nativeAuthenticated": true,
+          "audienceApproved": true
         }
       },
-      "expected": "execution-approval-required"
+      "expected": "68656c6c6f"
     },
     {
       "id": "collaboration-no-binding",
       "operation": "collaboration",
       "requirement": "execution",
       "input": {
-        "text": "{\"agreement\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"capability\":{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"},\"payload\":\"aGVsbG8=\"}",
+        "text": "{\"capability\":{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"},\"conversation\":\"88888888888888888888888888888888\",\"payload\":\"aGVsbG8=\"}",
         "context": {
           "bindingReady": false,
-          "agreement": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "common": [
             {
               "id": "org.example.review",
               "definition": "4444444444444444444444444444444444444444444444444444444444444444"
             }
           ],
-          "executionApproved": true
+          "executionApproved": true,
+          "conversation": "88888888888888888888888888888888",
+          "nativeAuthenticated": true,
+          "audienceApproved": true
         }
       },
       "expected": "binding-required"
@@ -930,35 +942,39 @@
       "operation": "collaboration",
       "requirement": "execution",
       "input": {
-        "text": "{\"agreement\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"capability\":{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"},\"payload\":\"aGVsbG8=\"}",
+        "text": "{\"capability\":{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"},\"conversation\":\"88888888888888888888888888888888\",\"payload\":\"aGVsbG8=\"}",
         "context": {
           "bindingReady": true,
-          "agreement": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
           "common": [
             {
               "id": "org.example.review",
               "definition": "4444444444444444444444444444444444444444444444444444444444444444"
             }
           ],
-          "executionApproved": true
+          "executionApproved": true,
+          "conversation": "77777777777777777777777777777777",
+          "nativeAuthenticated": true,
+          "audienceApproved": true
         }
       },
-      "expected": "agreement-mismatch"
+      "expected": "conversation-mismatch"
     },
     {
       "id": "collaboration-unknown-capability",
       "operation": "collaboration",
       "requirement": "execution",
       "input": {
-        "text": "{\"agreement\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"capability\":{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"},\"payload\":\"aGVsbG8=\"}",
+        "text": "{\"capability\":{\"definition\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"id\":\"org.example.review\"},\"conversation\":\"88888888888888888888888888888888\",\"payload\":\"aGVsbG8=\"}",
         "context": {
           "bindingReady": true,
-          "agreement": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "common": [],
-          "executionApproved": true
+          "executionApproved": true,
+          "conversation": "88888888888888888888888888888888",
+          "nativeAuthenticated": true,
+          "audienceApproved": true
         }
       },
-      "expected": "capability-unavailable"
+      "expected": "68656c6c6f"
     },
     {
       "id": "roundtrip-1",

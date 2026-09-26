@@ -15,10 +15,10 @@
     {
       "profileLocator": "stable-core",
       "generation": 1,
-      "profileId": "4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17",
+      "profileId": "abef93baec2b1a7ecdf67bb3783bc641c0c1be7f3696615462597f323e4b46b5",
       "lifecycle": "Candidate",
-      "definitionStatus": "COMPLETE",
-      "sessionEligible": true,
+      "definitionStatus": "PARTIAL",
+      "sessionEligible": false,
       "publicationEligible": false,
       "sourceDescriptorPath": "spec/v1/protection/profile.json",
       "requiredClaimIds": [
@@ -46,12 +46,12 @@
         "ratchet-header-confidentiality",
         "rollback-detection-under-fully-compromised-store"
       ],
-      "blockers": []
+      "blockers": [
+        "SEC-proof-requalification"
+      ]
     }
   ],
-  "activeProfileIds": [
-    "4b7d575f397862f9031e44b716921e86c410b5facf379bde21955922b0d58a17"
-  ],
+  "activeProfileIds": [],
   "contentIdentity": {
     "name": "ProtectionProfileSemanticProjectionV1",
     "algorithm": "SHA-256-over-domain-and-deterministic-CBOR",

@@ -11,8 +11,6 @@
     "MAX_TRANSPORT_OVERHEAD_BYTES_PER_OPERATION": "logical-carrier-bytes-excluding-raw-protected-packet-octets",
     "MAX_PATH_BYTES": "decoded-request-target-bytes",
     "MAX_HEADER_BYTES": "decoded-header-field-section-bytes-per-direction",
-    "STORAGE_WINDOW_SECONDS": "seconds",
-    "IDEMPOTENCY_WINDOW_SECONDS": "seconds",
     "CLAIM_WINDOW_SECONDS": "seconds",
     "MAX_QUEUE_BYTES_PER_HANDLE": "bytes",
     "MAX_CLAIM_BYTES": "bytes"
@@ -43,8 +41,6 @@
     "MAX_SETTLE_RESPONSE_CONTROL_BYTES": 2438,
     "MAX_SETTLEMENT_RESULT_BYTES": 2438,
     "MAX_RETRY_AFTER_MS": 60000,
-    "STORAGE_WINDOW_SECONDS": 3600,
-    "IDEMPOTENCY_WINDOW_SECONDS": 300,
     "CLAIM_WINDOW_SECONDS": 300,
     "MAX_PATH_BYTES": 128,
     "MAX_HEADER_BYTES": 2048
@@ -58,8 +54,6 @@
     "MAX_CONTROL_BODY_BYTES = MAX_CLAIM_RESPONSE_CONTROL_BYTES",
     "MAX_SETTLEMENT_ITEMS <= MAX_CLAIM_ITEMS",
     "MAX_SETTLEMENT_ATTEMPTS >= 1",
-    "IDEMPOTENCY_WINDOW_SECONDS < STORAGE_WINDOW_SECONDS",
-    "CLAIM_WINDOW_SECONDS <= STORAGE_WINDOW_SECONDS",
     "MAX_TRANSPORT_OVERHEAD_BYTES_PER_OPERATION = 2 * MAX_HEADER_BYTES + MAX_PATH_BYTES + MAX_SETTLE_REQUEST_CONTROL_BYTES + MAX_SETTLE_RESPONSE_CONTROL_BYTES",
     "MAX_OPERATION_ID_BYTES = 16",
     "MAX_DELIVERY_HANDLE_BYTES = 32",
@@ -74,12 +68,13 @@
     "SETTLE": 9143
   },
   "overheadFormula": "request-header-section + response-header-section + request-target + request-control-CBOR + response-control-CBOR; raw-protected-packet-octets-excluded",
-  "resetPolicy": "retry-reconnect-route-change-station-migration-never-reset-or-extend-a-window",
+  "resetPolicy": "processing-turn-budgets-may-reset; accepted-custody-and-operation-id-guards-never-reset",
   "storage": {
-    "retention": "one fixed storage window from accepted submission",
-    "queue": "opaque protected packets only",
-    "claim": "one bounded live claim per returned item and fixed claim window",
-    "settlement": "complete or release atomically for the complete requested set",
-    "senderRetentionInput": "forbidden"
-  }
+    "retention": "until-authorized-settlement-or-explicit-deletion; no-protocol-TTL",
+    "queue": "opaque-protected-packets-with-durable-custody-before-acceptance",
+    "claim": "bounded-exclusive-lease; expiry-releases-claim-not-item",
+    "settlement": "idempotent-per-item-with-retained-outcome-or-retired-handle-frontier",
+    "senderRetentionInput": "not-needed-for-no-expiry-custody"
+  },
+  "budgetScope": "per-operation-or-active-processing-turn; not-total-accepted-work"
 }

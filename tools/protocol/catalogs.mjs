@@ -29,11 +29,12 @@ export function assertValidProtocolCatalogs(protocolLines, protectionProfiles, s
   const [line] = protocolLines.lines;
   const [profile] = protectionProfiles.profiles;
   for (const [entry, label] of [[line, "Protocol Line"], [profile, "Profile"]]) {
-    if (entry.generation !== 1 || entry.lifecycle !== "Candidate" ||
-        entry.definitionStatus !== "COMPLETE" || entry.sessionEligible !== true ||
-        entry.publicationEligible !== false || entry.blockers.length !== 0) {
-      throw new CatalogError(`${label} must be the complete initial V1 Candidate`);
-    }
+    if (entry.generation !== 1 || entry.lifecycle !== "Candidate" || entry.publicationEligible !== false)
+      throw new CatalogError(`${label} must be an initial V1 Candidate`);
+    if (entry.definitionStatus === "COMPLETE") {
+      if (!entry.sessionEligible || entry.blockers.length !== 0) throw new CatalogError(`${label} incomplete admission`);
+    } else if (entry.sessionEligible || entry.blockers.length === 0)
+      throw new CatalogError(`${label} cannot claim admission while requalification is pending`);
   }
   for (const [values, label] of [
     [line.mandatoryCapabilities, "mandatory capabilities"],
@@ -45,8 +46,8 @@ export function assertValidProtocolCatalogs(protocolLines, protectionProfiles, s
   if (typeof line.protocolLineId !== "string" || typeof profile.profileId !== "string" ||
       line.mandatoryCapabilities.some((id) => !line.definedCapabilities.includes(id)) ||
       line.protectionProfileIds.length !== 1 || line.protectionProfileIds[0] !== profile.profileId ||
-      protectionProfiles.activeProfileIds.length !== 1 ||
-      protectionProfiles.activeProfileIds[0] !== profile.profileId) {
+      (profile.sessionEligible ? (protectionProfiles.activeProfileIds.length !== 1 ||
+      protectionProfiles.activeProfileIds[0] !== profile.profileId) : protectionProfiles.activeProfileIds.length !== 0)) {
     throw new CatalogError("initial V1 must bind its exact complete capability and Profile closure");
   }
   return true;

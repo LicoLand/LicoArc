@@ -74,7 +74,7 @@ test("Group state evolution freezes the exact machine bounds and exhaustion sema
   assert.doesNotMatch(decision, /tombstone\s+expiry/iu);
   assert.equal(registry.resourceAccounting.rejectedOrDuplicateInput,
     "no-budget-consumption-and-no-state-mutation");
-  assert.equal(registry.resourceAccounting.retryReset, "forbidden");
+  assert.match(registry.resourceAccounting.retryReset, /processing-turn-only/);
 });
 
 function parseInventory(text) {

@@ -18,8 +18,8 @@ exact encoding, validation, direction and failure semantics.
 | Binding `channel` | Authenticate the selected outer association inside native protection. | FLD-nostr-session-binding |
 | Binding `initiator`, `responder` | Bind both role-ordered Nostr accounts to the native session; no cross-curve key alias. | FLD-nostr-session-binding |
 | Binding `session` | Reject cross-session reassociation; the exact native context is the authenticated source. | FLD-nostr-session-binding |
-| Binding `capabilities` (`id`, `definition`) | Peer-only exact independent application definitions; support does not imply approval. | FLD-nostr-session-binding |
-| Collaboration `agreement` | Bind both immutable capability offers to this association. | FLD-nostr-collaboration-payload |
+| Binding `conversation` | Associates the established peer scope with a persistent dialogue; tools are not part of identity binding. | FLD-continuity-and-capability-records |
+| Collaboration `conversation` | Keeps business payload meaning independent of session renewal and capability updates. | FLD-continuity-and-capability-records |
 | Collaboration `capability` (`id`, `definition`) | Select only an exact mutually supported definition without inferring semantics from a brand or version label. | FLD-nostr-collaboration-payload |
 | Collaboration `payload` | Preserve opaque application bytes; native message kind/id/relatesTo already supply request semantics. | FLD-nostr-collaboration-payload |
 

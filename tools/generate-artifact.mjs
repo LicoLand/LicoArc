@@ -74,11 +74,18 @@ const security = await readObjectPaths(Object.fromEntries(Object.entries(securit
   .filter(([name]) => name !== "sourceManifest")), securityLimits);
 const securitySchemas = await readObjectPaths(securitySchemaPaths);
 assertValidSecurityAccounting({ ...security, schemas: securitySchemas });
-const proofEvidenceBytes = await readFile(fromRelative(security.registry.proofEvidencePath));
-if (sha256(proofEvidenceBytes) !== security.registry.proofEvidenceDigest) {
-  throw new Error("formal proof evidence digest mismatch");
+if (security.registry.definitionStatus === "COMPLETE") {
+  const proofEvidenceBytes = await readFile(fromRelative(security.registry.proofEvidencePath));
+  if (sha256(proofEvidenceBytes) !== security.registry.proofEvidenceDigest) throw new Error("formal proof evidence digest mismatch");
+  assertProofEvidence(parseRestrictedJson(proofEvidenceBytes, securityLimits), security);
+} else {
+  if (security.registry.proofEvidencePath !== null || security.registry.proofEvidenceDigest !== null ||
+      security.bindings.bindings.length !== 0 || security.claims.claims.some(c => c.status === "proved"))
+    throw new Error("pending proof admission cannot reuse prior evidence");
+  const review = await readJson("formal/requalification.json");
+  if (review.status !== "required" || sha256(await readFile(fromRelative(review.supersededEvidencePath))) !== review.supersededEvidenceDigest)
+    throw new Error("invalid superseded proof provenance");
 }
-assertProofEvidence(parseRestrictedJson(proofEvidenceBytes, securityLimits), security);
 
 const componentClosures = [];
 for (const capability of manifest.capabilities) {

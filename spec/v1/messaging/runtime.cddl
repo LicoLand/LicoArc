@@ -70,4 +70,4 @@ attachment-receive-state = {
 ; complete contentDigest verifies. Completion, cancellation, and failure are
 ; absorbing. stateUpdate and recoveryRound cannot decrease or reset; retries,
 ; reconnects, session renewal, Route changes, and Station migration do not
-; refresh any lifetime bound or ATTACHMENT_RECOVERY_WINDOW.
+; rewind nonce or replay state. Processing budgets may resume; attachments do not expire.

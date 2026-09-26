@@ -33,7 +33,10 @@
       "const": "Candidate"
     },
     "definitionStatus": {
-      "const": "COMPLETE"
+      "enum": [
+        "PARTIAL",
+        "COMPLETE"
+      ]
     },
     "claimsPath": {
       "const": "spec/v1/security/claims.json"
@@ -45,11 +48,21 @@
       "const": "spec/v1/security/formal-bindings.json"
     },
     "proofEvidencePath": {
-      "const": "formal/evidence.json"
+      "enum": [
+        "formal/evidence.json",
+        null
+      ]
     },
     "proofEvidenceDigest": {
-      "type": "string",
-      "pattern": "^[0-9a-f]{64}$"
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      ]
     },
     "proofDoesNotDefineProtocol": {
       "const": true

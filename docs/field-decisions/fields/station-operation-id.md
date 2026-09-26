@@ -12,7 +12,7 @@ specification; normative field semantics come only from the Field Registry.
 | Decision status | `DECIDED` |
 | Definition status | `SPECIFIED` |
 | Existing authority | [`FIELD-REGISTRY.md`](../../../spec/FIELD-REGISTRY.md) |
-| Current conclusion | `operationId` is a mandatory `ID128` for `AFFILIATE`, `RESERVE`, `SUBMIT`, `CLAIM`, and `SETTLE`, scoped to the Station, authenticated caller, operation, and fixed idempotency window; reusing it with a different canonical request yields `conflict`. |
+| Current conclusion | `operationId` is a mandatory `ID128` for `AFFILIATE`, `RESERVE`, `SUBMIT`, `CLAIM`, and `SETTLE`, scoped to the Station, authenticated caller, operation, and durable operation identity scope; reusing it with a different canonical request yields `conflict`. |
 
 ## Question
 
@@ -23,7 +23,7 @@ placement, visibility, and trust boundary apply?
 
 Calling Endpoints repeat a Station operation, including creation of an opaque
 affiliation commitment, safely after an ambiguous carrier result. Stations
-detect duplicate or conflicting requests within the fixed idempotency window.
+detect duplicate or conflicting requests until authorized settlement or authenticated handle retirement.
 
 ## Contribution to LicoArc's final vision
 

@@ -29,7 +29,7 @@ Lico Arc Protocol authority and the rules each location follows.
   embedded as interpretation metadata, and the artifact digest binds those
   fields together with every listed source.
 - The v1 locator currently identifies V1 / Generation 1,
-  eight mandatory capabilities, user-authority snapshots, and
+  five mandatory core capabilities and three optional scopes, user-authority snapshots, and
   confirmation-driven reliable finality.
 - Examples and fixtures contain only synthetic values.
 - Algorithm and Message Field Decision Workspaces do not enter a Protocol Line

@@ -85,6 +85,7 @@ export {
   applyGroupMemberConfirmation,
   applyReliableConfirmation,
   confirmationBinding,
+  createEndpointConfirmation,
   executeGroupMemberConfirmationCase,
   executeReliableConfirmationCase,
   validateEndpointConfirmation

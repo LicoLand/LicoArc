@@ -1,308 +1,170 @@
 # Nostr interoperability and LicoArc extensions — V1
 
-## 1. Authority and conformance
+## 1. Authority and independent conformance targets
 
-This is the initial **V1 / Generation 1**, not a V2 migration. It defines two
-independent communication paths. `nostr-dm` interoperates with any client that
-implements the common NIP-17 baseline. `licoarc-enhanced` adds open endpoint
-protection and collaboration semantics. Neither path requires the LicoUp
-product, an official service, an official client allowlist, or LicoArc Network
-membership. A Nostr relay need not implement LicoArc Station operations.
+This is the unreleased initial V1 / Generation 1. Nostr is an optional transport
+and ecosystem adapter. A LicoArc core Endpoint MUST work without Nostr using another
+approved carrier. The durable contract in `spec/v1/reliable/continuity.md` and live
+capability contract in `spec/v1/messaging/capabilities.md` are native, not Nostr-owned.
+The manifest's `nativeProtocolLineId` identifies the current core definition; a
+semantic change recomputes it instead of preserving unpublished obsolete bytes.
 
-The manifest fixes the upstream NIPs at one immutable commit. The referenced
-NIPs own their unmodified event, encryption and relay semantics; LicoArc owns
-only the choices and extensions defined here. Supporting Nostr event carriage
-alone is NOT NIP-17 interoperability. Support claims MUST name the path and
-implemented optional functions. This specification does not claim that any
-current client implements either path or has passed cross-client testing.
+`nostr-dm` provides unmodified common NIP-17 private text interoperability.
+`nostr-carrier` provides NIP-01/44-v2/59 event carriage and inbox discovery without
+requiring a chat UI or kind-14 authoring. `licoarc-enhanced` uses that carrier plus
+LicoArc endpoint core and this binding. Enhanced-service implementations need not
+also implement standard-chat behavior. A complete user-facing compatible chat client
+implements both. Each support claim names the actual target and optional features.
 
-The existing native V1 definition remains a complete eight-capability
-composition, including native HTTPS Transport and Federation Governance. Its
-cryptographic bytes, Profile and content identity are unchanged here. The
-Nostr binding is an additional **outer carrier**, not a second interpretation
-of those protected bytes, an alternate cryptographic Profile, or a relaxation
-of their admission. Native HTTPS restrictions and governance operations apply
-when that native service is used, not to standard Nostr relays or baseline
-clients. Implementations claiming the complete native line must still satisfy
-its complete conformance contract. Path interoperability is a narrower claim.
-
-The Canonical Field Registry incorporates `fields.md` for this scope. Closed
-schemas constrain structure; this document supplies the cross-field rules and
-state transitions. Neither a schema nor a successful source test proves a
-cryptographic implementation. The binding's semantic identity is SHA-256 of
-canonical JSON containing ordered `{path, source}` entries for exactly the
-manifest's `semanticSources`, with JSON parsed and object keys sorted and
-Markdown included as exact canonical UTF-8 text. It contains no own digest,
-corpus results, implementation output or publication state: lifecycle,
-definitionStatus and implementationStatus are omitted from the manifest's
-semantic projection. The independent bundle digest additionally binds the
-complete declared definition corpus and source manifest.
+No official client, LicoUp workflow runtime, official relay, client allowlist or
+federation membership is needed. Group collaboration, native HTTPS Station operations
+and federation governance are independently scoped capabilities, not requirements on
+standard Nostr relays. Nostr upstream owns its existing formats at the pinned revision.
+The LicoArc binding owns only its extensions. Event carriage alone is not chat interop.
 
 ## 2. Standard private-message path
 
-Implement NIP-01 event validation and WebSocket relay interaction, NIP-17
-private messages, NIP-44 **version 2**, and NIP-59 sealing/gift wrapping. A
-baseline text message is an unsigned kind 14 rumor with required id and
-created_at and plain-text content; it is sealed as kind 13 and gift-wrapped
-as kind 1059 separately for each recipient and the sender. Replies and room
-membership use NIP-17 semantics without LicoArc-required tags or fields.
+Use NIP-01 event verification and relay interaction, NIP-17 private messages, NIP-44
+version 2 and NIP-59. Text is a kind 14 unsigned rumor, sealed as kind 13, gift-wrapped
+as kind 1059 separately for each recipient and the sender. Preserve upstream reply,
+room and timestamp-randomization behavior without LicoArc-required fields.
+Verify signatures, ids, MACs, intended recipient and matching seal/rumor authors before
+display; a random wrapper key is not the sender. Deduplicate by authenticated sender
+and rumor id. Kind 14 content is plain text, never an executable control packet.
 
-Validate event ids and signatures, encryption/MACs, intended recipient, and
-that the seal author equals the rumor author before displaying plaintext.
-Do not treat the random wrapper signing key as the sender. Honor the upstream
-created_at randomization; wrapper timestamps are not task order or identity
-freshness. Deduplicate received chat by authenticated sender and rumor id,
-not by wrapper id. Unsigned rumors do not provide transferable attribution.
+Retrieve the recipient's authenticated kind 10050 inbox-relay list using upstream
+replacement ordering. Use user-selected/previously known discovery relays and cached
+signed lists to find it; do not publish private data to discovery relays or to unrelated
+NIP-65 read/write relays. Refresh on reconnection and delivery failure; absence or
+conflicting/unverifiable information is inbox-unavailable, not a guessed broadcast.
+Support NIP-42 on selected relays when required. A relay's limits/receipts do not prove
+security, custody or delivery. NIP-11 limits inform resource admission; NIP-19/21 are
+optional presentation conveniences. Keep one fetch cursor per source and an unresolved
+message inventory. Creation-time-only fetching cannot establish complete catch-up.
 
-Resolve the recipient's authenticated latest kind 10050 inbox relay list with
-NIP-01 replacement ordering. Send only to that list, not to a guessed public
-relay or a profile's unrelated relay list. A missing/invalid list produces
-`recipient-inbox-unavailable`, not a broadcast. A client must support NIP-42
-when a selected relay requires authentication; authentication is always for
-the user-approved relay. NIP-11 limits can inform admission but cannot certify
-security or availability. NIP-19/21 identifiers are optional UI conveniences;
-wire public keys remain the specified 32-byte x-only secp256k1 public keys.
+Optional files, reactions, edits, deletion and disappearing messages need independent
+implementation claims. No NIP-04 fallback is defined. Standard NIP-44 is not claimed to
+provide forward secrecy, post-compromise recovery or post-quantum protection. A
+user-selected business expiry/deletion is not evidence that every remote copy disappeared.
 
-NIP-17 files, reactions, editing, deletion and disappearing-message features
-are optional and must not be advertised without their specific implementation
-and interoperability evidence. No NIP-04 fallback is defined. NIP-44 is not
-claimed to provide cryptographic forward secrecy, post-compromise recovery or
-post-quantum protection. In particular, a disappearing-message request is not
-a substitute for a ratchet or proof that every copy was deleted.
+## 3. Enhanced framing
 
-## 3. Enhanced carrier, not another chat format
+Publish only kind 1059 gift wraps for durable enhanced work. The authenticated inner
+rumor is application kind 44900 with exactly `[["t","licoarc.v1"],["p",recipientPubkey]]`
+and canonical JSON carrier content. Kind 44900 is experimental and unallocated upstream,
+NOT an approved NIP. Require kind and exact namespace; unknown values are unsupported,
+not chat or instructions. NIP-78 is private app storage, not this interchange. Do not
+publish a bare extension rumor or seal. Outer tags never expose channel, capabilities,
+Endpoint identity or protected content. Enhanced data is wrapped only for the authorized
+remote account; device history synchronization needs its own authorization.
 
-Only kind 1059 gift wraps are published. Inside the authenticated seal, a
-LicoArc extension rumor uses dedicated application kind **44900**, exactly
-`[["t","licoarc.v1"],["p",recipientPubkey]]` as its tags, and a canonical JSON
-carrier envelope as its content. The rumor otherwise follows NIP-59's unsigned
-event and id rules. This kind is a LicoArc-defined, unallocated experimental
-kind, **not an approved NIP or a claim of upstream allocation**. Dispatch
-requires both the kind and exact namespace/tag shape. Any later upstream
-allocation requires an explicit reviewed Candidate change. Unknown kinds or
-namespaces are not chat, instructions or authorization.
+The envelope has exactly `channel`, `type`, `digest`, `length`, `index`, `data`.
+`channel` is a fresh 128-bit pairing/transport reference, not a conversation or an
+authenticator. `type` selects the native deterministic-CBOR endpoint-identity,
+user-authority, prekey-bundle, first-packet, session-accept or raw protected-record
+header-CBOR || ciphertext || tag. Native type-specific bounds still apply.
 
-NIP-78 kinds 78/30078 are not used: private app storage is not this cross-client
-interchange. Kind 14 is never parsed as a machine command. Outer gift-wrap
-metadata contains only upstream routing information, never the LicoArc channel,
-object type, capabilities, Endpoint identity or application payload. Do not
-publish a bare kind 44900 rumor or seal. The sender-backup copy required by
-standard NIP-17 chat does not authorize another recipient for enhanced data;
-enhanced wraps go only to the intended remote account. Device synchronization
-is a separate user-authorized path.
+Hash the complete original bytes with SHA-256, split into consecutive 8192-byte
+fragments, and encode each fragment in canonical padded standard Base64. Derive
+fragment count from length; all non-final fragments are full-sized, the last has the
+exact remainder. Preserve original protected bytes; a matching hash is not authentication.
+The event must fit the local maximum and selected relay's smaller limit. Refusal cannot
+authorize weaker encryption, unrelated relays or another recipient.
 
-The complete canonical UTF-8 Nostr event must fit MAX_EVENT_BYTES and any
-smaller chosen relay limit. A refusal is a transport failure, never permission
-to send plaintext, choose a weaker path or publish on unrelated relays.
-Ephemeral kind 21059 is not part of this V1 binding: choosing non-retention
-instead of offline delivery is a different service contract, not an automatic
-optimization. No sender can force a malicious relay to erase received bytes.
+Reassembly keys include authenticated seal author, recipient, channel, type and digest.
+Accept any part order; identical parts coalesce, conflicting parts reject without
+altering accepted parts. Reserve declared bytes against quotas before allocation.
+Hot reassembly bounds limit one working set, not logical lifetime. Persist accepted
+parts/spool references or guarantee retained recovery custody before reclaiming hot
+state. There is no age-based assembly failure or pairing expiry. Native authentication,
+revocation, consumed-prekey and replay checks remain mandatory on complete objects.
 
-## 4. Object framing and bounded reassembly
+Same-attempt retry uses the stored native packet and Gift Wraps. A later attempt may
+make fresh outer wraps of the SAME protected object for late-upload/relay compatibility.
+No fresh native nonce is required merely to rewrap; fresh native reprotection, when
+needed, follows core continuity and keeps the exact logical intent. Rewrapping never
+creates a new authorization or business request. Ephemeral 21059 is not used for
+accepted durable tasks; another explicitly declared transient capability can use it.
 
-An envelope has exactly `channel`, `type`, `digest`, `length`, `index`, `data`.
-`channel` is a fresh 128-bit random initiator-chosen identifier for one peer
-pairing/session attempt, represented by 32 lowercase hex characters. It is a
-routing hint, never a session authenticator. `type` selects one existing native
-object grammar: endpoint identity record, user-authority snapshot, prekey
-bundle, first packet, SessionAccept, or established protected record.
+## 4. Asynchronous pairing and identity-only binding
 
-`digest` is lowercase SHA-256 of the **complete original native bytes**;
-`length` is their complete byte length. Split those bytes into consecutive
-8192-octet fragments. `index` is zero-based; total fragments are derived as
-ceil(length/8192), never separately encoded. All non-final fragments are
-exactly 8192 octets; the final fragment has exactly the derived remaining
-length. `data` is canonical padded standard Base64, without whitespace, URL
-alphabet or a prefix. Decoding and re-encoding must reproduce it exactly.
-No native object is normalized, compressed, decrypted or re-encrypted by the
-carrier. Single-fragment and fragmented objects use the same grammar.
+Nostr accounts and LicoArc user/Endpoint keys are distinct namespaces. Never reinterpret
+or silently derive one from the other. One account shared by devices is not a device
+roster, legal identity or execution authority. Every Endpoint retains independent keys.
 
-Reassembly keys include authenticated seal author, local recipient, channel,
-object type and full digest. All parts must agree on length. Identical parts
-are duplicates; conflicting bytes at one index reject the fragment without cache mutation. Accept
-arbitrary fragment order. Bound counts and reserve the declared total length
-before allocation: at most 524288 bytes/object, 64 fragments/object, four
-pending objects/peer, sixteen globally and 8388608 reserved bytes globally.
-Over-bound input is rejected before allocation and native state changes.
+Persist a user/standing-policy-approved pairing with fixed initiator and responder
+accounts. Exchange identity and user-authority records, including missing predecessors,
+then an exact signed active prekey pair. Validate native continuity, possession, peer
+trust and signatures. Both parties may be offline between ANY steps without cancelling
+this intent. Persist exact answers before transmission, replay them after restart.
+Local quota pressure pauses new work, not already accepted pairing state. Responding
+to unsolicited pairing requires local policy. Public discovery materials contain no
+application request; they do not acquire post-quantum metadata confidentiality.
 
-Assembly has one 600-second local monotonic deadline from first admission;
-retries and duplicate fragments do not refresh it. Expiry discards only the
-carrier cache and reports incomplete transport, not native task failure or
-success. Repeated reassembly never extends native reliable-exchange deadlines.
-All durable native replay, inbox, request and effect state survives cache
-expiry and restart. Local resource admission may be stricter and reports a
-resource failure rather than weakening security.
+Follow native atomic paired-prekey redemption, first-packet and SessionAccept rules.
+Clock-based prekey expiration is not part of this revised Candidate. Consumed/revoked
+material is never reused; acquire fresh material when necessary without losing the
+conversation/request. Only after native confirmation and protected authority admission
+may identity binding and live capability messages be accepted as control.
 
-Only complete exact-length digest-verified objects reach the indicated native
-validator. A hash match is NOT authentication. Wrong signature, wrong native
-line/Profile, revoked identity, prekey reuse, invalid AEAD or native replay
-still rejects. Rewrapping the same object never creates a new business request.
-For retry, persist and retransmit identical native bytes and already-built
-gift wraps; do not advance the ratchet or regenerate identity/capability state.
-Receiver native replay protection remains necessary after carrier caches expire.
+An identity binding is a protected Generic Message event, contentType 1279328257, with
+canonical JSON per binding.schema.json: binding semantic id, channel, fixed accounts,
+native session-context digest and persistent `conversation`. The conversation reference
+is agreed within an already approved peer/Group scope; it grants no new membership.
+Verify exact values against the authenticated native session, outer account context
+and local association. Binding mismatch affects that association, not unrelated work.
 
-## 5. Pairing, native establishment and account binding
+The binding contains NO capability list. Its immutable identity fields may not be
+rewritten inside a session. Tool changes, capability availability and permission
+changes use independent protected live updates and NEVER trigger rebinding. A key or
+account replacement is a different security event requiring approved continuity and a
+safe session; the existing user-visible conversation and logical work survive it.
 
-Nostr account keys and LicoArc Endpoint/user-authority keys are **different
-namespaces and key types**. Never copy, reinterpret or silently derive one
-from the other. A Nostr account is not a legal identity, an Endpoint, a device
-roster or authority to execute effects. Multiple devices may advertise the
-same account, but every native Endpoint retains independent keys and sessions.
+Identity binding acknowledgment can use the digest of role-ordered identity records
+under `LICOARC-NOSTR-V1/AGREEMENT\0`. This is a session-control fact, not a field in the
+business request identity. It cannot force a new request when a session changes.
 
-The carried native object is exactly the `identity-update` or
-`user-authority-state` deterministic-CBOR record in
-`spec/v1/identity/runtime.cddl` for `endpoint-identity` or `user-authority`,
-respectively. The other four types use the same-named grammar in
-`spec/v1/protection/runtime.cddl`: prekey-bundle, first-packet, session-accept,
-or protected-record. The last is raw header-CBOR || ciphertext || tag, NOT an
-enclosing CBOR array. The native parser remains authoritative; an envelope
-type mismatch is invalid. The outer 512 KiB cap is not permission to exceed
-the smaller native bound for that object.
+Application packets received before binding remain in a durable native inbox with
+`binding-pending` disposition and no execution. Commit retained payload/disposition
+with native replay/ratchet state; never consume a key and lose the only payload.
+There is no expiry of this accepted work. Quota refusal happens before native commit,
+retaining ciphertext custody. When binding succeeds, list candidates and apply normal
+receipt/authorization rules; remove pending custody only in a successful durable handoff.
 
-A user-approved pairing creates a pending channel with a fixed initiator and
-responder Nostr account pair. The initiator sends native endpoint-identity and
-user-authority objects; accepted predecessors needed by a fresh peer travel
-as separate objects of the same types. A responder that locally accepts the
-pairing returns its own identity/authority material and an exact native signed
-prekey-bundle. Do not manufacture a prekey, reserve one at the relay or convert
-a Nostr key into a prekey. Native chain, possession, bounds, signature and
-peer-trust validation is mandatory before first-packet construction/admission.
-No Station directory or Nostr profile chooses the authority tip.
+## 5. Live capabilities and collaboration
 
-Missing predecessors, missing prekeys or absent peer consent keep the attempt
-pending within the original 600-second pairing window. At most 32 pending
-channels exist locally; expiry reports `pairing-incomplete`. A refusal or
-unavailability is not evidence that the other client lacks all enhancements.
-Reusing an established or closed channel for another session is forbidden.
-Recipient-first-contact approval or an existing user-approved peer policy is
-required before answering an unsolicited pairing. No application payload is
-allowed in these discovery objects: they carry public native identity/prekey
-material only. Their transport does not gain post-quantum metadata secrecy.
+Use the native live capability record/page messages on existing sessions. Each authorized
+conversation gets relevant updates; roles distinguish a requester who understands the
+interface from a provider with the tool. Offline repair, removal records, exact interface
+digests, generation/revision ordering and scoped disclosure follow capabilities.md.
+No global frozen intersection is part of the cryptographic or identity handshake.
 
-The initiator sends `first-packet`; the responder executes the existing atomic
-paired-prekey redemption and returns the exact `session-accept`. A consumed
-prekey, invalid confirmation or failure has native failure semantics; no
-alternative cryptographic suite is selected. The initiator commits only after
-native confirmation. Both sides next complete the native protected authority
-payload admission, including the exact peer Endpoint records it requires.
-Discovery data and Nostr signatures are not substitutes for that admission.
+A protected Generic Message with contentType 1279328258 carries canonical JSON
+`{conversation,capability,payload}`; payload is Base64 application bytes, capability is
+id+definition. The protected intent contains this stable content, not a session-specific
+agreement. Generic kind, messageId, relatesTo, attachment and group identities keep their
+meaning. Target/authorization and actual body/result grammar belong to the independently
+published application contract; any client implementing it can participate.
 
-Once established, each side sends exactly one protected Generic Message of
-class `event`, contentType **1279328257**, whose payload is canonical JSON
-matching binding.schema.json. It contains the binding semantic digest, the
-channel, the fixed initiator/responder Nostr account keys, native `sessionContextDigest` as lowercase hexadecimal, and that sender's supported application capabilities. These
-are inside the native protected-record, not the cryptographic handshake.
-Capabilities do not select algorithms or change the native Profile.
+Receive validation checks authenticated scope, closed structure and payload bounds.
+It does NOT require permission to execute. Durably store a request as waiting-approval or
+unsupported when appropriate; store responses, progress and cancellation facts against
+their existing request. The action boundary separately checks current invocation/provider
+compatibility, target and authorization. A stale advertisement cannot authorize an effect.
+Unknown capabilities never dispatch to a tool, but need not destroy the whole conversation.
 
-Each receiver checks these values against its exact native session and local
-pending account/channel association AND the authenticated Nostr context. A
-mismatch closes that association before application admission. Native peer
-trust must have been approved independently: matching public claims alone
-never establishes trust. An already approved Endpoint-to-account association
-cannot be silently overwritten by a profile, new device, relay or Nostr key
-rotation. A replacement requires local approval and a fresh fully bound
-session. Revoked native devices remain revoked even while they control a
-Nostr key. Offline clients learn revocation only when valid newer native
-state arrives; no immediate global-revocation guarantee is made.
+## 6. Path selection and evidence
 
-Capabilities are sorted by id, have unique ids, and pair an ASCII namespaced
-id with the SHA-256 digest of its exact independent application definition.
-Common capabilities are the exact id+digest intersection, not version-name
-similarity. Empty intersection is valid: secure messaging capability does not
-imply any shared business extension. Freeze both binding records for this
-session; duplicate identical records are harmless, changed records reject.
-At most 256 active channels map to native sessions. Change of account,
-capabilities or binding revision requires an explicitly established new bound
-channel; it never rewrites the active session or downgrades an outstanding task.
+Every send has a locally authorized requirement: standard-chat, enhanced-message or
+enhanced-collaboration. The adapter may report unavailable; the core queues accepted
+intent for a later approved path. Never silently copy an enhanced task into kind 14,
+NIP-04, plaintext, another recipient or an unrelated relay. Switching equally protective,
+authorized carriers is not downgrade and does not create new work.
 
-After both records validate, compute `agreement` as SHA-256 of ASCII
-`LICOARC-NOSTR-V1/AGREEMENT\0` (the final character is one NUL octet), followed
-by canonical JSON `[initiatorBinding,responderBinding]` in that role order.
-This binds both offers and the native context, without a circular digest or
-another signature. Application messages that arrive before both binding
-records validate have disposition `binding-pending` and MUST NOT produce
-Endpoint Accepted, effects or an execution-success confirmation. Preserve the
-authenticated payload and its disposition atomically in the native durable
-inbox/replay transaction: at most four such messages per channel, sixteen
-globally and 8388608 payload bytes globally. The original pairing deadline
-bounds pending admission and is never reset by retries. Once both bindings
-validate, admit held messages through the normal authorization/reliable path;
-completion order does not confer execution order on concurrent operations.
-
-A repeated native packet retrieves its stored disposition, not a second
-decryption or effect. On restart, recover both native replay state and held
-payloads together; never consume a ratchet key and then lose the only pending
-plaintext. Resource exhaustion or expiry records an authenticated non-success
-under the native contract without a business effect. It is not a successful
-receipt, a reason to replay already-consumed keys, or permission to create a
-new task identity or weaker compatibility copy. Before binding, only the
-native authority admission and the binding control message bypass this gate.
-
-An `enhanced-message` uses an ordinary native Generic Message after binding;
-its opaque application content type still requires a mutually understood
-application definition, but need not request a business capability. An unknown
-content type must be surfaced as unsupported, never dispatched as a tool.
-`enhanced-collaboration` below explicitly asserts an exact business capability.
-
-## 6. Open collaboration and explicit authorization
-
-A protected Generic Message with contentType **1279328258** carries canonical
-JSON `{agreement, capability, payload}`. `capability` is the exact agreed
-id+definition descriptor, and `payload` is canonical Base64 of the opaque
-application bytes (at most 262144 bytes). Generic Message kind, messageId,
-relatesTo, native protected intent, cancellation, attachment identities and
-Endpoint confirmations keep their existing meanings; do not invent another
-request identity or promote relay `OK` to an execution result.
-
-The agreement must match the active association and the capability must be in
-the frozen intersection. Unknown capabilities/digests fail without effects.
-Capability support is not consent: the Endpoint applies local approval and
-execution permission for each request. Plain-text chat, a Nostr signature,
-a remote Agent name or a capability advertisement never authorizes a tool.
-Application definitions own their typed body and result schema. This generic
-contract does not pretend to define a deployment command, shell API or the
-LicoUp workflow engine. Any third-party implementation of the same published
-application definition can collaborate; client branding has no authority.
-
-Local task extraction, model selection, workflow scheduling, UI and memories
-remain product behavior. They do not require a wire extension unless another
-Endpoint must interpret the corresponding operation. Sending content to a
-model provider is a separate authorized disclosure, not implied by peer E2EE.
-
-## 7. Path selection and failure
-
-Every send has an explicit locally authorized requirement: `standard-chat`,
-`enhanced-message`, or `enhanced-collaboration`. Standard chat uses only the
-baseline. Enhanced requests use only an established, account-bound native
-session; collaboration additionally requires the exact agreed capability.
-Discovery advertisements and successful relay storage are not readiness.
-
-If an enhanced prerequisite fails, return `enhanced-unavailable`,
-`binding-required` or `capability-unavailable` and retain/cancel the pending
-operation according to its native contract. Never silently retry it as kind
-14, NIP-04, plaintext, another recipient, another unapproved relay, or a second
-compatibility copy. A separately authorized standard message is a new user
-operation, not a retry of the enhanced operation. Strong and baseline
-conversations may coexist with explicit per-message security labels.
-
-## 8. Security and evidence boundary
-
-NIP-59 hides the inner sender/type from public observers but does not hide all
-routing tags, IP addresses, authentication, traffic, size or timing from the
-relay. Payload E2EE is not anonymity, relay non-retention, honest client code,
-or confidentiality from an authorized model provider. Native cryptographic
-claims remain conditional on their own model and implementation assumptions.
-Those proofs do NOT automatically cover Nostr parsing, this new binding,
-fragment reassembly, account association or a concrete product integration.
-
-Definition tests here exercise deterministic framing, routing and association
-rules with synthetic public fixtures. They do not implement production Nostr
-cryptography, connect real clients, audit an SDK or certify the composite.
-Before a product claims interoperability, its owning repository must test
-standard text/replies/group fan-out against an independent NIP-17 client;
-validate real NIP-44/59 vectors and signature failures; run the enhanced path
-between independent Endpoint implementations through an ordinary Nostr relay;
-exercise offline delivery, duplicate/reordered/lost fragments, prekey races,
-revocation, restarts and mismatched capabilities; and verify that no failure
-causes a weaker copy or unauthorized effect. Record exact clients, commits,
-relay configuration and results separately from this definition's status.
+NIP-59 does not hide all recipient routing, IP/authentication, traffic, size or timing.
+No relay deletion, unconditional availability, honest-client-code or automatic historical
+key recovery guarantee is made. Standards and the native cryptographic primitive choices
+are reused, not reinvented. New composition/continuity semantics require their own proof
+review and real-client qualification. Synthetic tests and deterministic models are not
+production crypto, storage or interoperability evidence. V1 revision changes must update
+content identities, source-closed artifacts and website pins together.

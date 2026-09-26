@@ -2,11 +2,13 @@
   "$schema": "https://licoarc.com/spec/schemas/conformance-corpus-manifest.schema.json",
   "manifestVersion": "licoarc.conformance-corpus-manifest.v1",
   "corpusId": "licoarc.messaging.conformance.v1",
-  "caseCount": 32,
+  "caseCount": 36,
   "operationIds": [
     "licoarc.foundation.canonicalize-governance-json.v1",
     "licoarc.foundation.decode-deterministic-cbor.v1",
-    "licoarc.foundation.encode-deterministic-cbor.v1"
+    "licoarc.foundation.encode-deterministic-cbor.v1",
+    "licoarc.messaging.live-capabilities.v1",
+    "licoarc.messaging.match-capability-roles.v1"
   ],
   "envelopePaths": [
     "conformance/v1/messaging/cases.json"

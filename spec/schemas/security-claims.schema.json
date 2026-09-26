@@ -107,9 +107,8 @@
             "maxLength": 256
           },
           "counterexampleStatus": {
-            "type": "string",
             "enum": [
-              "not-evaluated",
+              "not-run",
               "no-counterexample-found",
               "counterexample-found"
             ]

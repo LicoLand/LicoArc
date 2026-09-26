@@ -1,0 +1,41 @@
+{
+  "version": "licoarc.conformance-targets.v1",
+  "generation": 1,
+  "targets": {
+    "licoarc.endpoint-core.v1": {
+      "requiredCapabilities": [
+        "licoarc.generic-messaging.v1",
+        "licoarc.identity.v1",
+        "licoarc.pairwise-protection.v1",
+        "licoarc.protocol-foundation.v1",
+        "licoarc.reliable-exchange.v1"
+      ],
+      "requiredCarrier": "at-least-one-authorized-independent-adapter",
+      "requiresNostr": false,
+      "requiresLicoUp": false,
+      "requiresFederationMembership": false
+    },
+    "licoarc.group.v1": {
+      "requiredCapabilities": [
+        "licoarc.generic-messaging.v1",
+        "licoarc.group-collaboration.v1",
+        "licoarc.identity.v1",
+        "licoarc.pairwise-protection.v1",
+        "licoarc.protocol-foundation.v1",
+        "licoarc.reliable-exchange.v1"
+      ]
+    },
+    "licoarc.https-station.v1": {
+      "requiredCapabilities": [
+        "licoarc.https-transport.v1"
+      ]
+    },
+    "licoarc.federation.v1": {
+      "requiredCapabilities": [
+        "licoarc.federation-governance.v1"
+      ]
+    }
+  },
+  "composition": "optional-application-and-network-capabilities-do-not-expand-minimum-Endpoint-core",
+  "claims": "name-target-and-evidence; never-infer-production-support-from-definition-tests"
+}
